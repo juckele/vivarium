@@ -6,10 +6,10 @@ import java.util.LinkedList;
 public class UckeleoidBrain
 {
 	private static final double	GAUSSIAN_MIX_RATE			= 0.1;
-	private static final double	MUTATION_RATE				= 0.01;
-	private static final double	SMALL_SCALE_MUTATION_RATE	= 0.99;
-	private static final double	RANDOM_MUTATION_RATE		= 0.00;
-	private static final double	FLIP_MUTATION_RATE			= 0.00;
+	private static final double	MUTATION_RATE				= 0.02;
+	private static final double	SMALL_SCALE_MUTATION_RATE	= 0.97;
+	private static final double	RANDOM_MUTATION_RATE		= 0.02;
+	private static final double	FLIP_MUTATION_RATE			= 0.01;
 	private static final int	GAUSIAN_SAMPLES				= 10;
 
 	// Weights represents all the weights in the neural network

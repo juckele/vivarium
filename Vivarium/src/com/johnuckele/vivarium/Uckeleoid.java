@@ -21,9 +21,9 @@ public class Uckeleoid
 	private World				_world;
 	private int					_r;
 	private int					_c;
-	private long				_ancestors;
+	private double				_generation;
 
-	private UckeleoidBrain			_brain;
+	private UckeleoidBrain		_brain;
 	private double[]			_inputs;
 	private double[]			_memoryUnits;
 
@@ -35,7 +35,7 @@ public class Uckeleoid
 	private int					_gestation;
 	private int					_food;
 	private Direction			_facing;
-	private UckeleoidAction			_action;
+	private UckeleoidAction		_action;
 
 	private Uckeleoid			_fetus;
 
@@ -58,7 +58,14 @@ public class Uckeleoid
 		this._r = r;
 		this._c = c;
 
-		this._ancestors = parent1 != null ? parent1._ancestors + parent2._ancestors + 2 : 0;
+		if(parent1 != null)
+		{
+			this._generation = UtilityFunctions.logarithmicAverage(parent1._generation, parent2._generation) + 1;
+		}
+		else
+		{
+			this._generation = 1;
+		}
 
 		// Create brain to control the Uckeleoid
 		if(parent1 != null)
@@ -294,7 +301,8 @@ public class Uckeleoid
 		{
 			case BIRTH:
 				// If gestation has been reached but the birth failed,
-				// let the Uckeleoid have a round of freedom before trying to give
+				// let the Uckeleoid have a round of freedom before trying to
+				// give
 				// birth again
 				this._gestation -= 2;
 				break;
@@ -334,9 +342,7 @@ public class Uckeleoid
 		output.append(String.format("%02d", this._c));
 		output.append(") ");
 		output.append("GEN-");
-		output.append(String.format("%1$.1f ", Math.log(this._ancestors + 2) / Math.log(2)));
-		output.append('-');
-		output.append(String.format("%02d", this._ancestors));
+		output.append(String.format("%1$.1f ", this._generation));
 		if(this._isFemale)
 		{
 			output.append('女');
