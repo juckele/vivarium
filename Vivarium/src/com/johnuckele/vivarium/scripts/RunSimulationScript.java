@@ -39,24 +39,7 @@ public class RunSimulationScript extends Script
 	@Override protected void run(String[] args)
 	{
 		// Load
-		World w = null;
-		File inputFile = new File(args[0]);
-		try
-		{
-			FileInputStream fis = new FileInputStream(inputFile);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			w = (World) ois.readObject();
-			ois.close();
-			fis.close();
-		}
-		catch(ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
+		World w = loadWorld(args[0]);
 		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
 		System.out.println("Uckeleoid count in loaded world: "+uckeleoidCount);
 
@@ -73,26 +56,7 @@ public class RunSimulationScript extends Script
 		if(args.length == 3)
 		{
 			System.out.println("Saving file: "+args[2]);
-			try
-			{
-				File outputFile = new File(args[2]);
-				FileOutputStream fos;
-				fos = new FileOutputStream(outputFile);
-				ObjectOutputStream oos = new ObjectOutputStream(fos);
-				oos.writeObject(w);
-				oos.flush();
-				oos.close();
-				fos.flush();
-				fos.close();
-			}
-			catch(FileNotFoundException e)
-			{
-				e.printStackTrace();
-			}
-			catch(IOException e)
-			{
-				e.printStackTrace();
-			}
+			saveWorld(w, args[2]);
 		}
 		else
 		{

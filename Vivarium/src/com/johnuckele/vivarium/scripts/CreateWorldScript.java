@@ -31,25 +31,12 @@ public class CreateWorldScript extends Script
 
 	@Override protected void run(String[] args)
 	{
-		File f = new File(args[0]);
 		World w = new World(Integer.parseInt(args[1]));
+
 		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
 		System.out.println("Uckeleoid count in new world: "+uckeleoidCount);
-		try
-		{
-			FileOutputStream fos = new FileOutputStream(f);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(w);
-			oos.flush();
-			oos.close();
-			fos.flush();
-			fos.close();
-		}
-		catch(IOException e)
-		{
-			System.out.print("Unable to write the file "+args[0]+"\n");
-			e.printStackTrace();
-		}
+
+		saveWorld(w, args[0]);
 	}
 
 	public static void main(String[] args)
