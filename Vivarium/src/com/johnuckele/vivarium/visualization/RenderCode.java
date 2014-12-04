@@ -2,5 +2,5 @@ package com.johnuckele.vivarium.visualization;
 
 public enum RenderCode
 {
-	OVERVIEW, RAT_LIST
+	MAP, BRAIN_WEIGHTS, UCKELEOID_LIST, DEAD_UCKELEOID_LIST
 }

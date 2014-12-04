@@ -9,7 +9,7 @@ public class Uckeleoid implements Serializable
 	/**
 	 * serialVersion
 	 */
-	private static final long	serialVersionUID	= 2L;
+	private static final long	serialVersionUID	= 3L;
 
 	/**
 	 * Constants
@@ -208,7 +208,7 @@ public class Uckeleoid implements Serializable
 		{
 			return(UckeleoidAction.DIE);
 		}
-		// Pregnant Rats can give birth
+		// Pregnant Uckeleoids can give birth
 		else if(this._gestation > Uckeleoid.MAXIMUM_GESTATION)
 		{
 			return(UckeleoidAction.BIRTH);
@@ -301,7 +301,7 @@ public class Uckeleoid implements Serializable
 		// double traitCrossProduct = this._foodPreferences1 * trait1 +
 		// this._foodPreferences2 * trait2;
 		this._food += Uckeleoid.EATING_FOOD_RATE;
-		// this._food += (0.5 + traitCrossProduct) * Rat.EATING_FOOD_RATE;
+		// this._food += (0.5 + traitCrossProduct) * Uckeleoid.EATING_FOOD_RATE;
 		if(this._food > Uckeleoid.MAXIMUM_FOOD)
 		{
 			this._food = Uckeleoid.MAXIMUM_FOOD;

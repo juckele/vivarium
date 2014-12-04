@@ -27,8 +27,10 @@ public class PreviewVivariumFile extends Script
 	@Override protected void run(String[] args)
 	{
 		World w = loadWorld(args[0]);
-		System.out.println(w.toString(RenderCode.OVERVIEW));
-		System.out.println(w.toString(RenderCode.RAT_LIST));
+		System.out.println(w.toString(RenderCode.MAP));
+		System.out.println(w.toString(RenderCode.BRAIN_WEIGHTS));
+		System.out.println(w.toString(RenderCode.UCKELEOID_LIST));
+		System.out.println(w.toString(RenderCode.DEAD_UCKELEOID_LIST));
 	}
 
 	public static void main(String[] args)
