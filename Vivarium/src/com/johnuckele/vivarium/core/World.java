@@ -16,26 +16,27 @@ public class World implements Serializable
 	/**
 	 * serialVersion
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long		serialVersionUID					= 2L;
 
 	/**
 	 * Constants
 	 */
-	private static final double	DEFAULT_WALL_THRESHOLD				= 0.1;
-	private static final double	DEFAULT_RAT_THRESHOLD				= 0.2;
-	private static final double	DEFAULT_FOOD_THRESHOLD				= 0.2;
-	private static final double	DEFAULT_FOOD_GENERATION_THRESHOLD	= 0.01;
+	private static final double		DEFAULT_WALL_THRESHOLD				= 0.1;
+	private static final double		DEFAULT_RAT_THRESHOLD				= 0.2;
+	private static final double		DEFAULT_FOOD_THRESHOLD				= 0.2;
+	private static final double		DEFAULT_FOOD_GENERATION_THRESHOLD	= 0.01;
 
-	private int					_worldDimensions;
-	private WorldObject[][]		_world;
-	private double[][][]		_foodProperties;
-	private Uckeleoid[][]				_ratGrid;
-	private LinkedList<Uckeleoid>		_ratList;
-	private double				_foodGenerationThreshold;
+	private int						_maximumUckeleoidID;
+	private int						_worldDimensions;
+	private WorldObject[][]			_world;
+	private double[][][]			_foodProperties;
+	private Uckeleoid[][]			_ratGrid;
+	private LinkedList<Uckeleoid>	_ratList;
+	private double					_foodGenerationThreshold;
 
 	public World(File inputFile)
 	{
-		//TODO
+		// TODO
 	}
 
 	public World(int worldDimensions)
@@ -45,6 +46,7 @@ public class World implements Serializable
 
 	public World(int worldDimensions, double wallThreshold, double foodThreshold, double ratThreshold)
 	{
+		this._maximumUckeleoidID = 0;
 		this._worldDimensions = worldDimensions;
 		this._world = new WorldObject[_worldDimensions][_worldDimensions];
 		this._ratGrid = new Uckeleoid[_worldDimensions][_worldDimensions];
@@ -86,6 +88,11 @@ public class World implements Serializable
 				}
 			}
 		}
+	}
+
+	public int requestNewUckleoidID()
+	{
+		return(++_maximumUckeleoidID);
 	}
 
 	/**
@@ -235,6 +242,7 @@ public class World implements Serializable
 	{
 		return(this._world[r][c]);
 	}
+
 	public double getFoodProperty(int r, int c, int property)
 	{
 		return(this._foodProperties[r][c][property]);
@@ -445,7 +453,7 @@ public class World implements Serializable
 		File f = new File("test.viv");
 		World w = new World(10);
 		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
-		System.out.println("Uckeleoid count: "+uckeleoidCount);
+		System.out.println("Uckeleoid count: " + uckeleoidCount);
 		try
 		{
 			FileOutputStream fos = new FileOutputStream(f);
@@ -478,7 +486,7 @@ public class World implements Serializable
 			e.printStackTrace();
 		}
 		int serializedUckeleoidCount = w2.getCount(WorldObject.UCKELEOID);
-		System.out.println("Serialized Uckeleoid count: "+serializedUckeleoidCount);
+		System.out.println("Serialized Uckeleoid count: " + serializedUckeleoidCount);
 		System.exit(0);
 	}
 }

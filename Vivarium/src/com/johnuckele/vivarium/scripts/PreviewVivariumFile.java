@@ -28,7 +28,7 @@ public class PreviewVivariumFile extends Script
 	{
 		World w = loadWorld(args[0]);
 		System.out.println(w.toString(RenderCode.OVERVIEW));
-//		System.out.println(w.toString(RenderCode.RAT_LIST));
+		System.out.println(w.toString(RenderCode.RAT_LIST));
 	}
 
 	public static void main(String[] args)

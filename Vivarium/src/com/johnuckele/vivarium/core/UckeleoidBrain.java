@@ -9,7 +9,7 @@ public class UckeleoidBrain implements Serializable
 	/**
 	 * serialVersion
 	 */
-	private static final long	serialVersionUID	= -7618961239087036813L;
+	private static final long	serialVersionUID	= 2L;
 
 	/**
 	 * Constants

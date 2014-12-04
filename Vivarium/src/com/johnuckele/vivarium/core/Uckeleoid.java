@@ -9,7 +9,7 @@ public class Uckeleoid implements Serializable
 	/**
 	 * serialVersion
 	 */
-	private static final long	serialVersionUID	= 1L;
+	private static final long	serialVersionUID	= 2L;
 
 	/**
 	 * Constants
@@ -27,8 +27,6 @@ public class Uckeleoid implements Serializable
 	private static final int	BRAIN_INPUTS				= 4;
 	private static final int	BRAIN_OUTPUTS				= 6;
 	private static final int	MEMORY_UNITS				= 0;
-
-	private static int			UNIQUE_UCKELEOID_COUNTER	= 0;
 
 	/**
 	 * individual specific members
@@ -67,7 +65,7 @@ public class Uckeleoid implements Serializable
 
 	public Uckeleoid(Uckeleoid parent1, Uckeleoid parent2, World world, int r, int c, double femaleThreshold)
 	{
-		this._id = Uckeleoid.UNIQUE_UCKELEOID_COUNTER++;
+		this._id = world.requestNewUckleoidID();
 
 		this._world = world;
 		this._r = r;
