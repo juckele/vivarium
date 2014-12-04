@@ -1,6 +1,8 @@
-package com.johnuckele.vivarium;
+package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
+
+import com.johnuckele.vivarium.UtilityFunctions;
 
 public class Uckeleoid implements Serializable
 {

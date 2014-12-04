@@ -1,4 +1,4 @@
-package com.johnuckele.vivarium;
+package com.johnuckele.vivarium.visualization;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

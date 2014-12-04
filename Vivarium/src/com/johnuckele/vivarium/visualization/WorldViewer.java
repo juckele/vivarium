@@ -1,7 +1,10 @@
-package com.johnuckele.vivarium;
+package com.johnuckele.vivarium.visualization;
 
 import java.util.ArrayList;
 import javax.swing.*;
+
+import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.core.WorldObject;
 
 public class WorldViewer extends JFrame
 {

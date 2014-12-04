@@ -1,4 +1,4 @@
-package com.johnuckele.vivarium;
+package com.johnuckele.vivarium.core;
 
 public enum WorldObject
 {

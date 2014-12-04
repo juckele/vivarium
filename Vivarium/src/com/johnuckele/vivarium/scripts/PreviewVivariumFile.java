@@ -1,7 +1,7 @@
 package com.johnuckele.vivarium.scripts;
 
-import com.johnuckele.vivarium.RenderCode;
-import com.johnuckele.vivarium.World;
+import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class PreviewVivariumFile extends Script
 {

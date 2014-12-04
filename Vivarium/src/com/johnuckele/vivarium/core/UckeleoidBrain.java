@@ -1,4 +1,4 @@
-package com.johnuckele.vivarium;
+package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 import java.util.Arrays;

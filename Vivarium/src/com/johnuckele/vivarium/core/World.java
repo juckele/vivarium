@@ -1,4 +1,4 @@
-package com.johnuckele.vivarium;
+package com.johnuckele.vivarium.core;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -8,6 +8,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.LinkedList;
+
+import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class World implements Serializable
 {

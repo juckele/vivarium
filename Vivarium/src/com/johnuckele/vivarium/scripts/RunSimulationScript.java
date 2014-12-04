@@ -8,8 +8,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import com.johnuckele.vivarium.World;
-import com.johnuckele.vivarium.WorldObject;
+import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.core.WorldObject;
 
 public class RunSimulationScript extends Script
 {
