@@ -1,7 +1,17 @@
 package com.johnuckele.vivarium;
 
-public class Uckeleoid
+import java.io.Serializable;
+
+public class Uckeleoid implements Serializable
 {
+	/**
+	 * serialVersion
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
+	 * Constants
+	 */
 	private static final double	DEFAULT_FEMALE_THRESHOLD	= 0.6;
 	private static final int	MAXIMUM_AGE					= 20000;
 	private static final int	MAXIMUM_GESTATION			= 2000;
@@ -18,6 +28,9 @@ public class Uckeleoid
 
 	private static int			UNIQUE_UCKELEOID_COUNTER	= 0;
 
+	/**
+	 * individual specific members
+	 */
 	private World				_world;
 	private int					_r;
 	private int					_c;

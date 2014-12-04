@@ -1,9 +1,24 @@
 package com.johnuckele.vivarium;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.LinkedList;
 
-public class World
+public class World implements Serializable
 {
+	/**
+	 * serialVersion
+	 */
+	private static final long	serialVersionUID	= 1L;
+
+	/**
+	 * Constants
+	 */
 	private static final double	DEFAULT_WALL_THRESHOLD				= 0.1;
 	private static final double	DEFAULT_RAT_THRESHOLD				= 0.2;
 	private static final double	DEFAULT_FOOD_THRESHOLD				= 0.2;
@@ -15,6 +30,11 @@ public class World
 	private Uckeleoid[][]				_ratGrid;
 	private LinkedList<Uckeleoid>		_ratList;
 	private double				_foodGenerationThreshold;
+
+	public World(File inputFile)
+	{
+		//TODO
+	}
 
 	public World(int worldDimensions)
 	{
@@ -416,5 +436,47 @@ public class World
 		{
 			throw new Error("Invalid Code");
 		}
+	}
+
+	public static void main(String[] args)
+	{
+		File f = new File("test.viv");
+		World w = new World(10);
+		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
+		System.out.println("Uckeleoid count: "+uckeleoidCount);
+		try
+		{
+			FileOutputStream fos = new FileOutputStream(f);
+			ObjectOutputStream oos = new ObjectOutputStream(fos);
+			oos.writeObject(w);
+			oos.flush();
+			oos.close();
+			fos.flush();
+			fos.close();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		World w2 = null;
+		try
+		{
+			FileInputStream fis = new FileInputStream(f);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			w2 = (World) ois.readObject();
+			ois.close();
+			fis.close();
+		}
+		catch(ClassNotFoundException e)
+		{
+			e.printStackTrace();
+		}
+		catch(IOException e)
+		{
+			e.printStackTrace();
+		}
+		int serializedUckeleoidCount = w2.getCount(WorldObject.UCKELEOID);
+		System.out.println("Serialized Uckeleoid count: "+serializedUckeleoidCount);
+		System.exit(0);
 	}
 }

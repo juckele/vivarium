@@ -1,10 +1,19 @@
 package com.johnuckele.vivarium;
 
+import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-public class UckeleoidBrain
+public class UckeleoidBrain implements Serializable
 {
+	/**
+	 * serialVersion
+	 */
+	private static final long	serialVersionUID	= -7618961239087036813L;
+
+	/**
+	 * Constants
+	 */
 	private static final double	GAUSSIAN_MIX_RATE			= 0.1;
 	private static final double	MUTATION_RATE				= 0.02;
 	private static final double	SMALL_SCALE_MUTATION_RATE	= 0.97;
