@@ -8,7 +8,6 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldObject;
 
 public abstract class Script
 {
