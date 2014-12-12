@@ -1,6 +1,7 @@
 package com.johnuckele.vivarium.visualization;
 
 import java.util.ArrayList;
+
 import javax.swing.*;
 
 import com.johnuckele.vivarium.core.World;

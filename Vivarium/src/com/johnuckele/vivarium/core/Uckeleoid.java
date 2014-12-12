@@ -2,8 +2,6 @@ package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 
-import com.johnuckele.vivarium.UtilityFunctions;
-
 public class Uckeleoid implements Serializable
 {
 	/**
@@ -41,8 +39,7 @@ public class Uckeleoid implements Serializable
 	private double[]			_memoryUnits;
 
 	private boolean				_isFemale;
-	private double				_foodPreferences1;
-	private double				_foodPreferences2;
+	private double				_randomSeed;
 	private int					_id;
 	private int					_age;
 	private int					_gestation;
@@ -51,6 +48,12 @@ public class Uckeleoid implements Serializable
 	private UckeleoidAction		_action;
 
 	private Uckeleoid			_fetus;
+
+	// Default initializer, for GWT support, should not be used in native Java
+	public Uckeleoid()
+	{
+		this(null, 0, 0);
+	}
 
 	// Randomly initialized Uckeleoid
 	public Uckeleoid(World world, int r, int c)
@@ -117,9 +120,7 @@ public class Uckeleoid implements Serializable
 		}
 
 		// Set food trait preferences
-		double randomAngle = Math.random() * 2 * Math.PI;
-		this._foodPreferences1 = Math.sin(randomAngle);
-		this._foodPreferences2 = Math.cos(randomAngle);
+		this._randomSeed = Math.random();
 
 		// Set defaults
 		this._age = 0;
@@ -223,6 +224,11 @@ public class Uckeleoid implements Serializable
 		return(this._facing);
 	}
 
+	public double getRandomSeed()
+	{
+		return(this._randomSeed);
+	}
+
 	public void setPosition(int r, int c)
 	{
 		this._r = r;
@@ -237,6 +243,11 @@ public class Uckeleoid implements Serializable
 	public int getC()
 	{
 		return(this._c);
+	}
+
+	public boolean isFemale()
+	{
+		return(this._isFemale);
 	}
 
 	public Uckeleoid getFetus()
@@ -345,8 +356,9 @@ public class Uckeleoid implements Serializable
 
 	public String toString()
 	{
-		StringBuilder output = new StringBuilder();
-
+		return "I BROKE DIS";
+/*		StringBuilder output = new StringBuilder();
+		NumberFormat shortNF = NumberFormat.getNumberInstance();
 		output.append("U_");
 		output.append(String.format("%04d", this._id));
 		output.append(" @(");
@@ -400,6 +412,6 @@ public class Uckeleoid implements Serializable
 
 		output.append(this._action);
 
-		return(output.toString());
+		return(output.toString());*/
 	}
 }

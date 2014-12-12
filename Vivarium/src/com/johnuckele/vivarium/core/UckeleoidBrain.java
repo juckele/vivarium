@@ -36,6 +36,12 @@ public class UckeleoidBrain implements Serializable
 	private int				_hiddenLayers;
 	private double[][]			_hiddenNodes;
 
+	// Default initializer, for GWT support, should not be used in native Java
+	public UckeleoidBrain()
+	{
+		this(0, 0, 0);
+	}
+
 	public UckeleoidBrain(int inputCount, int outputCount, int hiddenLayers)
 	{
 		this._outputCount = outputCount;
@@ -219,7 +225,8 @@ public class UckeleoidBrain implements Serializable
 
 	public String toString()
 	{
-		StringBuffer output = new StringBuffer();
+		return "I BROKE DIS AS WELL";
+/*		StringBuffer output = new StringBuffer();
 
 		String[] lineEndLabel =
 		{ "_", "M", "L", "R", "E", "B"};
@@ -253,6 +260,7 @@ public class UckeleoidBrain implements Serializable
 		}
 
 		return(output.toString());
+		*/
 	}
 
 	private static double sigmoid(double x)

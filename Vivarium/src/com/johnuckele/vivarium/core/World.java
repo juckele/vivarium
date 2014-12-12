@@ -1,11 +1,5 @@
 package com.johnuckele.vivarium.core;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.LinkedList;
 
@@ -27,17 +21,18 @@ public class World implements Serializable
 	private static final double		DEFAULT_FOOD_GENERATION_THRESHOLD	= 0.01;
 
 	private int						_maximumUckeleoidID;
-	private int						_worldDimensions;
-	private WorldObject[][]			_world;
+	protected int					_worldDimensions;
+	protected WorldObject[][]		_world;
 	private double[][][]			_foodProperties;
-	private Uckeleoid[][]			_uckeleoidGrid;
-	private LinkedList<Uckeleoid>	_uckeleoidList;
+	protected Uckeleoid[][]			_uckeleoidGrid;
+	protected LinkedList<Uckeleoid>	_uckeleoidList;
 	private LinkedList<Uckeleoid>	_deadUckeleoidList;
 	private double					_foodGenerationThreshold;
 
-	public World(File inputFile)
+	// Default for GWT support, should not be used by native Java
+	public World()
 	{
-		// TODO
+		this(10);
 	}
 
 	public World(int worldDimensions)
@@ -100,11 +95,12 @@ public class World implements Serializable
 	/**
 	 * Top level simulation step of the entire world and all denizens within it.
 	 * Simulations are divided into four phases: 1, each uckeleoid will age and
-	 * compute other time based values. 2, each uckeleoid will decide on an action to
-	 * attempt. 3, each uckeleoid will attempt to execute the planned action (the
-	 * order of execution on the actions is currently left to right, top to
-	 * bottom, so some uckeleoids will get priority if actions conflict). 4, finally,
-	 * food is spawned at a constant chance in empty spaces in the world.
+	 * compute other time based values. 2, each uckeleoid will decide on an
+	 * action to attempt. 3, each uckeleoid will attempt to execute the planned
+	 * action (the order of execution on the actions is currently left to right,
+	 * top to bottom, so some uckeleoids will get priority if actions conflict).
+	 * 4, finally, food is spawned at a constant chance in empty spaces in the
+	 * world.
 	 */
 	public void tick()
 	{
@@ -239,6 +235,11 @@ public class World implements Serializable
 				}
 			}
 		}
+	}
+
+	public int getSize()
+	{
+		return this._world.length;
 	}
 
 	public WorldObject getObject(int r, int c)
@@ -462,47 +463,5 @@ public class World implements Serializable
 		{
 			throw new Error("Invalid Code");
 		}
-	}
-
-	public static void main(String[] args)
-	{
-		File f = new File("test.viv");
-		World w = new World(10);
-		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
-		System.out.println("Uckeleoid count: " + uckeleoidCount);
-		try
-		{
-			FileOutputStream fos = new FileOutputStream(f);
-			ObjectOutputStream oos = new ObjectOutputStream(fos);
-			oos.writeObject(w);
-			oos.flush();
-			oos.close();
-			fos.flush();
-			fos.close();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		World w2 = null;
-		try
-		{
-			FileInputStream fis = new FileInputStream(f);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			w2 = (World) ois.readObject();
-			ois.close();
-			fis.close();
-		}
-		catch(ClassNotFoundException e)
-		{
-			e.printStackTrace();
-		}
-		catch(IOException e)
-		{
-			e.printStackTrace();
-		}
-		int serializedUckeleoidCount = w2.getCount(WorldObject.UCKELEOID);
-		System.out.println("Serialized Uckeleoid count: " + serializedUckeleoidCount);
-		System.exit(0);
 	}
 }
