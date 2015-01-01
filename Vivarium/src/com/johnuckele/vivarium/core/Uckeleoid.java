@@ -7,7 +7,7 @@ public class Uckeleoid implements Serializable
 	/**
 	 * serialVersion
 	 */
-	private static final long	serialVersionUID	= 3L;
+	private static final long	serialVersionUID			= 3L;
 
 	/**
 	 * Constants
@@ -22,13 +22,14 @@ public class Uckeleoid implements Serializable
 	private static final int	MOVING_FOOD_RATE			= -1;
 	private static final int	BASE_FOOD_RATE				= -1;
 	private static final int	PREGNANT_FOOD_RATE			= -2;
-	private static final int	BRAIN_INPUTS				= 4;
+	private static final int	BRAIN_INPUTS				= 5;
 	private static final int	BRAIN_OUTPUTS				= 6;
 	private static final int	MEMORY_UNITS				= 0;
 
 	/**
 	 * individual specific members
 	 */
+	private int					_id;
 	private World				_world;
 	private int					_r;
 	private int					_c;
@@ -40,7 +41,6 @@ public class Uckeleoid implements Serializable
 
 	private boolean				_isFemale;
 	private double				_randomSeed;
-	private int					_id;
 	private int					_age;
 	private int					_gestation;
 	private int					_food;
@@ -49,28 +49,26 @@ public class Uckeleoid implements Serializable
 
 	private Uckeleoid			_fetus;
 
-	// Default initializer, for GWT support, should not be used in native Java
-	public Uckeleoid()
-	{
-		this(null, 0, 0);
-	}
-
 	// Randomly initialized Uckeleoid
 	public Uckeleoid(World world, int r, int c)
 	{
-		this(null, null, world, r, c, Uckeleoid.DEFAULT_FEMALE_THRESHOLD);
+		this(null, null, world, world.requestNewUckleoidID(), r, c);
+	}
+
+	public Uckeleoid(World world, int id, int r, int c)
+	{
+		this(null, null, world, id, r, c);
 	}
 
 	public Uckeleoid(Uckeleoid parent1, Uckeleoid parent2, World world)
 	{
-		this(parent1, parent2, world, 0, 0, Uckeleoid.DEFAULT_FEMALE_THRESHOLD);
+		this(parent1, parent2, world, world.requestNewUckleoidID(), 0, 0);
 	}
 
-	public Uckeleoid(Uckeleoid parent1, Uckeleoid parent2, World world, int r, int c, double femaleThreshold)
+	public Uckeleoid(Uckeleoid parent1, Uckeleoid parent2, World world, int id, int r, int c)
 	{
-		this._id = world.requestNewUckleoidID();
-
 		this._world = world;
+		this._id = id;
 		this._r = r;
 		this._c = c;
 
@@ -110,7 +108,7 @@ public class Uckeleoid implements Serializable
 
 		// Set gender
 		double randomNumber = Math.random();
-		if(randomNumber < femaleThreshold)
+		if(randomNumber < DEFAULT_FEMALE_THRESHOLD)
 		{
 			this._isFemale = true;
 		}
@@ -170,11 +168,12 @@ public class Uckeleoid implements Serializable
 			// Hard coded inputs
 			int facingR = this._r + Direction.getVerticalComponent(this._facing);
 			int facingC = this._c + Direction.getHorizontalComponent(this._facing);
-			WorldObject facingObject = this._world.getObject(facingR, facingC);
+			WorldObject facingObject = this._world.getWorldObject(facingR, facingC);
 			_inputs[0] = this._isFemale ? 1 : 0;
 			_inputs[1] = facingObject == WorldObject.FOOD ? 1 : 0;
 			_inputs[2] = facingObject == WorldObject.UCKELEOID ? 1 : 0;
 			_inputs[3] = facingObject == WorldObject.WALL ? 1 : 0;
+			_inputs[4] = ((double)this._food) / MAXIMUM_FOOD;
 			// Read memory units
 			for(int i = 0; i < Uckeleoid.MEMORY_UNITS; i++)
 			{
@@ -245,7 +244,12 @@ public class Uckeleoid implements Serializable
 		return(this._c);
 	}
 
-	public boolean isFemale()
+	public void setIsFemale(boolean isFemale)
+	{
+		this._isFemale = isFemale;
+	}
+
+	public boolean getIsFemale()
 	{
 		return(this._isFemale);
 	}
@@ -307,7 +311,7 @@ public class Uckeleoid implements Serializable
 		}
 	}
 
-	public void eat(double trait1, double trait2)
+	public void eat()
 	{
 		// double traitCrossProduct = this._foodPreferences1 * trait1 +
 		// this._foodPreferences2 * trait2;
@@ -356,18 +360,16 @@ public class Uckeleoid implements Serializable
 
 	public String toString()
 	{
-		return "I BROKE DIS";
-/*		StringBuilder output = new StringBuilder();
-		NumberFormat shortNF = NumberFormat.getNumberInstance();
+		StringBuilder output = new StringBuilder();
 		output.append("U_");
-		output.append(String.format("%04d", this._id));
+		output.append(this._id);
 		output.append(" @(");
-		output.append(String.format("%02d", this._r));
+		output.append(this._r);
 		output.append(',');
-		output.append(String.format("%02d", this._c));
+		output.append(this._c);
 		output.append(") ");
 		output.append("GEN-");
-		output.append(String.format("%1$.1f ", this._generation));
+		output.append(this._generation);
 		if(this._isFemale)
 		{
 			output.append('女');
@@ -377,11 +379,11 @@ public class Uckeleoid implements Serializable
 			output.append('男');
 		}
 		output.append("/a:");
-		output.append(String.format("%05d", this._age));
+		output.append(this._age);
 		output.append("/g:");
-		output.append(String.format("%04d", this._gestation));
+		output.append(this._gestation);
 		output.append("/f:");
-		output.append(String.format("%04d", this._food));
+		output.append(this._food);
 		output.append("/f:");
 		switch(this._facing)
 		{
@@ -403,15 +405,78 @@ public class Uckeleoid implements Serializable
 
 		for(int i = 0; i < Uckeleoid.MEMORY_UNITS; i++)
 		{
-			output.append(String.format("%1$.2f ", this._memoryUnits[i]));
+			output.append(this._memoryUnits[i]);
 		}
-		output.append(String.format("%1$.2f ", this._foodPreferences1));
-		output.append(String.format("%1$.2f ", this._foodPreferences2));
 
 		output.append(' ');
 
 		output.append(this._action);
 
-		return(output.toString());*/
+		return(output.toString());
+	}
+
+	public int getID()
+	{
+		return(this._id);
+	}
+
+	public double getGeneration()
+	{
+		return(this._generation);
+	}
+
+	public int getAge()
+	{
+		return(this._age);
+	}
+
+	public int getGestation()
+	{
+		return(this._gestation);
+	}
+
+	public int getFood()
+	{
+		return(this._food);
+	}
+
+	public void setGeneration(double generation)
+	{
+		this._generation = generation;
+	}
+
+	public void setRandomSeed(double randomSeed)
+	{
+		this._randomSeed = randomSeed;
+	}
+
+	public void setAge(int age)
+	{
+		this._age = age;
+	}
+
+	public void setGestation(int gestation)
+	{
+		this._gestation = gestation;
+	}
+
+	public void setFood(int food)
+	{
+		this._food = food;
+	}
+
+	public void setFacing(Direction facing)
+	{
+		this._facing = facing;
+	}
+
+	public void setFetus(Uckeleoid fetus)
+	{
+		this._fetus = fetus;
+	}
+
+	public void setBrain(UckeleoidBrain brain)
+	{
+		this._brain = brain;
 	}
 }

@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import com.johnuckele.vivarium.core.World;
 
 public abstract class Script
@@ -33,12 +36,28 @@ public abstract class Script
 		System.exit(0);
 	}
 
-	protected void saveWorld(World w, String fileName)
+	public static void saveWorld(World w, String fileName, Format f)
 	{
-		File f = new File(fileName);
+		if(f == Format.JAVA_SERIALIZABLE)
+		{
+			saveWorldWithDefaultSerialization(w, fileName);
+		}
+		else if(f == Format.JSON)
+		{
+			saveWorldWithJSON(w, fileName);
+		}
+		else
+		{
+			throw new Error("Loading format "+f+" is not supported");
+		}
+	}
+
+	private static void saveWorldWithDefaultSerialization(World w, String fileName)
+	{
+		File file = new File(fileName);
 		try
 		{
-			FileOutputStream fos = new FileOutputStream(f);
+			FileOutputStream fos = new FileOutputStream(file);
 			ObjectOutputStream oos = new ObjectOutputStream(fos);
 			oos.writeObject(w);
 			oos.flush();
@@ -54,8 +73,41 @@ public abstract class Script
 		}
 	}
 
-	protected World loadWorld(String fileName)
+	private static void saveWorldWithJSON(World w, String fileName)
 	{
+		JSONObject jsonObject;
+		try
+		{
+			jsonObject = JSONEncoder.convertWorldToJSON(w);
+			File file = new File(fileName);
+			FileOutputStream fos = new FileOutputStream(file);
+			System.out.println(jsonObject.toString());
+			byte[] jsonByteData = jsonObject.toString().getBytes();
+			fos.write(jsonByteData);
+			fos.flush();
+			fos.close();
+		}
+		catch(IOException e)
+		{
+			System.out.print("Unable to write the file "+fileName+"\n");
+			e.printStackTrace();
+			System.exit(1);
+		}
+		catch(JSONException e)
+		{
+			System.out.print("Unable to write the create JSON\n");
+			e.printStackTrace();
+			System.exit(2);
+		}
+
+	}
+
+	protected World loadWorld(String fileName, Format f)
+	{
+		if(f != Format.JAVA_SERIALIZABLE)
+		{
+			throw new Error("Loading format "+f+" is not supported");
+		}
 		World w = null;
 		File inputFile = new File(fileName);
 		try

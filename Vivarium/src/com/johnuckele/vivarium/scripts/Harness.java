@@ -4,13 +4,40 @@ public class Harness
 {
 	public static void main(String[] args)
 	{
-		String[] args1 = {"data/world_saves/medium.viv", "30"};
-		CreateWorldScript.main(args1);
+		{
+			String[] commandArgs =
+			{ "data/world_saves/world_viewer/tick0.viv", "data/world_saves/snap1.json" };
+			ConvertToJSON.main(commandArgs);
+		}
+		{
+			String[] commandArgs =
+			{ "data/world_saves/world_viewer/tick0.viv"};
+			PreviewVivariumFile.main(commandArgs);	
+		}
+		
+	}
 
-		String[] args2 = {"data/world_saves/medium.viv", "20000", "data/world_saves/medium2.viv"};
-		RunSimulationScript.main(args2);
+	public static void inactive()
+	{
+		for(int i = 3; i < 10; i++)
+		{
+			System.out.println("Loading "+i+" and saving to "+(i+1));
+			String[] commandArgs =
+			{ "data/world_saves/medium"+i+".viv", "200000", "data/world_saves/medium"+(i+1)+".viv" };
+			RunSimulationScript.main(commandArgs);
+		}
+		{
+			String[] commandArgs =
+			{ "data/world_saves/medium2.viv", "data/world_saves/antisocial.json" };
+			ConvertToJSON.main(commandArgs);
+		}
+		{
+			String[] commandArgs =
+			{ "data/world_saves/medium.viv", "25" };
+			CreateWorldScript.main(commandArgs);
 
-		String[] args3 = {"data/world_saves/medium2.viv"};
-		PreviewVivariumFile.main(args3);
+		}
+
+
 	}
 }

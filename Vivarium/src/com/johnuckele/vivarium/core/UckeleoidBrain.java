@@ -14,11 +14,11 @@ public class UckeleoidBrain implements Serializable
 	/**
 	 * Constants
 	 */
-	private static final double	GAUSSIAN_MIX_RATE			= 0.1;
-	private static final double	MUTATION_RATE				= 0.02;
-	private static final double	SMALL_SCALE_MUTATION_RATE	= 0.97;
-	private static final double	RANDOM_MUTATION_RATE		= 0.02;
-	private static final double	FLIP_MUTATION_RATE			= 0.01;
+	private static final double	GAUSSIAN_MIX_RATE			= 0.8;
+	private static final double	MUTATION_RATE				= 0.01;
+	private static final double	SMALL_SCALE_MUTATION_RATE	= 0.5;
+	private static final double	RANDOM_MUTATION_RATE		= 0.25;
+	private static final double	FLIP_MUTATION_RATE			= 0.25;
 	private static final int	GAUSIAN_SAMPLES				= 10;
 
 	// Weights represents all the weights in the neural network
@@ -36,29 +36,28 @@ public class UckeleoidBrain implements Serializable
 	private int				_hiddenLayers;
 	private double[][]			_hiddenNodes;
 
-	// Default initializer, for GWT support, should not be used in native Java
-	public UckeleoidBrain()
-	{
-		this(0, 0, 0);
-	}
-
 	public UckeleoidBrain(int inputCount, int outputCount, int hiddenLayers)
 	{
 		this._outputCount = outputCount;
 		this._inputCount = inputCount;
 		this._hiddenLayers = hiddenLayers;
+		resetOptimizingDataStructures();
+	}
+
+	private void resetOptimizingDataStructures()
+	{
 		this._outputs = new double[_outputCount];
-		this._hiddenNodes = new double[hiddenLayers][];
-		for(int i = 0; i < hiddenLayers; i++)
+		this._hiddenNodes = new double[this._hiddenLayers][];
+		for(int i = 0; i < this._hiddenLayers; i++)
 		{
 			this._hiddenNodes[i] = new double[this._inputCount];
 		}
-		this._weights = new double[hiddenLayers + 1][][];
-		if(hiddenLayers > 0)
+		this._weights = new double[this._hiddenLayers + 1][][];
+		if(this._hiddenLayers > 0)
 		{
 			// A NN with at least 1 hidden layer
 			this._weights[0] = new double[_inputCount][_inputCount + 2];
-			for(int i = 1; i < hiddenLayers - 1; i++)
+			for(int i = 1; i < this._hiddenLayers - 1; i++)
 			{
 				this._weights[i] = new double[_inputCount][_inputCount + 2];
 			}
@@ -96,7 +95,6 @@ public class UckeleoidBrain implements Serializable
 				}
 			}
 		}
-
 	}
 
 	public UckeleoidBrain(UckeleoidBrain brain1, UckeleoidBrain brain2)
@@ -148,7 +146,7 @@ public class UckeleoidBrain implements Serializable
 							// use a gaussian approximation with a range
 							// between 0.8 - 1.2
 							double gaussianRandomValue = UckeleoidBrain.gaussian();
-							_weights[i][j][k] = 0.8 * _weights[i][j][k] + 0.4 * gaussianRandomValue;
+							_weights[i][j][k] =  (0.8 + 0.4 * gaussianRandomValue) * _weights[i][j][k];
 						}
 						else
 						{
@@ -178,6 +176,42 @@ public class UckeleoidBrain implements Serializable
 		}
 	}
 
+	public int getOutputCount()
+	{
+		return(this._outputCount);
+	}
+	public int getInputCount()
+	{
+		return(this._inputCount);
+	}
+	public int getHiddenLayers()
+	{
+		return(this._hiddenLayers);
+	}
+	public double[][][] getWeights()
+	{
+		return(this._weights);
+	}
+	public void setOutputCount(int outputCount)
+	{
+		this._outputCount = outputCount;
+		resetOptimizingDataStructures();
+	}
+	public void setInputCount(int inputCount)
+	{
+		this._inputCount = inputCount;
+		resetOptimizingDataStructures();
+	}
+	public void setHiddenLayers(int hiddenLayers)
+	{
+		this._hiddenLayers = hiddenLayers;
+		resetOptimizingDataStructures();
+	}
+	public void setWeights(double[][][] weights)
+	{
+		this._weights = weights;
+	}
+	
 	public double[] outputs(double[] inputs)
 	{
 		// Clear the output units
@@ -225,18 +259,17 @@ public class UckeleoidBrain implements Serializable
 
 	public String toString()
 	{
-		return "I BROKE DIS AS WELL";
-/*		StringBuffer output = new StringBuffer();
+		StringBuffer output = new StringBuffer();
 
 		String[] lineEndLabel =
 		{ "_", "M", "L", "R", "E", "B"};
 		String[] columnHeaderLabel =
-		{ "cB", "rB", "女", "一", "中", "口"};
+		{ "cB", "rB", "女", "一", "中", "口", "%"};
 
 		for(int i = 0; i < columnHeaderLabel.length; i++)
 		{
 			output.append(columnHeaderLabel[i]);
-			output.append('\t');
+			output.append("\t\t\t");
 		}
 		output.append('\n');
 
@@ -246,7 +279,7 @@ public class UckeleoidBrain implements Serializable
 			{
 				for(int k = 0; k < _weights[i][j].length; k++)
 				{
-					output.append(String.format("%1$.2f", _weights[i][j][k]));
+					output.append(_weights[i][j][k]);
 					output.append('\t');
 				}
 				if(i == _weights.length - 1)
@@ -260,7 +293,6 @@ public class UckeleoidBrain implements Serializable
 		}
 
 		return(output.toString());
-		*/
 	}
 
 	private static double sigmoid(double x)
@@ -307,6 +339,47 @@ public class UckeleoidBrain implements Serializable
 		System.out.println("" + Arrays.toString(inputs4) + " -> " + Arrays.toString(brain.outputs(inputs4)));
 		System.out.println("Maximum output " + Arrays.toString(brain.outputs(inputs4)));
 
+	}
+
+	public static UckeleoidBrain minBrain(LinkedList<UckeleoidBrain> brains)
+	{
+		UckeleoidBrain minBrain = new UckeleoidBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		// Set all the weights with
+		for(UckeleoidBrain brain : brains)
+		{
+			for(int i = 0; i < minBrain._weights.length; i++)
+			{
+				for(int j = 0; j < minBrain._weights[i].length; j++)
+				{
+					for(int k = 0; k < minBrain._weights[i][j].length; k++)
+					{
+						minBrain._weights[i][j][k] = Math.min(brain._weights[i][j][k], minBrain._weights[i][j][k]);
+					}
+				}
+			}
+		}
+		return minBrain;
+
+	}
+
+	public static UckeleoidBrain maxBrain(LinkedList<UckeleoidBrain> brains)
+	{
+		UckeleoidBrain maxBrain = new UckeleoidBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		// Set all the weights with
+		for(UckeleoidBrain brain : brains)
+		{
+			for(int i = 0; i < maxBrain._weights.length; i++)
+			{
+				for(int j = 0; j < maxBrain._weights[i].length; j++)
+				{
+					for(int k = 0; k < maxBrain._weights[i][j].length; k++)
+					{
+						maxBrain._weights[i][j][k] = Math.max(brain._weights[i][j][k], maxBrain._weights[i][j][k]);
+					}
+				}
+			}
+		}
+		return maxBrain;
 	}
 
 	public static UckeleoidBrain medianBrain(LinkedList<UckeleoidBrain> brains)
