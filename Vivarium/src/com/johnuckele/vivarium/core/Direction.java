@@ -39,13 +39,13 @@ public enum Direction
 		switch ( direction )
 		{
 			case NORTH:
-				return (EAST);
-			case EAST:
-				return (SOUTH);
-			case SOUTH:
 				return (WEST);
-			case WEST:
+			case EAST:
 				return (NORTH);
+			case SOUTH:
+				return (EAST);
+			case WEST:
+				return (SOUTH);
 		}
 		return null;
 	}
@@ -55,13 +55,13 @@ public enum Direction
 		switch ( direction )
 		{
 			case NORTH:
-				return (WEST);
-			case EAST:
-				return (NORTH);
-			case SOUTH:
 				return (EAST);
-			case WEST:
+			case EAST:
 				return (SOUTH);
+			case SOUTH:
+				return (WEST);
+			case WEST:
+				return (NORTH);
 		}
 		return null;
 	}
