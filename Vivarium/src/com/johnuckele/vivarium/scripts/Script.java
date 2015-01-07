@@ -73,16 +73,13 @@ public abstract class Script
 		}
 	}
 
-	private static void saveWorldWithJSON(World w, String fileName)
+	protected static void saveStringToFile(String dataString, String fileName)
 	{
-		JSONObject jsonObject;
 		try
 		{
-			jsonObject = JSONEncoder.convertWorldToJSON(w);
 			File file = new File(fileName);
 			FileOutputStream fos = new FileOutputStream(file);
-			System.out.println(jsonObject.toString());
-			byte[] jsonByteData = jsonObject.toString().getBytes();
+			byte[] jsonByteData = dataString.getBytes();
 			fos.write(jsonByteData);
 			fos.flush();
 			fos.close();
@@ -93,13 +90,21 @@ public abstract class Script
 			e.printStackTrace();
 			System.exit(1);
 		}
+	}
+	private static void saveWorldWithJSON(World w, String fileName)
+	{
+		try
+		{
+			JSONObject jsonObject = JSONEncoder.convertWorldToJSON(w);
+			System.out.println(jsonObject.toString());
+			saveStringToFile(jsonObject.toString(), fileName);
+		}
 		catch(JSONException e)
 		{
 			System.out.print("Unable to write the create JSON\n");
 			e.printStackTrace();
 			System.exit(2);
 		}
-
 	}
 
 	protected World loadWorld(String fileName, Format f)

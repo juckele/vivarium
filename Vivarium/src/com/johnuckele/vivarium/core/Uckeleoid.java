@@ -7,11 +7,9 @@ public class Uckeleoid implements Serializable
 	/**
 	 * serialVersion
 	 */
-	private static final long	serialVersionUID			= 3L;
+	private static final long	serialVersionUID			= 4L;
 
-	/**
-	 * Constants
-	 */
+	// Uckeleoid Constants
 	private static final double	DEFAULT_FEMALE_THRESHOLD	= 0.6;
 	private static final int	MAXIMUM_AGE					= 20000;
 	private static final int	MAXIMUM_GESTATION			= 2000;
@@ -26,19 +24,19 @@ public class Uckeleoid implements Serializable
 	private static final int	BRAIN_OUTPUTS				= 6;
 	private static final int	MEMORY_UNITS				= 0;
 
-	/**
-	 * individual specific members
-	 */
+	// Meta information
 	private int					_id;
 	private World				_world;
 	private int					_r;
 	private int					_c;
 	private double				_generation;
 
+	// Brain
 	private UckeleoidBrain		_brain;
 	private double[]			_inputs;
 	private double[]			_memoryUnits;
 
+	// State
 	private boolean				_isFemale;
 	private double				_randomSeed;
 	private int					_age;
@@ -47,7 +45,11 @@ public class Uckeleoid implements Serializable
 	private Direction			_facing;
 	private UckeleoidAction		_action;
 
+	// Fetus
 	private Uckeleoid			_fetus;
+
+	// Action history
+	private ActionHistory	_actionHistory;
 
 	// Randomly initialized Uckeleoid
 	public Uckeleoid(World world, int r, int c)
@@ -126,6 +128,8 @@ public class Uckeleoid implements Serializable
 		this._food = Uckeleoid.MAXIMUM_FOOD;
 		this._facing = Direction.NORTH;
 		this._action = UckeleoidAction.REST;
+
+		this._actionHistory = new ActionHistory();
 	}
 
 	public void tick()
@@ -291,6 +295,7 @@ public class Uckeleoid implements Serializable
 				this._c += Direction.getHorizontalComponent(this._facing);
 				break;
 			case REST:
+			case DIE:
 				// change nothing
 				break;
 			case TURN_LEFT:
@@ -300,27 +305,18 @@ public class Uckeleoid implements Serializable
 				this._facing = Direction.stepClockwise(this._facing);
 				break;
 			case EAT:
-				// Eat is now handled by the dedicated eat function because
-				// it requires specific information to be passed, generic
-				// action handling on eat should not be invoked
-			case DIE:
+				this._food += Uckeleoid.EATING_FOOD_RATE;
+				if(this._food > Uckeleoid.MAXIMUM_FOOD)
+				{
+					this._food = Uckeleoid.MAXIMUM_FOOD;
+				}
+				break;
 			default:
 				System.err.println("Non-Fatal Error, unhandled action");
 				new Error().printStackTrace();
 				break;
 		}
-	}
-
-	public void eat()
-	{
-		// double traitCrossProduct = this._foodPreferences1 * trait1 +
-		// this._foodPreferences2 * trait2;
-		this._food += Uckeleoid.EATING_FOOD_RATE;
-		// this._food += (0.5 + traitCrossProduct) * Uckeleoid.EATING_FOOD_RATE;
-		if(this._food > Uckeleoid.MAXIMUM_FOOD)
-		{
-			this._food = Uckeleoid.MAXIMUM_FOOD;
-		}
+		this._actionHistory.recordAction(action, ActionHistory.SUCCEED);
 	}
 
 	public void failAction(UckeleoidAction action)
@@ -351,6 +347,7 @@ public class Uckeleoid implements Serializable
 			default:
 				break;
 		}
+		this._actionHistory.recordAction(action, ActionHistory.FAIL);
 	}
 
 	private Uckeleoid createOffspringWith(Uckeleoid breedingTarget)
@@ -478,5 +475,15 @@ public class Uckeleoid implements Serializable
 	public void setBrain(UckeleoidBrain brain)
 	{
 		this._brain = brain;
+	}
+
+	public ActionHistory getActionHistory()
+	{
+		return _actionHistory;
+	}
+
+	public void setActionHistory(ActionHistory _actionHistory)
+	{
+		this._actionHistory = _actionHistory;
 	}
 }

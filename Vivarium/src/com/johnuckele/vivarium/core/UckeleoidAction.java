@@ -28,4 +28,34 @@ public enum UckeleoidAction
 				throw new Error("Conversion out of bounds error for value " + i);
 		}
 	}
+
+	public static int convertActionToInteger(UckeleoidAction a)
+	{
+		switch ( a )
+		{
+			case REST:
+				return 0;
+			case MOVE:
+				return 1;
+			case TURN_LEFT:
+				return 1;
+			case TURN_RIGHT:
+				return 3;
+			case EAT:
+				return 4;
+			case BREED:
+				return 5;
+			case BIRTH:
+				return 6;
+			case DIE:
+				return 7;
+			default:
+				throw new Error("Conversion out of bounds error for value " + a);
+		}
+	}
+
+	public static int getDistinctActionCount()
+	{
+		return 8;
+	}
 }
