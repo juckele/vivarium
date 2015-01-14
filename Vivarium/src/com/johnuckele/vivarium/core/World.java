@@ -23,7 +23,7 @@ public class World implements Serializable
 	private static final double		DEFAULT_WALL_THRESHOLD				= 0.1;
 
 	private int						_maximumUckeleoidID;
-	private int	_tickCounter;
+	private int						_tickCounter;
 	protected int					_worldDimensions;
 	private double					_foodGenerationThreshold;
 
@@ -31,8 +31,7 @@ public class World implements Serializable
 	protected Uckeleoid[][]			_uckeleoidGrid;
 	protected LinkedList<Uckeleoid>	_liveUckeleoidList;
 	private LinkedList<Uckeleoid>	_deadUckeleoidList;
-	private CensusRecord	_census;
-
+	private CensusRecord			_census;
 
 	public World(int worldDimensions)
 	{
@@ -106,18 +105,18 @@ public class World implements Serializable
 		// changes in condition such as age,
 		// gestation, and energy levels.
 		tickUckeleoids();
-	
+
 		// Each uckeleoid plans which actions to
 		// attempt to do during the next phase
 		letUckeleoidsPlan();
-	
+
 		// Each uckeleoid will physically try to carry
 		// out the planned action
 		executeUckeleoidActions();
-	
+
 		// New food resources will be spawned in the world
 		spawnFood();
-		
+
 		// Keep the census up to date
 		this._tickCounter++;
 		this._census.updateRecords(this._tickCounter, this._liveUckeleoidList.size());
@@ -166,7 +165,7 @@ public class World implements Serializable
 				dyingUckeleoids.add(uckeleoid);
 			}
 			// Various actions that always succeed and are simple
-			else if(uckeleoidAction == UckeleoidAction.TURN_LEFT || uckeleoidAction == UckeleoidAction.TURN_RIGHT)
+			else if(uckeleoidAction == UckeleoidAction.TURN_LEFT || uckeleoidAction == UckeleoidAction.TURN_RIGHT || uckeleoidAction == UckeleoidAction.REST)
 			{
 				uckeleoid.executeAction(uckeleoidAction);
 			}
@@ -264,7 +263,7 @@ public class World implements Serializable
 				System.err.println("Non-Fatal Error, unhandled action");
 				new Error().printStackTrace();
 		}
-	
+
 		// Default object move
 		_worldObjectGrid[r2][c2] = _worldObjectGrid[r1][c1];
 		_worldObjectGrid[r1][c1] = WorldObject.EMPTY;
@@ -306,7 +305,7 @@ public class World implements Serializable
 				System.err.println("Non-Fatal Error, unhandled action");
 				new Error().printStackTrace();
 		}
-	
+
 		_worldObjectGrid[r][c] = WorldObject.EMPTY;
 		_uckeleoidGrid[r][c] = null;
 	}
@@ -316,23 +315,24 @@ public class World implements Serializable
 		LinkedList<Uckeleoid> allUckeleoids = new LinkedList<Uckeleoid>();
 		allUckeleoids.addAll(this._liveUckeleoidList);
 		allUckeleoids.addAll(this._deadUckeleoidList);
-		Collections.sort(allUckeleoids, new Comparator<Uckeleoid>() {
-	         @Override
-	         public int compare(Uckeleoid o1, Uckeleoid o2) {
-	        	 if(o1.getGeneration() > o2.getGeneration())
-	        	 {
-	        		 return 1;
-	        	 }
-	        	 else if(o1.getGeneration() < o2.getGeneration())
-	        	 {
-	        		 return -1;
-	        	 }
-	        	 else
-	        	 {
-	        		 return 0;
-	        	 }
-	         }
-	     });
+		Collections.sort(allUckeleoids, new Comparator<Uckeleoid>()
+		{
+			@Override public int compare(Uckeleoid o1, Uckeleoid o2)
+			{
+				if(o1.getGeneration() > o2.getGeneration())
+				{
+					return 1;
+				}
+				else if(o1.getGeneration() < o2.getGeneration())
+				{
+					return -1;
+				}
+				else
+				{
+					return 0;
+				}
+			}
+		});
 		return allUckeleoids;
 	}
 
@@ -396,7 +396,7 @@ public class World implements Serializable
 	public void setWorldDimensions(int worldDimensions)
 	{
 		this._worldDimensions = worldDimensions;
-	
+
 		this._worldObjectGrid = new WorldObject[_worldDimensions][_worldDimensions];
 		this._uckeleoidGrid = new Uckeleoid[_worldDimensions][_worldDimensions];
 		this._liveUckeleoidList = new LinkedList<Uckeleoid>();
@@ -513,7 +513,7 @@ public class World implements Serializable
 		}
 		return(worldOutput.toString());
 	}
-	
+
 	private String renderBrainWeights()
 	{
 		// Draw average brain

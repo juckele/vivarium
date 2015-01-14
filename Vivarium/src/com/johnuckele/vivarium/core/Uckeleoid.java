@@ -316,7 +316,7 @@ public class Uckeleoid implements Serializable
 				new Error().printStackTrace();
 				break;
 		}
-		this._actionHistory.recordAction(action, ActionHistory.SUCCEED);
+		this._actionHistory.recordAction(action, true);
 	}
 
 	public void failAction(UckeleoidAction action)
@@ -340,14 +340,19 @@ public class Uckeleoid implements Serializable
 			case MOVE:
 				this._food -= 1;
 				break;
+			case DIE:
+				break;
 			case REST:
 			case TURN_LEFT:
 			case TURN_RIGHT:
-			case DIE:
+				System.err.println("Action class "+action+" should not fail");
+				break;
 			default:
+				System.err.println("Non-Fatal Error, unhandled action");
+				new Error().printStackTrace();
 				break;
 		}
-		this._actionHistory.recordAction(action, ActionHistory.FAIL);
+		this._actionHistory.recordAction(action, false);
 	}
 
 	private Uckeleoid createOffspringWith(Uckeleoid breedingTarget)

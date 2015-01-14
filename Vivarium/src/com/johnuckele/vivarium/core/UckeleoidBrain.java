@@ -15,7 +15,7 @@ public class UckeleoidBrain implements Serializable
 	 * Constants
 	 */
 	private static final double	GAUSSIAN_MIX_RATE			= 0.8;
-	private static final double	MUTATION_RATE				= 0.01;
+	private static final double	MUTATION_RATE				= 0.001;
 	private static final double	SMALL_SCALE_MUTATION_RATE	= 0.5;
 	private static final double	RANDOM_MUTATION_RATE		= 0.25;
 	private static final double	FLIP_MUTATION_RATE			= 0.25;

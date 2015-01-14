@@ -38,7 +38,7 @@ public enum UckeleoidAction
 			case MOVE:
 				return 1;
 			case TURN_LEFT:
-				return 1;
+				return 2;
 			case TURN_RIGHT:
 				return 3;
 			case EAT:
