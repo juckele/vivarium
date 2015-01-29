@@ -6,6 +6,7 @@ import javax.swing.*;
 
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
+import com.johnuckele.vivarium.core.WorldVariables;
 import com.johnuckele.vivarium.scripts.Format;
 import com.johnuckele.vivarium.scripts.Script;
 
@@ -97,7 +98,7 @@ public class WorldViewer extends JFrame
 	{
 		int worldDimensions = 25;
 		System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-		World w = new World(worldDimensions);
+		World w = new World(worldDimensions, new WorldVariables());
 		System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 		Script.saveWorld(w, "data/world_saves/world_viewer/tick0.viv", Format.JAVA_SERIALIZABLE);
 

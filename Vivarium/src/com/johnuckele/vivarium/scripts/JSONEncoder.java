@@ -8,6 +8,7 @@ import com.johnuckele.vivarium.core.Uckeleoid;
 import com.johnuckele.vivarium.core.UckeleoidBrain;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
+import com.johnuckele.vivarium.core.WorldVariables;
 
 public class JSONEncoder
 {
@@ -17,7 +18,10 @@ public class JSONEncoder
 		// Store basic values
 		worldJSON.put("maximumUckeleoidID", w.getMaximumUckeleoidID());
 		worldJSON.put("worldDimensions", w.getWorldDimensions());
-		worldJSON.put("foodGenerationThreshold", w.getFoodGenerationThreshold());
+
+		// Store world variables
+		JSONObject worldVariableJSON = convertWorldVariablesToJSON(w.getWorldVariables());
+		worldJSON.put("worldVariables",  worldVariableJSON);
 
 		JSONArray worldObjects = new JSONArray();
 		// Store what lives where
@@ -44,7 +48,27 @@ public class JSONEncoder
 		return worldJSON;
 	}
 
-	// TODO Auto-generated method stub
+	private static JSONObject convertWorldVariablesToJSON(WorldVariables worldVariables) throws JSONException
+	{
+		JSONObject worldVariablesJSON = new JSONObject();
+
+		// world gen
+		worldVariablesJSON.put("foodGenerationProbability", worldVariables.getFoodGenerationProbability());
+		worldVariablesJSON.put("initialFoodGenerationProbability", worldVariables.getInitialFoodGenerationProbability());
+		worldVariablesJSON.put("initialUckeleoidGenerationProbability", worldVariables.getInitialUckeleoidGenerationProbability());
+		worldVariablesJSON.put("initialWallGenerationProbability", worldVariables.getInitialWallGenerationProbability());
+		
+		// Uckeleoid Neurology
+		worldVariablesJSON.put("uckeleoidMemoryUnitCount", worldVariables.getUckeleoidMemoryUnitCount());
+		worldVariablesJSON.put("inheritanceGaussianMixRate", worldVariables.getInheritanceGaussianMixRate());
+		worldVariablesJSON.put("inheritanceSinglePickRate", worldVariables.getInheritanceSinglePickRate());
+		worldVariablesJSON.put("mutationRate", worldVariables.getMutationRate());
+		worldVariablesJSON.put("mutationSmallScaleRate", worldVariables.getMutationSmallScaleRate());
+		worldVariablesJSON.put("mutationRandomRate", worldVariables.getMutationRandomRate());
+		worldVariablesJSON.put("mutationFlipRate", worldVariables.getMutationFlipRate());
+
+		return worldVariablesJSON;
+	}
 
 	// Unsaved crap
 	/*

@@ -14,18 +14,11 @@ public class World implements Serializable
 	 */
 	private static final long		serialVersionUID					= 4L;
 
-	/**
-	 * Constants
-	 */
-	private static final double		DEFAULT_FOOD_GENERATION_THRESHOLD	= 0.01;
-	private static final double		DEFAULT_FOOD_THRESHOLD				= 0.2;
-	private static final double		DEFAULT_UCKELEOID_THRESHOLD			= 0.2;
-	private static final double		DEFAULT_WALL_THRESHOLD				= 0.1;
+	private WorldVariables			_worldVariables;
 
 	private int						_maximumUckeleoidID;
 	private int						_tickCounter;
 	protected int					_worldDimensions;
-	private double					_foodGenerationThreshold;
 
 	protected WorldObject[][]		_worldObjectGrid;
 	protected Uckeleoid[][]			_uckeleoidGrid;
@@ -33,11 +26,12 @@ public class World implements Serializable
 	private LinkedList<Uckeleoid>	_deadUckeleoidList;
 	private CensusRecord			_census;
 
-	public World(int worldDimensions)
+
+	public World(int worldDimensions, WorldVariables worldVariables)
 	{
+		this._worldVariables = worldVariables;
 		this._maximumUckeleoidID = 0;
 		this._tickCounter = 0;
-		this._foodGenerationThreshold = World.DEFAULT_FOOD_GENERATION_THRESHOLD;
 
 		this.setWorldDimensions(worldDimensions);
 		this.populatateWorld();
@@ -64,15 +58,18 @@ public class World implements Serializable
 				else
 				{
 					double randomNumber = Math.random();
-					if(randomNumber < DEFAULT_WALL_THRESHOLD)
+					double wallProbability = _worldVariables.getInitialWallGenerationProbability();
+					double foodProbability = _worldVariables.getInitialFoodGenerationProbability();
+					double uckeleoidProbability = _worldVariables.getInitialUckeleoidGenerationProbability();
+					if(randomNumber < wallProbability)
 					{
 						_worldObjectGrid[r][c] = WorldObject.WALL;
 					}
-					else if(randomNumber < DEFAULT_WALL_THRESHOLD + DEFAULT_FOOD_THRESHOLD)
+					else if(randomNumber < wallProbability + foodProbability)
 					{
 						_worldObjectGrid[r][c] = WorldObject.FOOD;
 					}
-					else if(randomNumber < DEFAULT_WALL_THRESHOLD + DEFAULT_FOOD_THRESHOLD + DEFAULT_UCKELEOID_THRESHOLD)
+					else if(randomNumber < wallProbability + foodProbability + uckeleoidProbability)
 					{
 						_worldObjectGrid[r][c] = WorldObject.UCKELEOID;
 						Uckeleoid uckeleoid = new Uckeleoid(this, r, c);
@@ -229,7 +226,7 @@ public class World implements Serializable
 				if(_worldObjectGrid[r][c] == WorldObject.EMPTY)
 				{
 					double randomNumber = Math.random();
-					if(randomNumber < this._foodGenerationThreshold)
+					if(randomNumber < this._worldVariables.getFoodGenerationProbability())
 					{
 						setObject(WorldObject.FOOD, r, c);
 						_worldObjectGrid[r][c] = WorldObject.FOOD;
@@ -357,16 +354,6 @@ public class World implements Serializable
 		return(count);
 	}
 
-	public double getFoodGenerationThreshold()
-	{
-		return this._foodGenerationThreshold;
-	}
-
-	public void setFoodGenerationThreshold(double foodGenerationThreshold)
-	{
-		this._foodGenerationThreshold = foodGenerationThreshold;
-	}
-
 	public int getMaximumUckeleoidID()
 	{
 		return this._maximumUckeleoidID;
@@ -415,6 +402,11 @@ public class World implements Serializable
 			throw new Error("Uckeleoid WorldObjects should not be assinged directly, use setUckeleoid");
 		}
 		setObject(obj, null, r, c);
+	}
+
+	public WorldVariables getWorldVariables()
+	{
+		return _worldVariables;
 	}
 
 	private void setObject(WorldObject obj, Uckeleoid newUckeleoid, int r, int c)

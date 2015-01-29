@@ -20,9 +20,10 @@ public class Uckeleoid implements Serializable
 	private static final int	MOVING_FOOD_RATE			= -1;
 	private static final int	BASE_FOOD_RATE				= -1;
 	private static final int	PREGNANT_FOOD_RATE			= -2;
+
+	// Brain structure
 	private static final int	BRAIN_INPUTS				= 5;
 	private static final int	BRAIN_OUTPUTS				= 6;
-	private static final int	MEMORY_UNITS				= 0;
 
 	// Meta information
 	private int					_id;
@@ -84,12 +85,13 @@ public class Uckeleoid implements Serializable
 		}
 
 		// Create brain to control the Uckeleoid
+		int memoryUnitCount = _world.getWorldVariables().getUckeleoidMemoryUnitCount();
 		if(parent1 != null)
 		{
 			if(parent2 != null)
 			{
 				// Brain combined from genetic legacy
-				this._brain = new UckeleoidBrain(parent1._brain, parent2._brain);
+				this._brain = new UckeleoidBrain(_world, parent1._brain, parent2._brain);
 			}
 			else
 			{
@@ -103,10 +105,10 @@ public class Uckeleoid implements Serializable
 		else
 		{
 			// Create a new default brain
-			this._brain = new UckeleoidBrain(Uckeleoid.BRAIN_INPUTS + Uckeleoid.MEMORY_UNITS, Uckeleoid.BRAIN_OUTPUTS + Uckeleoid.MEMORY_UNITS, 0);
+			this._brain = new UckeleoidBrain(_world, Uckeleoid.BRAIN_INPUTS + memoryUnitCount, Uckeleoid.BRAIN_OUTPUTS + memoryUnitCount, 0);
 		}
-		_inputs = new double[Uckeleoid.BRAIN_INPUTS + Uckeleoid.MEMORY_UNITS];
-		_memoryUnits = new double[Uckeleoid.MEMORY_UNITS];
+		_inputs = new double[Uckeleoid.BRAIN_INPUTS + memoryUnitCount];
+		_memoryUnits = new double[memoryUnitCount];
 
 		// Set gender
 		double randomNumber = Math.random();
@@ -179,14 +181,14 @@ public class Uckeleoid implements Serializable
 			_inputs[3] = facingObject == WorldObject.WALL ? 1 : 0;
 			_inputs[4] = ((double)this._food) / MAXIMUM_FOOD;
 			// Read memory units
-			for(int i = 0; i < Uckeleoid.MEMORY_UNITS; i++)
+			for(int i = 0; i < this._memoryUnits.length; i++)
 			{
 				_memoryUnits[i] = _inputs[Uckeleoid.BRAIN_INPUTS + i];
 			}
 			// Main computation
 			double[] outputs = this._brain.outputs(_inputs);
 			// Save memory units
-			for(int i = 0; i < Uckeleoid.MEMORY_UNITS; i++)
+			for(int i = 0; i < this._memoryUnits.length; i++)
 			{
 				_memoryUnits[i] = outputs[Uckeleoid.BRAIN_OUTPUTS + i];
 			}
@@ -405,7 +407,7 @@ public class Uckeleoid implements Serializable
 
 		output.append(' ');
 
-		for(int i = 0; i < Uckeleoid.MEMORY_UNITS; i++)
+		for(int i = 0; i < this._memoryUnits.length; i++)
 		{
 			output.append(this._memoryUnits[i]);
 		}

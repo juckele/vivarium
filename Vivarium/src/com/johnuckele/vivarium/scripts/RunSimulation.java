@@ -3,9 +3,9 @@ package com.johnuckele.vivarium.scripts;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 
-public class RunSimulationScript extends Script
+public class RunSimulation extends Script
 {
-	public RunSimulationScript(String[] args)
+	public RunSimulation(String[] args)
 	{
 		super(args);
 	}
@@ -58,6 +58,6 @@ public class RunSimulationScript extends Script
 
 	public static void main(String[] args)
 	{
-		new RunSimulationScript(args);
+		new RunSimulation(args);
 	}
 }

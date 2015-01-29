@@ -9,18 +9,16 @@ public class UckeleoidBrain implements Serializable
 	/**
 	 * serialVersion
 	 */
-	private static final long	serialVersionUID	= 4L;
+	private static final long	serialVersionUID				= 4L;
 
 	/**
 	 * Constants
 	 */
-	private static final double	GAUSSIAN_MIX_RATE			= 0.8;
-	private static final double	MUTATION_RATE				= 0.001;
-	private static final double	SMALL_SCALE_MUTATION_RATE	= 0.5;
-	private static final double	RANDOM_MUTATION_RATE		= 0.25;
-	private static final double	FLIP_MUTATION_RATE			= 0.25;
-	private static final int	GAUSIAN_SAMPLES				= 10;
+	private static final int	GAUSIAN_APPROXIMATION_SAMPLES	= 10;
 
+	// World object which we're apart of
+	private World _world;
+	
 	// Weights represents all the weights in the neural network
 	// weight[i][j] corresponds to the weight of the connection
 	// for the ith node in the layer coming from the jth node in
@@ -33,11 +31,12 @@ public class UckeleoidBrain implements Serializable
 	private int					_outputCount;
 	private double[]			_outputs;
 	private int					_inputCount;
-	private int				_hiddenLayers;
+	private int					_hiddenLayers;
 	private double[][]			_hiddenNodes;
 
-	public UckeleoidBrain(int inputCount, int outputCount, int hiddenLayers)
+	public UckeleoidBrain(World world, int inputCount, int outputCount, int hiddenLayers)
 	{
+		this._world = world;
 		this._outputCount = outputCount;
 		this._inputCount = inputCount;
 		this._hiddenLayers = hiddenLayers;
@@ -63,8 +62,10 @@ public class UckeleoidBrain implements Serializable
 			}
 			this._weights[_hiddenLayers] = new double[_outputCount][_inputCount + 2];
 
-			// With one or more hidden layers, copy inputs to the last layer initially
-			// This code assumes that all hidden layers have as many outputs as the overall
+			// With one or more hidden layers, copy inputs to the last layer
+			// initially
+			// This code assumes that all hidden layers have as many outputs as
+			// the overall
 			// network has for inputs
 			for(int i = 0; i < _weights.length; i++)
 			{
@@ -97,11 +98,11 @@ public class UckeleoidBrain implements Serializable
 		}
 	}
 
-	public UckeleoidBrain(UckeleoidBrain brain1, UckeleoidBrain brain2)
+	public UckeleoidBrain(World world, UckeleoidBrain brain1, UckeleoidBrain brain2)
 	{
 		// Construct the weight layer and store variables with the int based
 		// constructor
-		this(brain1._inputCount, brain1._outputCount, brain1._hiddenLayers);
+		this(world, brain1._inputCount, brain1._outputCount, brain1._hiddenLayers);
 
 		// Set all the weights with
 		for(int i = 0; i < _weights.length; i++)
@@ -113,15 +114,14 @@ public class UckeleoidBrain implements Serializable
 					// Mix first
 					double randomValue = Math.random();
 					// Sometimes mix the two values with a gaussian
-					// approximation
-					// value.
-					if(randomValue < UckeleoidBrain.GAUSSIAN_MIX_RATE)
+					// approximation.
+					if(randomValue < _world.getWorldVariables().getInheritanceGaussianMixRate())
 					{
 						double gaussianRandomValue = UckeleoidBrain.gaussian();
 						double weightDifference = brain2._weights[i][j][k] - brain1._weights[i][j][k];
 						_weights[i][j][k] = brain1._weights[i][j][k] + gaussianRandomValue * weightDifference;
 					}
-					// Otherwise pick one
+					// Otherwise pick one value
 					else
 					{
 						randomValue = Math.random();
@@ -137,36 +137,36 @@ public class UckeleoidBrain implements Serializable
 
 					// Sometimes mutate
 					randomValue = Math.random();
-					if(randomValue < UckeleoidBrain.MUTATION_RATE)
+					if(randomValue < _world.getWorldVariables().getMutationRate())
 					{
 						randomValue = Math.random();
-						if(randomValue < UckeleoidBrain.SMALL_SCALE_MUTATION_RATE)
+						if(randomValue < _world.getWorldVariables().getMutationSmallScaleRate())
 						{
 							// Gaussian multipliplication mutation,
 							// use a gaussian approximation with a range
 							// between 0.8 - 1.2
 							double gaussianRandomValue = UckeleoidBrain.gaussian();
-							_weights[i][j][k] =  (0.8 + 0.4 * gaussianRandomValue) * _weights[i][j][k];
+							_weights[i][j][k] = (0.8 + 0.4 * gaussianRandomValue) * _weights[i][j][k];
 						}
 						else
 						{
-							randomValue -= UckeleoidBrain.SMALL_SCALE_MUTATION_RATE;
-							if(randomValue < UckeleoidBrain.RANDOM_MUTATION_RATE)
+							randomValue -= _world.getWorldVariables().getMutationSmallScaleRate();
+							if(randomValue < _world.getWorldVariables().getMutationRandomRate())
 							{
 								// Random mutation
 								_weights[i][j][k] = Math.random() * 2 - 1;
 							}
 							else
 							{
-								randomValue -= UckeleoidBrain.RANDOM_MUTATION_RATE;
-								if(randomValue < UckeleoidBrain.FLIP_MUTATION_RATE)
+								randomValue -= _world.getWorldVariables().getMutationRandomRate();
+								if(randomValue < _world.getWorldVariables().getMutationFlipRate())
 								{
 									// Flip mutation
 									_weights[i][j][k] = -_weights[i][j][k];
 								}
 								else
 								{
-									randomValue -= UckeleoidBrain.FLIP_MUTATION_RATE;
+									randomValue -= _world.getWorldVariables().getMutationFlipRate();
 								}
 							}
 						}
@@ -180,38 +180,45 @@ public class UckeleoidBrain implements Serializable
 	{
 		return(this._outputCount);
 	}
+
 	public int getInputCount()
 	{
 		return(this._inputCount);
 	}
+
 	public int getHiddenLayers()
 	{
 		return(this._hiddenLayers);
 	}
+
 	public double[][][] getWeights()
 	{
 		return(this._weights);
 	}
+
 	public void setOutputCount(int outputCount)
 	{
 		this._outputCount = outputCount;
 		resetOptimizingDataStructures();
 	}
+
 	public void setInputCount(int inputCount)
 	{
 		this._inputCount = inputCount;
 		resetOptimizingDataStructures();
 	}
+
 	public void setHiddenLayers(int hiddenLayers)
 	{
 		this._hiddenLayers = hiddenLayers;
 		resetOptimizingDataStructures();
 	}
+
 	public void setWeights(double[][][] weights)
 	{
 		this._weights = weights;
 	}
-	
+
 	public double[] outputs(double[] inputs)
 	{
 		// Clear the output units
@@ -250,7 +257,7 @@ public class UckeleoidBrain implements Serializable
 			// prior units
 			for(int j = 0; j < inputs.length; j++)
 			{
-				outputs[i] += weights[i][j+2] * inputs[j];
+				outputs[i] += weights[i][j + 2] * inputs[j];
 			}
 			// Scale for sigmoid
 			outputs[i] = UckeleoidBrain.sigmoid(outputs[i]);
@@ -262,9 +269,9 @@ public class UckeleoidBrain implements Serializable
 		StringBuffer output = new StringBuffer();
 
 		String[] lineEndLabel =
-		{ "_", "M", "L", "R", "E", "B"};
+		{ "_", "M", "L", "R", "E", "B" };
 		String[] columnHeaderLabel =
-		{ "cB", "rB", "女", "一", "中", "口", "%"};
+		{ "cB", "rB", "女", "一", "中", "口", "%" };
 
 		for(int i = 0; i < columnHeaderLabel.length; i++)
 		{
@@ -303,11 +310,11 @@ public class UckeleoidBrain implements Serializable
 	private static double gaussian()
 	{
 		double randomValue = 0;
-		for(int i = 0; i < GAUSIAN_SAMPLES; i++)
+		for(int i = 0; i < GAUSIAN_APPROXIMATION_SAMPLES; i++)
 		{
 			randomValue += Math.random();
 		}
-		return(randomValue / GAUSIAN_SAMPLES);
+		return(randomValue / GAUSIAN_APPROXIMATION_SAMPLES);
 	}
 
 	public static void main(String[] args)
@@ -318,7 +325,7 @@ public class UckeleoidBrain implements Serializable
 		{
 			System.out.println("Sigmoid(" + i + ") = " + UckeleoidBrain.sigmoid(i));
 		}
-		UckeleoidBrain brain = new UckeleoidBrain(2, 7, 0);
+		UckeleoidBrain brain = new UckeleoidBrain(null, 2, 7, 0);
 		System.out.println("Creating Brain...");
 		System.out.println(brain);
 		System.out.println("Brain Outputs for inputs");
@@ -343,7 +350,7 @@ public class UckeleoidBrain implements Serializable
 
 	public static UckeleoidBrain minBrain(LinkedList<UckeleoidBrain> brains)
 	{
-		UckeleoidBrain minBrain = new UckeleoidBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		UckeleoidBrain minBrain = new UckeleoidBrain(null, brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
 		for(UckeleoidBrain brain : brains)
 		{
@@ -364,7 +371,7 @@ public class UckeleoidBrain implements Serializable
 
 	public static UckeleoidBrain maxBrain(LinkedList<UckeleoidBrain> brains)
 	{
-		UckeleoidBrain maxBrain = new UckeleoidBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		UckeleoidBrain maxBrain = new UckeleoidBrain(null, brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
 		for(UckeleoidBrain brain : brains)
 		{
@@ -384,7 +391,7 @@ public class UckeleoidBrain implements Serializable
 
 	public static UckeleoidBrain medianBrain(LinkedList<UckeleoidBrain> brains)
 	{
-		UckeleoidBrain medianBrain = new UckeleoidBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		UckeleoidBrain medianBrain = new UckeleoidBrain(null, brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
 		for(int i = 0; i < medianBrain._weights.length; i++)
 		{
@@ -425,7 +432,7 @@ public class UckeleoidBrain implements Serializable
 
 	public static UckeleoidBrain standardDeviationBrain(LinkedList<UckeleoidBrain> brains, UckeleoidBrain medianBrain)
 	{
-		UckeleoidBrain standardDeviationBrain = new UckeleoidBrain(medianBrain._inputCount, medianBrain._outputCount, brains.get(0)._hiddenLayers);
+		UckeleoidBrain standardDeviationBrain = new UckeleoidBrain(null, medianBrain._inputCount, medianBrain._outputCount, brains.get(0)._hiddenLayers);
 		for(int i = 0; i < standardDeviationBrain._weights.length; i++)
 		{
 			for(int j = 0; j < standardDeviationBrain._weights[i].length; j++)

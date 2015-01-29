@@ -2,17 +2,24 @@ package com.johnuckele.vivarium.scripts;
 
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
+import com.johnuckele.vivarium.core.WorldVariables;
 
-public class CreateWorldScript extends Script
+public class CreateWorld extends Script
 {
-	public CreateWorldScript(String[] args)
+	public CreateWorld(String[] args)
 	{
 		super(args);
 	}
 
 	@Override protected boolean argumentCountIsValid(int argCount)
 	{
+		// Two arguments are okay
 		if(argCount == 2)
+		{
+			return true;
+		}
+		// More than two args are okay as long as the extras come in pairs
+		else if(argCount > 2 && argCount%2 == 0)
 		{
 			return true;
 		}
@@ -26,7 +33,14 @@ public class CreateWorldScript extends Script
 
 	@Override protected void run(String[] args)
 	{
-		World w = new World(Integer.parseInt(args[1]));
+		WorldVariables worldVariables = new WorldVariables();
+		// For each pair of extra arguments after the first two, set a worldVariable value
+		for(int i = 2; i+1 < args.length; i+=2)
+		{
+			worldVariables.setKeyValue(args[i], args[i+1]);
+		}
+
+		World w = new World(Integer.parseInt(args[1]), worldVariables);
 
 		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
 		System.out.println("Uckeleoid count in new world: "+uckeleoidCount);
@@ -36,6 +50,6 @@ public class CreateWorldScript extends Script
 
 	public static void main(String[] args)
 	{
-		new CreateWorldScript(args);
+		new CreateWorld(args);
 	}
 }
