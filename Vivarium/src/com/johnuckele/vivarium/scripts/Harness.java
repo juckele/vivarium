@@ -4,6 +4,8 @@ public class Harness
 {
 	public static void main(String[] args)
 	{
+		System.out.println("Harness Testing");
+		
 		{
 			String[] commandArgs =
 			{ "data/world_saves/medium.viv", "25", "uckeleoidMemoryUnitCount", "1"};
@@ -13,9 +15,21 @@ public class Harness
 
 		{
 			String[] commandArgs =
-			{ "data/world_saves/medium.viv", "20000000", "data/world_saves/medium2.viv" };
+			{ "data/world_saves/medium.viv", "20000", "data/world_saves/medium2.viv" };
 			RunSimulation.main(commandArgs);
 		}
+
+		{
+			String[] commandArgs =
+			{ "data/world_saves/medium2.viv", "data/csv/medium2_pop_summary.csv" };
+			GeneratePopulationSummaryCSV.main(commandArgs);
+		}
+
+	}
+
+	public static void inactive()
+	{
+
 
 		{
 			String[] commandArgs =
@@ -23,10 +37,6 @@ public class Harness
 			ConvertToJSON.main(commandArgs);
 		}
 
-	}
-
-	public static void inactive()
-	{
 		{
 			String[] commandArgs =
 			{ "data/world_saves/medium.viv", "20000000", "data/world_saves/medium2.viv" };

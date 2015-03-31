@@ -364,6 +364,16 @@ public class World implements Serializable
 		this._maximumUckeleoidID = maximumUckeleoidID;
 	}
 
+	public int getTickCounter()
+	{
+		return this._tickCounter;
+	}
+
+	public void setTickCounter(int tickCounter)
+	{
+		this._tickCounter = tickCounter;
+	}
+
 	public Uckeleoid getUckeleoid(int r, int c)
 	{
 		return this._uckeleoidGrid[r][c];

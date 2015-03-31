@@ -18,7 +18,7 @@ public class WorldVariables implements Serializable
 	private static final int	DEFAULT_UCKELEOID_MEMORY_UNIT_COUNT					= 0;
 	private static final double	DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE				= 0.8;
 	private static final double	DEFAULT_INHERITANCE_SINGLE_PICK_RATE				= 0.2;
-	private static final double	DEFAULT_MUTATION_RATE								= 0.001;
+	private static final double	DEFAULT_MUTATION_RATE_EXPONENT						= -7;
 	private static final double	DEFAULT_MUTATION_SMALL_SCALE_RATE					= 0.5;
 	private static final double	DEFAULT_MUTATION_RANDOM_RATE						= 0.25;
 	private static final double	DEFAULT_MUTATION_FLIP_RATE							= 0.25;
@@ -37,6 +37,7 @@ public class WorldVariables implements Serializable
 	private double				_inheritanceGaussianMixRate;
 	private double				_inheritanceSinglePickRate;
 	private double				_mutationRate;
+	private double				_mutationRateExponent;
 	private double				_mutationSmallScaleRate;
 	private double				_mutationRandomRate;
 	private double				_mutationFlipRate;
@@ -51,7 +52,7 @@ public class WorldVariables implements Serializable
 		setUckeleoidMemoryUnitCount(DEFAULT_UCKELEOID_MEMORY_UNIT_COUNT);
 		setInheritanceGaussianMixRate(DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE);
 		setInheritanceSinglePickRate(DEFAULT_INHERITANCE_SINGLE_PICK_RATE);
-		setMutationRate(DEFAULT_MUTATION_RATE);
+		setMutationRateExponent(DEFAULT_MUTATION_RATE_EXPONENT);
 		setMutationSmallScaleRate(DEFAULT_MUTATION_SMALL_SCALE_RATE);
 		setMutationRandomRate(DEFAULT_MUTATION_RANDOM_RATE);
 		setMutationFlipRate(DEFAULT_MUTATION_FLIP_RATE);
@@ -132,9 +133,15 @@ public class WorldVariables implements Serializable
 		return _mutationRate;
 	}
 
-	public void setMutationRate(double mutationRate)
+	public double getMutationRateExponent()
 	{
-		this._mutationRate = mutationRate;
+		return _mutationRateExponent;
+	}
+
+	public void setMutationRateExponent(double mutationRateExponent)
+	{
+		this._mutationRateExponent = mutationRateExponent;
+		this._mutationRate = Math.pow(2, mutationRateExponent);
 	}
 
 	public double getMutationSmallScaleRate()
@@ -194,8 +201,8 @@ public class WorldVariables implements Serializable
 			case "inheritanceSinglePickRate":
 				this.setInheritanceSinglePickRate(Double.parseDouble(value));
 				break;
-			case "mutationRate":
-				this.setMutationRate(Double.parseDouble(value));
+			case "mutationRateExponent":
+				this.setMutationRateExponent(Double.parseDouble(value));
 				break;
 			case "mutationSmallScaleRate":
 				this.setMutationSmallScaleRate(Double.parseDouble(value));

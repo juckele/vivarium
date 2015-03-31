@@ -64,7 +64,7 @@ public class WorldViewer extends JFrame
 			if(tick % renderEvery == 0)
 			{
 				_overviewRenders.add(_w.toString(RenderCode.MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
-				_ratListRenders.add(_w.toString(RenderCode.UCKELEOID_LIST));
+				_ratListRenders.add(_w.toString(RenderCode.LIVE_UCKELEOID_LIST));
 				System.out.println("Population "+_w.getCount(WorldObject.UCKELEOID));
 				Script.saveWorld(_w, "data/world_saves/world_viewer/tick"+tick+".viv", Format.JAVA_SERIALIZABLE);
 /*				long now = System.currentTimeMillis();
@@ -96,7 +96,7 @@ public class WorldViewer extends JFrame
 
 	public static void main(String[] args)
 	{
-		int worldDimensions = 25;
+		int worldDimensions = 10;
 		System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
 		World w = new World(worldDimensions, new WorldVariables());
 		System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
@@ -104,7 +104,7 @@ public class WorldViewer extends JFrame
 
 		WorldViewer wh = new WorldViewer(w);
 		wh.runAndRenderTicks(2000000, 2000);
-//		wh.runAndRenderTicks(1000, 1);
+//		wh.runAndRenderTicks(20000, 1);
 
 		System.out.println("Finished simulations");
 	}

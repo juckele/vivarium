@@ -17,6 +17,7 @@ public class JSONEncoder
 		JSONObject worldJSON = new JSONObject();
 		// Store basic values
 		worldJSON.put("maximumUckeleoidID", w.getMaximumUckeleoidID());
+		worldJSON.put("tickCounter", w.getTickCounter());
 		worldJSON.put("worldDimensions", w.getWorldDimensions());
 
 		// Store world variables
@@ -62,7 +63,7 @@ public class JSONEncoder
 		worldVariablesJSON.put("uckeleoidMemoryUnitCount", worldVariables.getUckeleoidMemoryUnitCount());
 		worldVariablesJSON.put("inheritanceGaussianMixRate", worldVariables.getInheritanceGaussianMixRate());
 		worldVariablesJSON.put("inheritanceSinglePickRate", worldVariables.getInheritanceSinglePickRate());
-		worldVariablesJSON.put("mutationRate", worldVariables.getMutationRate());
+		worldVariablesJSON.put("mutationRateExponent", worldVariables.getMutationRateExponent());
 		worldVariablesJSON.put("mutationSmallScaleRate", worldVariables.getMutationSmallScaleRate());
 		worldVariablesJSON.put("mutationRandomRate", worldVariables.getMutationRandomRate());
 		worldVariablesJSON.put("mutationFlipRate", worldVariables.getMutationFlipRate());
