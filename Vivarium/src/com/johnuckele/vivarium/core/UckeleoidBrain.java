@@ -248,7 +248,6 @@ public class UckeleoidBrain implements Serializable
 
 	public void computeLayerInPlace(double[] inputs, double[] outputs, double[][] weights)
 	{
-		// A NN with no hidden layers
 		for(int i = 0; i < outputs.length; i++)
 		{
 			// Bias units
