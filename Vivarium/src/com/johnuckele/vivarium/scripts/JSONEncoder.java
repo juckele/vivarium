@@ -53,7 +53,10 @@ public class JSONEncoder
 	{
 		JSONObject worldVariablesJSON = new JSONObject();
 
-		// world gen
+		// Program options
+		worldVariablesJSON.put("rememberTheDead", worldVariables.getRememberTheDead());
+
+		// World gen
 		worldVariablesJSON.put("foodGenerationProbability", worldVariables.getFoodGenerationProbability());
 		worldVariablesJSON.put("initialFoodGenerationProbability", worldVariables.getInitialFoodGenerationProbability());
 		worldVariablesJSON.put("initialUckeleoidGenerationProbability", worldVariables.getInitialUckeleoidGenerationProbability());

@@ -33,7 +33,7 @@ public class ConvertToJSON extends Script
 		World w = loadWorld(args[0], Format.JAVA_SERIALIZABLE);
 
 		// Save
-		saveWorld(w, args[1], Format.JSON);
+		Script.saveWorld(w, args[1], Format.JSON);
 	}
 
 	public static void main(String[] args)

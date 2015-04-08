@@ -5,9 +5,13 @@ import java.io.Serializable;
 public class WorldVariables implements Serializable
 {
 	private static final long	serialVersionUID									= 1L;
+
 	/**
 	 * Default values
 	 */
+	// Program Options
+	private static final boolean	DEFAULT_REMEMBER_THE_DEAD						= false;
+
 	// World Gen
 	private static final double	DEFAULT_FOOD_GENERATION_PROBABILITY					= 0.01;
 	private static final double	DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY			= 0.2;
@@ -26,6 +30,9 @@ public class WorldVariables implements Serializable
 	/**
 	 * Instance variables
 	 */
+	// Program Options
+	private boolean				_rememberTheDead;
+
 	// World Gen
 	private double				_foodGenerationProbability;
 	private double				_initialFoodGenerationProbability;
@@ -44,6 +51,8 @@ public class WorldVariables implements Serializable
 
 	public WorldVariables()
 	{
+		setRememberTheDead(DEFAULT_REMEMBER_THE_DEAD);
+		
 		setFoodGenerationProbability(DEFAULT_FOOD_GENERATION_PROBABILITY);
 		setInitialFoodGenerationProbability(DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY);
 		setInitialUckeleoidGenerationProbability(DEFAULT_INITIAL_UCKELEOID_GENERATION_PROBABILITY);
@@ -58,14 +67,24 @@ public class WorldVariables implements Serializable
 		setMutationFlipRate(DEFAULT_MUTATION_FLIP_RATE);
 	}
 
+	public boolean getRememberTheDead()
+	{
+		return _rememberTheDead;
+	}
+
+	public void setRememberTheDead(boolean rememberTheDead)
+	{
+		_rememberTheDead = rememberTheDead;
+	}
+
 	public double getFoodGenerationProbability()
 	{
 		return _foodGenerationProbability;
 	}
 
-	public void setFoodGenerationProbability(double food_generation_probability)
+	public void setFoodGenerationProbability(double foodGenerationProbability)
 	{
-		this._foodGenerationProbability = food_generation_probability;
+		this._foodGenerationProbability = foodGenerationProbability;
 	}
 
 	public double getInitialFoodGenerationProbability()

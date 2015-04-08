@@ -207,7 +207,10 @@ public class World implements Serializable
 		for(Uckeleoid deadUckeleoid : dyingUckeleoids)
 		{
 			this._liveUckeleoidList.remove(deadUckeleoid);
-			this._deadUckeleoidList.add(deadUckeleoid);
+			if(this._worldVariables.getRememberTheDead())
+			{
+				this._deadUckeleoidList.add(deadUckeleoid);
+			}
 		}
 		// Add newborn rats
 		for(Uckeleoid spawningUckeleoid : spawningUckeleoids)
