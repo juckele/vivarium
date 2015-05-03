@@ -117,7 +117,11 @@ public class UckeleoidBrain implements Serializable
 					// approximation.
 					if(randomValue < _world.getWorldVariables().getInheritanceGaussianMixRate())
 					{
-						double gaussianRandomValue = UckeleoidBrain.gaussian();
+						// Radnom.nextGaussian generates a Gaussian with μ = 0 and σ = 1
+						// but we want μ = 0.5 and σ = 0.5 to mix between numbers
+						// This can cause a mix to introduce values higher or lower than
+						// either parent, which is by design.
+						double gaussianRandomValue = World.RANDOM.nextGaussian() / 2 + 0.5;
 						double weightDifference = brain2._weights[i][j][k] - brain1._weights[i][j][k];
 						_weights[i][j][k] = brain1._weights[i][j][k] + gaussianRandomValue * weightDifference;
 					}
@@ -143,10 +147,9 @@ public class UckeleoidBrain implements Serializable
 						if(randomValue < _world.getWorldVariables().getMutationSmallScaleRate())
 						{
 							// Gaussian multipliplication mutation,
-							// use a gaussian approximation with a range
-							// between 0.8 - 1.2
-							double gaussianRandomValue = UckeleoidBrain.gaussian();
-							_weights[i][j][k] = (0.8 + 0.4 * gaussianRandomValue) * _weights[i][j][k];
+							// μ = 1 and σ = 0.2
+							double gaussianRandomValue = World.RANDOM.nextGaussian() / 5 + 1;
+							_weights[i][j][k] = gaussianRandomValue * _weights[i][j][k];
 						}
 						else
 						{
@@ -304,16 +307,6 @@ public class UckeleoidBrain implements Serializable
 	private static double sigmoid(double x)
 	{
 		return 1 / (1 + Math.exp(-x));
-	}
-
-	private static double gaussian()
-	{
-		double randomValue = 0;
-		for(int i = 0; i < GAUSIAN_APPROXIMATION_SAMPLES; i++)
-		{
-			randomValue += Math.random();
-		}
-		return(randomValue / GAUSIAN_APPROXIMATION_SAMPLES);
 	}
 
 	public static void main(String[] args)

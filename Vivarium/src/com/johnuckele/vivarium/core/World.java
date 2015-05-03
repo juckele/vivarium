@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
+import java.util.Random;
 
 import com.johnuckele.vivarium.visualization.RenderCode;
 
@@ -13,6 +14,7 @@ public class World implements Serializable
 	 * serialVersion
 	 */
 	private static final long		serialVersionUID					= 4L;
+	public static Random RANDOM = new Random();
 
 	private WorldVariables			_worldVariables;
 
