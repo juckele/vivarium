@@ -38,7 +38,7 @@ public class Uckeleoid implements Serializable
 	private double[]			_memoryUnits;
 
 	// State
-	private boolean				_isFemale;
+	private Gender				_gender;
 	private double				_randomSeed;
 	private int					_age;
 	private int					_gestation;
@@ -50,7 +50,8 @@ public class Uckeleoid implements Serializable
 	private Uckeleoid			_fetus;
 
 	// Action history
-	private ActionHistory	_actionHistory;
+	private ActionProfile		_actionProfile;
+	private ActionProfile		_generationGenderActionProfile;
 
 	// Randomly initialized Uckeleoid
 	public Uckeleoid(World world, int r, int c)
@@ -114,11 +115,11 @@ public class Uckeleoid implements Serializable
 		double randomNumber = Math.random();
 		if(randomNumber < DEFAULT_FEMALE_THRESHOLD)
 		{
-			this._isFemale = true;
+			this._gender = Gender.FEMALE;
 		}
 		else
 		{
-			this._isFemale = false;
+			this._gender = Gender.MALE;
 		}
 
 		// Set food trait preferences
@@ -131,7 +132,11 @@ public class Uckeleoid implements Serializable
 		this._facing = Direction.NORTH;
 		this._action = UckeleoidAction.REST;
 
-		this._actionHistory = new ActionHistory();
+		if(this._world.getWorldVariables().getKeepGenerationActionProfile())
+		{
+			this._actionProfile = new ActionProfile();
+			this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int) this._generation, this._gender);
+		}
 	}
 
 	public void tick()
@@ -175,7 +180,7 @@ public class Uckeleoid implements Serializable
 			int facingR = this._r + Direction.getVerticalComponent(this._facing);
 			int facingC = this._c + Direction.getHorizontalComponent(this._facing);
 			WorldObject facingObject = this._world.getWorldObject(facingR, facingC);
-			_inputs[0] = this._isFemale ? 1 : 0;
+			_inputs[0] = this._gender == Gender.FEMALE ? 1 : 0;
 			_inputs[1] = facingObject == WorldObject.FOOD ? 1 : 0;
 			_inputs[2] = facingObject == WorldObject.UCKELEOID ? 1 : 0;
 			_inputs[3] = facingObject == WorldObject.WALL ? 1 : 0;
@@ -252,12 +257,12 @@ public class Uckeleoid implements Serializable
 
 	public void setIsFemale(boolean isFemale)
 	{
-		this._isFemale = isFemale;
+		this._gender = isFemale ? Gender.FEMALE : Gender.MALE;
 	}
 
 	public boolean getIsFemale()
 	{
-		return(this._isFemale);
+		return(this._gender == Gender.FEMALE);
 	}
 
 	public Uckeleoid getFetus()
@@ -284,7 +289,7 @@ public class Uckeleoid implements Serializable
 				break;
 			case BREED:
 				assert breedingTarget != null;
-				if(this._isFemale && this._gestation < 1)
+				if(this._gender == Gender.FEMALE && this._gestation < 1)
 				{
 					this._gestation = 1;
 					this._fetus = createOffspringWith(breedingTarget);
@@ -318,7 +323,12 @@ public class Uckeleoid implements Serializable
 				new Error().printStackTrace();
 				break;
 		}
-		this._actionHistory.recordAction(action, true);
+		if(this._world.getWorldVariables().getKeepGenerationActionProfile())
+		{
+			this._actionProfile.recordAction(action, true);
+			this._generationGenderActionProfile.recordAction(action, true);
+		}
+
 	}
 
 	public void failAction(UckeleoidAction action)
@@ -354,7 +364,11 @@ public class Uckeleoid implements Serializable
 				new Error().printStackTrace();
 				break;
 		}
-		this._actionHistory.recordAction(action, false);
+		if(this._world.getWorldVariables().getKeepGenerationActionProfile())
+		{
+			this._actionProfile.recordAction(action, false);
+			this._generationGenderActionProfile.recordAction(action, false);
+		}
 	}
 
 	private Uckeleoid createOffspringWith(Uckeleoid breedingTarget)
@@ -374,7 +388,7 @@ public class Uckeleoid implements Serializable
 		output.append(") ");
 		output.append("GEN-");
 		output.append(this._generation);
-		if(this._isFemale)
+		if(this._gender == Gender.FEMALE)
 		{
 			output.append('女');
 		}
@@ -484,13 +498,20 @@ public class Uckeleoid implements Serializable
 		this._brain = brain;
 	}
 
-	public ActionHistory getActionHistory()
+	public ActionProfile getActionHistory()
 	{
-		return _actionHistory;
+		if(this._world.getWorldVariables().getKeepGenerationActionProfile())
+		{
+			return _actionProfile;
+		}
+		else
+		{
+			throw new Error("Action Profiles are not supported in this world");
+		}
 	}
 
-	public void setActionHistory(ActionHistory _actionHistory)
+	public void setActionHistory(ActionProfile _actionHistory)
 	{
-		this._actionHistory = _actionHistory;
+		this._actionProfile = _actionHistory;
 	}
 }

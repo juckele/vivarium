@@ -12,6 +12,7 @@ public class WorldVariables implements Serializable
 	// Program Options
 	private static final boolean	DEFAULT_REMEMBER_THE_DEAD						= false;
 	private static final boolean	DEFAULT_KEEP_CENSUS_DATA						= false;
+	private static final boolean	DEFAULT_KEEP_GENERATION_ACTION_PROFILE			= false;
 
 	// World Gen
 	private static final double	DEFAULT_FOOD_GENERATION_PROBABILITY					= 0.01;
@@ -33,6 +34,7 @@ public class WorldVariables implements Serializable
 		// Program Options
 		"rememberTheDead",
 		"keepCensusData",
+		"keepGenerationActionProfile",
 		// World Gen
 		"foodGenerationProbability",
 		"initialFoodGenerationProbability",
@@ -55,6 +57,7 @@ public class WorldVariables implements Serializable
 	// Program Options
 	private boolean				_rememberTheDead;
 	private boolean				_keepCensusData;
+	private boolean				_keepGenerationActionProfile;
 
 	// World Gen
 	private double				_foodGenerationProbability;
@@ -77,6 +80,7 @@ public class WorldVariables implements Serializable
 		// Program Options
 		setRememberTheDead(DEFAULT_REMEMBER_THE_DEAD);
 		setKeepCensusData(DEFAULT_KEEP_CENSUS_DATA);
+		setKeepGenerationActionProfile(DEFAULT_KEEP_GENERATION_ACTION_PROFILE);
 		
 		// World Gen
 		setFoodGenerationProbability(DEFAULT_FOOD_GENERATION_PROBABILITY);
@@ -122,6 +126,16 @@ public class WorldVariables implements Serializable
 	public void setKeepCensusData(boolean keepCensusData)
 	{
 		_keepCensusData = keepCensusData;
+	}
+
+	public boolean getKeepGenerationActionProfile()
+	{
+		return _keepGenerationActionProfile;
+	}
+
+	public void setKeepGenerationActionProfile(boolean keepGenerationActionProfile)
+	{
+		_keepGenerationActionProfile = keepGenerationActionProfile;
 	}
 
 	public double getFoodGenerationProbability()
@@ -250,6 +264,9 @@ public class WorldVariables implements Serializable
 				break;
 			case "keepCensusData":
 				this.setKeepCensusData(Boolean.parseBoolean(value));
+				break;
+			case "keepGenerationActionProfile":
+				this.setKeepGenerationActionProfile(Boolean.parseBoolean(value));
 				break;
 			// World Gen
 			case "foodGenerationProbability":

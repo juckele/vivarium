@@ -26,20 +26,35 @@ public class World implements Serializable
 	protected Uckeleoid[][]			_uckeleoidGrid;
 	protected LinkedList<Uckeleoid>	_liveUckeleoidList;
 	private LinkedList<Uckeleoid>	_deadUckeleoidList;
+	
+	// Optional data strucures
 	private CensusRecord			_census;
+	private LinkedList<ActionProfile> _generationalMaleActionProfiles;
+	private LinkedList<ActionProfile> _generationalFemaleActionProfiles;
 
 	public World(int worldDimensions, WorldVariables worldVariables)
 	{
+		// Set up base variables
 		this._worldVariables = worldVariables;
 		this._maximumUckeleoidID = 0;
 		this._tickCounter = 0;
 
+		// Size the world
 		this.setWorldDimensions(worldDimensions);
-		this.populatateWorld();
+
+		// Build supporting data structures as required by config variables
 		if(this._worldVariables.getKeepCensusData())
 		{
 			this._census = new CensusRecord(this.getCount(WorldObject.UCKELEOID));
 		}
+		if(this._worldVariables.getKeepGenerationActionProfile())
+		{
+			_generationalMaleActionProfiles = new LinkedList<ActionProfile>();
+			_generationalFemaleActionProfiles = new LinkedList<ActionProfile>();
+		}
+
+		// Final step
+		this.populatateWorld();
 	}
 
 	public int getWorldDimensions()
@@ -450,6 +465,47 @@ public class World implements Serializable
 		}
 	}
 
+	public ActionProfile getActionProfileForGeneration(int generation, Gender gender)
+	{
+		// Populate new generation trackers as required
+		while(_generationalFemaleActionProfiles.size() < generation)
+		{
+			_generationalFemaleActionProfiles.add(new ActionProfile());
+			_generationalMaleActionProfiles.add(new ActionProfile());
+		}
+		// Get the requested generationalActionProfile
+		if(gender == Gender.FEMALE)
+		{
+			return _generationalFemaleActionProfiles.get(generation-1);
+		}
+		else
+		{
+			return _generationalMaleActionProfiles.get(generation-1);
+		}
+	}
+
+	public LinkedList<ActionProfile> getAllActionProfilesForGender(Gender gender)
+	{
+		if(this._worldVariables.getKeepGenerationActionProfile())
+		{
+			LinkedList<ActionProfile> actionProfiles = new LinkedList<ActionProfile>();
+			if(gender == Gender.FEMALE)
+			{
+				actionProfiles.addAll(this._generationalFemaleActionProfiles);
+			}
+			if(gender == Gender.MALE)
+			{
+				actionProfiles.addAll(this._generationalMaleActionProfiles);
+			}
+			return actionProfiles;
+		}
+		else 
+		{
+			throw new Error("Census data not available due to world configuration settings");
+		}
+	}
+
+	
 	public String toString(RenderCode code)
 	{
 		if(code == RenderCode.MAP)

@@ -13,7 +13,6 @@ public class GenerateCensusCSVTest
 			String[] commandArgs =
 			{ "test.viv", "25", "keepCensusData", "true"};
 			CreateWorld.main(commandArgs);
-			assertTrue("keepCensusData can be set to true", true);
 		}
 		// Get the census before doing any simulations in the new world
 		{

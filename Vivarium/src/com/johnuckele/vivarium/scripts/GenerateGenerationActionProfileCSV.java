@@ -1,9 +1,10 @@
 package com.johnuckele.vivarium.scripts;
 
 import java.util.Iterator;
+import java.util.LinkedList;
 
-import com.johnuckele.vivarium.core.ActionHistory;
-import com.johnuckele.vivarium.core.Uckeleoid;
+import com.johnuckele.vivarium.core.ActionProfile;
+import com.johnuckele.vivarium.core.Gender;
 import com.johnuckele.vivarium.core.UckeleoidAction;
 import com.johnuckele.vivarium.core.World;
 
@@ -35,40 +36,37 @@ public class GenerateGenerationActionProfileCSV extends Script
 
 		// Build the CSV data
 		StringBuilder csvStringBuilder = new StringBuilder("generation,action,action_success,female,count\n");
-		int generation = 1;
-		ActionHistory femaleGenerationActionHistory = new ActionHistory();
-		ActionHistory maleGenerationActionHistory = new ActionHistory();
-		ActionHistory uckeleoidActionHistory;
-		Iterator<Uckeleoid> it = w.getAllUckeleoids().iterator();
-		while(it.hasNext())
+		LinkedList<ActionProfile> femaleActionProfiles = w.getAllActionProfilesForGender(Gender.FEMALE);
+		LinkedList<ActionProfile> maleActionProfiles = w.getAllActionProfilesForGender(Gender.MALE);
+		
+		int generation=0;
+		Iterator<ActionProfile> femaleIterator = femaleActionProfiles.iterator();
+		Iterator<ActionProfile> maleIterator = maleActionProfiles.iterator();
+		while(femaleIterator.hasNext())
 		{
-			Uckeleoid u = it.next();
-			uckeleoidActionHistory = u.getActionHistory();
+			generation++;
+			ActionProfile femaleGenerationActionProfile = femaleIterator.next();
+			ActionProfile maleGenerationActionProfile = maleIterator.next();
 
-			// If this uckeleoid is part of the next generation
-			// write the action history for the last generation and start a new
-			// one
-			if((int) u.getGeneration() > generation)
+			// Generate CSV rows
+			for(int i = 0; i < 2; i++)
 			{
-				// Generate CSV row
-				for(int i = 0; i < 2; i++)
+				for(int j = 0; j < UckeleoidAction.getDistinctActionCount(); j++)
 				{
-					for(int j = 0; j < UckeleoidAction.getDistinctActionCount(); j++)
+					for(int k = 0; k < 2; k++)
 					{
-						for(int k = 0; k < 2; k++)
-						{
 						UckeleoidAction action = UckeleoidAction.convertIntegerToAction(j);
 						boolean actionSuccess = i == 1;
 						boolean isFemale = k == 1;
 						int actionCount;
 						if(isFemale)
 						{
-							 actionCount = femaleGenerationActionHistory.getActionCount(action, actionSuccess);
+							 actionCount = femaleGenerationActionProfile.getActionCount(action, actionSuccess);
 							
 						}
 						else
 						{
-							 actionCount = maleGenerationActionHistory.getActionCount(action, actionSuccess);
+							 actionCount = maleGenerationActionProfile.getActionCount(action, actionSuccess);
 							
 						}
 						csvStringBuilder.append(generation);
@@ -81,36 +79,9 @@ public class GenerateGenerationActionProfileCSV extends Script
 						csvStringBuilder.append(',');
 						csvStringBuilder.append(actionCount);
 						csvStringBuilder.append('\n');
-						}
 					}
 				}
-				// Start new generation data
-				generation = (int)u.getGeneration();
-				femaleGenerationActionHistory = new ActionHistory();
-				maleGenerationActionHistory = new ActionHistory();
-				if(u.getIsFemale())
-				{
-					femaleGenerationActionHistory.addActionHistory(uckeleoidActionHistory);
-				}
-				else
-				{
-					maleGenerationActionHistory.addActionHistory(uckeleoidActionHistory);
-				}
 			}
-			// Otherwise, just append this uckeleoid's action history to their
-			// generation's
-			else
-			{
-				if(u.getIsFemale())
-				{
-					femaleGenerationActionHistory.addActionHistory(uckeleoidActionHistory);
-				}
-				else
-				{
-					maleGenerationActionHistory.addActionHistory(uckeleoidActionHistory);
-				}
-			}
-
 		}
 
 		// Save

@@ -2,13 +2,13 @@ package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 
-public class ActionHistory implements Serializable
+public class ActionProfile implements Serializable
 {
 	private static final long	serialVersionUID	= 1L;
 
 	int[][] _actionCount;
 	
-	public ActionHistory()
+	public ActionProfile()
 	{
 		_actionCount = new int[2][UckeleoidAction.getDistinctActionCount()];
 	}
@@ -25,7 +25,7 @@ public class ActionHistory implements Serializable
 		return(_actionCount[didSucceed ? 1 : 0][actionInt]);
 	}
 
-	public void addActionHistory(ActionHistory history)
+	public void addActionHistory(ActionProfile history)
 	{
 		for(int i = 0; i < 2; i++)
 		{
