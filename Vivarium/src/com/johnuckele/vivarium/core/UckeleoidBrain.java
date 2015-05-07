@@ -11,11 +11,6 @@ public class UckeleoidBrain implements Serializable
 	 */
 	private static final long	serialVersionUID				= 4L;
 
-	/**
-	 * Constants
-	 */
-	private static final int	GAUSIAN_APPROXIMATION_SAMPLES	= 10;
-
 	// World object which we're apart of
 	private World _world;
 	
