@@ -27,6 +27,26 @@ public class WorldVariables implements Serializable
 	private static final double	DEFAULT_MUTATION_RANDOM_RATE						= 0.25;
 	private static final double	DEFAULT_MUTATION_FLIP_RATE							= 0.25;
 
+	private static final String[] VARIABLE_NAMES =
+	{
+		// Program Options
+		"rememberTheDead",
+		// World Gen
+		"foodGenerationProbability",
+		"initialFoodGenerationProbability",
+		"initialUckeleoidGenerationProbability",
+		"initialWallGenerationProbability",
+		// Uckeleoid Neurology
+		"uckeleoidMemoryUnitCount",
+		"inheritanceGaussianMixRate",
+		"inheritanceSinglePickRate",
+		"mutationRate",
+		"mutationRateExponent",
+		"mutationSmallScaleRate",
+		"mutationRandomRate",
+		"mutationFlipRate"
+	};
+
 	/**
 	 * Instance variables
 	 */
@@ -51,13 +71,16 @@ public class WorldVariables implements Serializable
 
 	public WorldVariables()
 	{
+		// Program Options
 		setRememberTheDead(DEFAULT_REMEMBER_THE_DEAD);
 		
+		// World Gen
 		setFoodGenerationProbability(DEFAULT_FOOD_GENERATION_PROBABILITY);
 		setInitialFoodGenerationProbability(DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY);
 		setInitialUckeleoidGenerationProbability(DEFAULT_INITIAL_UCKELEOID_GENERATION_PROBABILITY);
 		setInitialWallGenerationProbability(DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY);
 
+		// Uckeleoid Neurology
 		setUckeleoidMemoryUnitCount(DEFAULT_UCKELEOID_MEMORY_UNIT_COUNT);
 		setInheritanceGaussianMixRate(DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE);
 		setInheritanceSinglePickRate(DEFAULT_INHERITANCE_SINGLE_PICK_RATE);
@@ -65,6 +88,16 @@ public class WorldVariables implements Serializable
 		setMutationSmallScaleRate(DEFAULT_MUTATION_SMALL_SCALE_RATE);
 		setMutationRandomRate(DEFAULT_MUTATION_RANDOM_RATE);
 		setMutationFlipRate(DEFAULT_MUTATION_FLIP_RATE);
+	}
+
+	/**
+	 * Returns the names in string form of all variables tracked by
+	 * a WorldVariables objects.
+	 * @return
+	 */
+	public static String[] getVariablesNames()
+	{
+		return WorldVariables.VARIABLE_NAMES;
 	}
 
 	public boolean getRememberTheDead()
@@ -197,6 +230,10 @@ public class WorldVariables implements Serializable
 	{
 		switch(key)
 		{
+			// Program Options
+			case "rememberTheDead":
+				this.setRememberTheDead(Boolean.parseBoolean(value));
+				break;
 			// World Gen
 			case "foodGenerationProbability":
 				this.setFoodGenerationProbability(Double.parseDouble(value));

@@ -96,7 +96,7 @@ public class WorldViewer extends JFrame
 
 	public static void main(String[] args)
 	{
-		int worldDimensions = 10;
+		int worldDimensions = 30;
 		System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
 		World w = new World(worldDimensions, new WorldVariables());
 		System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);

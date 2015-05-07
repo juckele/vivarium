@@ -28,7 +28,6 @@ public class World implements Serializable
 	private LinkedList<Uckeleoid>	_deadUckeleoidList;
 	private CensusRecord			_census;
 
-
 	public World(int worldDimensions, WorldVariables worldVariables)
 	{
 		this._worldVariables = worldVariables;
