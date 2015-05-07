@@ -11,6 +11,7 @@ public class WorldVariables implements Serializable
 	 */
 	// Program Options
 	private static final boolean	DEFAULT_REMEMBER_THE_DEAD						= false;
+	private static final boolean	DEFAULT_KEEP_CENSUS_DATA						= false;
 
 	// World Gen
 	private static final double	DEFAULT_FOOD_GENERATION_PROBABILITY					= 0.01;
@@ -31,6 +32,7 @@ public class WorldVariables implements Serializable
 	{
 		// Program Options
 		"rememberTheDead",
+		"keepCensusData",
 		// World Gen
 		"foodGenerationProbability",
 		"initialFoodGenerationProbability",
@@ -52,6 +54,7 @@ public class WorldVariables implements Serializable
 	 */
 	// Program Options
 	private boolean				_rememberTheDead;
+	private boolean				_keepCensusData;
 
 	// World Gen
 	private double				_foodGenerationProbability;
@@ -73,6 +76,7 @@ public class WorldVariables implements Serializable
 	{
 		// Program Options
 		setRememberTheDead(DEFAULT_REMEMBER_THE_DEAD);
+		setKeepCensusData(DEFAULT_KEEP_CENSUS_DATA);
 		
 		// World Gen
 		setFoodGenerationProbability(DEFAULT_FOOD_GENERATION_PROBABILITY);
@@ -108,6 +112,16 @@ public class WorldVariables implements Serializable
 	public void setRememberTheDead(boolean rememberTheDead)
 	{
 		_rememberTheDead = rememberTheDead;
+	}
+
+	public boolean getKeepCensusData()
+	{
+		return _keepCensusData;
+	}
+
+	public void setKeepCensusData(boolean keepCensusData)
+	{
+		_keepCensusData = keepCensusData;
 	}
 
 	public double getFoodGenerationProbability()
@@ -233,6 +247,9 @@ public class WorldVariables implements Serializable
 			// Program Options
 			case "rememberTheDead":
 				this.setRememberTheDead(Boolean.parseBoolean(value));
+				break;
+			case "keepCensusData":
+				this.setKeepCensusData(Boolean.parseBoolean(value));
 				break;
 			// World Gen
 			case "foodGenerationProbability":

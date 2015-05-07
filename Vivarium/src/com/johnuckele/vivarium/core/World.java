@@ -36,7 +36,10 @@ public class World implements Serializable
 
 		this.setWorldDimensions(worldDimensions);
 		this.populatateWorld();
-		this._census = new CensusRecord(this.getCount(WorldObject.UCKELEOID));
+		if(this._worldVariables.getKeepCensusData())
+		{
+			this._census = new CensusRecord(this.getCount(WorldObject.UCKELEOID));
+		}
 	}
 
 	public int getWorldDimensions()
@@ -117,7 +120,10 @@ public class World implements Serializable
 
 		// Keep the census up to date
 		this._tickCounter++;
-		this._census.updateRecords(this._tickCounter, this._liveUckeleoidList.size());
+		if(this._worldVariables.getKeepCensusData())
+		{
+			this._census.updateRecords(this._tickCounter, this._liveUckeleoidList.size());
+		}
 	}
 
 	private void tickUckeleoids()
@@ -339,7 +345,14 @@ public class World implements Serializable
 
 	public CensusRecord getCensus()
 	{
-		return this._census;
+		if(this._worldVariables.getKeepCensusData())
+		{
+			return this._census;
+		}
+		else 
+		{
+			throw new Error("Census data not available due to world configuration settings");
+		}
 	}
 
 	public int getCount(WorldObject obj)
