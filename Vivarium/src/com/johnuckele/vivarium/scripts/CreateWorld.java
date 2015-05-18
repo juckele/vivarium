@@ -28,7 +28,7 @@ public class CreateWorld extends Script
 
 	@Override protected String getUsage()
 	{
-		return "Usage: java scriptPath filePath dimensions";
+		return "Usage: java scriptPath filePath dimensions [worldVariableKey worldVariableValue]*";
 	}
 
 	@Override protected void run(String[] args)

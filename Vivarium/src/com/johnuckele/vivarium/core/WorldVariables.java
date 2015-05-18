@@ -44,7 +44,6 @@ public class WorldVariables implements Serializable
 		"uckeleoidMemoryUnitCount",
 		"inheritanceGaussianMixRate",
 		"inheritanceSinglePickRate",
-		"mutationRate",
 		"mutationRateExponent",
 		"mutationSmallScaleRate",
 		"mutationRandomRate",

@@ -501,7 +501,7 @@ public class World implements Serializable
 		}
 		else 
 		{
-			throw new Error("Census data not available due to world configuration settings");
+			throw new Error("Generational Action Profile data not available due to world configuration settings");
 		}
 	}
 
