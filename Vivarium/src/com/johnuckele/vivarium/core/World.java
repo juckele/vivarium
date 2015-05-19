@@ -42,11 +42,7 @@ public class World implements Serializable
 		// Size the world
 		this.setWorldDimensions(worldDimensions);
 
-		// Build supporting data structures as required by config variables
-		if(this._worldVariables.getKeepCensusData())
-		{
-			this._census = new CensusRecord(this.getCount(WorldObject.UCKELEOID));
-		}
+		// Build the action profile data structures
 		if(this._worldVariables.getKeepGenerationActionProfile())
 		{
 			_generationalMaleActionProfiles = new LinkedList<ActionProfile>();
@@ -55,6 +51,12 @@ public class World implements Serializable
 
 		// Final step
 		this.populatateWorld();
+
+		// Take an initial census
+		if(this._worldVariables.getKeepCensusData())
+		{
+			this._census = new CensusRecord(this.getCount(WorldObject.UCKELEOID));
+		}
 	}
 
 	public int getWorldDimensions()
