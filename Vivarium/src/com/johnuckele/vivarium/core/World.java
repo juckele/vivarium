@@ -124,6 +124,9 @@ public class World implements Serializable
 		// gestation, and energy levels.
 		tickUckeleoids();
 
+		// Uckeleoids transmit sound
+		transmitSounds();
+		
 		// Each uckeleoid plans which actions to
 		// attempt to do during the next phase
 		letUckeleoidsPlan();
@@ -152,6 +155,20 @@ public class World implements Serializable
 				if(_worldObjectGrid[r][c] == WorldObject.UCKELEOID)
 				{
 					_uckeleoidGrid[r][c].tick();
+				}
+			}
+		}
+	}
+
+	private void transmitSounds()
+	{
+		for(Uckeleoid listeningUckeleoid : this._liveUckeleoidList)
+		{
+			for(Uckeleoid speakingUckeleoid : this._liveUckeleoidList)
+			{
+				if( listeningUckeleoid != speakingUckeleoid )
+				{
+					listeningUckeleoid.listenToUckeleoid(speakingUckeleoid);
 				}
 			}
 		}

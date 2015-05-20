@@ -2,13 +2,12 @@ package com.johnuckele.vivarium.visualization;
 
 import java.util.ArrayList;
 
-import javax.swing.*;
+import javax.swing.JFrame;
+import javax.swing.JTextArea;
 
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 import com.johnuckele.vivarium.core.WorldVariables;
-import com.johnuckele.vivarium.scripts.Format;
-import com.johnuckele.vivarium.scripts.Script;
 
 public class WorldViewer extends JFrame
 {
@@ -66,10 +65,6 @@ public class WorldViewer extends JFrame
 				_overviewRenders.add(_w.toString(RenderCode.MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
 				_ratListRenders.add(_w.toString(RenderCode.LIVE_UCKELEOID_LIST));
 				System.out.println("Population "+_w.getCount(WorldObject.UCKELEOID));
-				Script.saveWorld(_w, "data/world_saves/world_viewer/tick"+tick+".viv", Format.JAVA_SERIALIZABLE);
-/*				long now = System.currentTimeMillis();
-				System.out.print("Runtime: "+(now-startTime)/1000.0+"\n");
-				startTime = now;*/
 			}
 		}
 	}
@@ -96,14 +91,17 @@ public class WorldViewer extends JFrame
 
 	public static void main(String[] args)
 	{
-		int worldDimensions = 30;
+		int worldDimensions = 25;
 		System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-		World w = new World(worldDimensions, new WorldVariables());
+		WorldVariables wv = new WorldVariables();
+		wv.setMutationRateExponent(-9);
+		wv.setUckeleoidMemoryUnitCount(1);
+		wv.setUckeleoidSoundChannelCount(1);
+		World w = new World(worldDimensions, wv);
 		System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
-		Script.saveWorld(w, "data/world_saves/world_viewer/tick0.viv", Format.JAVA_SERIALIZABLE);
 
 		WorldViewer wh = new WorldViewer(w);
-		wh.runAndRenderTicks(2000000, 2000);
+		wh.runAndRenderTicks(2000000, 20000);
 //		wh.runAndRenderTicks(20000, 1);
 
 		System.out.println("Finished simulations");

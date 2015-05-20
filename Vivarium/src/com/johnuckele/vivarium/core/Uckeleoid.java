@@ -36,6 +36,8 @@ public class Uckeleoid implements Serializable
 	private UckeleoidBrain		_brain;
 	private double[]			_inputs;
 	private double[]			_memoryUnits;
+	private double[]			_soundInputs;
+	private double[]			_soundOutputs;
 
 	// State
 	private Gender				_gender;
@@ -87,29 +89,28 @@ public class Uckeleoid implements Serializable
 
 		// Create brain to control the Uckeleoid
 		int memoryUnitCount = _world.getWorldVariables().getUckeleoidMemoryUnitCount();
-		if(parent1 != null)
+		int soundChannelCount = _world.getWorldVariables().getUckeleoidSoundChannelCount();
+		int totalBrainInputs = Uckeleoid.BRAIN_INPUTS + memoryUnitCount + soundChannelCount;
+		int totalBrainOutputs = Uckeleoid.BRAIN_OUTPUTS + memoryUnitCount + soundChannelCount;
+		
+		if(parent1 != null && parent2 != null)
 		{
-			if(parent2 != null)
-			{
-				// Brain combined from genetic legacy
-				this._brain = new UckeleoidBrain(_world, parent1._brain, parent2._brain);
-			}
-			else
-			{
-				throw new Error("Uckeleoid with single parent");
-			}
+			// Brain combined from genetic legacy
+			this._brain = new UckeleoidBrain(_world, parent1._brain, parent2._brain);
 		}
-		else if(parent2 != null)
+		else if(parent1 == null && parent1 == null)
 		{
-			throw new Error("Uckeleoid with single parent");
+			// Create a new default brain
+			this._brain = new UckeleoidBrain(_world, totalBrainInputs, totalBrainOutputs, 0);
 		}
 		else
 		{
-			// Create a new default brain
-			this._brain = new UckeleoidBrain(_world, Uckeleoid.BRAIN_INPUTS + memoryUnitCount, Uckeleoid.BRAIN_OUTPUTS + memoryUnitCount, 0);
+			throw new Error("Uckeleoid with single parent");
 		}
-		_inputs = new double[Uckeleoid.BRAIN_INPUTS + memoryUnitCount];
+		_inputs = new double[totalBrainInputs];
 		_memoryUnits = new double[memoryUnitCount];
+		_soundInputs = new double[soundChannelCount];
+		_soundOutputs = new double[soundChannelCount];
 
 		// Set gender
 		double randomNumber = Math.random();
@@ -162,6 +163,15 @@ public class Uckeleoid implements Serializable
 		return(_action);
 	}
 
+	public void listenToUckeleoid(Uckeleoid u)
+	{
+		int distanceSquared = (this._r - u._r)*(this._r - u._r) + (this._c - u._c)*(this._c - u._c);
+		for(int i=0; i < u._soundOutputs.length; i++)
+		{
+			this._soundInputs[i] += u._soundOutputs[i]/distanceSquared;
+		}
+	}
+
 	public void planAction()
 	{
 		_action = determineAction();
@@ -188,14 +198,25 @@ public class Uckeleoid implements Serializable
 			// Read memory units
 			for(int i = 0; i < this._memoryUnits.length; i++)
 			{
-				_memoryUnits[i] = _inputs[Uckeleoid.BRAIN_INPUTS + i];
+				_inputs[Uckeleoid.BRAIN_INPUTS - 1 + i] = _memoryUnits[i];
 			}
-			// Main computation
+			// Read sound inputs
+			for(int i = 0; i < this._soundInputs.length; i++)
+			{
+				_inputs[Uckeleoid.BRAIN_INPUTS - 1 + this._memoryUnits.length + i] = _soundInputs[i];
+			}
+			// Main brain computation
 			double[] outputs = this._brain.outputs(_inputs);
 			// Save memory units
 			for(int i = 0; i < this._memoryUnits.length; i++)
 			{
-				_memoryUnits[i] = outputs[Uckeleoid.BRAIN_OUTPUTS + i];
+				_memoryUnits[i] = outputs[Uckeleoid.BRAIN_OUTPUTS + i - 1];
+			}
+			// Clear the sound inputs and set the sound outputs
+			for(int i = 0; i < this._soundInputs.length; i++)
+			{
+				this._soundInputs[i] = 0;
+				this._soundOutputs[i] = outputs[Uckeleoid.BRAIN_OUTPUTS - 1 + this._memoryUnits.length + i];
 			}
 			// Hard coded outputs (actionable outputs)
 			int maxActionOutput = 0;

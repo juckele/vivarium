@@ -22,6 +22,7 @@ public class WorldVariables implements Serializable
 
 	// Uckeleoid Neurology
 	private static final int	DEFAULT_UCKELEOID_MEMORY_UNIT_COUNT					= 0;
+	private static final int	DEFAULT_UCKELEOID_SOUND_CHANNEL_COUNT				= 0;
 	private static final double	DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE				= 0.8;
 	private static final double	DEFAULT_INHERITANCE_SINGLE_PICK_RATE				= 0.2;
 	private static final double	DEFAULT_MUTATION_RATE_EXPONENT						= -7;
@@ -42,6 +43,7 @@ public class WorldVariables implements Serializable
 		"initialWallGenerationProbability",
 		// Uckeleoid Neurology
 		"uckeleoidMemoryUnitCount",
+		"uckeleoidSoundChannelCount",
 		"inheritanceGaussianMixRate",
 		"inheritanceSinglePickRate",
 		"mutationRateExponent",
@@ -66,6 +68,7 @@ public class WorldVariables implements Serializable
 
 	// Uckeleoid Neurology
 	private int					_uckeleoidMemoryUnitCount;
+	private int					_uckeleoidSoundChannelCount;
 	private double				_inheritanceGaussianMixRate;
 	private double				_inheritanceSinglePickRate;
 	private double				_mutationRate;
@@ -89,6 +92,7 @@ public class WorldVariables implements Serializable
 
 		// Uckeleoid Neurology
 		setUckeleoidMemoryUnitCount(DEFAULT_UCKELEOID_MEMORY_UNIT_COUNT);
+		setUckeleoidSoundChannelCount(DEFAULT_UCKELEOID_SOUND_CHANNEL_COUNT);
 		setInheritanceGaussianMixRate(DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE);
 		setInheritanceSinglePickRate(DEFAULT_INHERITANCE_SINGLE_PICK_RATE);
 		setMutationRateExponent(DEFAULT_MUTATION_RATE_EXPONENT);
@@ -182,9 +186,19 @@ public class WorldVariables implements Serializable
 		return _uckeleoidMemoryUnitCount;
 	}
 
-	public void setUckeleoidMemoryUnitCount(int _uckeleoidMemoryUnitCount)
+	public void setUckeleoidMemoryUnitCount(int uckeleoidMemoryUnitCount)
 	{
-		this._uckeleoidMemoryUnitCount = _uckeleoidMemoryUnitCount;
+		this._uckeleoidMemoryUnitCount = uckeleoidMemoryUnitCount;
+	}
+
+	public int getUckeleoidSoundChannelCount()
+	{
+		return _uckeleoidSoundChannelCount;
+	}
+
+	public void setUckeleoidSoundChannelCount(int uckeleoidSoundChannelCount)
+	{
+		this._uckeleoidSoundChannelCount = uckeleoidSoundChannelCount;
 	}
 
 	public double getInheritanceGaussianMixRate()
@@ -283,6 +297,9 @@ public class WorldVariables implements Serializable
 			// Uckeleoid Neurology
 			case "uckeleoidMemoryUnitCount":
 				this.setUckeleoidMemoryUnitCount(Integer.parseInt(value));
+				break;
+			case "uckeleoidSoundChannelCount":
+				this.setUckeleoidSoundChannelCount(Integer.parseInt(value));
 				break;
 			case "inheritanceGaussianMixRate":
 				this.setInheritanceGaussianMixRate(Double.parseDouble(value));

@@ -265,15 +265,39 @@ public class UckeleoidBrain implements Serializable
 	{
 		StringBuffer output = new StringBuffer();
 
-		String[] lineEndLabel =
+		String[] baseLineEndLabel =
 		{ "_", "M", "L", "R", "E", "B" };
-		String[] columnHeaderLabel =
+		String[] lineEndLabel = new String[this._outputCount];
+		for(int i = 0; i < lineEndLabel.length; i++)
+		{
+			if(i < baseLineEndLabel.length)
+			{
+				lineEndLabel[i] = baseLineEndLabel[i];
+			}
+			else
+			{
+				lineEndLabel[i] = "x"+(i-baseLineEndLabel.length+1);
+			}
+		}
+		String[] baseColumnHeaderLabel =
 		{ "cB", "rB", "女", "一", "中", "口", "%" };
+		String[] columnHeaderLabel = new String[this._inputCount+2];
+		for(int i = 0; i < columnHeaderLabel.length; i++)
+		{
+			if(i < baseColumnHeaderLabel.length)
+			{
+				columnHeaderLabel[i] = baseColumnHeaderLabel[i];
+			}
+			else
+			{
+				columnHeaderLabel[i] = "x"+(i-baseColumnHeaderLabel.length+1);
+			}
+		}
 
 		for(int i = 0; i < columnHeaderLabel.length; i++)
 		{
 			output.append(columnHeaderLabel[i]);
-			output.append("\t\t\t");
+			output.append("\t");
 		}
 		output.append('\n');
 
@@ -283,7 +307,8 @@ public class UckeleoidBrain implements Serializable
 			{
 				for(int k = 0; k < _weights[i][j].length; k++)
 				{
-					output.append(_weights[i][j][k]);
+					double weight = _weights[i][j][k];
+					output.append(String.format("%.3f", weight));
 					output.append('\t');
 				}
 				if(i == _weights.length - 1)
