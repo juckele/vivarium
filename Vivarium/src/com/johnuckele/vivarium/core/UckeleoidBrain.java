@@ -11,6 +11,15 @@ public class UckeleoidBrain implements Serializable
 	 */
 	private static final long	serialVersionUID				= 4L;
 
+	// Random number state
+	private static long _random									= (long)(Math.random()*Long.MAX_VALUE);
+	private static long xorShiftLong() {
+		_random ^= (_random << 21);
+		_random ^= (_random >>> 35);
+		_random ^= (_random << 4);
+		return _random;
+	}
+
 	// World object which we're apart of
 	private World _world;
 	
@@ -250,7 +259,7 @@ public class UckeleoidBrain implements Serializable
 		{
 			// Bias units
 			outputs[i] += weights[i][0] * 1;
-			outputs[i] += weights[i][1] * (2 * Math.random() - 1);
+			outputs[i] += weights[i][1] * UckeleoidBrain.xorShiftLong() / Long.MAX_VALUE;
 			// prior units
 			for(int j = 0; j < inputs.length; j++)
 			{
