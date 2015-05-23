@@ -266,7 +266,7 @@ public class UckeleoidBrain implements Serializable
 				outputs[i] += weights[i][j + 2] * inputs[j];
 			}
 			// Scale for sigmoid
-			outputs[i] = UckeleoidBrain.sigmoid(outputs[i]);
+			outputs[i] = UtilityFunctions.sigmoid(outputs[i]);
 		}
 	}
 
@@ -333,20 +333,9 @@ public class UckeleoidBrain implements Serializable
 		return(output.toString());
 	}
 
-	private static double sigmoid(double x)
-	{
-		return 1 / (1 + Math.exp(-x));
-	}
-
 	public static void main(String[] args)
 	{
-		System.out.println("Testing UckeleoidBrain code...");
-		System.out.println("Calculating Sigmoids...");
-		for(double i = -4; i <= 4; i += .5)
-		{
-			System.out.println("Sigmoid(" + i + ") = " + UckeleoidBrain.sigmoid(i));
-		}
-		UckeleoidBrain brain = new UckeleoidBrain(null, 2, 7, 0);
+		UckeleoidBrain brain = new UckeleoidBrain(null, 3, 10, 0);
 		System.out.println("Creating Brain...");
 		System.out.println(brain);
 		System.out.println("Brain Outputs for inputs");
