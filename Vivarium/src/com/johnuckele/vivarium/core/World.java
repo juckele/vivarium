@@ -162,13 +162,16 @@ public class World implements Serializable
 
 	private void transmitSounds()
 	{
-		for(Uckeleoid listeningUckeleoid : this._liveUckeleoidList)
+		if(this._worldVariables.getUckeleoidSoundChannelCount() > 0)
 		{
-			for(Uckeleoid speakingUckeleoid : this._liveUckeleoidList)
+			for(Uckeleoid listeningUckeleoid : this._liveUckeleoidList)
 			{
-				if( listeningUckeleoid != speakingUckeleoid )
+				for(Uckeleoid speakingUckeleoid : this._liveUckeleoidList)
 				{
-					listeningUckeleoid.listenToUckeleoid(speakingUckeleoid);
+					if( listeningUckeleoid != speakingUckeleoid )
+					{
+						listeningUckeleoid.listenToUckeleoid(speakingUckeleoid);
+					}
 				}
 			}
 		}
