@@ -253,7 +253,7 @@ public class UckeleoidBrain implements Serializable
 		return(_outputs);
 	}
 
-	public void computeLayerInPlace(double[] inputs, double[] outputs, double[][] weights)
+	public static void computeLayerInPlace(double[] inputs, double[] outputs, double[][] weights)
 	{
 		for(int i = 0; i < outputs.length; i++)
 		{
