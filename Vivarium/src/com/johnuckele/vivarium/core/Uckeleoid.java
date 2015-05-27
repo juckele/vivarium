@@ -535,4 +535,23 @@ public class Uckeleoid implements Serializable
 	{
 		this._actionProfile = _actionHistory;
 	}
+
+	public void disconnectFromWorld()
+	{
+		this._world = null;
+		this._generationGenderActionProfile = null;
+	}
+
+	public void connectToWorld(World w)
+	{
+		this._world = w;
+		if(this._world.getWorldVariables().getKeepGenerationActionProfile())
+		{
+			if(this._actionProfile == null)
+			{
+				this._actionProfile = new ActionProfile();
+			}
+			this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int) this._generation, this._gender);
+		}
+	}
 }

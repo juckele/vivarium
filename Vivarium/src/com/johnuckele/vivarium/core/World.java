@@ -623,18 +623,22 @@ public class World implements Serializable
 		}
 		if(brains.size() > 0)
 		{
-			UckeleoidBrain minBrain = UckeleoidBrain.minBrain(brains);
-			UckeleoidBrain maxBrain = UckeleoidBrain.maxBrain(brains);
+//			UckeleoidBrain minBrain = UckeleoidBrain.minBrain(brains);
+//			UckeleoidBrain maxBrain = UckeleoidBrain.maxBrain(brains);
 			UckeleoidBrain medianBrain = UckeleoidBrain.medianBrain(brains);
 			UckeleoidBrain standardDeviationBrain = UckeleoidBrain.standardDeviationBrain(brains, medianBrain);
 			uckeleoidBrainOutput.append("Average uckeleoid NN:\n");
 			uckeleoidBrainOutput.append(medianBrain.toString());
 			uckeleoidBrainOutput.append("Std. Deviation on uckeleoid NNs:\n");
 			uckeleoidBrainOutput.append(standardDeviationBrain.toString());
-			uckeleoidBrainOutput.append("Min uckeleoid NN:\n");
+/*			uckeleoidBrainOutput.append("Min uckeleoid NN:\n");
 			uckeleoidBrainOutput.append(minBrain.toString());
 			uckeleoidBrainOutput.append("Max uckeleoid NN:\n");
-			uckeleoidBrainOutput.append(maxBrain.toString());
+			uckeleoidBrainOutput.append(maxBrain.toString());*/
+			uckeleoidBrainOutput.append("Oldest uckeleoid NN:\n");
+			uckeleoidBrainOutput.append(brains.get(0).toString());
+			uckeleoidBrainOutput.append("Random uckeleoid NN:\n");
+			uckeleoidBrainOutput.append(brains.get(RANDOM.nextInt(brains.size())).toString());
 		}
 		return(uckeleoidBrainOutput.toString());
 	}
