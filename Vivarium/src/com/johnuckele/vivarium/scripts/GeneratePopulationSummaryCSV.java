@@ -30,7 +30,7 @@ public class GeneratePopulationSummaryCSV extends Script
 	@Override protected void run(String[] args)
 	{
 		// Setup
-		World w = loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+		World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
 		CensusRecord census = w.getCensus();
 
 		// Header, this CSV is always a single row so we build the header with the single row
@@ -113,7 +113,7 @@ public class GeneratePopulationSummaryCSV extends Script
 
 		// Save
 		System.out.println("Saving file: "+args[1]);
-		Script.saveStringToFile(csvStringBuilder.toString(), args[1]);
+		ScriptIO.saveStringToFile(csvStringBuilder.toString(), args[1]);
 	}
 
 	public static void main(String[] args)

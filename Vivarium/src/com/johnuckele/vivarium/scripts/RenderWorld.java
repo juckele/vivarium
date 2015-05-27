@@ -3,9 +3,9 @@ package com.johnuckele.vivarium.scripts;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class PreviewVivariumFile extends Script
+public class RenderWorld extends Script
 {
-	public PreviewVivariumFile(String[] args)
+	public RenderWorld(String[] args)
 	{
 		super(args);
 	}
@@ -26,7 +26,7 @@ public class PreviewVivariumFile extends Script
 
 	@Override protected void run(String[] args)
 	{
-		World w = loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+		World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
 		System.out.println(w.toString(RenderCode.MAP));
 		System.out.println(w.toString(RenderCode.BRAIN_WEIGHTS));
 //		System.out.println(w.toString(RenderCode.UCKELEOID_LIST));
@@ -35,6 +35,6 @@ public class PreviewVivariumFile extends Script
 
 	public static void main(String[] args)
 	{
-		new PreviewVivariumFile(args);
+		new RenderWorld(args);
 	}
 }

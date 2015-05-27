@@ -45,7 +45,7 @@ public class CreateWorld extends Script
 		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
 		System.out.println("Uckeleoid count in new world: "+uckeleoidCount);
 
-		saveWorld(w, args[0], Format.JAVA_SERIALIZABLE);
+		ScriptIO.saveWorld(w, args[0], Format.JAVA_SERIALIZABLE);
 	}
 
 	public static void main(String[] args)

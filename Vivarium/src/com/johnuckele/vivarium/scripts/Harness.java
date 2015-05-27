@@ -70,7 +70,7 @@ public class Harness
 		{
 			String[] commandArgs =
 			{ "data/world_saves/world_viewer/tick0.viv" };
-			PreviewVivariumFile.main(commandArgs);
+			RenderWorld.main(commandArgs);
 		}
 
 	}

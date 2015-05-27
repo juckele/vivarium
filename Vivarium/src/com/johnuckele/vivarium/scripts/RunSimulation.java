@@ -31,7 +31,7 @@ public class RunSimulation extends Script
 	@Override protected void run(String[] args)
 	{
 		// Load
-		World w = loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+		World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
 		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
 		System.out.println("Uckeleoid count in loaded world: "+uckeleoidCount);
 
@@ -48,7 +48,7 @@ public class RunSimulation extends Script
 		if(args.length == 3)
 		{
 			System.out.println("Saving file: "+args[2]);
-			saveWorld(w, args[2], Format.JAVA_SERIALIZABLE);
+			ScriptIO.saveWorld(w, args[2], Format.JAVA_SERIALIZABLE);
 		}
 		else
 		{
