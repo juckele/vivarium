@@ -23,8 +23,7 @@ public class UckeleoidBrain implements Serializable
 	// the previous layer.
 	// Each node has a two special previous values, a constant
 	// bias unit with a value of 1 and a stochastic bias unit
-	// with a value between -1 and 1.
-	// These extra weights are added after the prior weights
+	// with a normally distributed value between -1 and 1.
 	private double[][][]		_weights;
 	private int					_outputCount;
 	private double[]			_outputs;

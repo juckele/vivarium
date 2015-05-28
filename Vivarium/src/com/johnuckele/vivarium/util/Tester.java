@@ -40,6 +40,13 @@ public class Tester
 		test( result == expected );
 	}
 
+	public static void greaterOrEqual(String message, double result, double expected)
+	{
+		checkScope();
+		System.out.println("\t\t"+message+": "+result+" >= "+expected);
+		test( result >= expected );
+	}
+
 	public static void lessOrEqual(String message, double result, double expected)
 	{
 		checkScope();
