@@ -530,7 +530,7 @@ public class World implements Serializable
 	
 	public String toString(RenderCode code)
 	{
-		if(code == RenderCode.MAP)
+		if(code == RenderCode.WORLD_MAP)
 		{
 			return(renderMap());
 		}
@@ -538,12 +538,12 @@ public class World implements Serializable
 		{
 			return(renderBrainWeights());
 		}
-		else if(code == RenderCode.UCKELEOID_LIST)
+		else if(code == RenderCode.FULL_UCKELEOID_LIST)
 		{
 			StringBuilder uckeleoidOutput = new StringBuilder();
 			for(Uckeleoid uckeleoid : this.getAllUckeleoids())
 			{
-				uckeleoidOutput.append(uckeleoid.toString());
+				uckeleoidOutput.append(uckeleoid.toString(RenderCode.SIMPLE_UCKELEOID));
 				uckeleoidOutput.append('\n');
 			}
 			return(uckeleoidOutput.toString());
@@ -553,7 +553,7 @@ public class World implements Serializable
 			StringBuilder uckeleoidOutput = new StringBuilder();
 			for(Uckeleoid uckeleoid : this._liveUckeleoidList)
 			{
-				uckeleoidOutput.append(uckeleoid.toString());
+				uckeleoidOutput.append(uckeleoid.toString(RenderCode.SIMPLE_UCKELEOID));
 				uckeleoidOutput.append('\n');
 			}
 			return(uckeleoidOutput.toString());
@@ -563,14 +563,14 @@ public class World implements Serializable
 			StringBuilder uckeleoidOutput = new StringBuilder();
 			for(Uckeleoid uckeleoid : this._deadUckeleoidList)
 			{
-				uckeleoidOutput.append(uckeleoid.toString());
+				uckeleoidOutput.append(uckeleoid.toString(RenderCode.SIMPLE_UCKELEOID));
 				uckeleoidOutput.append('\n');
 			}
 			return(uckeleoidOutput.toString());
 		}
 		else
 		{
-			throw new Error("Invalid Code");
+			throw new Error("Invalid Code "+code);
 		}
 	}
 

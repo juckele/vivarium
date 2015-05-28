@@ -2,6 +2,8 @@ package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 
+import com.johnuckele.vivarium.visualization.RenderCode;
+
 public class Uckeleoid implements Serializable
 {
 	/**
@@ -397,46 +399,62 @@ public class Uckeleoid implements Serializable
 		return new Uckeleoid(this, breedingTarget, _world);
 	}
 
-	public String toString()
+	public String toString(RenderCode code)
 	{
-		StringBuilder output = new StringBuilder();
-		output.append("U_");
-		output.append(this._id);
-		output.append(" @(");
-		output.append(this._r);
-		output.append(',');
-		output.append(this._c);
-		output.append(") ");
-		output.append("GEN-");
-		output.append(this._generation);
-		if(this._gender == Gender.FEMALE)
+		if(code == RenderCode.COMPLEX_UCKELEOID || code == RenderCode.SIMPLE_UCKELEOID)
 		{
-			output.append('女');
+			return this.renderSelf(code);
+		}
+		else if(code == RenderCode.BRAIN_WEIGHTS)
+		{
+			return(this._brain.toString());
 		}
 		else
 		{
-			output.append('男');
+			throw new Error("Invalid Code "+code);
 		}
-		output.append("/a:");
+	}
+	private String renderSelf(RenderCode code)
+	{
+		StringBuilder output = new StringBuilder();
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "Uckeleoid ID: " : "U_");
+		output.append(this._id);
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nCoordinates: (" : " @(");
+		output.append(this._r);
+		output.append(',');
+		output.append(this._c);
+		output.append(")");
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nGeneration: " : " GEN-");
+		output.append(this._generation);
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nGender: " : "");
+		if(this._gender == Gender.FEMALE)
+		{
+			output.append(code == RenderCode.COMPLEX_UCKELEOID ? "Female" : '女');
+		}
+		else
+		{
+			output.append(code == RenderCode.COMPLEX_UCKELEOID ? "Male" : '男');
+		}
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nAge: " : "/a:");
 		output.append(this._age);
-		output.append("/g:");
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nGestation: " : "/g:");
 		output.append(this._gestation);
-		output.append("/f:");
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nFood: " : "/f:");
 		output.append(this._food);
-		output.append("/f:");
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nFacing: " : "/f:");
 		switch(this._facing)
 		{
 			case EAST:
-				output.append('东');
+				output.append(code == RenderCode.COMPLEX_UCKELEOID ? "East" : '东');
 				break;
 			case NORTH:
-				output.append('北');
+				output.append(code == RenderCode.COMPLEX_UCKELEOID ? "North" : '北');
 				break;
 			case SOUTH:
-				output.append('南');
+				output.append(code == RenderCode.COMPLEX_UCKELEOID ? "South" : '南');
 				break;
 			case WEST:
-				output.append('西');
+				output.append(code == RenderCode.COMPLEX_UCKELEOID ? "West" : '西');
 				break;
 		}
 
@@ -444,10 +462,11 @@ public class Uckeleoid implements Serializable
 
 		for(int i = 0; i < this._memoryUnits.length; i++)
 		{
+			output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nMemory: "+i : "");
 			output.append(this._memoryUnits[i]);
 		}
 
-		output.append(' ');
+		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nAction: " : " ");
 
 		output.append(this._action);
 

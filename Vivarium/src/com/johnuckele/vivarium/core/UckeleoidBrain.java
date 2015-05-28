@@ -326,8 +326,6 @@ public class UckeleoidBrain implements Serializable
 				}
 				output.append('\n');
 			}
-			output.append('\n');
-			output.append('\n');
 		}
 
 		return(output.toString());

@@ -27,8 +27,8 @@ public class WorldViewer extends JFrame
 	public WorldViewer(World w)
 	{
 		_w = w;
-		_overviewRenders.add(_w.toString(RenderCode.MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
-		_ratListRenders.add(_w.toString(RenderCode.UCKELEOID_LIST));
+		_overviewRenders.add(_w.toString(RenderCode.WORLD_MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
+		_ratListRenders.add(_w.toString(RenderCode.FULL_UCKELEOID_LIST));
 
 		_overviewRender = new JTextArea(_overviewRenders.get(_renderIndex));
 		_ratListRender = new JTextArea(_ratListRenders.get(_renderIndex));
@@ -62,7 +62,7 @@ public class WorldViewer extends JFrame
 			_w.tick();
 			if(tick % renderEvery == 0)
 			{
-				_overviewRenders.add(_w.toString(RenderCode.MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
+				_overviewRenders.add(_w.toString(RenderCode.WORLD_MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
 				_ratListRenders.add(_w.toString(RenderCode.LIVE_UCKELEOID_LIST));
 				System.out.println("Population "+_w.getCount(WorldObject.UCKELEOID));
 			}
