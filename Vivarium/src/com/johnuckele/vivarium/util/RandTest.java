@@ -31,6 +31,9 @@ public class RandTest
 		Rand.setRandomSeed(30);
 		double randFromSeed4 = Rand.getRandomPositiveDouble();
 		Tester.equal("Two randoms with matching seeds do match", randFromSeed3, randFromSeed4, 0.0);
+
+		// Clear the seed
+		Rand.setRandomSeed();
 	}
 
 	@Test public void testRandSeedForXorshiftMethods()
@@ -62,6 +65,9 @@ public class RandTest
 		Rand.setRandomSeed(30);
 		long randFromSeed4 = Rand.getRandomLong();
 		Tester.equal("Two randoms with matching seeds do match", randFromSeed3, randFromSeed4);
+
+		// Clear the seed
+		Rand.setRandomSeed();
 	}
 	@Test public void testGetRandomPositiveDouble()
 	{
@@ -80,6 +86,9 @@ public class RandTest
 		double observedProbability = ((double) heads) / samples;
 		double error = Math.abs(observedProbability - 0.5);
 		Tester.lessOrEqual("Above or below 0.5 should behave like an unbiased coin", error, allowedError);
+
+		// Clear the seed
+		Rand.setRandomSeed();
 	}
 	@Test public void testGetRandomLong()
 	{
@@ -98,5 +107,8 @@ public class RandTest
 		double observedProbability = ((double) heads) / samples;
 		double error = Math.abs(observedProbability - 0.5);
 		Tester.lessOrEqual("Above or below 0 should be an unbiased coin", error, allowedError);
+
+		// Clear the seed
+		Rand.setRandomSeed();
 	}
 }
