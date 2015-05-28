@@ -11,15 +11,6 @@ public class UckeleoidBrain implements Serializable
 	 */
 	private static final long	serialVersionUID				= 4L;
 
-	// Random number state
-	private static long _random									= (long)(Math.random()*Long.MAX_VALUE);
-	private static long xorShiftLong() {
-		_random ^= (_random << 21);
-		_random ^= (_random >>> 35);
-		_random ^= (_random << 4);
-		return _random;
-	}
-
 	// World object which we're apart of
 	private World _world;
 	
@@ -116,7 +107,7 @@ public class UckeleoidBrain implements Serializable
 				for(int k = 0; k < _weights[i][j].length; k++)
 				{
 					// Mix first
-					double randomValue = Math.random();
+					double randomValue = UtilityFunctions.getRandomPositiveDouble();
 					// Sometimes mix the two values with a gaussian
 					// approximation.
 					if(randomValue < _world.getWorldVariables().getInheritanceGaussianMixRate())
@@ -125,14 +116,14 @@ public class UckeleoidBrain implements Serializable
 						// but we want μ = 0.5 and σ = 0.5 to mix between numbers
 						// This can cause a mix to introduce values higher or lower than
 						// either parent, which is by design.
-						double gaussianRandomValue = World.RANDOM.nextGaussian() / 2 + 0.5;
+						double gaussianRandomValue = UtilityFunctions.getRandomGaussian() / 2 + 0.5;
 						double weightDifference = brain2._weights[i][j][k] - brain1._weights[i][j][k];
 						_weights[i][j][k] = brain1._weights[i][j][k] + gaussianRandomValue * weightDifference;
 					}
 					// Otherwise pick one value
 					else
 					{
-						randomValue = Math.random();
+						randomValue = UtilityFunctions.getRandomPositiveDouble();
 						if(randomValue < 0.5)
 						{
 							_weights[i][j] = brain1._weights[i][j];
@@ -144,15 +135,15 @@ public class UckeleoidBrain implements Serializable
 					}
 
 					// Sometimes mutate
-					randomValue = Math.random();
+					randomValue = UtilityFunctions.getRandomPositiveDouble();
 					if(randomValue < _world.getWorldVariables().getMutationRate())
 					{
-						randomValue = Math.random();
+						randomValue = UtilityFunctions.getRandomPositiveDouble();
 						if(randomValue < _world.getWorldVariables().getMutationSmallScaleRate())
 						{
 							// Gaussian multipliplication mutation,
 							// μ = 1 and σ = 0.2
-							double gaussianRandomValue = World.RANDOM.nextGaussian() / 5 + 1;
+							double gaussianRandomValue = UtilityFunctions.getRandomGaussian() / 5 + 1;
 							_weights[i][j][k] = gaussianRandomValue * _weights[i][j][k];
 						}
 						else
@@ -161,7 +152,7 @@ public class UckeleoidBrain implements Serializable
 							if(randomValue < _world.getWorldVariables().getMutationRandomRate())
 							{
 								// Random mutation
-								_weights[i][j][k] = Math.random() * 2 - 1;
+								_weights[i][j][k] = UtilityFunctions.getRandomDouble();
 							}
 							else
 							{
@@ -259,7 +250,7 @@ public class UckeleoidBrain implements Serializable
 		{
 			// Bias units
 			outputs[i] += weights[i][0] * 1;
-			outputs[i] += weights[i][1] * UckeleoidBrain.xorShiftLong() / Long.MAX_VALUE;
+			outputs[i] += weights[i][1] * UtilityFunctions.getRandomDouble();
 			// prior units
 			for(int j = 0; j < inputs.length; j++)
 			{

@@ -115,7 +115,7 @@ public class Uckeleoid implements Serializable
 		_soundOutputs = new double[soundChannelCount];
 
 		// Set gender
-		double randomNumber = Math.random();
+		double randomNumber = UtilityFunctions.getRandomPositiveDouble();
 		if(randomNumber < DEFAULT_FEMALE_THRESHOLD)
 		{
 			this._gender = Gender.FEMALE;
@@ -125,8 +125,10 @@ public class Uckeleoid implements Serializable
 			this._gender = Gender.MALE;
 		}
 
-		// Set food trait preferences
-		this._randomSeed = Math.random();
+		// Set the per Uckeleoid random seed (this is
+		// currently only used to set animation offsets in
+		// GWT viewer)
+		this._randomSeed = UtilityFunctions.getRandomDouble();
 
 		// Set defaults
 		this._age = 0;

@@ -15,5 +15,4 @@ public class UckeleoidBrainTest
 		UckeleoidBrain.computeLayerInPlace(inputs, actualOutputs, weights);
 		assertEquals("no inputs, output is = constant bias", expectedOutputs[0], actualOutputs[0], 0.0001);
 	}
-
 }
