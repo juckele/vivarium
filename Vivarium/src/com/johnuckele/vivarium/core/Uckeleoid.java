@@ -2,6 +2,8 @@ package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 
+import com.johnuckele.vivarium.util.Functions;
+import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class Uckeleoid implements Serializable
@@ -82,7 +84,7 @@ public class Uckeleoid implements Serializable
 
 		if(parent1 != null)
 		{
-			this._generation = UtilityFunctions.logarithmicAverage(parent1._generation, parent2._generation) + 1;
+			this._generation = Functions.logarithmicAverage(parent1._generation, parent2._generation) + 1;
 		}
 		else
 		{
@@ -115,7 +117,7 @@ public class Uckeleoid implements Serializable
 		_soundOutputs = new double[soundChannelCount];
 
 		// Set gender
-		double randomNumber = UtilityFunctions.getRandomPositiveDouble();
+		double randomNumber = Rand.getRandomPositiveDouble();
 		if(randomNumber < DEFAULT_FEMALE_THRESHOLD)
 		{
 			this._gender = Gender.FEMALE;
@@ -128,7 +130,7 @@ public class Uckeleoid implements Serializable
 		// Set the per Uckeleoid random seed (this is
 		// currently only used to set animation offsets in
 		// GWT viewer)
-		this._randomSeed = UtilityFunctions.getRandomDouble();
+		this._randomSeed = Rand.getRandomDouble();
 
 		// Set defaults
 		this._age = 0;

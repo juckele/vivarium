@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class World implements Serializable
@@ -76,7 +77,7 @@ public class World implements Serializable
 				}
 				else
 				{
-					double randomNumber = UtilityFunctions.getRandomPositiveDouble();
+					double randomNumber = Rand.getRandomPositiveDouble();
 					double wallProbability = _worldVariables.getInitialWallGenerationProbability();
 					double foodProbability = _worldVariables.getInitialFoodGenerationProbability();
 					double uckeleoidProbability = _worldVariables.getInitialUckeleoidGenerationProbability();
@@ -270,7 +271,7 @@ public class World implements Serializable
 			{
 				if(_worldObjectGrid[r][c] == WorldObject.EMPTY)
 				{
-					double randomNumber = UtilityFunctions.getRandomPositiveDouble();
+					double randomNumber = Rand.getRandomPositiveDouble();
 					if(randomNumber < this._worldVariables.getFoodGenerationProbability())
 					{
 						setObject(WorldObject.FOOD, r, c);
@@ -636,7 +637,7 @@ public class World implements Serializable
 			uckeleoidBrainOutput.append("Oldest uckeleoid NN:\n");
 			uckeleoidBrainOutput.append(brains.get(0).toString());
 			uckeleoidBrainOutput.append("Random uckeleoid NN:\n");
-			uckeleoidBrainOutput.append(brains.get(UtilityFunctions.getRandomInt(brains.size())).toString());
+			uckeleoidBrainOutput.append(brains.get(Rand.getRandomInt(brains.size())).toString());
 		}
 		return(uckeleoidBrainOutput.toString());
 	}

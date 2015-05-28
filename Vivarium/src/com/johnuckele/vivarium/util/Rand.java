@@ -1,8 +1,8 @@
-package com.johnuckele.vivarium.core;
+package com.johnuckele.vivarium.util;
 
 import java.util.Random;
 
-public class UtilityFunctions
+public class Rand
 {
 	// Random number state
 	private static Random _random = new Random();
@@ -45,7 +45,7 @@ public class UtilityFunctions
 	 * @return A pseudorandom double
 	 */
 	public static double getRandomDouble() {
-		return (double) UtilityFunctions.getRandomLong() / Long.MAX_VALUE;
+		return (double) Rand.getRandomLong() / Long.MAX_VALUE;
 	}
 	/**
 	 * Get a pseudorandom positive double with the range [0,1)
@@ -80,35 +80,5 @@ public class UtilityFunctions
 		_randomLong ^= (_randomLong >>> 35);
 		_randomLong ^= (_randomLong << 4);
 		return _randomLong;
-	}
-
-	/**
-	 * computes the logistic sigmoid of a value,
-	 * the logistic sigmoid is s(x) = 1 / ( 1 + e ^ -x )
-	 * 
-	 * @param x
-	 * @return sigmoid(x)
-	 */
-	public static double sigmoid(double x)
-	{
-		return 1 / (1 + Math.exp(-x));
-	}
-
-	/**
-	 * computes the midpoint between two values on a logarithmic
-	 * scale, defined as log((exp(A)+exp(B))/2), but is usable
-	 * even when A or B are too large to fit into Java primitives.
-	 * 
-	 * @param logA
-	 *            the log of A
-	 * @param logB
-	 *            the log of B
-	 * @return log((A+B)/2)
-	 */
-	public static double logarithmicAverage(double logA, double logB)
-	{
-		double difference = Math.abs(logA - logB);
-		double expandedDifference = Math.exp(difference);
-		return Math.log((expandedDifference + 1) / 2) + Math.min(logA, logB);
 	}
 }

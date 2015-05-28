@@ -4,12 +4,14 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.johnuckele.vivarium.util.Functions;
+
 public class UckeleoidBrainTest
 {
 	@Test public void testComputeLayerInPlace()
 	{
 		double[] inputs = {};
-		double[] expectedOutputs = {UtilityFunctions.sigmoid(1)};
+		double[] expectedOutputs = {Functions.sigmoid(1)};
 		double[] actualOutputs = {0.0};
 		double[][] weights = {{1, 0}};
 		UckeleoidBrain.computeLayerInPlace(inputs, actualOutputs, weights);
