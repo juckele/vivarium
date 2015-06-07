@@ -59,4 +59,62 @@ public class UckeleoidBrainTest
 		Tester.lessOrEqual("4th output maximum value", actualOutputs[3], maximumExpectedOutputs[3]);
 		Tester.greaterOrEqual("4th output minimum", actualOutputs[3], minimumExpectedOutputs[3]);
 	}
+
+	@Test public void validateWeights()
+	{
+		// A brain initialized with all zeros will have an empty weight matrix
+		UckeleoidBrain ub = new UckeleoidBrain(0,0,0);
+		Tester.isTrue("Validate a brand new Uckeleoid initialized with all zeros", ub.validateWeights(ub.getWeights()));
+
+		// Test empty matrix on zero initialized brain
+		Tester.isFalse("Null matrix doesn't validate", ub.validateWeights(null));
+		double[][][] oneLayerEmpty = {};
+		Tester.isFalse("One layer empty matrix doesn't validate for zero input/output brain", ub.validateWeights(oneLayerEmpty));
+		double[][][] twoLayerEmpty = {{}};
+		Tester.isTrue("Two layer empty matrix is still allowed", ub.validateWeights(twoLayerEmpty));
+		double[][][] threeLayerEmpty = {{{}}};
+		Tester.isFalse("Three layer empty matrix has too many outputs", ub.validateWeights(threeLayerEmpty));
+
+		// Improperly initialized weight map still doesn't work
+		double[][][] partiallyInitialized = new double[1][][];
+		NullPointerException nullPointer = null;
+		try
+		{
+			ub.validateWeights(partiallyInitialized);
+		}
+		catch(NullPointerException e)
+		{
+			nullPointer = e;
+		}
+		Tester.isNotNull("Exception is thrown with improperly initialized weights", nullPointer);
+		
+		// Change the shape of the brain and retest the empty matrix as a valid weight
+		// It should no longer validate
+		ub.setOutputCount(1);
+		Tester.isFalse(
+				"Empty matrix doesn't validate after setting output count",
+				ub.validateWeights(twoLayerEmpty));
+		Tester.isTrue(
+				"Matrix with only one vector will compute a single output",
+				ub.validateWeights(new double[][][]{{{0, 0}}}));
+
+		ub.setInputCount(1);
+		Tester.isTrue(
+				"Input = 1, Output = 2, Single Layer Weight Size is 1x3",
+				ub.validateWeights(new double[][][]{{{0, 0, 1}}}));
+		Tester.isFalse(
+				"Matrix with insufficient single vector length fails",
+				ub.validateWeights(new double[][][]{{{0}}}));
+
+		ub.setOutputCount(2);
+		Tester.isTrue(
+				"Input = 1, Output = 2, Single Layer Weight Size is 2x3",
+				ub.validateWeights(new double[][][]{{{0, 0, 1},{1, 1, 0}}}));
+		Tester.isFalse(
+				"Input = 1, Output = 2, Single Layer Weight Size is irregular",
+				ub.validateWeights(new double[][][]{{{0, 0},{1, 1, 0}}}));
+		Tester.isFalse(
+				"Input = 1, Output = 2, Single Layer Weight Size is irregular",
+				ub.validateWeights(new double[][][]{{{0, 0, 1},{1, 1}}}));
+	}
 }

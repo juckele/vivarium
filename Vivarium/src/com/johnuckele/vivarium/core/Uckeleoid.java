@@ -105,7 +105,7 @@ public class Uckeleoid implements Serializable
 		else if(parent1 == null && parent1 == null)
 		{
 			// Create a new default brain
-			this._brain = new UckeleoidBrain(_world, totalBrainInputs, totalBrainOutputs, 0);
+			this._brain = new UckeleoidBrain(totalBrainInputs, totalBrainOutputs, 0);
 		}
 		else
 		{

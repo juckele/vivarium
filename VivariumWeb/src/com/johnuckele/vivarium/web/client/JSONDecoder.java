@@ -115,7 +115,7 @@ public class JSONDecoder
 		int outputCount = (int)brainJSON.get("outputCount").isNumber().doubleValue();
 		int hiddenLayers = (int)brainJSON.get("hiddenLayers").isNumber().doubleValue();
 		
-		UckeleoidBrain brain = new UckeleoidBrain(w, inputCount, outputCount, hiddenLayers);
+		UckeleoidBrain brain = new UckeleoidBrain(inputCount, outputCount, hiddenLayers);
 
 		JSONArray weightsJSON = brainJSON.get("weights").isArray();
 		double[][][] weights = new double[weightsJSON.size()][][];

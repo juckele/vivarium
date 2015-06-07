@@ -40,11 +40,39 @@ public class Tester
 		test( result == expected );
 	}
 
+	public static void fail(String message)
+	{
+		checkScope();
+		System.out.println("\t\t"+message);
+		test( false );
+	}
+
 	public static void greaterOrEqual(String message, double result, double expected)
 	{
 		checkScope();
 		System.out.println("\t\t"+message+": "+result+" >= "+expected);
 		test( result >= expected );
+	}
+
+	public static void isFalse(String string, boolean test)
+	{
+		checkScope();
+		System.out.println("\t\t"+string+": "+test);
+		test( !test );
+	}
+
+	public static void isNotNull(String string, Object o)
+	{
+		checkScope();
+		System.out.println("\t\t"+string+": "+o);
+		test( o != null );
+	}
+
+	public static void isTrue(String string, boolean test)
+	{
+		checkScope();
+		System.out.println("\t\t"+string+": "+test);
+		test( test );
 	}
 
 	public static void lessOrEqual(String message, double result, double expected)
