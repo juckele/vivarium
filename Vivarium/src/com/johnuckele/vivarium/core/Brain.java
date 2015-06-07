@@ -7,7 +7,7 @@ import java.util.LinkedList;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 
-public class UckeleoidBrain implements Serializable
+public class Brain implements Serializable
 {
 	/**
 	 * serialVersion
@@ -28,7 +28,7 @@ public class UckeleoidBrain implements Serializable
 	private int					_hiddenLayers;
 	private double[][]			_hiddenNodes;
 
-	public UckeleoidBrain(int inputCount, int outputCount, int hiddenLayers)
+	public Brain(int inputCount, int outputCount, int hiddenLayers)
 	{
 		this._outputCount = outputCount;
 		this._inputCount = inputCount;
@@ -91,7 +91,7 @@ public class UckeleoidBrain implements Serializable
 		}
 	}
 
-	public UckeleoidBrain(World world, UckeleoidBrain brain1, UckeleoidBrain brain2)
+	public Brain(World world, Brain brain1, Brain brain2)
 	{
 		// Construct the weight layer and store variables with the int based
 		// constructor
@@ -364,7 +364,7 @@ public class UckeleoidBrain implements Serializable
 
 	public static void main(String[] args)
 	{
-		UckeleoidBrain brain = new UckeleoidBrain(3, 10, 0);
+		Brain brain = new Brain(3, 10, 0);
 		System.out.println("Creating Brain...");
 		System.out.println(brain);
 		System.out.println("Brain Outputs for inputs");
@@ -387,11 +387,11 @@ public class UckeleoidBrain implements Serializable
 
 	}
 
-	public static UckeleoidBrain minBrain(LinkedList<UckeleoidBrain> brains)
+	public static Brain minBrain(LinkedList<Brain> brains)
 	{
-		UckeleoidBrain minBrain = new UckeleoidBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		Brain minBrain = new Brain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
-		for(UckeleoidBrain brain : brains)
+		for(Brain brain : brains)
 		{
 			for(int i = 0; i < minBrain._weights.length; i++)
 			{
@@ -408,11 +408,11 @@ public class UckeleoidBrain implements Serializable
 
 	}
 
-	public static UckeleoidBrain maxBrain(LinkedList<UckeleoidBrain> brains)
+	public static Brain maxBrain(LinkedList<Brain> brains)
 	{
-		UckeleoidBrain maxBrain = new UckeleoidBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		Brain maxBrain = new Brain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
-		for(UckeleoidBrain brain : brains)
+		for(Brain brain : brains)
 		{
 			for(int i = 0; i < maxBrain._weights.length; i++)
 			{
@@ -428,9 +428,9 @@ public class UckeleoidBrain implements Serializable
 		return maxBrain;
 	}
 
-	public static UckeleoidBrain medianBrain(LinkedList<UckeleoidBrain> brains)
+	public static Brain medianBrain(LinkedList<Brain> brains)
 	{
-		UckeleoidBrain medianBrain = new UckeleoidBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		Brain medianBrain = new Brain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
 		for(int i = 0; i < medianBrain._weights.length; i++)
 		{
@@ -443,7 +443,7 @@ public class UckeleoidBrain implements Serializable
 			}
 		}
 		int brainsAveraged = brains.size();
-		for(UckeleoidBrain brain : brains)
+		for(Brain brain : brains)
 		{
 			for(int i = 0; i < medianBrain._weights.length; i++)
 			{
@@ -469,9 +469,9 @@ public class UckeleoidBrain implements Serializable
 		return medianBrain;
 	}
 
-	public static UckeleoidBrain standardDeviationBrain(LinkedList<UckeleoidBrain> brains, UckeleoidBrain medianBrain)
+	public static Brain standardDeviationBrain(LinkedList<Brain> brains, Brain medianBrain)
 	{
-		UckeleoidBrain standardDeviationBrain = new UckeleoidBrain(medianBrain._inputCount, medianBrain._outputCount, brains.get(0)._hiddenLayers);
+		Brain standardDeviationBrain = new Brain(medianBrain._inputCount, medianBrain._outputCount, brains.get(0)._hiddenLayers);
 		for(int i = 0; i < standardDeviationBrain._weights.length; i++)
 		{
 			for(int j = 0; j < standardDeviationBrain._weights[i].length; j++)
@@ -484,7 +484,7 @@ public class UckeleoidBrain implements Serializable
 		}
 		int brainsAveraged = brains.size();
 		double error;
-		for(UckeleoidBrain brain : brains)
+		for(Brain brain : brains)
 		{
 			for(int i = 0; i < standardDeviationBrain._weights.length; i++)
 			{

@@ -6,14 +6,14 @@ import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class Uckeleoid implements Serializable
+public class Creature implements Serializable
 {
 	/**
 	 * serialVersion
 	 */
 	private static final long	serialVersionUID			= 4L;
 
-	// Uckeleoid Constants
+	// Creature Constants
 	private static final double	DEFAULT_FEMALE_THRESHOLD	= 0.6;
 	private static final int	MAXIMUM_AGE					= 20000;
 	private static final int	MAXIMUM_GESTATION			= 2000;
@@ -37,7 +37,7 @@ public class Uckeleoid implements Serializable
 	private double				_generation;
 
 	// Brain
-	private UckeleoidBrain		_brain;
+	private Brain		_brain;
 	private double[]			_inputs;
 	private double[]			_memoryUnits;
 	private double[]			_soundInputs;
@@ -50,32 +50,32 @@ public class Uckeleoid implements Serializable
 	private int					_gestation;
 	private int					_food;
 	private Direction			_facing;
-	private UckeleoidAction		_action;
+	private Action		_action;
 
 	// Fetus
-	private Uckeleoid			_fetus;
+	private Creature			_fetus;
 
 	// Action history
 	private ActionProfile		_actionProfile;
 	private ActionProfile		_generationGenderActionProfile;
 
-	// Randomly initialized Uckeleoid
-	public Uckeleoid(World world, int r, int c)
+	// Randomly initialized Creature
+	public Creature(World world, int r, int c)
 	{
 		this(null, null, world, world.requestNewUckleoidID(), r, c);
 	}
 
-	public Uckeleoid(World world, int id, int r, int c)
+	public Creature(World world, int id, int r, int c)
 	{
 		this(null, null, world, id, r, c);
 	}
 
-	public Uckeleoid(Uckeleoid parent1, Uckeleoid parent2, World world)
+	public Creature(Creature parent1, Creature parent2, World world)
 	{
 		this(parent1, parent2, world, world.requestNewUckleoidID(), 0, 0);
 	}
 
-	public Uckeleoid(Uckeleoid parent1, Uckeleoid parent2, World world, int id, int r, int c)
+	public Creature(Creature parent1, Creature parent2, World world, int id, int r, int c)
 	{
 		this._world = world;
 		this._id = id;
@@ -91,25 +91,25 @@ public class Uckeleoid implements Serializable
 			this._generation = 1;
 		}
 
-		// Create brain to control the Uckeleoid
-		int memoryUnitCount = _world.getWorldVariables().getUckeleoidMemoryUnitCount();
-		int soundChannelCount = _world.getWorldVariables().getUckeleoidSoundChannelCount();
-		int totalBrainInputs = Uckeleoid.BRAIN_INPUTS + memoryUnitCount + soundChannelCount;
-		int totalBrainOutputs = Uckeleoid.BRAIN_OUTPUTS + memoryUnitCount + soundChannelCount;
+		// Create brain to control the Creature
+		int memoryUnitCount = _world.getWorldVariables().getCreatureMemoryUnitCount();
+		int soundChannelCount = _world.getWorldVariables().getCreatureSoundChannelCount();
+		int totalBrainInputs = Creature.BRAIN_INPUTS + memoryUnitCount + soundChannelCount;
+		int totalBrainOutputs = Creature.BRAIN_OUTPUTS + memoryUnitCount + soundChannelCount;
 		
 		if(parent1 != null && parent2 != null)
 		{
 			// Brain combined from genetic legacy
-			this._brain = new UckeleoidBrain(_world, parent1._brain, parent2._brain);
+			this._brain = new Brain(_world, parent1._brain, parent2._brain);
 		}
 		else if(parent1 == null && parent1 == null)
 		{
 			// Create a new default brain
-			this._brain = new UckeleoidBrain(totalBrainInputs, totalBrainOutputs, 0);
+			this._brain = new Brain(totalBrainInputs, totalBrainOutputs, 0);
 		}
 		else
 		{
-			throw new Error("Uckeleoid with single parent");
+			throw new Error("Creature with single parent");
 		}
 		_inputs = new double[totalBrainInputs];
 		_memoryUnits = new double[memoryUnitCount];
@@ -127,7 +127,7 @@ public class Uckeleoid implements Serializable
 			this._gender = Gender.MALE;
 		}
 
-		// Set the per Uckeleoid random seed (this is
+		// Set the per Creature random seed (this is
 		// currently only used to set animation offsets in
 		// GWT viewer)
 		this._randomSeed = Rand.getRandomDouble();
@@ -135,9 +135,9 @@ public class Uckeleoid implements Serializable
 		// Set defaults
 		this._age = 0;
 		this._gestation = 0;
-		this._food = Uckeleoid.MAXIMUM_FOOD;
+		this._food = Creature.MAXIMUM_FOOD;
 		this._facing = Direction.NORTH;
-		this._action = UckeleoidAction.REST;
+		this._action = Action.REST;
 
 		if(this._world.getWorldVariables().getKeepGenerationActionProfile())
 		{
@@ -155,21 +155,21 @@ public class Uckeleoid implements Serializable
 		if(this._gestation > 0)
 		{
 			this._gestation++;
-			this._food += Uckeleoid.PREGNANT_FOOD_RATE;
+			this._food += Creature.PREGNANT_FOOD_RATE;
 		}
 		else
 		{
-			this._food += Uckeleoid.BASE_FOOD_RATE;
+			this._food += Creature.BASE_FOOD_RATE;
 		}
 
 	}
 
-	public UckeleoidAction getAction()
+	public Action getAction()
 	{
 		return(_action);
 	}
 
-	public void listenToUckeleoid(Uckeleoid u)
+	public void listenToCreature(Creature u)
 	{
 		int distanceSquared = (this._r - u._r)*(this._r - u._r) + (this._c - u._c)*(this._c - u._c);
 		for(int i=0; i < u._soundOutputs.length; i++)
@@ -183,9 +183,9 @@ public class Uckeleoid implements Serializable
 		_action = determineAction();
 	}
 
-	private UckeleoidAction determineAction()
+	private Action determineAction()
 	{
-		UckeleoidAction involuntaryAction = getInvoluntaryAction();
+		Action involuntaryAction = getInvoluntaryAction();
 		if(involuntaryAction != null)
 		{
 			return(involuntaryAction);
@@ -198,35 +198,35 @@ public class Uckeleoid implements Serializable
 			WorldObject facingObject = this._world.getWorldObject(facingR, facingC);
 			_inputs[0] = this._gender == Gender.FEMALE ? 1 : 0;
 			_inputs[1] = facingObject == WorldObject.FOOD ? 1 : 0;
-			_inputs[2] = facingObject == WorldObject.UCKELEOID ? 1 : 0;
+			_inputs[2] = facingObject == WorldObject.CREATURE ? 1 : 0;
 			_inputs[3] = facingObject == WorldObject.WALL ? 1 : 0;
 			_inputs[4] = ((double)this._food) / MAXIMUM_FOOD;
 			// Read memory units
 			for(int i = 0; i < this._memoryUnits.length; i++)
 			{
-				_inputs[Uckeleoid.BRAIN_INPUTS - 1 + i] = _memoryUnits[i];
+				_inputs[Creature.BRAIN_INPUTS - 1 + i] = _memoryUnits[i];
 			}
 			// Read sound inputs
 			for(int i = 0; i < this._soundInputs.length; i++)
 			{
-				_inputs[Uckeleoid.BRAIN_INPUTS - 1 + this._memoryUnits.length + i] = _soundInputs[i];
+				_inputs[Creature.BRAIN_INPUTS - 1 + this._memoryUnits.length + i] = _soundInputs[i];
 			}
 			// Main brain computation
 			double[] outputs = this._brain.outputs(_inputs);
 			// Save memory units
 			for(int i = 0; i < this._memoryUnits.length; i++)
 			{
-				_memoryUnits[i] = outputs[Uckeleoid.BRAIN_OUTPUTS + i - 1];
+				_memoryUnits[i] = outputs[Creature.BRAIN_OUTPUTS + i - 1];
 			}
 			// Clear the sound inputs and set the sound outputs
 			for(int i = 0; i < this._soundInputs.length; i++)
 			{
 				this._soundInputs[i] = 0;
-				this._soundOutputs[i] = outputs[Uckeleoid.BRAIN_OUTPUTS - 1 + this._memoryUnits.length + i];
+				this._soundOutputs[i] = outputs[Creature.BRAIN_OUTPUTS - 1 + this._memoryUnits.length + i];
 			}
 			// Hard coded outputs (actionable outputs)
 			int maxActionOutput = 0;
-			for(int i = 1; i < Uckeleoid.BRAIN_OUTPUTS; i++)
+			for(int i = 1; i < Creature.BRAIN_OUTPUTS; i++)
 			{
 				if(outputs[i] > outputs[maxActionOutput])
 				{
@@ -234,22 +234,22 @@ public class Uckeleoid implements Serializable
 				}
 			}
 			// Return the output conversion to action
-			return(UckeleoidAction.convertIntegerToAction(maxActionOutput));
+			return(Action.convertIntegerToAction(maxActionOutput));
 		}
 	}
 
-	public UckeleoidAction getInvoluntaryAction()
+	public Action getInvoluntaryAction()
 	{
 		// Forced actions
-		// Old Uckeleoids Die
-		if(this._age > Uckeleoid.MAXIMUM_AGE || this._food < 1)
+		// Old Creatures Die
+		if(this._age > Creature.MAXIMUM_AGE || this._food < 1)
 		{
-			return(UckeleoidAction.DIE);
+			return(Action.DIE);
 		}
-		// Pregnant Uckeleoids can give birth
-		else if(this._gestation > Uckeleoid.MAXIMUM_GESTATION)
+		// Pregnant Creatures can give birth
+		else if(this._gestation > Creature.MAXIMUM_GESTATION)
 		{
-			return(UckeleoidAction.BIRTH);
+			return(Action.BIRTH);
 		}
 
 		// If there are no involuntary actions, return null
@@ -292,22 +292,22 @@ public class Uckeleoid implements Serializable
 		return(this._gender == Gender.FEMALE);
 	}
 
-	public Uckeleoid getFetus()
+	public Creature getFetus()
 	{
 		return(_fetus);
 	}
 
-	public UckeleoidBrain getBrain()
+	public Brain getBrain()
 	{
 		return(_brain);
 	}
 
-	public void executeAction(UckeleoidAction action)
+	public void executeAction(Action action)
 	{
 		executeAction(action, null);
 	}
 
-	public void executeAction(UckeleoidAction action, Uckeleoid breedingTarget)
+	public void executeAction(Action action, Creature breedingTarget)
 	{
 		switch(action)
 		{
@@ -321,10 +321,10 @@ public class Uckeleoid implements Serializable
 					this._gestation = 1;
 					this._fetus = createOffspringWith(breedingTarget);
 				}
-				this._food += Uckeleoid.BREEDING_FOOD_RATE;
+				this._food += Creature.BREEDING_FOOD_RATE;
 				break;
 			case MOVE:
-				this._food += Uckeleoid.MOVING_FOOD_RATE;
+				this._food += Creature.MOVING_FOOD_RATE;
 				this._r += Direction.getVerticalComponent(this._facing);
 				this._c += Direction.getHorizontalComponent(this._facing);
 				break;
@@ -339,10 +339,10 @@ public class Uckeleoid implements Serializable
 				this._facing = Direction.stepClockwise(this._facing);
 				break;
 			case EAT:
-				this._food += Uckeleoid.EATING_FOOD_RATE;
-				if(this._food > Uckeleoid.MAXIMUM_FOOD)
+				this._food += Creature.EATING_FOOD_RATE;
+				if(this._food > Creature.MAXIMUM_FOOD)
 				{
-					this._food = Uckeleoid.MAXIMUM_FOOD;
+					this._food = Creature.MAXIMUM_FOOD;
 				}
 				break;
 			default:
@@ -358,15 +358,14 @@ public class Uckeleoid implements Serializable
 
 	}
 
-	public void failAction(UckeleoidAction action)
+	public void failAction(Action action)
 	{
 		switch(action)
 		{
 			case BIRTH:
 				// If gestation has been reached but the birth failed,
-				// let the Uckeleoid have a round of freedom before trying to
-				// give
-				// birth again
+				// let the Creature have a round of freedom before trying to
+				// give birth again
 				this._gestation -= 2;
 				break;
 			case BREED:
@@ -398,14 +397,14 @@ public class Uckeleoid implements Serializable
 		}
 	}
 
-	private Uckeleoid createOffspringWith(Uckeleoid breedingTarget)
+	private Creature createOffspringWith(Creature breedingTarget)
 	{
-		return new Uckeleoid(this, breedingTarget, _world);
+		return new Creature(this, breedingTarget, _world);
 	}
 
 	public String toString(RenderCode code)
 	{
-		if(code == RenderCode.COMPLEX_UCKELEOID || code == RenderCode.SIMPLE_UCKELEOID)
+		if(code == RenderCode.COMPLEX_CREATURE || code == RenderCode.SIMPLE_CREATURE)
 		{
 			return this.renderSelf(code);
 		}
@@ -421,44 +420,44 @@ public class Uckeleoid implements Serializable
 	private String renderSelf(RenderCode code)
 	{
 		StringBuilder output = new StringBuilder();
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "Uckeleoid ID: " : "U_");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "Creature ID: " : "U_");
 		output.append(this._id);
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nCoordinates: (" : " @(");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "\nCoordinates: (" : " @(");
 		output.append(this._r);
 		output.append(',');
 		output.append(this._c);
 		output.append(")");
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nGeneration: " : " GEN-");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "\nGeneration: " : " GEN-");
 		output.append(this._generation);
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nGender: " : "");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "\nGender: " : "");
 		if(this._gender == Gender.FEMALE)
 		{
-			output.append(code == RenderCode.COMPLEX_UCKELEOID ? "Female" : '女');
+			output.append(code == RenderCode.COMPLEX_CREATURE ? "Female" : '女');
 		}
 		else
 		{
-			output.append(code == RenderCode.COMPLEX_UCKELEOID ? "Male" : '男');
+			output.append(code == RenderCode.COMPLEX_CREATURE ? "Male" : '男');
 		}
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nAge: " : "/a:");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "\nAge: " : "/a:");
 		output.append(this._age);
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nGestation: " : "/g:");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "\nGestation: " : "/g:");
 		output.append(this._gestation);
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nFood: " : "/f:");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "\nFood: " : "/f:");
 		output.append(this._food);
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nFacing: " : "/f:");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "\nFacing: " : "/f:");
 		switch(this._facing)
 		{
 			case EAST:
-				output.append(code == RenderCode.COMPLEX_UCKELEOID ? "East" : '东');
+				output.append(code == RenderCode.COMPLEX_CREATURE ? "East" : '东');
 				break;
 			case NORTH:
-				output.append(code == RenderCode.COMPLEX_UCKELEOID ? "North" : '北');
+				output.append(code == RenderCode.COMPLEX_CREATURE ? "North" : '北');
 				break;
 			case SOUTH:
-				output.append(code == RenderCode.COMPLEX_UCKELEOID ? "South" : '南');
+				output.append(code == RenderCode.COMPLEX_CREATURE ? "South" : '南');
 				break;
 			case WEST:
-				output.append(code == RenderCode.COMPLEX_UCKELEOID ? "West" : '西');
+				output.append(code == RenderCode.COMPLEX_CREATURE ? "West" : '西');
 				break;
 		}
 
@@ -466,11 +465,11 @@ public class Uckeleoid implements Serializable
 
 		for(int i = 0; i < this._memoryUnits.length; i++)
 		{
-			output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nMemory: "+i : "");
+			output.append(code == RenderCode.COMPLEX_CREATURE ? "\nMemory: "+i : "");
 			output.append(this._memoryUnits[i]);
 		}
 
-		output.append(code == RenderCode.COMPLEX_UCKELEOID ? "\nAction: " : " ");
+		output.append(code == RenderCode.COMPLEX_CREATURE ? "\nAction: " : " ");
 
 		output.append(this._action);
 
@@ -532,12 +531,12 @@ public class Uckeleoid implements Serializable
 		this._facing = facing;
 	}
 
-	public void setFetus(Uckeleoid fetus)
+	public void setFetus(Creature fetus)
 	{
 		this._fetus = fetus;
 	}
 
-	public void setBrain(UckeleoidBrain brain)
+	public void setBrain(Brain brain)
 	{
 		this._brain = brain;
 	}

@@ -3,12 +3,12 @@ package com.johnuckele.vivarium.scripts;
 import java.util.LinkedList;
 import java.util.Random;
 
-import com.johnuckele.vivarium.core.Uckeleoid;
+import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.World;
 
-public class ExtractUckeleoidFromWorld extends Script
+public class ExtractCreatureFromWorld extends Script
 {
-	public ExtractUckeleoidFromWorld(String[] args)
+	public ExtractCreatureFromWorld(String[] args)
 	{
 		super(args);
 	}
@@ -24,7 +24,7 @@ public class ExtractUckeleoidFromWorld extends Script
 
 	@Override protected String getUsage()
 	{
-		return "Usage: java scriptPath worldInputFilePath uckeleoidOutputFilePath [uckeleoidID]";
+		return "Usage: java scriptPath worldInputFilePath creatureOutputFilePath [creatureID]";
 	}
 
 	@Override protected void run(String[] args)
@@ -32,22 +32,22 @@ public class ExtractUckeleoidFromWorld extends Script
 		// Load the world file
 		World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
 
-		// Find the specific Uckeleoid requested if one was requested
-		Uckeleoid u = null;
-		LinkedList<Uckeleoid> uckeleoids = w.getAllUckeleoids();
+		// Find the specific Creature requested if one was requested
+		Creature u = null;
+		LinkedList<Creature> creatures = w.getAllCreatures();
 		if(args.length == 3)
 		{
-			int uckeleoidId = Integer.parseInt(args[2]);
-			for(Uckeleoid tempU : uckeleoids)
+			int creatureID = Integer.parseInt(args[2]);
+			for(Creature tempU : creatures)
 			{
-				if(tempU.getID() == uckeleoidId)
+				if(tempU.getID() == creatureID)
 				{
 					u = tempU;
 				}
 			}
 			if ( u == null )
 			{
-				System.err.println("Uckeleloid with ID "+uckeleoidId+" not found");
+				System.err.println("Uckeleloid with ID "+creatureID+" not found");
 				System.exit(-1);
 			}
 		}
@@ -55,17 +55,17 @@ public class ExtractUckeleoidFromWorld extends Script
 		else
 		{
 			Random random = new Random();
-			u = uckeleoids.get(random.nextInt(uckeleoids.size()));
+			u = creatures.get(random.nextInt(creatures.size()));
 		}
 
-		// Disconnect the Uckeleoid and save it
+		// Disconnect the Creature and save it
 		u.disconnectFromWorld();
 		ScriptIO.saveUckeleloid(u, args[1], Format.JAVA_SERIALIZABLE);
 	}
 
 	public static void main(String[] args)
 	{
-		new ExtractUckeleoidFromWorld(args);
+		new ExtractCreatureFromWorld(args);
 	}
 	
 }

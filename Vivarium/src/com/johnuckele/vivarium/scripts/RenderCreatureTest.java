@@ -4,7 +4,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
-public class RenderUckeleoidTest
+public class RenderCreatureTest
 {
 	@Test public void test()
 	{
@@ -15,17 +15,17 @@ public class RenderUckeleoidTest
 			{ "test.viv", ""+worldSize };
 			CreateWorld.main(commandArgs);
 		}
-		// Extract the uckeleoid
+		// Extract the creature
 		{
 			String[] commandArgs =
 			{ "test.viv", "test.uck" };
-			ExtractUckeleoidFromWorld.main(commandArgs);
+			ExtractCreatureFromWorld.main(commandArgs);
 		}
-		// Render the uckeleoid
+		// Render the creature
 		{
 			String[] commandArgs =
 			{ "test.uck" };
-			RenderUckeleoid.main(commandArgs);
+			RenderCreature.main(commandArgs);
 		}
 		assertTrue("Code did not crash", true);
 	}

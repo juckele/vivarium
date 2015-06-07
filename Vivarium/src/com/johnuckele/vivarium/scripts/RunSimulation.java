@@ -32,8 +32,8 @@ public class RunSimulation extends Script
 	{
 		// Load
 		World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
-		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
-		System.out.println("Uckeleoid count in loaded world: "+uckeleoidCount);
+		int creatureCount = w.getCount(WorldObject.CREATURE);
+		System.out.println("Creature count in loaded world: "+creatureCount);
 
 		// Run simulation
 		int simulationTicks = Integer.parseInt(args[1]);
@@ -41,8 +41,8 @@ public class RunSimulation extends Script
 		{
 			w.tick();
 		}
-		uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
-		System.out.println("Uckeleoid count after simulations: "+uckeleoidCount);
+		creatureCount = w.getCount(WorldObject.CREATURE);
+		System.out.println("Creature count after simulations: "+creatureCount);
 
 		// Save
 		if(args.length == 3)

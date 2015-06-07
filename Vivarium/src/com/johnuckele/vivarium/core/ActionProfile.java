@@ -10,18 +10,18 @@ public class ActionProfile implements Serializable
 	
 	public ActionProfile()
 	{
-		_actionCount = new int[2][UckeleoidAction.getDistinctActionCount()];
+		_actionCount = new int[2][Action.getDistinctActionCount()];
 	}
 
-	public void recordAction(UckeleoidAction action, boolean didSucceed)
+	public void recordAction(Action action, boolean didSucceed)
 	{
-		int actionInt = UckeleoidAction.convertActionToInteger(action);
+		int actionInt = Action.convertActionToInteger(action);
 		_actionCount[didSucceed ? 1 : 0][actionInt]++;
 	}
 
-	public int getActionCount(UckeleoidAction action, boolean didSucceed)
+	public int getActionCount(Action action, boolean didSucceed)
 	{
-		int actionInt = UckeleoidAction.convertActionToInteger(action);
+		int actionInt = Action.convertActionToInteger(action);
 		return(_actionCount[didSucceed ? 1 : 0][actionInt]);
 	}
 
@@ -29,7 +29,7 @@ public class ActionProfile implements Serializable
 	{
 		for(int i = 0; i < 2; i++)
 		{
-			for(int j = 0; j < UckeleoidAction.getDistinctActionCount(); j++)
+			for(int j = 0; j < Action.getDistinctActionCount(); j++)
 			{
 				this._actionCount[i][j] += history._actionCount[i][j];
 			}

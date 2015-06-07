@@ -1,10 +1,10 @@
 package com.johnuckele.vivarium.core;
 
-public enum UckeleoidAction
+public enum Action
 {
 	REST, MOVE, TURN_LEFT, TURN_RIGHT, EAT, BREED, BIRTH, DIE;
 
-	public static UckeleoidAction convertIntegerToAction(int i)
+	public static Action convertIntegerToAction(int i)
 	{
 		switch ( i )
 		{
@@ -29,7 +29,7 @@ public enum UckeleoidAction
 		}
 	}
 
-	public static int convertActionToInteger(UckeleoidAction a)
+	public static int convertActionToInteger(Action a)
 	{
 		switch ( a )
 		{

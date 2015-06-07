@@ -1,11 +1,11 @@
 package com.johnuckele.vivarium.scripts;
 
-import com.johnuckele.vivarium.core.Uckeleoid;
+import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class RenderUckeleoid extends Script
+public class RenderCreature extends Script
 {
-	public RenderUckeleoid(String[] args)
+	public RenderCreature(String[] args)
 	{
 		super(args);
 	}
@@ -26,14 +26,14 @@ public class RenderUckeleoid extends Script
 
 	@Override protected void run(String[] args)
 	{
-		Uckeleoid u = ScriptIO.loadUckeleoid(args[0], Format.JAVA_SERIALIZABLE);
+		Creature u = ScriptIO.loadCreature(args[0], Format.JAVA_SERIALIZABLE);
 		System.out.println(u.toString(RenderCode.BRAIN_WEIGHTS));
-		System.out.println(u.toString(RenderCode.COMPLEX_UCKELEOID));
+		System.out.println(u.toString(RenderCode.COMPLEX_CREATURE));
 
 	}
 
 	public static void main(String[] args)
 	{
-		new RenderUckeleoid(args);
+		new RenderCreature(args);
 	}
 }

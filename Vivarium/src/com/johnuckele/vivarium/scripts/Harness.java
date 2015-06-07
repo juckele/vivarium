@@ -8,7 +8,7 @@ public class Harness
 		
 		{
 			String[] commandArgs =
-			{ "data/world_saves/medium.viv", "25", "uckeleoidMemoryUnitCount", "1"};
+			{ "data/world_saves/medium.viv", "25", "creatureMemoryUnitCount", "1"};
 			CreateWorld.main(commandArgs);
 
 		}

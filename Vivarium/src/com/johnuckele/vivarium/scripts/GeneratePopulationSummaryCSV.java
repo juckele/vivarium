@@ -76,7 +76,7 @@ public class GeneratePopulationSummaryCSV extends Script
 		// Start building data row
 
 		// Unique population
-		csvStringBuilder.append(w.getMaximumUckeleoidID());
+		csvStringBuilder.append(w.getMaximimCreatureID());
 		csvStringBuilder.append(',');
 		// minimum population
 		csvStringBuilder.append(minPopulation);

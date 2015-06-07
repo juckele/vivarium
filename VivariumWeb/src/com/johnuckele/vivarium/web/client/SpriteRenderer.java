@@ -13,18 +13,18 @@ public class SpriteRenderer
 	private static int		WALL_Y				= 0 * PIXEL_BLOCK_SIZE;
 	private static int		FOOD_X				= 1 * PIXEL_BLOCK_SIZE;
 	private static int		FOOD_Y				= 1 * PIXEL_BLOCK_SIZE;
-	private static int		RED_UCKELEOID_1_X	= 0 * PIXEL_BLOCK_SIZE;
-	private static int		RED_UCKELEOID_1_Y	= 2 * PIXEL_BLOCK_SIZE;
-	private static int		RED_UCKELEOID_2_X	= 1 * PIXEL_BLOCK_SIZE;
-	private static int		RED_UCKELEOID_2_Y	= 2 * PIXEL_BLOCK_SIZE;
-	private static int		RED_UCKELEOID_3_X	= 2 * PIXEL_BLOCK_SIZE;
-	private static int		RED_UCKELEOID_3_Y	= 2 * PIXEL_BLOCK_SIZE;
-	private static int		BLUE_UCKELEOID_1_X	= 0 * PIXEL_BLOCK_SIZE;
-	private static int		BLUE_UCKELEOID_1_Y	= 3 * PIXEL_BLOCK_SIZE;
-	private static int		BLUE_UCKELEOID_2_X	= 1 * PIXEL_BLOCK_SIZE;
-	private static int		BLUE_UCKELEOID_2_Y	= 3 * PIXEL_BLOCK_SIZE;
-	private static int		BLUE_UCKELEOID_3_X	= 2 * PIXEL_BLOCK_SIZE;
-	private static int		BLUE_UCKELEOID_3_Y	= 3 * PIXEL_BLOCK_SIZE;
+	private static int		RED_CREATURE_1_X	= 0 * PIXEL_BLOCK_SIZE;
+	private static int		RED_CREATURE_1_Y	= 2 * PIXEL_BLOCK_SIZE;
+	private static int		RED_CREATURE_2_X	= 1 * PIXEL_BLOCK_SIZE;
+	private static int		RED_CREATURE_2_Y	= 2 * PIXEL_BLOCK_SIZE;
+	private static int		RED_CREATURE_3_X	= 2 * PIXEL_BLOCK_SIZE;
+	private static int		RED_CREATURE_3_Y	= 2 * PIXEL_BLOCK_SIZE;
+	private static int		BLUE_CREATURE_1_X	= 0 * PIXEL_BLOCK_SIZE;
+	private static int		BLUE_CREATURE_1_Y	= 3 * PIXEL_BLOCK_SIZE;
+	private static int		BLUE_CREATURE_2_X	= 1 * PIXEL_BLOCK_SIZE;
+	private static int		BLUE_CREATURE_2_Y	= 3 * PIXEL_BLOCK_SIZE;
+	private static int		BLUE_CREATURE_3_X	= 2 * PIXEL_BLOCK_SIZE;
+	private static int		BLUE_CREATURE_3_Y	= 3 * PIXEL_BLOCK_SIZE;
 
 	private Context2d		_context;
 	private ImageElement	_imageElement;
@@ -59,35 +59,35 @@ public class SpriteRenderer
 			sourceX = FOOD_X;
 			sourceY = FOOD_Y;
 		}
-		else if(sprite == Sprite.RED_UCKELEOID_1)
+		else if(sprite == Sprite.RED_CREATURE_1)
 		{
-			sourceX = RED_UCKELEOID_1_X;
-			sourceY = RED_UCKELEOID_1_Y;
+			sourceX = RED_CREATURE_1_X;
+			sourceY = RED_CREATURE_1_Y;
 		}
-		else if(sprite == Sprite.RED_UCKELEOID_2)
+		else if(sprite == Sprite.RED_CREATURE_2)
 		{
-			sourceX = RED_UCKELEOID_2_X;
-			sourceY = RED_UCKELEOID_2_Y;
+			sourceX = RED_CREATURE_2_X;
+			sourceY = RED_CREATURE_2_Y;
 		}
-		else if(sprite == Sprite.RED_UCKELEOID_3)
+		else if(sprite == Sprite.RED_CREATURE_3)
 		{
-			sourceX = RED_UCKELEOID_3_X;
-			sourceY = RED_UCKELEOID_3_Y;
+			sourceX = RED_CREATURE_3_X;
+			sourceY = RED_CREATURE_3_Y;
 		}
-		else if(sprite == Sprite.BLUE_UCKELEOID_1)
+		else if(sprite == Sprite.BLUE_CREATURE_1)
 		{
-			sourceX = BLUE_UCKELEOID_1_X;
-			sourceY = BLUE_UCKELEOID_1_Y;
+			sourceX = BLUE_CREATURE_1_X;
+			sourceY = BLUE_CREATURE_1_Y;
 		}
-		else if(sprite == Sprite.BLUE_UCKELEOID_2)
+		else if(sprite == Sprite.BLUE_CREATURE_2)
 		{
-			sourceX = BLUE_UCKELEOID_2_X;
-			sourceY = BLUE_UCKELEOID_2_Y;
+			sourceX = BLUE_CREATURE_2_X;
+			sourceY = BLUE_CREATURE_2_Y;
 		}
-		else if(sprite == Sprite.BLUE_UCKELEOID_3)
+		else if(sprite == Sprite.BLUE_CREATURE_3)
 		{
-			sourceX = BLUE_UCKELEOID_3_X;
-			sourceY = BLUE_UCKELEOID_3_Y;
+			sourceX = BLUE_CREATURE_3_X;
+			sourceY = BLUE_CREATURE_3_Y;
 		}
 		// Translate and rotate
 		_context.translate((c + 0.5) * PIXEL_BLOCK_SIZE, (r + 0.5) * PIXEL_BLOCK_SIZE);

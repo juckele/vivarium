@@ -17,14 +17,14 @@ public class World implements Serializable
 
 	private WorldVariables			_worldVariables;
 
-	private int						_maximumUckeleoidID;
+	private int						_maximumCreatureID;
 	private int						_tickCounter;
 	protected int					_worldDimensions;
 
 	protected WorldObject[][]		_worldObjectGrid;
-	protected Uckeleoid[][]			_uckeleoidGrid;
-	protected LinkedList<Uckeleoid>	_liveUckeleoidList;
-	private LinkedList<Uckeleoid>	_deadUckeleoidList;
+	protected Creature[][]			_creatureGrid;
+	protected LinkedList<Creature>	_liveCreatureList;
+	private LinkedList<Creature>	_deadCreatureList;
 	
 	// Optional data strucures
 	private CensusRecord			_census;
@@ -35,7 +35,7 @@ public class World implements Serializable
 	{
 		// Set up base variables
 		this._worldVariables = worldVariables;
-		this._maximumUckeleoidID = 0;
+		this._maximumCreatureID = 0;
 		this._tickCounter = 0;
 
 		// Size the world
@@ -54,7 +54,7 @@ public class World implements Serializable
 		// Take an initial census
 		if(this._worldVariables.getKeepCensusData())
 		{
-			this._census = new CensusRecord(this.getCount(WorldObject.UCKELEOID));
+			this._census = new CensusRecord(this.getCount(WorldObject.CREATURE));
 		}
 	}
 
@@ -70,7 +70,7 @@ public class World implements Serializable
 			for(int c = 0; c < _worldDimensions; c++)
 			{
 				_worldObjectGrid[r][c] = WorldObject.EMPTY;
-				_uckeleoidGrid[r][c] = null;
+				_creatureGrid[r][c] = null;
 				if(r < 1 || c < 1 || r > _worldDimensions - 2 || c > _worldDimensions - 2)
 				{
 					_worldObjectGrid[r][c] = WorldObject.WALL;
@@ -80,7 +80,7 @@ public class World implements Serializable
 					double randomNumber = Rand.getRandomPositiveDouble();
 					double wallProbability = _worldVariables.getInitialWallGenerationProbability();
 					double foodProbability = _worldVariables.getInitialFoodGenerationProbability();
-					double uckeleoidProbability = _worldVariables.getInitialUckeleoidGenerationProbability();
+					double creatureProbability = _worldVariables.getInitialCreatureGenerationProbability();
 					if(randomNumber < wallProbability)
 					{
 						_worldObjectGrid[r][c] = WorldObject.WALL;
@@ -89,12 +89,12 @@ public class World implements Serializable
 					{
 						_worldObjectGrid[r][c] = WorldObject.FOOD;
 					}
-					else if(randomNumber < wallProbability + foodProbability + uckeleoidProbability)
+					else if(randomNumber < wallProbability + foodProbability + creatureProbability)
 					{
-						_worldObjectGrid[r][c] = WorldObject.UCKELEOID;
-						Uckeleoid uckeleoid = new Uckeleoid(this, r, c);
-						_uckeleoidGrid[r][c] = uckeleoid;
-						_liveUckeleoidList.add(uckeleoid);
+						_worldObjectGrid[r][c] = WorldObject.CREATURE;
+						Creature creature = new Creature(this, r, c);
+						_creatureGrid[r][c] = creature;
+						_liveCreatureList.add(creature);
 					}
 				}
 			}
@@ -103,36 +103,36 @@ public class World implements Serializable
 
 	public int requestNewUckleoidID()
 	{
-		return(++_maximumUckeleoidID);
+		return(++_maximumCreatureID);
 	}
 
 	/**
 	 * Top level simulation step of the entire world and all denizens within it.
-	 * Simulations are divided into four phases: 1, each uckeleoid will age and
-	 * compute other time based values. 2, each uckeleoid will decide on an
-	 * action to attempt. 3, each uckeleoid will attempt to execute the planned
+	 * Simulations are divided into four phases: 1, each creature will age and
+	 * compute other time based values. 2, each creatur will decide on an
+	 * action to attempt. 3, each creature will attempt to execute the planned
 	 * action (the order of execution on the actions is currently left to right,
-	 * top to bottom, so some uckeleoids will get priority if actions conflict).
+	 * top to bottom, so some creature will get priority if actions conflict).
 	 * 4, finally, food is spawned at a constant chance in empty spaces in the
 	 * world.
 	 */
 	public void tick()
 	{
-		// Each uckeleoid calculates time based
+		// Each creature calculates time based
 		// changes in condition such as age,
 		// gestation, and energy levels.
-		tickUckeleoids();
+		tickCreatures();
 
-		// Uckeleoids transmit sound
+		// Creatures transmit sound
 		transmitSounds();
 		
-		// Each uckeleoid plans which actions to
+		// Each creature plans which actions to
 		// attempt to do during the next phase
-		letUckeleoidsPlan();
+		letCreaturesPlan();
 
-		// Each uckeleoid will physically try to carry
+		// Each creature will physically try to carry
 		// out the planned action
-		executeUckeleoidActions();
+		executeCreaturePlans();
 
 		// New food resources will be spawned in the world
 		spawnFood();
@@ -141,19 +141,19 @@ public class World implements Serializable
 		this._tickCounter++;
 		if(this._worldVariables.getKeepCensusData())
 		{
-			this._census.updateRecords(this._tickCounter, this._liveUckeleoidList.size());
+			this._census.updateRecords(this._tickCounter, this._liveCreatureList.size());
 		}
 	}
 
-	private void tickUckeleoids()
+	private void tickCreatures()
 	{
 		for(int r = 0; r < _worldDimensions; r++)
 		{
 			for(int c = 0; c < _worldDimensions; c++)
 			{
-				if(_worldObjectGrid[r][c] == WorldObject.UCKELEOID)
+				if(_worldObjectGrid[r][c] == WorldObject.CREATURE)
 				{
-					_uckeleoidGrid[r][c].tick();
+					_creatureGrid[r][c].tick();
 				}
 			}
 		}
@@ -161,104 +161,104 @@ public class World implements Serializable
 
 	private void transmitSounds()
 	{
-		if(this._worldVariables.getUckeleoidSoundChannelCount() > 0)
+		if(this._worldVariables.getCreatureSoundChannelCount() > 0)
 		{
-			for(Uckeleoid listeningUckeleoid : this._liveUckeleoidList)
+			for(Creature listener : this._liveCreatureList)
 			{
-				for(Uckeleoid speakingUckeleoid : this._liveUckeleoidList)
+				for(Creature speaker : this._liveCreatureList)
 				{
-					if( listeningUckeleoid != speakingUckeleoid )
+					if( listener != speaker )
 					{
-						listeningUckeleoid.listenToUckeleoid(speakingUckeleoid);
+						listener.listenToCreature(speaker);
 					}
 				}
 			}
 		}
 	}
 
-	private void letUckeleoidsPlan()
+	private void letCreaturesPlan()
 	{
-		for(Uckeleoid uckeleoid : this._liveUckeleoidList)
+		for(Creature creature : this._liveCreatureList)
 		{
-			uckeleoid.planAction();
+			creature.planAction();
 		}
 	}
 
-	private void executeUckeleoidActions()
+	private void executeCreaturePlans()
 	{
-		// Uckeleoids act
-		LinkedList<Uckeleoid> dyingUckeleoids = new LinkedList<Uckeleoid>();
-		LinkedList<Uckeleoid> spawningUckeleoids = new LinkedList<Uckeleoid>();
-		for(Uckeleoid uckeleoid : this._liveUckeleoidList)
+		// Creatures act
+		LinkedList<Creature> dyingCreatures = new LinkedList<Creature>();
+		LinkedList<Creature> spawningCreatures = new LinkedList<Creature>();
+		for(Creature creature : this._liveCreatureList)
 		{
-			UckeleoidAction uckeleoidAction = uckeleoid.getAction();
-			Direction uckeleoidFacing = uckeleoid.getFacing();
-			int r = uckeleoid.getR();
-			int c = uckeleoid.getC();
-			int facingR = r + Direction.getVerticalComponent(uckeleoidFacing);
-			int facingC = c + Direction.getHorizontalComponent(uckeleoidFacing);
+			Action action = creature.getAction();
+			Direction facing = creature.getFacing();
+			int r = creature.getR();
+			int c = creature.getC();
+			int facingR = r + Direction.getVerticalComponent(facing);
+			int facingC = c + Direction.getHorizontalComponent(facing);
 			// Death
-			if(uckeleoidAction == UckeleoidAction.DIE)
+			if(action == Action.DIE)
 			{
-				uckeleoid.executeAction(uckeleoidAction);
+				creature.executeAction(action);
 				removeObject(r, c);
-				dyingUckeleoids.add(uckeleoid);
+				dyingCreatures.add(creature);
 			}
 			// Various actions that always succeed and are simple
-			else if(uckeleoidAction == UckeleoidAction.TURN_LEFT || uckeleoidAction == UckeleoidAction.TURN_RIGHT || uckeleoidAction == UckeleoidAction.REST)
+			else if(action == Action.TURN_LEFT || action == Action.TURN_RIGHT || action == Action.REST)
 			{
-				uckeleoid.executeAction(uckeleoidAction);
+				creature.executeAction(action);
 			}
 			// Movement
-			else if(uckeleoidAction == UckeleoidAction.MOVE && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
+			else if(action == Action.MOVE && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
 			{
-				uckeleoid.executeAction(uckeleoidAction);
-				moveObject(r, c, uckeleoidFacing);
+				creature.executeAction(action);
+				moveObject(r, c, facing);
 			}
 			// Eating
-			else if(uckeleoidAction == UckeleoidAction.EAT && _worldObjectGrid[facingR][facingC] == WorldObject.FOOD)
+			else if(action == Action.EAT && _worldObjectGrid[facingR][facingC] == WorldObject.FOOD)
 			{
-				uckeleoid.executeAction(uckeleoidAction);
-				removeObject(r, c, uckeleoidFacing);
+				creature.executeAction(action);
+				removeObject(r, c, facing);
 			}
 			// Attempt to breed
-			else if(uckeleoidAction == UckeleoidAction.BREED
-			// Make sure we're facing another uckeleoid
-					&& _worldObjectGrid[facingR][facingC] == WorldObject.UCKELEOID
-					// And that uckeleoid also is trying to breed
-					&& _uckeleoidGrid[facingR][facingC].getAction() == UckeleoidAction.BREED
-					// Make sure the uckeleoids are facing each other
-					&& uckeleoid.getFacing() == Direction.flipDirection(_uckeleoidGrid[facingR][facingC].getFacing()))
+			else if(action == Action.BREED
+			// Make sure we're facing another creature
+					&& _worldObjectGrid[facingR][facingC] == WorldObject.CREATURE
+					// And that creature also is trying to breed
+					&& _creatureGrid[facingR][facingC].getAction() == Action.BREED
+					// Make sure the creatures are facing each other
+					&& creature.getFacing() == Direction.flipDirection(_creatureGrid[facingR][facingC].getFacing()))
 			{
-				uckeleoid.executeAction(uckeleoidAction, _uckeleoidGrid[facingR][facingC]);
+				creature.executeAction(action, _creatureGrid[facingR][facingC]);
 			}
 			// Giving Birth
-			else if(uckeleoidAction == UckeleoidAction.BIRTH && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
+			else if(action == Action.BIRTH && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
 			{
-				Uckeleoid spawningUckeleoid = uckeleoid.getFetus();
-				uckeleoid.executeAction(uckeleoidAction);
-				setUckeleoid(spawningUckeleoid, facingR, facingC);
-				spawningUckeleoids.add(spawningUckeleoid);
+				Creature spawningCreature = creature.getFetus();
+				creature.executeAction(action);
+				setCreature(spawningCreature, facingR, facingC);
+				spawningCreatures.add(spawningCreature);
 			}
 			// Action failed
 			else
 			{
-				uckeleoid.failAction(uckeleoidAction);
+				creature.failAction(action);
 			}
 		}
-		// Remove dead uckeleoids
-		for(Uckeleoid deadUckeleoid : dyingUckeleoids)
+		// Remove dead creatures
+		for(Creature deadCreatures : dyingCreatures)
 		{
-			this._liveUckeleoidList.remove(deadUckeleoid);
+			this._liveCreatureList.remove(deadCreatures);
 			if(this._worldVariables.getRememberTheDead())
 			{
-				this._deadUckeleoidList.add(deadUckeleoid);
+				this._deadCreatureList.add(deadCreatures);
 			}
 		}
 		// Add newborn rats
-		for(Uckeleoid spawningUckeleoid : spawningUckeleoids)
+		for(Creature spawningCreature : spawningCreatures)
 		{
-			this._liveUckeleoidList.add(spawningUckeleoid);
+			this._liveCreatureList.add(spawningCreature);
 		}
 	}
 
@@ -310,11 +310,11 @@ public class World implements Serializable
 		// Default object move
 		_worldObjectGrid[r2][c2] = _worldObjectGrid[r1][c1];
 		_worldObjectGrid[r1][c1] = WorldObject.EMPTY;
-		// Special uckeleoid move extras
-		if(_worldObjectGrid[r2][c2] == WorldObject.UCKELEOID)
+		// Special creatures move extras
+		if(_worldObjectGrid[r2][c2] == WorldObject.CREATURE)
 		{
-			_uckeleoidGrid[r2][c2] = _uckeleoidGrid[r1][c1];
-			_uckeleoidGrid[r1][c1] = null;
+			_creatureGrid[r2][c2] = _creatureGrid[r1][c1];
+			_creatureGrid[r1][c1] = null;
 		}
 	}
 
@@ -350,17 +350,17 @@ public class World implements Serializable
 		}
 
 		_worldObjectGrid[r][c] = WorldObject.EMPTY;
-		_uckeleoidGrid[r][c] = null;
+		_creatureGrid[r][c] = null;
 	}
 
-	public LinkedList<Uckeleoid> getAllUckeleoids()
+	public LinkedList<Creature> getAllCreatures()
 	{
-		LinkedList<Uckeleoid> allUckeleoids = new LinkedList<Uckeleoid>();
-		allUckeleoids.addAll(this._liveUckeleoidList);
-		allUckeleoids.addAll(this._deadUckeleoidList);
-		Collections.sort(allUckeleoids, new Comparator<Uckeleoid>()
+		LinkedList<Creature> allCreatures = new LinkedList<Creature>();
+		allCreatures.addAll(this._liveCreatureList);
+		allCreatures.addAll(this._deadCreatureList);
+		Collections.sort(allCreatures, new Comparator<Creature>()
 		{
-			@Override public int compare(Uckeleoid o1, Uckeleoid o2)
+			@Override public int compare(Creature o1, Creature o2)
 			{
 				if(o1.getGeneration() > o2.getGeneration())
 				{
@@ -376,7 +376,7 @@ public class World implements Serializable
 				}
 			}
 		});
-		return allUckeleoids;
+		return allCreatures;
 	}
 
 	public CensusRecord getCensus()
@@ -407,14 +407,14 @@ public class World implements Serializable
 		return(count);
 	}
 
-	public int getMaximumUckeleoidID()
+	public int getMaximimCreatureID()
 	{
-		return this._maximumUckeleoidID;
+		return this._maximumCreatureID;
 	}
 
-	public void setMaximumUckeleoidID(int maximumUckeleoidID)
+	public void setMaximumCreatureID(int maximumCreatureID)
 	{
-		this._maximumUckeleoidID = maximumUckeleoidID;
+		this._maximumCreatureID = maximumCreatureID;
 	}
 
 	public int getTickCounter()
@@ -427,20 +427,20 @@ public class World implements Serializable
 		this._tickCounter = tickCounter;
 	}
 
-	public Uckeleoid getUckeleoid(int r, int c)
+	public Creature getCreature(int r, int c)
 	{
-		return this._uckeleoidGrid[r][c];
+		return this._creatureGrid[r][c];
 	}
 
-	public void addUckeleoidAtPosition(Uckeleoid newUckeleoid, int r, int c)
+	public void addCreatureAtPosition(Creature creature, int r, int c)
 	{
-		setObject(WorldObject.UCKELEOID, newUckeleoid, r, c);
-		this._liveUckeleoidList.add(newUckeleoid);
+		setObject(WorldObject.CREATURE, creature, r, c);
+		this._liveCreatureList.add(creature);
 	}
 
-	private void setUckeleoid(Uckeleoid newUckeleoid, int r, int c)
+	private void setCreature(Creature creature, int r, int c)
 	{
-		setObject(WorldObject.UCKELEOID, newUckeleoid, r, c);
+		setObject(WorldObject.CREATURE, creature, r, c);
 	}
 
 	public void setWorldDimensions(int worldDimensions)
@@ -448,9 +448,9 @@ public class World implements Serializable
 		this._worldDimensions = worldDimensions;
 
 		this._worldObjectGrid = new WorldObject[_worldDimensions][_worldDimensions];
-		this._uckeleoidGrid = new Uckeleoid[_worldDimensions][_worldDimensions];
-		this._liveUckeleoidList = new LinkedList<Uckeleoid>();
-		this._deadUckeleoidList = new LinkedList<Uckeleoid>();
+		this._creatureGrid = new Creature[_worldDimensions][_worldDimensions];
+		this._liveCreatureList = new LinkedList<Creature>();
+		this._deadCreatureList = new LinkedList<Creature>();
 	}
 
 	public WorldObject getWorldObject(int r, int c)
@@ -460,9 +460,9 @@ public class World implements Serializable
 
 	public void setObject(WorldObject obj, int r, int c)
 	{
-		if(obj == WorldObject.UCKELEOID)
+		if(obj == WorldObject.CREATURE)
 		{
-			throw new Error("Uckeleoid WorldObjects should not be assinged directly, use setUckeleoid");
+			throw new Error("Creature WorldObjects should not be assinged directly, use setCreature");
 		}
 		setObject(obj, null, r, c);
 	}
@@ -472,18 +472,14 @@ public class World implements Serializable
 		return _worldVariables;
 	}
 
-	private void setObject(WorldObject obj, Uckeleoid newUckeleoid, int r, int c)
+	private void setObject(WorldObject obj, Creature creature, int r, int c)
 	{
 		_worldObjectGrid[r][c] = obj;
-		if(obj == WorldObject.UCKELEOID)
+		if(creature != null)
 		{
-			newUckeleoid.setPosition(r, c);
-			_uckeleoidGrid[r][c] = newUckeleoid;
+			creature.setPosition(r, c);
 		}
-		else
-		{
-			_uckeleoidGrid[r][c] = null;
-		}
+		_creatureGrid[r][c] = creature;
 	}
 
 	public ActionProfile getActionProfileForGeneration(int generation, Gender gender)
@@ -537,35 +533,35 @@ public class World implements Serializable
 		{
 			return(renderBrainWeights());
 		}
-		else if(code == RenderCode.FULL_UCKELEOID_LIST)
+		else if(code == RenderCode.FULL_CREATURE_LIST)
 		{
-			StringBuilder uckeleoidOutput = new StringBuilder();
-			for(Uckeleoid uckeleoid : this.getAllUckeleoids())
+			StringBuilder creatureOutput = new StringBuilder();
+			for(Creature creature : this.getAllCreatures())
 			{
-				uckeleoidOutput.append(uckeleoid.toString(RenderCode.SIMPLE_UCKELEOID));
-				uckeleoidOutput.append('\n');
+				creatureOutput.append(creature.toString(RenderCode.SIMPLE_CREATURE));
+				creatureOutput.append('\n');
 			}
-			return(uckeleoidOutput.toString());
+			return(creatureOutput.toString());
 		}
-		else if(code == RenderCode.LIVE_UCKELEOID_LIST)
+		else if(code == RenderCode.LIVE_CREATURE_LIST)
 		{
-			StringBuilder uckeleoidOutput = new StringBuilder();
-			for(Uckeleoid uckeleoid : this._liveUckeleoidList)
+			StringBuilder creatureOutput = new StringBuilder();
+			for(Creature creature : this._liveCreatureList)
 			{
-				uckeleoidOutput.append(uckeleoid.toString(RenderCode.SIMPLE_UCKELEOID));
-				uckeleoidOutput.append('\n');
+				creatureOutput.append(creature.toString(RenderCode.SIMPLE_CREATURE));
+				creatureOutput.append('\n');
 			}
-			return(uckeleoidOutput.toString());
+			return(creatureOutput.toString());
 		}
-		else if(code == RenderCode.DEAD_UCKELEOID_LIST)
+		else if(code == RenderCode.DEAD_CREATURE_LIST)
 		{
-			StringBuilder uckeleoidOutput = new StringBuilder();
-			for(Uckeleoid uckeleoid : this._deadUckeleoidList)
+			StringBuilder creatureOutput = new StringBuilder();
+			for(Creature creature : this._deadCreatureList)
 			{
-				uckeleoidOutput.append(uckeleoid.toString(RenderCode.SIMPLE_UCKELEOID));
-				uckeleoidOutput.append('\n');
+				creatureOutput.append(creature.toString(RenderCode.SIMPLE_CREATURE));
+				creatureOutput.append('\n');
 			}
-			return(uckeleoidOutput.toString());
+			return(creatureOutput.toString());
 		}
 		else
 		{
@@ -579,8 +575,8 @@ public class World implements Serializable
 		StringBuilder worldOutput = new StringBuilder();
 		worldOutput.append("Walls: ");
 		worldOutput.append(this.getCount(WorldObject.WALL));
-		worldOutput.append(", Uckeleoids: ");
-		worldOutput.append(this.getCount(WorldObject.UCKELEOID));
+		worldOutput.append(", Creatures: ");
+		worldOutput.append(this.getCount(WorldObject.CREATURE));
 		worldOutput.append(", Food: ");
 		worldOutput.append(this.getCount(WorldObject.FOOD));
 		worldOutput.append('\n');
@@ -600,7 +596,7 @@ public class World implements Serializable
 				{
 					worldOutput.append('一');
 				}
-				else if(_worldObjectGrid[r][c] == WorldObject.UCKELEOID)
+				else if(_worldObjectGrid[r][c] == WorldObject.CREATURE)
 				{
 					worldOutput.append('中');
 				}
@@ -613,32 +609,32 @@ public class World implements Serializable
 	private String renderBrainWeights()
 	{
 		// Draw average brain
-		// Draw uckeleoid readouts
-		StringBuilder uckeleoidBrainOutput = new StringBuilder();
-		LinkedList<UckeleoidBrain> brains = new LinkedList<UckeleoidBrain>();
-		for(Uckeleoid rat : this._liveUckeleoidList)
+		// Draw creature readouts
+		StringBuilder brainOutput = new StringBuilder();
+		LinkedList<Brain> brains = new LinkedList<Brain>();
+		for(Creature rat : this._liveCreatureList)
 		{
 			brains.add(rat.getBrain());
 		}
 		if(brains.size() > 0)
 		{
-//			UckeleoidBrain minBrain = UckeleoidBrain.minBrain(brains);
-//			UckeleoidBrain maxBrain = UckeleoidBrain.maxBrain(brains);
-			UckeleoidBrain medianBrain = UckeleoidBrain.medianBrain(brains);
-			UckeleoidBrain standardDeviationBrain = UckeleoidBrain.standardDeviationBrain(brains, medianBrain);
-			uckeleoidBrainOutput.append("Average uckeleoid NN:\n");
-			uckeleoidBrainOutput.append(medianBrain.toString());
-			uckeleoidBrainOutput.append("Std. Deviation on uckeleoid NNs:\n");
-			uckeleoidBrainOutput.append(standardDeviationBrain.toString());
-/*			uckeleoidBrainOutput.append("Min uckeleoid NN:\n");
-			uckeleoidBrainOutput.append(minBrain.toString());
-			uckeleoidBrainOutput.append("Max uckeleoid NN:\n");
-			uckeleoidBrainOutput.append(maxBrain.toString());*/
-			uckeleoidBrainOutput.append("Oldest uckeleoid NN:\n");
-			uckeleoidBrainOutput.append(brains.get(0).toString());
-			uckeleoidBrainOutput.append("Random uckeleoid NN:\n");
-			uckeleoidBrainOutput.append(brains.get(Rand.getRandomInt(brains.size())).toString());
+//			Brain minBrain = Brain.minBrain(brains);
+//			Brain maxBrain = Brain.maxBrain(brains);
+			Brain medianBrain = Brain.medianBrain(brains);
+			Brain standardDeviationBrain = Brain.standardDeviationBrain(brains, medianBrain);
+			brainOutput.append("Average creature NN:\n");
+			brainOutput.append(medianBrain.toString());
+			brainOutput.append("Std. Deviation on creature NNs:\n");
+			brainOutput.append(standardDeviationBrain.toString());
+/*			brainOutput.append("Min creature NN:\n");
+			brainOutput.append(minBrain.toString());
+			brainOutput.append("Max creature NN:\n");
+			brainOutput.append(maxBrain.toString());*/
+			brainOutput.append("Oldest creature NN:\n");
+			brainOutput.append(brains.get(0).toString());
+			brainOutput.append("Random creature NN:\n");
+			brainOutput.append(brains.get(Rand.getRandomInt(brains.size())).toString());
 		}
-		return(uckeleoidBrainOutput.toString());
+		return(brainOutput.toString());
 	}
 }

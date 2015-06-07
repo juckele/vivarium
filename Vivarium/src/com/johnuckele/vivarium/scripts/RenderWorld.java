@@ -29,8 +29,8 @@ public class RenderWorld extends Script
 		World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
 		System.out.println(w.toString(RenderCode.WORLD_MAP));
 		System.out.println(w.toString(RenderCode.BRAIN_WEIGHTS));
-//		System.out.println(w.toString(RenderCode.UCKELEOID_LIST));
-//		System.out.println(w.toString(RenderCode.DEAD_UCKELEOID_LIST));
+//		System.out.println(w.toString(RenderCode.CREATURE_LIST));
+//		System.out.println(w.toString(RenderCode.DEAD_CREATURE_LIST));
 	}
 
 	public static void main(String[] args)

@@ -28,7 +28,7 @@ public class WorldViewer extends JFrame
 	{
 		_w = w;
 		_overviewRenders.add(_w.toString(RenderCode.WORLD_MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
-		_ratListRenders.add(_w.toString(RenderCode.FULL_UCKELEOID_LIST));
+		_ratListRenders.add(_w.toString(RenderCode.FULL_CREATURE_LIST));
 
 		_overviewRender = new JTextArea(_overviewRenders.get(_renderIndex));
 		_ratListRender = new JTextArea(_ratListRenders.get(_renderIndex));
@@ -63,8 +63,8 @@ public class WorldViewer extends JFrame
 			if(tick % renderEvery == 0)
 			{
 				_overviewRenders.add(_w.toString(RenderCode.WORLD_MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
-				_ratListRenders.add(_w.toString(RenderCode.LIVE_UCKELEOID_LIST));
-				System.out.println("Population "+_w.getCount(WorldObject.UCKELEOID));
+				_ratListRenders.add(_w.toString(RenderCode.LIVE_CREATURE_LIST));
+				System.out.println("Population "+_w.getCount(WorldObject.CREATURE));
 			}
 		}
 	}
@@ -95,8 +95,8 @@ public class WorldViewer extends JFrame
 		System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
 		WorldVariables wv = new WorldVariables();
 		wv.setMutationRateExponent(-9);
-		wv.setUckeleoidMemoryUnitCount(1);
-		wv.setUckeleoidSoundChannelCount(1);
+		wv.setCreatureMemoryUnitCount(1);
+		wv.setCreatureSoundChannelCount(1);
 		World w = new World(worldDimensions, wv);
 		System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 

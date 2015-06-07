@@ -1,6 +1,6 @@
 package com.johnuckele.vivarium.web.client;
 
-import com.johnuckele.vivarium.core.Uckeleoid;
+import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 import com.johnuckele.vivarium.core.WorldVariables;
@@ -43,7 +43,7 @@ public class WebWorld extends World
 
 	public void actorRender(SpriteRenderer renderer, int milliseconds)
 	{
-		// Draw uckeleoids and food
+		// Draw creatures and food
 		for(int i = 1; i < this._worldDimensions-1; i++)
 		{
 			for(int j = 1; j < this._worldDimensions-1; j++)
@@ -53,51 +53,51 @@ public class WebWorld extends World
 					renderer.draw(Sprite.FLOOR, i, j);
 					renderer.draw(Sprite.FOOD, i, j);
 				}
-				else if(this._worldObjectGrid[i][j] == WorldObject.UCKELEOID)
+				else if(this._worldObjectGrid[i][j] == WorldObject.CREATURE)
 				{
-					Uckeleoid uckeleoid = this._uckeleoidGrid[i][j];
-					int offsetMilliseconds = (int)(milliseconds + uckeleoid.getRandomSeed() * 1000) % 1000;
-					Sprite uckeleoidSprite;
-					if(uckeleoid.getIsFemale())
+					Creature creature = this._creatureGrid[i][j];
+					int offsetMilliseconds = (int)(milliseconds + creature.getRandomSeed() * 1000) % 1000;
+					Sprite creatureSprites;
+					if(creature.getIsFemale())
 					{
 						if(offsetMilliseconds < 250)
 						{
-							uckeleoidSprite = Sprite.BLUE_UCKELEOID_1;
+							creatureSprites = Sprite.BLUE_CREATURE_1;
 						}
 						else if(offsetMilliseconds < 500)
 						{
-							uckeleoidSprite = Sprite.BLUE_UCKELEOID_2;
+							creatureSprites = Sprite.BLUE_CREATURE_2;
 						}
 						else if(offsetMilliseconds < 750)
 						{
-							uckeleoidSprite = Sprite.BLUE_UCKELEOID_3;
+							creatureSprites = Sprite.BLUE_CREATURE_3;
 						}
 						else
 						{
-							uckeleoidSprite = Sprite.BLUE_UCKELEOID_2;
+							creatureSprites = Sprite.BLUE_CREATURE_2;
 						}
 					}
 					else
 					{
 						if(offsetMilliseconds < 250)
 						{
-							uckeleoidSprite = Sprite.RED_UCKELEOID_1;
+							creatureSprites = Sprite.RED_CREATURE_1;
 						}
 						else if(offsetMilliseconds < 500)
 						{
-							uckeleoidSprite = Sprite.RED_UCKELEOID_2;
+							creatureSprites = Sprite.RED_CREATURE_2;
 						}
 						else if(offsetMilliseconds < 750)
 						{
-							uckeleoidSprite = Sprite.RED_UCKELEOID_3;
+							creatureSprites = Sprite.RED_CREATURE_3;
 						}
 						else
 						{
-							uckeleoidSprite = Sprite.RED_UCKELEOID_2;
+							creatureSprites = Sprite.RED_CREATURE_2;
 						}
 					}
 					renderer.draw(Sprite.FLOOR, i, j);
-					renderer.draw(uckeleoidSprite, i, j, uckeleoid.getFacing());
+					renderer.draw(creatureSprites, i, j, creature.getFacing());
 				}
 			}
 		}

@@ -5,8 +5,8 @@ import com.google.gwt.json.client.JSONObject;
 import com.google.gwt.json.client.JSONParser;
 import com.google.gwt.json.client.JSONValue;
 import com.johnuckele.vivarium.core.Direction;
-import com.johnuckele.vivarium.core.Uckeleoid;
-import com.johnuckele.vivarium.core.UckeleoidBrain;
+import com.johnuckele.vivarium.core.Creature;
+import com.johnuckele.vivarium.core.Brain;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 import com.johnuckele.vivarium.core.WorldVariables;
@@ -28,8 +28,8 @@ public class JSONDecoder
 		w.setWorldDimensions(worldDimensions);
 		int tickCounter = (int)worldJSON.get("tickCounter").isNumber().doubleValue();
 		w.setTickCounter(tickCounter);
-		int maximumUckeleoidID = (int)worldJSON.get("maximumUckeleoidID").isNumber().doubleValue();
-		w.setMaximumUckeleoidID(maximumUckeleoidID);
+		int maximumCreatureID = (int)worldJSON.get("maximumCreatureID").isNumber().doubleValue();
+		w.setMaximumCreatureID(maximumCreatureID);
 
 		// Populate data structures
 		JSONArray worldObjects = worldJSON.get("worldObjects").isArray();
@@ -40,10 +40,10 @@ public class JSONDecoder
 				JSONObject jsonObject = worldObjects.get(r * w.getWorldDimensions() + c).isObject();
 				String worldObjectString = jsonObject.get("type").isString().stringValue();
 				WorldObject objectType = WorldObject.parseString(worldObjectString);
-				if(objectType == WorldObject.UCKELEOID)
+				if(objectType == WorldObject.CREATURE)
 				{
-					Uckeleoid u = JSONDecoder.convertJSONToUckeleoid(w, jsonObject);
-					w.addUckeleoidAtPosition(u, r, c);
+					Creature u = JSONDecoder.convertJSONToCreature(w, jsonObject);
+					w.addCreatureAtPosition(u, r, c);
 				}
 				else
 				{
@@ -71,51 +71,51 @@ public class JSONDecoder
 		return worldVariables;
 	}
 
-	private static Uckeleoid convertJSONToUckeleoid(World w, JSONObject uckeleoidJSON)
+	private static Creature convertJSONToCreature(World w, JSONObject creatureJSON)
 	{
-		int id = (int)uckeleoidJSON.get("id").isNumber().doubleValue();
-		int r = (int)uckeleoidJSON.get("r").isNumber().doubleValue();
-		int c = (int)uckeleoidJSON.get("c").isNumber().doubleValue();
-		Uckeleoid u = new Uckeleoid(w, id, r, c);
+		int id = (int)creatureJSON.get("id").isNumber().doubleValue();
+		int r = (int)creatureJSON.get("r").isNumber().doubleValue();
+		int c = (int)creatureJSON.get("c").isNumber().doubleValue();
+		Creature u = new Creature(w, id, r, c);
 
-		double generation = uckeleoidJSON.get("generation").isNumber().doubleValue();
+		double generation = creatureJSON.get("generation").isNumber().doubleValue();
 		u.setGeneration(generation);
-		boolean isFemale = uckeleoidJSON.get("isFemale").isBoolean().booleanValue();
+		boolean isFemale = creatureJSON.get("isFemale").isBoolean().booleanValue();
 		u.setIsFemale(isFemale);
-		double randomSeed = uckeleoidJSON.get("randomSeed").isNumber().doubleValue();
+		double randomSeed = creatureJSON.get("randomSeed").isNumber().doubleValue();
 		u.setRandomSeed(randomSeed);
-		int age = (int)uckeleoidJSON.get("age").isNumber().doubleValue();
+		int age = (int)creatureJSON.get("age").isNumber().doubleValue();
 		u.setAge(age);
-		int gestation = (int)uckeleoidJSON.get("gestation").isNumber().doubleValue();
+		int gestation = (int)creatureJSON.get("gestation").isNumber().doubleValue();
 		u.setGestation(gestation);
-		int food = (int)uckeleoidJSON.get("food").isNumber().doubleValue();
+		int food = (int)creatureJSON.get("food").isNumber().doubleValue();
 		u.setFood(food);
-		Direction facing = Direction.parseString(uckeleoidJSON.get("facing").isString().stringValue());
+		Direction facing = Direction.parseString(creatureJSON.get("facing").isString().stringValue());
 		u.setFacing(facing);
 		
 		// Restore brain
-		JSONObject brainJSON = uckeleoidJSON.get("brain").isObject();
-		UckeleoidBrain brain = JSONDecoder.convertJSONToUckeleoidBrain(w, brainJSON);
+		JSONObject brainJSON = creatureJSON.get("brain").isObject();
+		Brain brain = JSONDecoder.convertJSONToBrain(w, brainJSON);
 		u.setBrain(brain);
 
 		// Restore fetus if present
-		JSONValue fetusJSON = uckeleoidJSON.get("fetus");
+		JSONValue fetusJSON = creatureJSON.get("fetus");
 		if(fetusJSON != null && fetusJSON.isObject() != null)
 		{
-			Uckeleoid fetus = convertJSONToUckeleoid(w, fetusJSON.isObject());
+			Creature fetus = convertJSONToCreature(w, fetusJSON.isObject());
 			u.setFetus(fetus);
 		}
 		
 		return(u);
 	}
 
-	private static UckeleoidBrain convertJSONToUckeleoidBrain(World w, JSONObject brainJSON)
+	private static Brain convertJSONToBrain(World w, JSONObject brainJSON)
 	{
 		int inputCount = (int)brainJSON.get("inputCount").isNumber().doubleValue();
 		int outputCount = (int)brainJSON.get("outputCount").isNumber().doubleValue();
 		int hiddenLayers = (int)brainJSON.get("hiddenLayers").isNumber().doubleValue();
 		
-		UckeleoidBrain brain = new UckeleoidBrain(inputCount, outputCount, hiddenLayers);
+		Brain brain = new Brain(inputCount, outputCount, hiddenLayers);
 
 		JSONArray weightsJSON = brainJSON.get("weights").isArray();
 		double[][][] weights = new double[weightsJSON.size()][][];

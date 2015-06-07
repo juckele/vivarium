@@ -4,8 +4,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.johnuckele.vivarium.core.Uckeleoid;
-import com.johnuckele.vivarium.core.UckeleoidBrain;
+import com.johnuckele.vivarium.core.Creature;
+import com.johnuckele.vivarium.core.Brain;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 import com.johnuckele.vivarium.core.WorldVariables;
@@ -16,7 +16,7 @@ public class JSONEncoder
 	{
 		JSONObject worldJSON = new JSONObject();
 		// Store basic values
-		worldJSON.put("maximumUckeleoidID", w.getMaximumUckeleoidID());
+		worldJSON.put("maximumCreatureID", w.getMaximimCreatureID());
 		worldJSON.put("tickCounter", w.getTickCounter());
 		worldJSON.put("worldDimensions", w.getWorldDimensions());
 
@@ -30,9 +30,9 @@ public class JSONEncoder
 		{
 			for(int c = 0; c < w.getWorldDimensions(); c++)
 			{
-				if(w.getWorldObject(r, c) == WorldObject.UCKELEOID)
+				if(w.getWorldObject(r, c) == WorldObject.CREATURE)
 				{
-					JSONObject worldObject = convertUckeleoidToJSON(w.getUckeleoid(r, c));
+					JSONObject worldObject = convertCreatureToJSON(w.getCreature(r, c));
 					worldObject.put("type", "" + w.getWorldObject(r, c));
 					worldObjects.put(worldObject);
 				}
@@ -59,11 +59,11 @@ public class JSONEncoder
 		// World gen
 		worldVariablesJSON.put("foodGenerationProbability", worldVariables.getFoodGenerationProbability());
 		worldVariablesJSON.put("initialFoodGenerationProbability", worldVariables.getInitialFoodGenerationProbability());
-		worldVariablesJSON.put("initialUckeleoidGenerationProbability", worldVariables.getInitialUckeleoidGenerationProbability());
+		worldVariablesJSON.put("initialCreatureGenerationProbability", worldVariables.getInitialCreatureGenerationProbability());
 		worldVariablesJSON.put("initialWallGenerationProbability", worldVariables.getInitialWallGenerationProbability());
 		
-		// Uckeleoid Neurology
-		worldVariablesJSON.put("uckeleoidMemoryUnitCount", worldVariables.getUckeleoidMemoryUnitCount());
+		// Neurology
+		worldVariablesJSON.put("creatureMemoryUnitCount", worldVariables.getCreatureMemoryUnitCount());
 		worldVariablesJSON.put("inheritanceGaussianMixRate", worldVariables.getInheritanceGaussianMixRate());
 		worldVariablesJSON.put("inheritanceSinglePickRate", worldVariables.getInheritanceSinglePickRate());
 		worldVariablesJSON.put("mutationRateExponent", worldVariables.getMutationRateExponent());
@@ -76,43 +76,43 @@ public class JSONEncoder
 
 	// Unsaved crap
 	/*
-	 * private UckeleoidBrain _brain; private double[] _memoryUnits;
+	 * private Brain _brain; private double[] _memoryUnits;
 	 * 
-	 * private UckeleoidAction _action;
+	 * private Action _action;
 	 */
-	private static JSONObject convertUckeleoidToJSON(Uckeleoid u) throws JSONException
+	private static JSONObject convertCreatureToJSON(Creature u) throws JSONException
 	{
-		JSONObject uckeleoidJSON = new JSONObject();
-		uckeleoidJSON.put("type", "" + WorldObject.UCKELEOID);
+		JSONObject creatureJSON = new JSONObject();
+		creatureJSON.put("type", "" + WorldObject.CREATURE);
 
 		// Store basic values
-		uckeleoidJSON.put("id", u.getID());
-		uckeleoidJSON.put("r", u.getR());
-		uckeleoidJSON.put("c", u.getC());
-		uckeleoidJSON.put("generation", u.getGeneration());
-		uckeleoidJSON.put("isFemale", u.getIsFemale());
-		uckeleoidJSON.put("randomSeed", u.getRandomSeed());
-		uckeleoidJSON.put("age", u.getAge());
-		uckeleoidJSON.put("gestation", u.getGestation());
-		uckeleoidJSON.put("food", u.getFood());
-		uckeleoidJSON.put("facing", u.getFacing());
+		creatureJSON.put("id", u.getID());
+		creatureJSON.put("r", u.getR());
+		creatureJSON.put("c", u.getC());
+		creatureJSON.put("generation", u.getGeneration());
+		creatureJSON.put("isFemale", u.getIsFemale());
+		creatureJSON.put("randomSeed", u.getRandomSeed());
+		creatureJSON.put("age", u.getAge());
+		creatureJSON.put("gestation", u.getGestation());
+		creatureJSON.put("food", u.getFood());
+		creatureJSON.put("facing", u.getFacing());
 
 		// Store brain
-		JSONObject brainJSON = convertUckeleoidBrainToJSON(u.getBrain());
-		uckeleoidJSON.put("brain", brainJSON);
+		JSONObject brainJSON = convertBrainToJSON(u.getBrain());
+		creatureJSON.put("brain", brainJSON);
 
 		// Store fetus if present
-		Uckeleoid fetus = u.getFetus();
+		Creature fetus = u.getFetus();
 		if(fetus != null)
 		{
-			JSONObject fetusJSON = convertUckeleoidToJSON(fetus);
-			uckeleoidJSON.put("fetus", fetusJSON);
+			JSONObject fetusJSON = convertCreatureToJSON(fetus);
+			creatureJSON.put("fetus", fetusJSON);
 		}
 
-		return(uckeleoidJSON);
+		return(creatureJSON);
 	}
 
-	private static JSONObject convertUckeleoidBrainToJSON(UckeleoidBrain brain) throws JSONException
+	private static JSONObject convertBrainToJSON(Brain brain) throws JSONException
 	{
 		JSONObject brainJSON = new JSONObject();
 		

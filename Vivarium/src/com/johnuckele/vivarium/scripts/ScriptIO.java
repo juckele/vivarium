@@ -10,12 +10,12 @@ import java.io.ObjectOutputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.johnuckele.vivarium.core.Uckeleoid;
+import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.World;
 
 public class ScriptIO
 {
-	public static void saveUckeleloid(Uckeleoid u, String fileName, Format f)
+	public static void saveUckeleloid(Creature u, String fileName, Format f)
 	{
 		if(f == Format.JAVA_SERIALIZABLE)
 		{
@@ -105,9 +105,9 @@ public class ScriptIO
 
 	}
 
-	public static Uckeleoid loadUckeleoid(String fileName, Format f)
+	public static Creature loadCreature(String fileName, Format f)
 	{
-		Uckeleoid u = (Uckeleoid) loadObject(fileName, f);
+		Creature u = (Creature) loadObject(fileName, f);
 		return u;
 	}
 

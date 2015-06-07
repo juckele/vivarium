@@ -42,8 +42,8 @@ public class CreateWorld extends Script
 
 		World w = new World(Integer.parseInt(args[1]), worldVariables);
 
-		int uckeleoidCount = w.getCount(WorldObject.UCKELEOID);
-		System.out.println("Uckeleoid count in new world: "+uckeleoidCount);
+		int creatureCount = w.getCount(WorldObject.CREATURE);
+		System.out.println("Creature count in new world: "+creatureCount);
 
 		ScriptIO.saveWorld(w, args[0], Format.JAVA_SERIALIZABLE);
 	}

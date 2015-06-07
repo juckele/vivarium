@@ -17,12 +17,12 @@ public class WorldVariables implements Serializable
 	// World Gen
 	private static final double	DEFAULT_FOOD_GENERATION_PROBABILITY					= 0.01;
 	private static final double	DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY			= 0.2;
-	private static final double	DEFAULT_INITIAL_UCKELEOID_GENERATION_PROBABILITY	= 0.2;
+	private static final double	DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY	= 0.2;
 	private static final double	DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY			= 0.1;
 
-	// Uckeleoid Neurology
-	private static final int	DEFAULT_UCKELEOID_MEMORY_UNIT_COUNT					= 0;
-	private static final int	DEFAULT_UCKELEOID_SOUND_CHANNEL_COUNT				= 0;
+	// Neurology
+	private static final int	DEFAULT_CREATURE_MEMORY_UNIT_COUNT					= 0;
+	private static final int	DEFAULT_CREATURE_SOUND_CHANNEL_COUNT				= 0;
 	private static final double	DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE				= 0.8;
 	private static final double	DEFAULT_INHERITANCE_SINGLE_PICK_RATE				= 0.2;
 	private static final double	DEFAULT_MUTATION_RATE_EXPONENT						= -7;
@@ -39,11 +39,11 @@ public class WorldVariables implements Serializable
 		// World Gen
 		"foodGenerationProbability",
 		"initialFoodGenerationProbability",
-		"initialUckeleoidGenerationProbability",
+		"initialCreatureGenerationProbability",
 		"initialWallGenerationProbability",
-		// Uckeleoid Neurology
-		"uckeleoidMemoryUnitCount",
-		"uckeleoidSoundChannelCount",
+		// Neurology
+		"creatureMemoryUnitCount",
+		"creatureSoundChannelCount",
 		"inheritanceGaussianMixRate",
 		"inheritanceSinglePickRate",
 		"mutationRateExponent",
@@ -63,12 +63,12 @@ public class WorldVariables implements Serializable
 	// World Gen
 	private double				_foodGenerationProbability;
 	private double				_initialFoodGenerationProbability;
-	private double				_initialUckeleoidGenerationProbability;
+	private double				_initialCreatureGenerationProbability;
 	private double				_initialWallGenerationProbability;
 
-	// Uckeleoid Neurology
-	private int					_uckeleoidMemoryUnitCount;
-	private int					_uckeleoidSoundChannelCount;
+	// Neurology
+	private int					_creatureMemoryUnitCount;
+	private int					_creatureSoundChannelCount;
 	private double				_inheritanceGaussianMixRate;
 	private double				_inheritanceSinglePickRate;
 	private double				_mutationRate;
@@ -87,12 +87,12 @@ public class WorldVariables implements Serializable
 		// World Gen
 		setFoodGenerationProbability(DEFAULT_FOOD_GENERATION_PROBABILITY);
 		setInitialFoodGenerationProbability(DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY);
-		setInitialUckeleoidGenerationProbability(DEFAULT_INITIAL_UCKELEOID_GENERATION_PROBABILITY);
+		setInitialCreatureGenerationProbability(DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY);
 		setInitialWallGenerationProbability(DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY);
 
-		// Uckeleoid Neurology
-		setUckeleoidMemoryUnitCount(DEFAULT_UCKELEOID_MEMORY_UNIT_COUNT);
-		setUckeleoidSoundChannelCount(DEFAULT_UCKELEOID_SOUND_CHANNEL_COUNT);
+		// Neurology
+		setCreatureMemoryUnitCount(DEFAULT_CREATURE_MEMORY_UNIT_COUNT);
+		setCreatureSoundChannelCount(DEFAULT_CREATURE_SOUND_CHANNEL_COUNT);
 		setInheritanceGaussianMixRate(DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE);
 		setInheritanceSinglePickRate(DEFAULT_INHERITANCE_SINGLE_PICK_RATE);
 		setMutationRateExponent(DEFAULT_MUTATION_RATE_EXPONENT);
@@ -161,14 +161,14 @@ public class WorldVariables implements Serializable
 		this._initialFoodGenerationProbability = _initialFoodGenerationProbability;
 	}
 
-	public double getInitialUckeleoidGenerationProbability()
+	public double getInitialCreatureGenerationProbability()
 	{
-		return _initialUckeleoidGenerationProbability;
+		return _initialCreatureGenerationProbability;
 	}
 
-	public void setInitialUckeleoidGenerationProbability(double _initialUckeleoidGenerationProbability)
+	public void setInitialCreatureGenerationProbability(double _initialCreatureGenerationProbability)
 	{
-		this._initialUckeleoidGenerationProbability = _initialUckeleoidGenerationProbability;
+		this._initialCreatureGenerationProbability = _initialCreatureGenerationProbability;
 	}
 
 	public double getInitialWallGenerationProbability()
@@ -181,24 +181,24 @@ public class WorldVariables implements Serializable
 		this._initialWallGenerationProbability = _initialWallGenerationProbability;
 	}
 
-	public int getUckeleoidMemoryUnitCount()
+	public int getCreatureMemoryUnitCount()
 	{
-		return _uckeleoidMemoryUnitCount;
+		return _creatureMemoryUnitCount;
 	}
 
-	public void setUckeleoidMemoryUnitCount(int uckeleoidMemoryUnitCount)
+	public void setCreatureMemoryUnitCount(int creatureMemoryUnitCount)
 	{
-		this._uckeleoidMemoryUnitCount = uckeleoidMemoryUnitCount;
+		this._creatureMemoryUnitCount = creatureMemoryUnitCount;
 	}
 
-	public int getUckeleoidSoundChannelCount()
+	public int getCreatureSoundChannelCount()
 	{
-		return _uckeleoidSoundChannelCount;
+		return _creatureSoundChannelCount;
 	}
 
-	public void setUckeleoidSoundChannelCount(int uckeleoidSoundChannelCount)
+	public void setCreatureSoundChannelCount(int creatureSoundChannelCount)
 	{
-		this._uckeleoidSoundChannelCount = uckeleoidSoundChannelCount;
+		this._creatureSoundChannelCount = creatureSoundChannelCount;
 	}
 
 	public double getInheritanceGaussianMixRate()
@@ -288,18 +288,18 @@ public class WorldVariables implements Serializable
 			case "initialFoodGenerationProbability":
 				this.setInitialFoodGenerationProbability(Double.parseDouble(value));
 				break;
-			case "initialUckeleoidGenerationProbability":
-				this.setInitialUckeleoidGenerationProbability(Double.parseDouble(value));
+			case "initialCreatureGenerationProbability":
+				this.setInitialCreatureGenerationProbability(Double.parseDouble(value));
 				break;
 			case "initialWallGenerationProbability":
 				this.setInitialWallGenerationProbability(Double.parseDouble(value));
 				break;
-			// Uckeleoid Neurology
-			case "uckeleoidMemoryUnitCount":
-				this.setUckeleoidMemoryUnitCount(Integer.parseInt(value));
+			// Neurology
+			case "creatureMemoryUnitCount":
+				this.setCreatureMemoryUnitCount(Integer.parseInt(value));
 				break;
-			case "uckeleoidSoundChannelCount":
-				this.setUckeleoidSoundChannelCount(Integer.parseInt(value));
+			case "creatureSoundChannelCount":
+				this.setCreatureSoundChannelCount(Integer.parseInt(value));
 				break;
 			case "inheritanceGaussianMixRate":
 				this.setInheritanceGaussianMixRate(Double.parseDouble(value));

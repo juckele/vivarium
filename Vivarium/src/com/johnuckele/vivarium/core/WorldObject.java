@@ -2,7 +2,7 @@ package com.johnuckele.vivarium.core;
 
 public enum WorldObject
 {
-	EMPTY, UCKELEOID, FOOD, WALL;
+	EMPTY, CREATURE, FOOD, WALL;
 
 	public static WorldObject parseString(String string)
 	{
@@ -11,9 +11,9 @@ public enum WorldObject
 		{
 			return EMPTY;
 		}
-		else if(processedString == "UCKELEOID")
+		else if(processedString == "CREATURE")
 		{
-			return UCKELEOID;
+			return CREATURE;
 		}
 		else if(processedString == "FOOD")
 		{

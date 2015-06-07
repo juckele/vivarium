@@ -5,7 +5,7 @@ import java.util.LinkedList;
 
 import com.johnuckele.vivarium.core.ActionProfile;
 import com.johnuckele.vivarium.core.Gender;
-import com.johnuckele.vivarium.core.UckeleoidAction;
+import com.johnuckele.vivarium.core.Action;
 import com.johnuckele.vivarium.core.World;
 
 public class GenerateGenerationActionProfileCSV extends Script
@@ -51,11 +51,11 @@ public class GenerateGenerationActionProfileCSV extends Script
 			// Generate CSV rows
 			for(int i = 0; i < 2; i++)
 			{
-				for(int j = 0; j < UckeleoidAction.getDistinctActionCount(); j++)
+				for(int j = 0; j < Action.getDistinctActionCount(); j++)
 				{
 					for(int k = 0; k < 2; k++)
 					{
-						UckeleoidAction action = UckeleoidAction.convertIntegerToAction(j);
+						Action action = Action.convertIntegerToAction(j);
 						boolean actionSuccess = i == 1;
 						boolean isFemale = k == 1;
 						int actionCount;
