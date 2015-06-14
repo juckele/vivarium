@@ -26,7 +26,7 @@ public class World implements Serializable
 	protected LinkedList<Creature>	_liveCreatureList;
 	private LinkedList<Creature>	_deadCreatureList;
 	
-	// Optional data strucures
+	// Auxiliary data strucures
 	private CensusRecord			_census;
 	private LinkedList<ActionProfile> _generationalMaleActionProfiles;
 	private LinkedList<ActionProfile> _generationalFemaleActionProfiles;

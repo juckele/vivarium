@@ -59,7 +59,6 @@ public class Creature implements Serializable
 	private ActionProfile		_actionProfile;
 	private ActionProfile		_generationGenderActionProfile;
 
-	// Randomly initialized Creature
 	public Creature(World world, int r, int c)
 	{
 		this(null, null, world, world.requestNewUckleoidID(), r, c);

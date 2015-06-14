@@ -2,6 +2,7 @@ package com.johnuckele.vivarium.scripts;
 
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
+import com.johnuckele.vivarium.util.Rand;
 
 public class RunSimulation extends Script
 {
@@ -12,11 +13,7 @@ public class RunSimulation extends Script
 
 	@Override protected boolean argumentCountIsValid(int argCount)
 	{
-		if(argCount == 2)
-		{
-			return true;
-		}
-		else if(argCount == 3)
+		if(argCount >= 2 && argCount <= 4)
 		{
 			return true;
 		}
@@ -25,7 +22,7 @@ public class RunSimulation extends Script
 
 	@Override protected String getUsage()
 	{
-		return "Usage: java scriptPath inputFilePath ticks [outputFilePath]";
+		return "Usage: java scriptPath inputFilePath ticks [outputFilePath] [randomSeed]";
 	}
 
 	@Override protected void run(String[] args)
@@ -34,6 +31,12 @@ public class RunSimulation extends Script
 		World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
 		int creatureCount = w.getCount(WorldObject.CREATURE);
 		System.out.println("Creature count in loaded world: "+creatureCount);
+
+		// If the user passed in a random seed use that for the run
+		if(args.length == 4)
+		{
+			Rand.setRandomSeed(Integer.parseInt(args[3]));
+		}
 
 		// Run simulation
 		int simulationTicks = Integer.parseInt(args[1]);
