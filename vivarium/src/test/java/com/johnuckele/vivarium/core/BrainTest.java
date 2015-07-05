@@ -3,7 +3,7 @@ package com.johnuckele.vivarium.core;
 import org.junit.Test;
 
 import com.johnuckele.vivarium.util.Functions;
-import com.johnuckele.vivarium.util.Tester;
+import com.johnuckele.vtest.Tester;
 
 public class BrainTest
 {

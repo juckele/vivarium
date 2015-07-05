@@ -1,6 +1,7 @@
 package com.johnuckele.vivarium.util;
 
 import org.junit.Test;
+import com.johnuckele.vtest.Tester;
 
 public class RandTest
 {
