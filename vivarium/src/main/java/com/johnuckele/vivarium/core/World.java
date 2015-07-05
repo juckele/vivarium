@@ -66,6 +66,7 @@ public class World implements Serializable
 
 	private void populatateWorld()
 	{
+		Species defaultSpecies = new Species();
 		for(int r = 0; r < _worldDimensions; r++)
 		{
 			for(int c = 0; c < _worldDimensions; c++)
@@ -93,7 +94,7 @@ public class World implements Serializable
 					else if(randomNumber < wallProbability + foodProbability + creatureProbability)
 					{
 						_worldObjectGrid[r][c] = WorldObject.CREATURE;
-						Creature creature = new Creature(this, r, c);
+						Creature creature = new Creature(this, defaultSpecies, r, c);
 						_creatureGrid[r][c] = creature;
 						_liveCreatureList.add(creature);
 					}
@@ -102,7 +103,7 @@ public class World implements Serializable
 		}
 	}
 
-	public int requestNewUckleoidID()
+	public int requestNewCreatureID()
 	{
 		return(++_maximumCreatureID);
 	}

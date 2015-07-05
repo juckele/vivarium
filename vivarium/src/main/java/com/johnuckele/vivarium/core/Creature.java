@@ -14,31 +14,22 @@ public class Creature implements Serializable
 	 */
 	private static final long	serialVersionUID			= 4L;
 
-	// Creature Constants
-	private static final double	DEFAULT_FEMALE_THRESHOLD	= 0.6;
-	private static final int	MAXIMUM_AGE					= 20000;
-	private static final int	MAXIMUM_GESTATION			= 2000;
-	private static final int	MAXIMUM_FOOD				= 2000;
-
 	private static final int	BREEDING_FOOD_RATE			= -10;
 	private static final int	EATING_FOOD_RATE			= 500;
 	private static final int	MOVING_FOOD_RATE			= -1;
 	private static final int	BASE_FOOD_RATE				= -1;
 	private static final int	PREGNANT_FOOD_RATE			= -2;
 
-	// Brain structure
-	private static final int	BRAIN_INPUTS				= 5;
-	private static final int	BRAIN_OUTPUTS				= 6;
-
 	// Meta information
 	private int					_id;
+	private Species 			_species;
 	private World				_world;
 	private int					_r;
 	private int					_c;
 	private double				_generation;
 
 	// Brain
-	private NeuralNetworkBrain		_brain;
+	private NeuralNetworkBrain	_brain;
 	private double[]			_inputs;
 	private double[]			_memoryUnits;
 	private double[]			_soundInputs;
@@ -51,7 +42,7 @@ public class Creature implements Serializable
 	private int					_gestation;
 	private int					_food;
 	private Direction			_facing;
-	private Action		_action;
+	private Action				_action;
 
 	// Fetus
 	private Creature			_fetus;
@@ -60,24 +51,25 @@ public class Creature implements Serializable
 	private ActionProfile		_actionProfile;
 	private ActionProfile		_generationGenderActionProfile;
 
-	public Creature(World world, int r, int c)
+	public Creature(World world, Species species, int r, int c)
 	{
-		this(null, null, world, world.requestNewUckleoidID(), r, c);
+		this(null, null, world, species, world.requestNewCreatureID(), r, c);
 	}
 
-	public Creature(World world, int id, int r, int c)
+	public Creature(World world, Species species, int id, int r, int c)
 	{
-		this(null, null, world, id, r, c);
+		this(null, null, world, species, id, r, c);
 	}
 
 	public Creature(Creature parent1, Creature parent2, World world)
 	{
-		this(parent1, parent2, world, world.requestNewUckleoidID(), 0, 0);
+		this(parent1, parent2, world, parent1._species, world.requestNewCreatureID(), 0, 0);
 	}
 
-	public Creature(Creature parent1, Creature parent2, World world, int id, int r, int c)
+	public Creature(Creature parent1, Creature parent2, World world, Species species, int id, int r, int c)
 	{
 		this._world = world;
+		this._species = species;
 		this._id = id;
 		this._r = r;
 		this._c = c;
@@ -94,8 +86,8 @@ public class Creature implements Serializable
 		// Create brain to control the Creature
 		int memoryUnitCount = _world.getWorldVariables().getCreatureMemoryUnitCount();
 		int soundChannelCount = _world.getWorldVariables().getCreatureSoundChannelCount();
-		int totalBrainInputs = Creature.BRAIN_INPUTS + memoryUnitCount + soundChannelCount;
-		int totalBrainOutputs = Creature.BRAIN_OUTPUTS + memoryUnitCount + soundChannelCount;
+		int totalBrainInputs = _species.getBrainInputs() + memoryUnitCount + soundChannelCount;
+		int totalBrainOutputs = _species.getBrainOutputs() + memoryUnitCount + soundChannelCount;
 		
 		if(parent1 != null && parent2 != null)
 		{
@@ -118,7 +110,7 @@ public class Creature implements Serializable
 
 		// Set gender
 		double randomNumber = Rand.getRandomPositiveDouble();
-		if(randomNumber < DEFAULT_FEMALE_THRESHOLD)
+		if(randomNumber < _species.getFemaleThreshold())
 		{
 			this._gender = Gender.FEMALE;
 		}
@@ -135,7 +127,7 @@ public class Creature implements Serializable
 		// Set defaults
 		this._age = 0;
 		this._gestation = 0;
-		this._food = Creature.MAXIMUM_FOOD;
+		this._food = _species.getMaximumFood();
 		this._facing = Direction.NORTH;
 		this._action = Action.REST;
 
@@ -200,33 +192,33 @@ public class Creature implements Serializable
 			_inputs[1] = facingObject == WorldObject.FOOD ? 1 : 0;
 			_inputs[2] = facingObject == WorldObject.CREATURE ? 1 : 0;
 			_inputs[3] = facingObject == WorldObject.WALL ? 1 : 0;
-			_inputs[4] = ((double)this._food) / MAXIMUM_FOOD;
+			_inputs[4] = ((double)this._food) / _species.getMaximumFood();
 			// Read memory units
 			for(int i = 0; i < this._memoryUnits.length; i++)
 			{
-				_inputs[Creature.BRAIN_INPUTS - 1 + i] = _memoryUnits[i];
+				_inputs[_species.getBrainInputs() - 1 + i] = _memoryUnits[i];
 			}
 			// Read sound inputs
 			for(int i = 0; i < this._soundInputs.length; i++)
 			{
-				_inputs[Creature.BRAIN_INPUTS - 1 + this._memoryUnits.length + i] = _soundInputs[i];
+				_inputs[_species.getBrainInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
 			}
 			// Main brain computation
 			double[] outputs = this._brain.outputs(_inputs);
 			// Save memory units
 			for(int i = 0; i < this._memoryUnits.length; i++)
 			{
-				_memoryUnits[i] = outputs[Creature.BRAIN_OUTPUTS + i - 1];
+				_memoryUnits[i] = outputs[_species.getBrainOutputs() + i - 1];
 			}
 			// Clear the sound inputs and set the sound outputs
 			for(int i = 0; i < this._soundInputs.length; i++)
 			{
 				this._soundInputs[i] = 0;
-				this._soundOutputs[i] = outputs[Creature.BRAIN_OUTPUTS - 1 + this._memoryUnits.length + i];
+				this._soundOutputs[i] = outputs[_species.getBrainOutputs() - 1 + this._memoryUnits.length + i];
 			}
 			// Hard coded outputs (actionable outputs)
 			int maxActionOutput = 0;
-			for(int i = 1; i < Creature.BRAIN_OUTPUTS; i++)
+			for(int i = 1; i < _species.getBrainOutputs(); i++)
 			{
 				if(outputs[i] > outputs[maxActionOutput])
 				{
@@ -242,12 +234,12 @@ public class Creature implements Serializable
 	{
 		// Forced actions
 		// Old Creatures Die
-		if(this._age > Creature.MAXIMUM_AGE || this._food < 1)
+		if(this._age > _species.getMaximumAge() || this._food < 1)
 		{
 			return(Action.DIE);
 		}
 		// Pregnant Creatures can give birth
-		else if(this._gestation > Creature.MAXIMUM_GESTATION)
+		else if(this._gestation > _species.getMaximumGestation())
 		{
 			return(Action.BIRTH);
 		}
@@ -340,9 +332,9 @@ public class Creature implements Serializable
 				break;
 			case EAT:
 				this._food += Creature.EATING_FOOD_RATE;
-				if(this._food > Creature.MAXIMUM_FOOD)
+				if(this._food > _species.getMaximumFood())
 				{
-					this._food = Creature.MAXIMUM_FOOD;
+					this._food = _species.getMaximumFood();
 				}
 				break;
 			default:
