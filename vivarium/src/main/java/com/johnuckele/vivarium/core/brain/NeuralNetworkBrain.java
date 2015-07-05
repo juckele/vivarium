@@ -7,7 +7,7 @@ import com.johnuckele.vivarium.core.WorldVariables;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 
-public class NeuralNetworkBrain extends BaseBrain
+public class NeuralNetworkBrain extends Brain
 {
 	/**
 	 * serialVersion
