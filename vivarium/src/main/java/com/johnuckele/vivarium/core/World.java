@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
+import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
@@ -611,7 +612,7 @@ public class World implements Serializable
 		// Draw average brain
 		// Draw creature readouts
 		StringBuilder brainOutput = new StringBuilder();
-		LinkedList<Brain> brains = new LinkedList<Brain>();
+		LinkedList<NeuralNetworkBrain> brains = new LinkedList<NeuralNetworkBrain>();
 		for(Creature rat : this._liveCreatureList)
 		{
 			brains.add(rat.getBrain());
@@ -620,8 +621,8 @@ public class World implements Serializable
 		{
 //			Brain minBrain = Brain.minBrain(brains);
 //			Brain maxBrain = Brain.maxBrain(brains);
-			Brain medianBrain = Brain.medianBrain(brains);
-			Brain standardDeviationBrain = Brain.standardDeviationBrain(brains, medianBrain);
+			NeuralNetworkBrain medianBrain = NeuralNetworkBrain.medianBrain(brains);
+			NeuralNetworkBrain standardDeviationBrain = NeuralNetworkBrain.standardDeviationBrain(brains, medianBrain);
 			brainOutput.append("Average creature NN:\n");
 			brainOutput.append(medianBrain.toString());
 			brainOutput.append("Std. Deviation on creature NNs:\n");

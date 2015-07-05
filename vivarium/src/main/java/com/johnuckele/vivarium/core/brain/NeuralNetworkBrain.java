@@ -1,18 +1,18 @@
-package com.johnuckele.vivarium.core;
+package com.johnuckele.vivarium.core.brain;
 
-import java.io.Serializable;
 import java.util.Arrays;
 import java.util.LinkedList;
 
+import com.johnuckele.vivarium.core.WorldVariables;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 
-public class Brain implements Serializable
+public class NeuralNetworkBrain extends BaseBrain
 {
 	/**
 	 * serialVersion
 	 */
-	private static final long	serialVersionUID				= 4L;
+	private static final long	serialVersionUID				= 5L;
 
 	// Weights represents all the weights in the neural network
 	// weight[i][j][k] corresponds to the weight of the connection
@@ -28,8 +28,9 @@ public class Brain implements Serializable
 	private int					_hiddenLayers;
 	private double[][]			_hiddenNodes;
 
-	public Brain(int inputCount, int outputCount, int hiddenLayers)
+	public NeuralNetworkBrain(int inputCount, int outputCount, int hiddenLayers)
 	{
+		super();
 		this._outputCount = outputCount;
 		this._inputCount = inputCount;
 		this._hiddenLayers = hiddenLayers;
@@ -91,7 +92,7 @@ public class Brain implements Serializable
 		}
 	}
 
-	public Brain(World world, Brain brain1, Brain brain2)
+	public NeuralNetworkBrain(WorldVariables variables, NeuralNetworkBrain brain1, NeuralNetworkBrain brain2)
 	{
 		// Construct the weight layer and store variables with the int based
 		// constructor
@@ -108,7 +109,7 @@ public class Brain implements Serializable
 					double randomValue = Rand.getRandomPositiveDouble();
 					// Sometimes mix the two values with a gaussian
 					// approximation.
-					if(randomValue < world.getWorldVariables().getInheritanceGaussianMixRate())
+					if(randomValue < variables.getInheritanceGaussianMixRate())
 					{
 						// Radnom.nextGaussian generates a Gaussian with μ = 0 and σ = 1
 						// but we want μ = 0.5 and σ = 0.5 to mix between numbers
@@ -134,10 +135,10 @@ public class Brain implements Serializable
 
 					// Sometimes mutate
 					randomValue = Rand.getRandomPositiveDouble();
-					if(randomValue < world.getWorldVariables().getMutationRate())
+					if(randomValue < variables.getMutationRate())
 					{
 						randomValue = Rand.getRandomPositiveDouble();
-						if(randomValue < world.getWorldVariables().getMutationSmallScaleRate())
+						if(randomValue < variables.getMutationSmallScaleRate())
 						{
 							// Gaussian multipliplication mutation,
 							// μ = 1 and σ = 0.2
@@ -146,23 +147,23 @@ public class Brain implements Serializable
 						}
 						else
 						{
-							randomValue -= world.getWorldVariables().getMutationSmallScaleRate();
-							if(randomValue < world.getWorldVariables().getMutationRandomRate())
+							randomValue -= variables.getMutationSmallScaleRate();
+							if(randomValue < variables.getMutationRandomRate())
 							{
 								// Random mutation
 								_weights[i][j][k] = Rand.getRandomDouble();
 							}
 							else
 							{
-								randomValue -= world.getWorldVariables().getMutationRandomRate();
-								if(randomValue < world.getWorldVariables().getMutationFlipRate())
+								randomValue -= variables.getMutationRandomRate();
+								if(randomValue < variables.getMutationFlipRate())
 								{
 									// Flip mutation
 									_weights[i][j][k] = -_weights[i][j][k];
 								}
 								else
 								{
-									randomValue -= world.getWorldVariables().getMutationFlipRate();
+									randomValue -= variables.getMutationFlipRate();
 								}
 							}
 						}
@@ -364,7 +365,7 @@ public class Brain implements Serializable
 
 	public static void main(String[] args)
 	{
-		Brain brain = new Brain(3, 10, 0);
+		NeuralNetworkBrain brain = new NeuralNetworkBrain(3, 10, 0);
 		System.out.println("Creating Brain...");
 		System.out.println(brain);
 		System.out.println("Brain Outputs for inputs");
@@ -387,11 +388,11 @@ public class Brain implements Serializable
 
 	}
 
-	public static Brain minBrain(LinkedList<Brain> brains)
+	public static NeuralNetworkBrain minBrain(LinkedList<NeuralNetworkBrain> brains)
 	{
-		Brain minBrain = new Brain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		NeuralNetworkBrain minBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
-		for(Brain brain : brains)
+		for(NeuralNetworkBrain brain : brains)
 		{
 			for(int i = 0; i < minBrain._weights.length; i++)
 			{
@@ -408,11 +409,11 @@ public class Brain implements Serializable
 
 	}
 
-	public static Brain maxBrain(LinkedList<Brain> brains)
+	public static NeuralNetworkBrain maxBrain(LinkedList<NeuralNetworkBrain> brains)
 	{
-		Brain maxBrain = new Brain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		NeuralNetworkBrain maxBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
-		for(Brain brain : brains)
+		for(NeuralNetworkBrain brain : brains)
 		{
 			for(int i = 0; i < maxBrain._weights.length; i++)
 			{
@@ -428,9 +429,9 @@ public class Brain implements Serializable
 		return maxBrain;
 	}
 
-	public static Brain medianBrain(LinkedList<Brain> brains)
+	public static NeuralNetworkBrain medianBrain(LinkedList<NeuralNetworkBrain> brains)
 	{
-		Brain medianBrain = new Brain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
+		NeuralNetworkBrain medianBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount, brains.get(0)._hiddenLayers);
 		// Set all the weights with
 		for(int i = 0; i < medianBrain._weights.length; i++)
 		{
@@ -443,7 +444,7 @@ public class Brain implements Serializable
 			}
 		}
 		int brainsAveraged = brains.size();
-		for(Brain brain : brains)
+		for(NeuralNetworkBrain brain : brains)
 		{
 			for(int i = 0; i < medianBrain._weights.length; i++)
 			{
@@ -469,9 +470,9 @@ public class Brain implements Serializable
 		return medianBrain;
 	}
 
-	public static Brain standardDeviationBrain(LinkedList<Brain> brains, Brain medianBrain)
+	public static NeuralNetworkBrain standardDeviationBrain(LinkedList<NeuralNetworkBrain> brains, NeuralNetworkBrain medianBrain)
 	{
-		Brain standardDeviationBrain = new Brain(medianBrain._inputCount, medianBrain._outputCount, brains.get(0)._hiddenLayers);
+		NeuralNetworkBrain standardDeviationBrain = new NeuralNetworkBrain(medianBrain._inputCount, medianBrain._outputCount, brains.get(0)._hiddenLayers);
 		for(int i = 0; i < standardDeviationBrain._weights.length; i++)
 		{
 			for(int j = 0; j < standardDeviationBrain._weights[i].length; j++)
@@ -484,7 +485,7 @@ public class Brain implements Serializable
 		}
 		int brainsAveraged = brains.size();
 		double error;
-		for(Brain brain : brains)
+		for(NeuralNetworkBrain brain : brains)
 		{
 			for(int i = 0; i < standardDeviationBrain._weights.length; i++)
 			{

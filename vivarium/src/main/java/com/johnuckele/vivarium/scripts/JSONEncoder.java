@@ -5,10 +5,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.johnuckele.vivarium.core.Creature;
-import com.johnuckele.vivarium.core.Brain;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 import com.johnuckele.vivarium.core.WorldVariables;
+import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
 
 public class JSONEncoder
 {
@@ -112,7 +112,7 @@ public class JSONEncoder
 		return(creatureJSON);
 	}
 
-	private static JSONObject convertBrainToJSON(Brain brain) throws JSONException
+	private static JSONObject convertBrainToJSON(NeuralNetworkBrain brain) throws JSONException
 	{
 		JSONObject brainJSON = new JSONObject();
 		

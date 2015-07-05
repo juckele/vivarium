@@ -2,6 +2,7 @@ package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 
+import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
@@ -37,7 +38,7 @@ public class Creature implements Serializable
 	private double				_generation;
 
 	// Brain
-	private Brain		_brain;
+	private NeuralNetworkBrain		_brain;
 	private double[]			_inputs;
 	private double[]			_memoryUnits;
 	private double[]			_soundInputs;
@@ -99,12 +100,12 @@ public class Creature implements Serializable
 		if(parent1 != null && parent2 != null)
 		{
 			// Brain combined from genetic legacy
-			this._brain = new Brain(_world, parent1._brain, parent2._brain);
+			this._brain = new NeuralNetworkBrain(_world.getWorldVariables(), parent1._brain, parent2._brain);
 		}
 		else if(parent1 == null && parent1 == null)
 		{
 			// Create a new default brain
-			this._brain = new Brain(totalBrainInputs, totalBrainOutputs, 0);
+			this._brain = new NeuralNetworkBrain(totalBrainInputs, totalBrainOutputs, 0);
 		}
 		else
 		{
@@ -296,7 +297,7 @@ public class Creature implements Serializable
 		return(_fetus);
 	}
 
-	public Brain getBrain()
+	public NeuralNetworkBrain getBrain()
 	{
 		return(_brain);
 	}
@@ -535,7 +536,7 @@ public class Creature implements Serializable
 		this._fetus = fetus;
 	}
 
-	public void setBrain(Brain brain)
+	public void setBrain(NeuralNetworkBrain brain)
 	{
 		this._brain = brain;
 	}
