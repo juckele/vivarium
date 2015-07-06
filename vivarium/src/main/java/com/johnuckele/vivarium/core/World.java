@@ -1,6 +1,7 @@
 package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -66,7 +67,7 @@ public class World implements Serializable
 
 	private void populatateWorld()
 	{
-		Species defaultSpecies = new Species();
+		ArrayList<Species> species = _worldVariables.getSpecies();
 		for(int r = 0; r < _worldDimensions; r++)
 		{
 			for(int c = 0; c < _worldDimensions; c++)
@@ -163,19 +164,16 @@ public class World implements Serializable
 
 	private void transmitSounds()
 	{
-		if(this._worldVariables.getCreatureSoundChannelCount() > 0)
-		{
+		for(Creature speaker : this._liveCreatureList)
+			{
 			for(Creature listener : this._liveCreatureList)
 			{
-				for(Creature speaker : this._liveCreatureList)
-				{
 					if( listener != speaker )
 					{
 						listener.listenToCreature(speaker);
 					}
 				}
 			}
-		}
 	}
 
 	private void letCreaturesPlan()

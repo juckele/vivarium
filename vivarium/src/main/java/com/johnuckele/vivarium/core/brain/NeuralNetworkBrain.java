@@ -3,7 +3,7 @@ package com.johnuckele.vivarium.core.brain;
 import java.util.Arrays;
 import java.util.LinkedList;
 
-import com.johnuckele.vivarium.core.WorldVariables;
+import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 
@@ -92,7 +92,7 @@ public class NeuralNetworkBrain extends Brain
 		}
 	}
 
-	public NeuralNetworkBrain(WorldVariables variables, NeuralNetworkBrain brain1, NeuralNetworkBrain brain2)
+	public NeuralNetworkBrain(Species species, NeuralNetworkBrain brain1, NeuralNetworkBrain brain2)
 	{
 		// Construct the weight layer and store variables with the int based
 		// constructor
@@ -109,7 +109,7 @@ public class NeuralNetworkBrain extends Brain
 					double randomValue = Rand.getRandomPositiveDouble();
 					// Sometimes mix the two values with a gaussian
 					// approximation.
-					if(randomValue < variables.getInheritanceGaussianMixRate())
+					if(randomValue < species.getInheritanceGaussianMixRate())
 					{
 						// Radnom.nextGaussian generates a Gaussian with μ = 0 and σ = 1
 						// but we want μ = 0.5 and σ = 0.5 to mix between numbers
@@ -135,10 +135,10 @@ public class NeuralNetworkBrain extends Brain
 
 					// Sometimes mutate
 					randomValue = Rand.getRandomPositiveDouble();
-					if(randomValue < variables.getMutationRate())
+					if(randomValue < species.getMutationRate())
 					{
 						randomValue = Rand.getRandomPositiveDouble();
-						if(randomValue < variables.getMutationSmallScaleRate())
+						if(randomValue < species.getMutationSmallScaleRate())
 						{
 							// Gaussian multipliplication mutation,
 							// μ = 1 and σ = 0.2
@@ -147,23 +147,23 @@ public class NeuralNetworkBrain extends Brain
 						}
 						else
 						{
-							randomValue -= variables.getMutationSmallScaleRate();
-							if(randomValue < variables.getMutationRandomRate())
+							randomValue -= species.getMutationSmallScaleRate();
+							if(randomValue < species.getMutationRandomRate())
 							{
 								// Random mutation
 								_weights[i][j][k] = Rand.getRandomDouble();
 							}
 							else
 							{
-								randomValue -= variables.getMutationRandomRate();
-								if(randomValue < variables.getMutationFlipRate())
+								randomValue -= species.getMutationRandomRate();
+								if(randomValue < species.getMutationFlipRate())
 								{
 									// Flip mutation
 									_weights[i][j][k] = -_weights[i][j][k];
 								}
 								else
 								{
-									randomValue -= variables.getMutationFlipRate();
+									randomValue -= species.getMutationFlipRate();
 								}
 							}
 						}

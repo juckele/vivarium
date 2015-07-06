@@ -53,7 +53,8 @@ public class JSONEncoder
 	{
 		JSONObject worldVariablesJSON = new JSONObject();
 
-		// Program options
+		//TODO FIX THIS
+/*		// Program options
 		worldVariablesJSON.put("rememberTheDead", worldVariables.getRememberTheDead());
 
 		// World gen
@@ -69,7 +70,7 @@ public class JSONEncoder
 		worldVariablesJSON.put("mutationRateExponent", worldVariables.getMutationRateExponent());
 		worldVariablesJSON.put("mutationSmallScaleRate", worldVariables.getMutationSmallScaleRate());
 		worldVariablesJSON.put("mutationRandomRate", worldVariables.getMutationRandomRate());
-		worldVariablesJSON.put("mutationFlipRate", worldVariables.getMutationFlipRate());
+		worldVariablesJSON.put("mutationFlipRate", worldVariables.getMutationFlipRate());*/
 
 		return worldVariablesJSON;
 	}

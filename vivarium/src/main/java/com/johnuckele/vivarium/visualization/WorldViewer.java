@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 import com.johnuckele.vivarium.core.WorldVariables;
@@ -93,10 +94,11 @@ public class WorldViewer extends JFrame
 	{
 		int worldDimensions = 25;
 		System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-		WorldVariables wv = new WorldVariables();
-		wv.setMutationRateExponent(-9);
-		wv.setCreatureMemoryUnitCount(1);
-		wv.setCreatureSoundChannelCount(1);
+		WorldVariables wv = new WorldVariables(1);
+		Species species = wv.getSpecies(0);
+		species.setMutationRateExponent(-9);
+		species.setCreatureMemoryUnitCount(1);
+		species.setCreatureSoundChannelCount(1);
 		World w = new World(worldDimensions, wv);
 		System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 

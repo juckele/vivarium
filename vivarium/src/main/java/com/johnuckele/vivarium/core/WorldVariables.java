@@ -1,6 +1,7 @@
 package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class WorldVariables implements Serializable
 {
@@ -17,18 +18,7 @@ public class WorldVariables implements Serializable
 	// World Gen
 	private static final double	DEFAULT_FOOD_GENERATION_PROBABILITY					= 0.01;
 	private static final double	DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY			= 0.2;
-	private static final double	DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY	= 0.2;
 	private static final double	DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY			= 0.1;
-
-	// Neurology
-	private static final int	DEFAULT_CREATURE_MEMORY_UNIT_COUNT					= 0;
-	private static final int	DEFAULT_CREATURE_SOUND_CHANNEL_COUNT				= 0;
-	private static final double	DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE				= 0.8;
-	private static final double	DEFAULT_INHERITANCE_SINGLE_PICK_RATE				= 0.2;
-	private static final double	DEFAULT_MUTATION_RATE_EXPONENT						= -7;
-	private static final double	DEFAULT_MUTATION_SMALL_SCALE_RATE					= 0.5;
-	private static final double	DEFAULT_MUTATION_RANDOM_RATE						= 0.25;
-	private static final double	DEFAULT_MUTATION_FLIP_RATE							= 0.25;
 
 	private static final String[] VARIABLE_NAMES =
 	{
@@ -41,9 +31,10 @@ public class WorldVariables implements Serializable
 		"initialFoodGenerationProbability",
 		"initialCreatureGenerationProbability",
 		"initialWallGenerationProbability",
-		// Neurology
+		// Creaturology
 		"creatureMemoryUnitCount",
 		"creatureSoundChannelCount",
+		// Neurology
 		"inheritanceGaussianMixRate",
 		"inheritanceSinglePickRate",
 		"mutationRateExponent",
@@ -63,21 +54,11 @@ public class WorldVariables implements Serializable
 	// World Gen
 	private double				_foodGenerationProbability;
 	private double				_initialFoodGenerationProbability;
-	private double				_initialCreatureGenerationProbability;
 	private double				_initialWallGenerationProbability;
 
-	// Neurology
-	private int					_creatureMemoryUnitCount;
-	private int					_creatureSoundChannelCount;
-	private double				_inheritanceGaussianMixRate;
-	private double				_inheritanceSinglePickRate;
-	private double				_mutationRate;
-	private double				_mutationRateExponent;
-	private double				_mutationSmallScaleRate;
-	private double				_mutationRandomRate;
-	private double				_mutationFlipRate;
+	private ArrayList<Species>	_species;
 
-	public WorldVariables()
+	public WorldVariables(int speciesCount)
 	{
 		// Program Options
 		setRememberTheDead(DEFAULT_REMEMBER_THE_DEAD);
@@ -87,18 +68,13 @@ public class WorldVariables implements Serializable
 		// World Gen
 		setFoodGenerationProbability(DEFAULT_FOOD_GENERATION_PROBABILITY);
 		setInitialFoodGenerationProbability(DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY);
-		setInitialCreatureGenerationProbability(DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY);
 		setInitialWallGenerationProbability(DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY);
 
-		// Neurology
-		setCreatureMemoryUnitCount(DEFAULT_CREATURE_MEMORY_UNIT_COUNT);
-		setCreatureSoundChannelCount(DEFAULT_CREATURE_SOUND_CHANNEL_COUNT);
-		setInheritanceGaussianMixRate(DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE);
-		setInheritanceSinglePickRate(DEFAULT_INHERITANCE_SINGLE_PICK_RATE);
-		setMutationRateExponent(DEFAULT_MUTATION_RATE_EXPONENT);
-		setMutationSmallScaleRate(DEFAULT_MUTATION_SMALL_SCALE_RATE);
-		setMutationRandomRate(DEFAULT_MUTATION_RANDOM_RATE);
-		setMutationFlipRate(DEFAULT_MUTATION_FLIP_RATE);
+		_species = new ArrayList<Species>(speciesCount);
+		for(int i=0; i<speciesCount; i++)
+		{
+			_species.set(i, new Species());
+		}
 	}
 
 	/**
@@ -161,16 +137,6 @@ public class WorldVariables implements Serializable
 		this._initialFoodGenerationProbability = _initialFoodGenerationProbability;
 	}
 
-	public double getInitialCreatureGenerationProbability()
-	{
-		return _initialCreatureGenerationProbability;
-	}
-
-	public void setInitialCreatureGenerationProbability(double _initialCreatureGenerationProbability)
-	{
-		this._initialCreatureGenerationProbability = _initialCreatureGenerationProbability;
-	}
-
 	public double getInitialWallGenerationProbability()
 	{
 		return _initialWallGenerationProbability;
@@ -179,92 +145,6 @@ public class WorldVariables implements Serializable
 	public void setInitialWallGenerationProbability(double _initialWallGenerationProbability)
 	{
 		this._initialWallGenerationProbability = _initialWallGenerationProbability;
-	}
-
-	public int getCreatureMemoryUnitCount()
-	{
-		return _creatureMemoryUnitCount;
-	}
-
-	public void setCreatureMemoryUnitCount(int creatureMemoryUnitCount)
-	{
-		this._creatureMemoryUnitCount = creatureMemoryUnitCount;
-	}
-
-	public int getCreatureSoundChannelCount()
-	{
-		return _creatureSoundChannelCount;
-	}
-
-	public void setCreatureSoundChannelCount(int creatureSoundChannelCount)
-	{
-		this._creatureSoundChannelCount = creatureSoundChannelCount;
-	}
-
-	public double getInheritanceGaussianMixRate()
-	{
-		return _inheritanceGaussianMixRate;
-	}
-
-	public void setInheritanceGaussianMixRate(double inheritanceGaussianMixRate)
-	{
-		this._inheritanceGaussianMixRate = inheritanceGaussianMixRate;
-	}
-
-	public double getInheritanceSinglePickRate()
-	{
-		return _inheritanceSinglePickRate;
-	}
-
-	public void setInheritanceSinglePickRate(double inheritanceSinglePickRate)
-	{
-		this._inheritanceSinglePickRate = inheritanceSinglePickRate;
-	}
-
-	public double getMutationRate()
-	{
-		return _mutationRate;
-	}
-
-	public double getMutationRateExponent()
-	{
-		return _mutationRateExponent;
-	}
-
-	public void setMutationRateExponent(double mutationRateExponent)
-	{
-		this._mutationRateExponent = mutationRateExponent;
-		this._mutationRate = Math.pow(2, mutationRateExponent);
-	}
-
-	public double getMutationSmallScaleRate()
-	{
-		return _mutationSmallScaleRate;
-	}
-
-	public void setMutationSmallScaleRate(double mutationSmallScaleRate)
-	{
-		this._mutationSmallScaleRate = mutationSmallScaleRate;
-	}
-
-	public double getMutationRandomRate()
-	{
-		return _mutationRandomRate;
-	}
-
-	public void setMutationRandomRate(double mutationRandomRate)
-	{
-		this._mutationRandomRate = mutationRandomRate;
-	}
-
-	public double getMutationFlipRate()
-	{
-		return _mutationFlipRate;
-	}
-
-	public void setMutationFlipRate(double mutationFlipRate)
-	{
-		this._mutationFlipRate = mutationFlipRate;
 	}
 
 	public void setKeyValue(String key, String value)
@@ -288,39 +168,17 @@ public class WorldVariables implements Serializable
 			case "initialFoodGenerationProbability":
 				this.setInitialFoodGenerationProbability(Double.parseDouble(value));
 				break;
-			case "initialCreatureGenerationProbability":
-				this.setInitialCreatureGenerationProbability(Double.parseDouble(value));
-				break;
 			case "initialWallGenerationProbability":
 				this.setInitialWallGenerationProbability(Double.parseDouble(value));
 				break;
-			// Neurology
-			case "creatureMemoryUnitCount":
-				this.setCreatureMemoryUnitCount(Integer.parseInt(value));
-				break;
-			case "creatureSoundChannelCount":
-				this.setCreatureSoundChannelCount(Integer.parseInt(value));
-				break;
-			case "inheritanceGaussianMixRate":
-				this.setInheritanceGaussianMixRate(Double.parseDouble(value));
-				break;
-			case "inheritanceSinglePickRate":
-				this.setInheritanceSinglePickRate(Double.parseDouble(value));
-				break;
-			case "mutationRateExponent":
-				this.setMutationRateExponent(Double.parseDouble(value));
-				break;
-			case "mutationSmallScaleRate":
-				this.setMutationSmallScaleRate(Double.parseDouble(value));
-				break;
-			case "mutationRandomRate":
-				this.setMutationRandomRate(Double.parseDouble(value));
-				break;
-			case "mutationFlipRate":
-				this.setMutationFlipRate(Double.parseDouble(value));
-				break;
-			default:
-				throw new Error("Unhandled case with key: "+key+", value: "+value);
 		}
+	}
+
+	public Species getSpecies(int i) {
+		return _species.get(i);
+	}
+
+	public ArrayList<Species> getSpecies() {
+		return _species;
 	}
 }

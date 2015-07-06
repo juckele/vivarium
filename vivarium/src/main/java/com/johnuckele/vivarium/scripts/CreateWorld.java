@@ -33,7 +33,7 @@ public class CreateWorld extends Script
 
 	@Override protected void run(String[] args)
 	{
-		WorldVariables worldVariables = new WorldVariables();
+		WorldVariables worldVariables = new WorldVariables(1);
 		// For each pair of extra arguments after the first two, set a worldVariable value
 		for(int i = 2; i+1 < args.length; i+=2)
 		{

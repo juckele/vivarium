@@ -84,15 +84,15 @@ public class Creature implements Serializable
 		}
 
 		// Create brain to control the Creature
-		int memoryUnitCount = _world.getWorldVariables().getCreatureMemoryUnitCount();
-		int soundChannelCount = _world.getWorldVariables().getCreatureSoundChannelCount();
+		int memoryUnitCount = _species.getMemoryUnitCount();
+		int soundChannelCount = _species.getSoundChannelCount();
 		int totalBrainInputs = _species.getBrainInputs() + memoryUnitCount + soundChannelCount;
 		int totalBrainOutputs = _species.getBrainOutputs() + memoryUnitCount + soundChannelCount;
 		
 		if(parent1 != null && parent2 != null)
 		{
 			// Brain combined from genetic legacy
-			this._brain = new NeuralNetworkBrain(_world.getWorldVariables(), parent1._brain, parent2._brain);
+			this._brain = new NeuralNetworkBrain(_species, parent1._brain, parent2._brain);
 		}
 		else if(parent1 == null && parent1 == null)
 		{
