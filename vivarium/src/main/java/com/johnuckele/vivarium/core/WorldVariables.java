@@ -70,10 +70,11 @@ public class WorldVariables implements Serializable
 		setInitialFoodGenerationProbability(DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY);
 		setInitialWallGenerationProbability(DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY);
 
+
 		_species = new ArrayList<Species>(speciesCount);
 		for(int i=0; i<speciesCount; i++)
 		{
-			_species.set(i, new Species());
+			_species.add(new Species());
 		}
 	}
 

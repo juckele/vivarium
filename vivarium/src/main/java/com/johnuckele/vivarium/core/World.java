@@ -67,7 +67,10 @@ public class World implements Serializable
 
 	private void populatateWorld()
 	{
-		ArrayList<Species> species = _worldVariables.getSpecies();
+		WorldPopulator populator = new WorldPopulator();
+		populator.setSpecies(_worldVariables.getSpecies());
+                populator.setWallProbability(_worldVariables.getInitialWallGenerationProbability());
+                populator.setFoodProbability(_worldVariables.getInitialFoodGenerationProbability());
 		for(int r = 0; r < _worldDimensions; r++)
 		{
 			for(int c = 0; c < _worldDimensions; c++)
@@ -80,24 +83,14 @@ public class World implements Serializable
 				}
 				else
 				{
-					double randomNumber = Rand.getRandomPositiveDouble();
-					double wallProbability = _worldVariables.getInitialWallGenerationProbability();
-					double foodProbability = _worldVariables.getInitialFoodGenerationProbability();
-					double creatureProbability = _worldVariables.getInitialCreatureGenerationProbability();
-					if(randomNumber < wallProbability)
-					{
-						_worldObjectGrid[r][c] = WorldObject.WALL;
-					}
-					else if(randomNumber < wallProbability + foodProbability)
-					{
-						_worldObjectGrid[r][c] = WorldObject.FOOD;
-					}
-					else if(randomNumber < wallProbability + foodProbability + creatureProbability)
-					{
-						_worldObjectGrid[r][c] = WorldObject.CREATURE;
-						Creature creature = new Creature(this, defaultSpecies, r, c);
-						_creatureGrid[r][c] = creature;
-						_liveCreatureList.add(creature);
+                                        WorldObject object = populator.getNextWorldObject();
+                                        _worldObjectGrid[r][c] = object;
+                                        if(object == WorldObject.CREATURE)
+                                        {
+						Creature creature = populator.getNextCreature();
+                                                _creatureGrid[r][c] = creature;
+                                                _liveCreatureList.add(creature);
+						
 					}
 				}
 			}
