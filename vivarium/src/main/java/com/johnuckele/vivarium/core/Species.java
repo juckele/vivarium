@@ -11,7 +11,7 @@ public class Species {
 	private static final int	BRAIN_OUTPUTS	 			= 6;
 
 	// Per species settings
-//	private static final double	DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY	= 0.2;
+	private static final double	DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY	= 0.2;
 	private static final int	DEFAULT_CREATURE_MEMORY_UNIT_COUNT					= 0;
 	private static final int	DEFAULT_CREATURE_SOUND_CHANNEL_COUNT				= 0;
 
@@ -40,6 +40,7 @@ public class Species {
 	private double				_mutationSmallScaleRate = DEFAULT_MUTATION_SMALL_SCALE_RATE;
 	private double				_mutationRandomRate = DEFAULT_MUTATION_RANDOM_RATE;
 	private double				_mutationFlipRate = DEFAULT_MUTATION_FLIP_RATE;
+	private double _initialGenerationProbability = DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY;
 //	private Action[] _involuntaryActions;
 //	private Action[] _voluntaryActions;
 
@@ -47,7 +48,7 @@ public class Species {
 		
 	}
 
-	public int getBrainInputs() {
+        public int getBrainInputs() {
 		return _brainInputs;
 	}
 
@@ -93,7 +94,12 @@ public class Species {
 		return this._inheritanceGaussianMixRate;
 	}
 
-	public int getMemoryUnitCount() {
+        public double getInitialGenerationProbability()
+        {
+                return this._initialGenerationProbability;
+        }
+
+        public int getMemoryUnitCount() {
 		return this._memoryUnitCount;
 	}
 
@@ -112,7 +118,10 @@ public class Species {
 
 	public void setCreatureSoundChannelCount(int soundChannelCount) {
 		this._soundChannelCount = soundChannelCount;
-		
 	}
 
+        public void setInitialGenerationProbability(double probability)
+	{
+		this._initialGenerationProbability = probability;
+	}
 }

@@ -1,7 +1,6 @@
 package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
@@ -87,10 +86,10 @@ public class World implements Serializable
                                         _worldObjectGrid[r][c] = object;
                                         if(object == WorldObject.CREATURE)
                                         {
-						Creature creature = populator.getNextCreature();
+                                                Species species = populator.getNextCreatureSpecies();
+                                                Creature creature = new Creature(this, species, r, c);
                                                 _creatureGrid[r][c] = creature;
                                                 _liveCreatureList.add(creature);
-						
 					}
 				}
 			}
