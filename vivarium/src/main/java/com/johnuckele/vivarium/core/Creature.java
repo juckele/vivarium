@@ -475,6 +475,11 @@ public class Creature implements Serializable
         return (this._id);
     }
 
+    public Species getSpecies()
+    {
+        return this._species;
+    }
+
     public double getGeneration()
     {
         return (this._generation);

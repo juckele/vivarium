@@ -217,6 +217,8 @@ public class World implements Serializable
             else if (action == Action.BREED
             // Make sure we're facing another creature
                     && _worldObjectGrid[facingR][facingC] == WorldObject.CREATURE
+                    // And that creature is the same species as us
+                    && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
                     // And that creature also is trying to breed
                     && _creatureGrid[facingR][facingC].getAction() == Action.BREED
                     // Make sure the creatures are facing each other
@@ -590,7 +592,7 @@ public class World implements Serializable
                 }
                 else if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
                 {
-                    worldOutput.append('中');
+                    worldOutput.append(_creatureGrid[r][c].getSpecies().getGlyph());
                 }
             }
             worldOutput.append('\n');

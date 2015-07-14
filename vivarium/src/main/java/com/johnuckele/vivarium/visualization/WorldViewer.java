@@ -94,16 +94,20 @@ public class WorldViewer extends JFrame
     {
         int worldDimensions = 25;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        WorldVariables wv = new WorldVariables(1);
+        WorldVariables wv = new WorldVariables(2);
         Species species = wv.getSpecies(0);
         species.setMutationRateExponent(-9);
         species.setCreatureMemoryUnitCount(1);
         species.setCreatureSoundChannelCount(1);
+        Species species2 = wv.getSpecies(1);
+        species2.setMutationRateExponent(-7);
+        species2.setCreatureMemoryUnitCount(1);
+        species2.setCreatureSoundChannelCount(1);
         World w = new World(worldDimensions, wv);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
         WorldViewer wh = new WorldViewer(w);
-        wh.runAndRenderTicks(2000000, 20000);
+        wh.runAndRenderTicks(2000000, 2000);
         // wh.runAndRenderTicks(20000, 1);
 
         System.out.println("Finished simulations");

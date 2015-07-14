@@ -1,7 +1,11 @@
 package com.johnuckele.vivarium.core;
 
-public class Species
+import java.io.Serializable;
+
+public class Species implements Serializable
 {
+    private static final long   serialVersionUID                                = 1L;
+
     // Creature Constants
     private static final double DEFAULT_FEMALE_THRESHOLD                        = 0.6;
     private static final int    MAXIMUM_AGE                                     = 20000;
@@ -47,9 +51,19 @@ public class Species
     // private Action[] _involuntaryActions;
     // private Action[] _voluntaryActions;
 
+    private static int          _existingSpecies                                = 0;
+    private static String[]     GLYPHS                                          = { "中", "马", "心" };
+    private String              _glyph                                          = "U";
+
     public Species()
     {
+        _glyph = GLYPHS[_existingSpecies];
+        _existingSpecies++;
+    }
 
+    public Object getGlyph()
+    {
+        return this._glyph;
     }
 
     public int getBrainInputs()
