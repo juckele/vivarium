@@ -5,40 +5,43 @@ import com.johnuckele.vivarium.core.World;
 public class ConvertToJSON extends Script
 {
 
-	public ConvertToJSON(String[] args)
-	{
-		super(args);
-	}
+    public ConvertToJSON(String[] args)
+    {
+        super(args);
+    }
 
-	@Override protected boolean argumentCountIsValid(int argCount)
-	{
-		if(argCount == 2)
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+    @Override
+    protected boolean argumentCountIsValid(int argCount)
+    {
+        if (argCount == 2)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
 
-	@Override protected String getUsage()
-	{
-		return "Usage: java scriptPath inputFilePath outputFilePath";
-	}
+    @Override
+    protected String getUsage()
+    {
+        return "Usage: java scriptPath inputFilePath outputFilePath";
+    }
 
-	@Override protected void run(String[] args)
-	{
-		// Load
-		World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+    @Override
+    protected void run(String[] args)
+    {
+        // Load
+        World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
 
-		// Save
-		ScriptIO.saveWorld(w, args[1], Format.JSON);
-	}
+        // Save
+        ScriptIO.saveWorld(w, args[1], Format.JSON);
+    }
 
-	public static void main(String[] args)
-	{
-		new ConvertToJSON(args);
-	}
+    public static void main(String[] args)
+    {
+        new ConvertToJSON(args);
+    }
 
 }

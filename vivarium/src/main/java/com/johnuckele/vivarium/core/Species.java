@@ -1,127 +1,150 @@
 package com.johnuckele.vivarium.core;
 
-public class Species {
-	// Creature Constants
-	private static final double	DEFAULT_FEMALE_THRESHOLD	= 0.6;
-	private static final int	MAXIMUM_AGE					= 20000;
-	private static final int	MAXIMUM_GESTATION			= 2000;
-	private static final int	MAXIMUM_FOOD				= 2000;
+public class Species
+{
+    // Creature Constants
+    private static final double DEFAULT_FEMALE_THRESHOLD                        = 0.6;
+    private static final int    MAXIMUM_AGE                                     = 20000;
+    private static final int    MAXIMUM_GESTATION                               = 2000;
+    private static final int    MAXIMUM_FOOD                                    = 2000;
 
-	private static final int	BRAIN_INPUTS 				= 5;
-	private static final int	BRAIN_OUTPUTS	 			= 6;
+    private static final int    BRAIN_INPUTS                                    = 5;
+    private static final int    BRAIN_OUTPUTS                                   = 6;
 
-	// Per species settings
-	private static final double	DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY	= 0.2;
-	private static final int	DEFAULT_CREATURE_MEMORY_UNIT_COUNT					= 0;
-	private static final int	DEFAULT_CREATURE_SOUND_CHANNEL_COUNT				= 0;
+    // Per species settings
+    private static final double DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY = 0.2;
+    private static final int    DEFAULT_CREATURE_MEMORY_UNIT_COUNT              = 0;
+    private static final int    DEFAULT_CREATURE_SOUND_CHANNEL_COUNT            = 0;
 
-	// Per species - Model settings
-	private static final double	DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE				= 0.8;
-	private static final double	DEFAULT_MUTATION_RATE_EXPONENT						= -7;
-	private static final double	DEFAULT_MUTATION_SMALL_SCALE_RATE					= 0.5;
-	private static final double	DEFAULT_MUTATION_RANDOM_RATE						= 0.25;
-	private static final double	DEFAULT_MUTATION_FLIP_RATE							= 0.25;
+    // Per species - Model settings
+    private static final double DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE           = 0.8;
+    private static final double DEFAULT_MUTATION_RATE_EXPONENT                  = -7;
+    private static final double DEFAULT_MUTATION_SMALL_SCALE_RATE               = 0.5;
+    private static final double DEFAULT_MUTATION_RANDOM_RATE                    = 0.25;
+    private static final double DEFAULT_MUTATION_FLIP_RATE                      = 0.25;
 
-	private double _femaleThreshold = DEFAULT_FEMALE_THRESHOLD;
-	private int _maximumAge = MAXIMUM_AGE;
-	private int _maximumGestation = MAXIMUM_GESTATION;
-	private int _maximumFood = MAXIMUM_FOOD;
-	
-	private int _brainInputs = BRAIN_INPUTS;
-	private int _brainOutputs = BRAIN_OUTPUTS;
-	
-	// Creaturology
-	private int					_memoryUnitCount = DEFAULT_CREATURE_MEMORY_UNIT_COUNT;
-	private int					_soundChannelCount = DEFAULT_CREATURE_SOUND_CHANNEL_COUNT;
-	// Neurology
-	private double				_inheritanceGaussianMixRate = DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE;
-	private double				_mutationRateExponent = DEFAULT_MUTATION_RATE_EXPONENT;
-	private double				_mutationRate = Math.pow(2, DEFAULT_MUTATION_RATE_EXPONENT);
-	private double				_mutationSmallScaleRate = DEFAULT_MUTATION_SMALL_SCALE_RATE;
-	private double				_mutationRandomRate = DEFAULT_MUTATION_RANDOM_RATE;
-	private double				_mutationFlipRate = DEFAULT_MUTATION_FLIP_RATE;
-	private double _initialGenerationProbability = DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY;
-//	private Action[] _involuntaryActions;
-//	private Action[] _voluntaryActions;
+    private double              _femaleThreshold                                = DEFAULT_FEMALE_THRESHOLD;
+    private int                 _maximumAge                                     = MAXIMUM_AGE;
+    private int                 _maximumGestation                               = MAXIMUM_GESTATION;
+    private int                 _maximumFood                                    = MAXIMUM_FOOD;
 
-	public Species() {
-		
-	}
+    private int                 _brainInputs                                    = BRAIN_INPUTS;
+    private int                 _brainOutputs                                   = BRAIN_OUTPUTS;
 
-        public int getBrainInputs() {
-		return _brainInputs;
-	}
+    // Creaturology
+    private int                 _memoryUnitCount                                = DEFAULT_CREATURE_MEMORY_UNIT_COUNT;
+    private int                 _soundChannelCount                              = DEFAULT_CREATURE_SOUND_CHANNEL_COUNT;
+    // Neurology
+    private double              _inheritanceGaussianMixRate                     = DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE;
+    private double              _mutationRateExponent                           = DEFAULT_MUTATION_RATE_EXPONENT;
+    private double              _mutationRate                                   = Math.pow(2,
+                                                                                        DEFAULT_MUTATION_RATE_EXPONENT);
+    private double              _mutationSmallScaleRate                         = DEFAULT_MUTATION_SMALL_SCALE_RATE;
+    private double              _mutationRandomRate                             = DEFAULT_MUTATION_RANDOM_RATE;
+    private double              _mutationFlipRate                               = DEFAULT_MUTATION_FLIP_RATE;
+    private double              _initialGenerationProbability                   = DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY;
 
-	public int getBrainOutputs() {
-		return _brainOutputs;
-	}
+    // private Action[] _involuntaryActions;
+    // private Action[] _voluntaryActions;
 
-	public double getFemaleThreshold() {
-		return _femaleThreshold;
-	}
+    public Species()
+    {
 
-	public int getMaximumAge() {
-		return _maximumAge;
-	}
+    }
 
-	public int getMaximumFood() {
-		return _maximumFood;
-	}
-	public int getMaximumGestation() {
-		return _maximumGestation;
-	}
+    public int getBrainInputs()
+    {
+        return _brainInputs;
+    }
 
-	public double getMutationSmallScaleRate() {
-		return this._mutationSmallScaleRate;
-	}
+    public int getBrainOutputs()
+    {
+        return _brainOutputs;
+    }
 
-	public double getMutationRateExponent() {
-		return this._mutationRateExponent;
-	}
-	public double getMutationRate() {
-		return this._mutationRate;
-	}
+    public double getFemaleThreshold()
+    {
+        return _femaleThreshold;
+    }
 
-	public double getMutationFlipRate() {
-		return this._mutationFlipRate;
-	}
+    public int getMaximumAge()
+    {
+        return _maximumAge;
+    }
 
-	public double getMutationRandomRate() {
-		return this._mutationRandomRate;
-	}
+    public int getMaximumFood()
+    {
+        return _maximumFood;
+    }
 
-	public double getInheritanceGaussianMixRate() {
-		return this._inheritanceGaussianMixRate;
-	}
+    public int getMaximumGestation()
+    {
+        return _maximumGestation;
+    }
 
-        public double getInitialGenerationProbability()
-        {
-                return this._initialGenerationProbability;
-        }
+    public double getMutationSmallScaleRate()
+    {
+        return this._mutationSmallScaleRate;
+    }
 
-        public int getMemoryUnitCount() {
-		return this._memoryUnitCount;
-	}
+    public double getMutationRateExponent()
+    {
+        return this._mutationRateExponent;
+    }
 
-	public int getSoundChannelCount() {
-		return this._soundChannelCount;
-	}
+    public double getMutationRate()
+    {
+        return this._mutationRate;
+    }
 
-	public void setMutationRateExponent(double exponent) {
-		this._mutationRateExponent = exponent;
-		this._mutationRate = Math.pow(2, exponent);
-	}
+    public double getMutationFlipRate()
+    {
+        return this._mutationFlipRate;
+    }
 
-	public void setCreatureMemoryUnitCount(int memoryUnitCount) {
-		this._memoryUnitCount = memoryUnitCount;
-	}
+    public double getMutationRandomRate()
+    {
+        return this._mutationRandomRate;
+    }
 
-	public void setCreatureSoundChannelCount(int soundChannelCount) {
-		this._soundChannelCount = soundChannelCount;
-	}
+    public double getInheritanceGaussianMixRate()
+    {
+        return this._inheritanceGaussianMixRate;
+    }
 
-        public void setInitialGenerationProbability(double probability)
-	{
-		this._initialGenerationProbability = probability;
-	}
+    public double getInitialGenerationProbability()
+    {
+        return this._initialGenerationProbability;
+    }
+
+    public int getMemoryUnitCount()
+    {
+        return this._memoryUnitCount;
+    }
+
+    public int getSoundChannelCount()
+    {
+        return this._soundChannelCount;
+    }
+
+    public void setMutationRateExponent(double exponent)
+    {
+        this._mutationRateExponent = exponent;
+        this._mutationRate = Math.pow(2, exponent);
+    }
+
+    public void setCreatureMemoryUnitCount(int memoryUnitCount)
+    {
+        this._memoryUnitCount = memoryUnitCount;
+    }
+
+    public void setCreatureSoundChannelCount(int soundChannelCount)
+    {
+        this._soundChannelCount = soundChannelCount;
+    }
+
+    public void setInitialGenerationProbability(double probability)
+    {
+        this._initialGenerationProbability = probability;
+    }
 }
