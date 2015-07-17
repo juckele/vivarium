@@ -5,7 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.LinkedList;
 
-import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
+import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
@@ -636,8 +636,7 @@ public class World implements Serializable
     {
         // Draw average brain
         // Draw creature readouts
-        StringBuilder brainOutput = new StringBuilder();
-        LinkedList<NeuralNetworkBrain> brains = new LinkedList<NeuralNetworkBrain>();
+        LinkedList<Brain> brains = new LinkedList<Brain>();
         for (Creature creature : this._liveCreatureList)
         {
             if (creature.getSpecies().equals(s))
@@ -647,28 +646,8 @@ public class World implements Serializable
         }
         if (brains.size() > 0)
         {
-            // Brain minBrain = Brain.minBrain(brains);
-            // Brain maxBrain = Brain.maxBrain(brains);
-            NeuralNetworkBrain medianBrain = NeuralNetworkBrain.medianBrain(brains);
-            NeuralNetworkBrain standardDeviationBrain = NeuralNetworkBrain.standardDeviationBrain(brains, medianBrain);
-            brainOutput.append("Average creature NN:\n");
-            brainOutput.append(medianBrain.toString());
-            brainOutput.append("Std. Deviation on creature NNs:\n");
-            brainOutput.append(standardDeviationBrain.toString());
-            /*
-             * brainOutput.append("Min creature NN:\n");
-             * brainOutput.append(minBrain.toString());
-             * brainOutput.append("Max creature NN:\n");
-             * brainOutput.append(maxBrain.toString());
-             */
-            /*
-             * brainOutput.append("Oldest creature NN:\n");
-             * brainOutput.append(brains.get(0).toString());
-             * brainOutput.append("Random creature NN:\n");
-             * brainOutput.append(brains
-             * .get(Rand.getRandomInt(brains.size())).toString());
-             */
+            return brains.getFirst().getBrainType().render(brains);
         }
-        return (brainOutput.toString());
+        return "";
     }
 }

@@ -2,7 +2,7 @@ package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 
-import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
+import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
@@ -12,44 +12,44 @@ public class Creature implements Serializable
     /**
      * serialVersion
      */
-    private static final long  serialVersionUID   = 4L;
+    private static final long serialVersionUID   = 4L;
 
-    private static final int   BREEDING_FOOD_RATE = -10;
-    private static final int   EATING_FOOD_RATE   = 500;
-    private static final int   MOVING_FOOD_RATE   = -1;
-    private static final int   BASE_FOOD_RATE     = -1;
-    private static final int   PREGNANT_FOOD_RATE = -2;
+    private static final int  BREEDING_FOOD_RATE = -10;
+    private static final int  EATING_FOOD_RATE   = 500;
+    private static final int  MOVING_FOOD_RATE   = -1;
+    private static final int  BASE_FOOD_RATE     = -1;
+    private static final int  PREGNANT_FOOD_RATE = -2;
 
     // Meta information
-    private int                _id;
-    private Species            _species;
-    private World              _world;
-    private int                _r;
-    private int                _c;
-    private double             _generation;
+    private int               _id;
+    private Species           _species;
+    private World             _world;
+    private int               _r;
+    private int               _c;
+    private double            _generation;
 
     // Brain
-    private NeuralNetworkBrain _brain;
-    private double[]           _inputs;
-    private double[]           _memoryUnits;
-    private double[]           _soundInputs;
-    private double[]           _soundOutputs;
+    private Brain             _brain;
+    private double[]          _inputs;
+    private double[]          _memoryUnits;
+    private double[]          _soundInputs;
+    private double[]          _soundOutputs;
 
     // State
-    private Gender             _gender;
-    private double             _randomSeed;
-    private int                _age;
-    private int                _gestation;
-    private int                _food;
-    private Direction          _facing;
-    private Action             _action;
+    private Gender            _gender;
+    private double            _randomSeed;
+    private int               _age;
+    private int               _gestation;
+    private int               _food;
+    private Direction         _facing;
+    private Action            _action;
 
     // Fetus
-    private Creature           _fetus;
+    private Creature          _fetus;
 
     // Action history
-    private ActionProfile      _actionProfile;
-    private ActionProfile      _generationGenderActionProfile;
+    private ActionProfile     _actionProfile;
+    private ActionProfile     _generationGenderActionProfile;
 
     public Creature(World world, Species species, int r, int c)
     {
@@ -84,27 +84,22 @@ public class Creature implements Serializable
         }
 
         // Create brain to control the Creature
-        int memoryUnitCount = _species.getMemoryUnitCount();
-        int soundChannelCount = _species.getSoundChannelCount();
-        int totalBrainInputs = _species.getBrainInputs() + memoryUnitCount + soundChannelCount;
-        int totalBrainOutputs = _species.getBrainOutputs() + memoryUnitCount + soundChannelCount;
-
         if (parent1 != null && parent2 != null)
         {
             // Brain combined from genetic legacy
-            this._brain = new NeuralNetworkBrain(_species, parent1._brain, parent2._brain);
+            this._brain = _species.getBrainType().ConstructBrain(_species, parent1._brain, parent2._brain);
         }
         else if (parent1 == null && parent1 == null)
         {
             // Create a new default brain
-            this._brain = new NeuralNetworkBrain(totalBrainInputs, totalBrainOutputs, 0);
+            this._brain = _species.getBrainType().ConstructBrain(_species);
         }
         else
         {
             throw new Error("Creature with single parent");
         }
-        _inputs = new double[totalBrainInputs];
-        _memoryUnits = new double[memoryUnitCount];
+        _inputs = new double[_species.getTotalBrainInputCount()];
+        _memoryUnits = new double[_species.getMemoryUnitCount()];
         _soundInputs = new double[world.getWorldVariables().getMaximumSoundChannelCount()];
         _soundOutputs = new double[world.getWorldVariables().getMaximumSoundChannelCount()];
 
@@ -291,7 +286,7 @@ public class Creature implements Serializable
         return (_fetus);
     }
 
-    public NeuralNetworkBrain getBrain()
+    public Brain getBrain()
     {
         return (_brain);
     }
@@ -536,7 +531,7 @@ public class Creature implements Serializable
         this._fetus = fetus;
     }
 
-    public void setBrain(NeuralNetworkBrain brain)
+    public void setBrain(Brain brain)
     {
         this._brain = brain;
     }

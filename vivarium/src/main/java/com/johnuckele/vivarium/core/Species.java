@@ -2,6 +2,8 @@ package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 
+import com.johnuckele.vivarium.core.brain.BrainType;
+
 public class Species implements Serializable
 {
     private static final long   serialVersionUID                                = 1L;
@@ -32,6 +34,7 @@ public class Species implements Serializable
     private int                 _maximumGestation                               = MAXIMUM_GESTATION;
     private int                 _maximumFood                                    = MAXIMUM_FOOD;
 
+    private BrainType           _brainType                                      = BrainType.NEURALNETWORK;
     private int                 _brainInputs                                    = BRAIN_INPUTS;
     private int                 _brainOutputs                                   = BRAIN_OUTPUTS;
 
@@ -160,5 +163,30 @@ public class Species implements Serializable
     public void setInitialGenerationProbability(double probability)
     {
         this._initialGenerationProbability = probability;
+    }
+
+    public BrainType getBrainType()
+    {
+        return this._brainType;
+    }
+
+    public void setBrainType(BrainType type)
+    {
+        this._brainType = type;
+    }
+
+    public int getTotalBrainInputCount()
+    {
+        return this._brainInputs + this._memoryUnitCount + this._soundChannelCount;
+    }
+
+    public int getTotalBrainOutputCount()
+    {
+        return this._brainOutputs + this._memoryUnitCount + this._soundChannelCount;
+    }
+
+    public int getHiddenLayerCount()
+    {
+        return 0;
     }
 }

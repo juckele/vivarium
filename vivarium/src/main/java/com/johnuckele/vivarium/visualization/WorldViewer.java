@@ -10,6 +10,7 @@ import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 import com.johnuckele.vivarium.core.WorldVariables;
+import com.johnuckele.vivarium.core.brain.BrainType;
 
 public class WorldViewer extends JFrame
 {
@@ -107,9 +108,7 @@ public class WorldViewer extends JFrame
 
         // Build another
         Species species2 = new Species();
-        species2.setMutationRateExponent(-7);
-        species2.setCreatureMemoryUnitCount(0);
-        species2.setCreatureSoundChannelCount(0);
+        species2.setBrainType(BrainType.RANDOM);
         species.add(species2);
 
         // Construct the world proper

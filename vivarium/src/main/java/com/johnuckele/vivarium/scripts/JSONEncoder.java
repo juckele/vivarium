@@ -110,8 +110,17 @@ public class JSONEncoder
         creatureJSON.put("facing", u.getFacing());
 
         // Store brain
-        JSONObject brainJSON = convertBrainToJSON(u.getBrain());
-        creatureJSON.put("brain", brainJSON);
+        // TODO: FIX ENCODING
+        try
+        {
+            JSONObject brainJSON = convertBrainToJSON((NeuralNetworkBrain) u.getBrain());
+            creatureJSON.put("brain", brainJSON);
+        }
+        catch (Error e)
+        {
+            throw new Error(
+                    "Lazy programmer error, please implement JSON serialization and deserialization for multiple brain types");
+        }
 
         // Store fetus if present
         Creature fetus = u.getFetus();

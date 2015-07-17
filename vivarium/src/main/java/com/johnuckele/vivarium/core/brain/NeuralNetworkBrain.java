@@ -1,7 +1,7 @@
 package com.johnuckele.vivarium.core.brain;
 
 import java.util.Arrays;
-import java.util.LinkedList;
+import java.util.List;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.util.Functions;
@@ -387,7 +387,7 @@ public class NeuralNetworkBrain extends Brain
 
     }
 
-    public static NeuralNetworkBrain minBrain(LinkedList<NeuralNetworkBrain> brains)
+    public static NeuralNetworkBrain minBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain minBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
                 brains.get(0)._hiddenLayers);
@@ -409,7 +409,7 @@ public class NeuralNetworkBrain extends Brain
 
     }
 
-    public static NeuralNetworkBrain maxBrain(LinkedList<NeuralNetworkBrain> brains)
+    public static NeuralNetworkBrain maxBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain maxBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
                 brains.get(0)._hiddenLayers);
@@ -430,7 +430,7 @@ public class NeuralNetworkBrain extends Brain
         return maxBrain;
     }
 
-    public static NeuralNetworkBrain medianBrain(LinkedList<NeuralNetworkBrain> brains)
+    public static NeuralNetworkBrain medianBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain medianBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
                 brains.get(0)._hiddenLayers);
@@ -472,7 +472,7 @@ public class NeuralNetworkBrain extends Brain
         return medianBrain;
     }
 
-    public static NeuralNetworkBrain standardDeviationBrain(LinkedList<NeuralNetworkBrain> brains,
+    public static NeuralNetworkBrain standardDeviationBrain(List<NeuralNetworkBrain> brains,
             NeuralNetworkBrain medianBrain)
     {
         NeuralNetworkBrain standardDeviationBrain = new NeuralNetworkBrain(medianBrain._inputCount,
@@ -514,5 +514,11 @@ public class NeuralNetworkBrain extends Brain
             }
         }
         return standardDeviationBrain;
+    }
+
+    @Override
+    public BrainType getBrainType()
+    {
+        return BrainType.NEURALNETWORK;
     }
 }
