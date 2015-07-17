@@ -57,7 +57,7 @@ public class JSONEncoder
         /*
          * // Program options worldVariablesJSON.put("rememberTheDead",
          * worldVariables.getRememberTheDead());
-         * 
+         *
          * // World gen worldVariablesJSON.put("foodGenerationProbability",
          * worldVariables.getFoodGenerationProbability());
          * worldVariablesJSON.put("initialFoodGenerationProbability",
@@ -66,7 +66,7 @@ public class JSONEncoder
          * worldVariables.getInitialCreatureGenerationProbability());
          * worldVariablesJSON.put("initialWallGenerationProbability",
          * worldVariables.getInitialWallGenerationProbability());
-         * 
+         *
          * // Neurology worldVariablesJSON.put("creatureMemoryUnitCount",
          * worldVariables.getCreatureMemoryUnitCount());
          * worldVariablesJSON.put("inheritanceGaussianMixRate",
@@ -89,7 +89,7 @@ public class JSONEncoder
     // Unsaved crap
     /*
      * private Brain _brain; private double[] _memoryUnits;
-     * 
+     *
      * private Action _action;
      */
     private static JSONObject convertCreatureToJSON(Creature u) throws JSONException

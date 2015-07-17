@@ -1,6 +1,7 @@
 package com.johnuckele.vivarium.util;
 
 import org.junit.Test;
+
 import com.johnuckele.vtest.Tester;
 
 public class FunctionsTest
@@ -37,7 +38,7 @@ public class FunctionsTest
 				0.0001
 			);
 	}
-			
+
 	@Test public void testLogarithmicAverage()
 	{
 		double a, b, c;

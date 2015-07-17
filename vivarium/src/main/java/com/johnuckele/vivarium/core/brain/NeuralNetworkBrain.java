@@ -262,6 +262,7 @@ public class NeuralNetworkBrain extends Brain
         return true;
     }
 
+    @Override
     public double[] outputs(double[] inputs)
     {
         // Clear the output units

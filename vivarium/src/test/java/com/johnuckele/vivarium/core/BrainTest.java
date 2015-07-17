@@ -4,7 +4,7 @@ import org.junit.Test;
 
 import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
 import com.johnuckele.vivarium.util.Functions;
-import com.johnuckele.vtest.Tester; 
+import com.johnuckele.vtest.Tester;
 
 public class BrainTest
 {

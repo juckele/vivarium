@@ -1,6 +1,7 @@
 package com.johnuckele.vivarium.util;
 
 import org.junit.Test;
+
 import com.johnuckele.vtest.Tester;
 
 public class RandTest
@@ -54,7 +55,7 @@ public class RandTest
 		// Clear the seed
 		Rand.setRandomSeed();
 		Tester.notEqual("1st random with generated seed", Rand.getRandomLong(), 1130297953386881L);
-		
+
 		Rand.setRandomSeed(10);
 		long randFromSeed1 = Rand.getRandomLong();
 		Rand.setRandomSeed(20);

@@ -90,7 +90,7 @@ public class WorldVariables implements Serializable
     /**
      * Returns the names in string form of all variables tracked by a
      * WorldVariables objects.
-     * 
+     *
      * @return
      */
     public static String[] getVariablesNames()

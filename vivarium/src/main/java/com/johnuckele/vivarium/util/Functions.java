@@ -5,7 +5,7 @@ public class Functions
     /**
      * computes the logistic sigmoid of a value, the logistic sigmoid is s(x) =
      * 1 / ( 1 + e ^ -x )
-     * 
+     *
      * @param x
      * @return sigmoid(x)
      */
@@ -18,7 +18,7 @@ public class Functions
      * computes the midpoint between two values on a logarithmic scale, defined
      * as log((exp(A)+exp(B))/2), but is usable even when A or B are too large
      * to fit into Java primitives.
-     * 
+     *
      * @param logA
      *            the log of A
      * @param logB
