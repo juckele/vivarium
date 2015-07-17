@@ -156,13 +156,16 @@ public class World implements Serializable
 
     private void transmitSounds()
     {
-        for (Creature speaker : this._liveCreatureList)
+        if (this._worldVariables.getMaximumSoundChannelCount() > 0)
         {
-            for (Creature listener : this._liveCreatureList)
+            for (Creature speaker : this._liveCreatureList)
             {
-                if (listener != speaker)
+                for (Creature listener : this._liveCreatureList)
                 {
-                    listener.listenToCreature(speaker);
+                    if (listener != speaker)
+                    {
+                        listener.listenToCreature(speaker);
+                    }
                 }
             }
         }
@@ -402,6 +405,22 @@ public class World implements Serializable
         return (count);
     }
 
+    public int getCount(Species s)
+    {
+        int count = 0;
+        for (int r = 0; r < _worldDimensions; r++)
+        {
+            for (int c = 0; c < _worldDimensions; c++)
+            {
+                if (this._creatureGrid[r][c] != null && this._creatureGrid[r][c].getSpecies().equals(s))
+                {
+                    count++;
+                }
+            }
+        }
+        return (count);
+    }
+
     public int getMaximimCreatureID()
     {
         return this._maximumCreatureID;
@@ -569,8 +588,11 @@ public class World implements Serializable
         StringBuilder worldOutput = new StringBuilder();
         worldOutput.append("Walls: ");
         worldOutput.append(this.getCount(WorldObject.WALL));
-        worldOutput.append(", Creatures: ");
-        worldOutput.append(this.getCount(WorldObject.CREATURE));
+        for (Species s : this._worldVariables.getSpecies())
+        {
+            worldOutput.append(", ").append(s.getGlyph()).append("-creatures: ");
+            worldOutput.append(this.getCount(s));
+        }
         worldOutput.append(", Food: ");
         worldOutput.append(this.getCount(WorldObject.FOOD));
         worldOutput.append('\n');
@@ -602,13 +624,26 @@ public class World implements Serializable
 
     private String renderBrainWeights()
     {
+        StringBuilder multiSpeciesOutput = new StringBuilder();
+        for (Species species : this._worldVariables.getSpecies())
+        {
+            multiSpeciesOutput.append(this.renderBrainWeights(species));
+        }
+        return multiSpeciesOutput.toString();
+    }
+
+    private String renderBrainWeights(Species s)
+    {
         // Draw average brain
         // Draw creature readouts
         StringBuilder brainOutput = new StringBuilder();
         LinkedList<NeuralNetworkBrain> brains = new LinkedList<NeuralNetworkBrain>();
-        for (Creature rat : this._liveCreatureList)
+        for (Creature creature : this._liveCreatureList)
         {
-            brains.add(rat.getBrain());
+            if (creature.getSpecies().equals(s))
+            {
+                brains.add(creature.getBrain());
+            }
         }
         if (brains.size() > 0)
         {
@@ -626,10 +661,13 @@ public class World implements Serializable
              * brainOutput.append("Max creature NN:\n");
              * brainOutput.append(maxBrain.toString());
              */
-            brainOutput.append("Oldest creature NN:\n");
-            brainOutput.append(brains.get(0).toString());
-            brainOutput.append("Random creature NN:\n");
-            brainOutput.append(brains.get(Rand.getRandomInt(brains.size())).toString());
+            /*
+             * brainOutput.append("Oldest creature NN:\n");
+             * brainOutput.append(brains.get(0).toString());
+             * brainOutput.append("Random creature NN:\n");
+             * brainOutput.append(brains
+             * .get(Rand.getRandomInt(brains.size())).toString());
+             */
         }
         return (brainOutput.toString());
     }

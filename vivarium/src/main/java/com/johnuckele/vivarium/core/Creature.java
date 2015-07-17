@@ -105,8 +105,8 @@ public class Creature implements Serializable
         }
         _inputs = new double[totalBrainInputs];
         _memoryUnits = new double[memoryUnitCount];
-        _soundInputs = new double[soundChannelCount];
-        _soundOutputs = new double[soundChannelCount];
+        _soundInputs = new double[world.getWorldVariables().getMaximumSoundChannelCount()];
+        _soundOutputs = new double[world.getWorldVariables().getMaximumSoundChannelCount()];
 
         // Set gender
         double randomNumber = Rand.getRandomPositiveDouble();
@@ -165,7 +165,8 @@ public class Creature implements Serializable
     public void listenToCreature(Creature u)
     {
         int distanceSquared = (this._r - u._r) * (this._r - u._r) + (this._c - u._c) * (this._c - u._c);
-        for (int i = 0; i < u._soundOutputs.length; i++)
+        int soundChannels = Math.min(this._species.getSoundChannelCount(), u._species.getSoundChannelCount());
+        for (int i = 0; i < soundChannels; i++)
         {
             this._soundInputs[i] += u._soundOutputs[i] / distanceSquared;
         }
@@ -200,7 +201,7 @@ public class Creature implements Serializable
                 _inputs[_species.getBrainInputs() - 1 + i] = _memoryUnits[i];
             }
             // Read sound inputs
-            for (int i = 0; i < this._soundInputs.length; i++)
+            for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {
                 _inputs[_species.getBrainInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
             }
@@ -212,7 +213,7 @@ public class Creature implements Serializable
                 _memoryUnits[i] = outputs[_species.getBrainOutputs() + i - 1];
             }
             // Clear the sound inputs and set the sound outputs
-            for (int i = 0; i < this._soundInputs.length; i++)
+            for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {
                 this._soundInputs[i] = 0;
                 this._soundOutputs[i] = outputs[_species.getBrainOutputs() - 1 + this._memoryUnits.length + i];

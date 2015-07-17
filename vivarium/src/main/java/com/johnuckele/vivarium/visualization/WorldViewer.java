@@ -1,6 +1,7 @@
 package com.johnuckele.vivarium.visualization;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -92,20 +93,31 @@ public class WorldViewer extends JFrame
 
     public static void main(String[] args)
     {
+        // Set up
         int worldDimensions = 25;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        WorldVariables wv = new WorldVariables(2);
-        Species species = wv.getSpecies(0);
-        species.setMutationRateExponent(-9);
-        species.setCreatureMemoryUnitCount(1);
-        species.setCreatureSoundChannelCount(1);
-        Species species2 = wv.getSpecies(1);
+        LinkedList<Species> species = new LinkedList<Species>();
+
+        // Build 1 species
+        Species species1 = new Species();
+        species1.setMutationRateExponent(-9);
+        species1.setCreatureMemoryUnitCount(1);
+        species1.setCreatureSoundChannelCount(1);
+        species.add(species1);
+
+        // Build another
+        Species species2 = new Species();
         species2.setMutationRateExponent(-7);
-        species2.setCreatureMemoryUnitCount(1);
-        species2.setCreatureSoundChannelCount(1);
+        species2.setCreatureMemoryUnitCount(0);
+        species2.setCreatureSoundChannelCount(0);
+        species.add(species2);
+
+        // Construct the world proper
+        WorldVariables wv = new WorldVariables(species);
         World w = new World(worldDimensions, wv);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
+        // Run simulation
         WorldViewer wh = new WorldViewer(w);
         wh.runAndRenderTicks(2000000, 2000);
         // wh.runAndRenderTicks(20000, 1);

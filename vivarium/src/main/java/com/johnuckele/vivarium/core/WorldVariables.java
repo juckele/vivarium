@@ -2,10 +2,12 @@ package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
 
 public class WorldVariables implements Serializable
 {
-    private static final long     serialVersionUID                            = 1L;
+    private static final long     serialVersionUID                            = 2L;
 
     /**
      * Default values
@@ -48,7 +50,21 @@ public class WorldVariables implements Serializable
 
     private ArrayList<Species>    _species;
 
-    public WorldVariables(int speciesCount)
+    private int                   _maximumSoundChannelcount;
+
+    public WorldVariables()
+    {
+        this(WorldVariables.createSingleSpeciesCollection());
+    }
+
+    private static Collection<Species> createSingleSpeciesCollection()
+    {
+        LinkedList<Species> species = new LinkedList<Species>();
+        species.add(new Species());
+        return species;
+    }
+
+    public WorldVariables(Collection<Species> species)
     {
         // Program Options
         setRememberTheDead(DEFAULT_REMEMBER_THE_DEAD);
@@ -60,10 +76,14 @@ public class WorldVariables implements Serializable
         setInitialFoodGenerationProbability(DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY);
         setInitialWallGenerationProbability(DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY);
 
-        _species = new ArrayList<Species>(speciesCount);
-        for (int i = 0; i < speciesCount; i++)
+        _species = new ArrayList<Species>(species);
+        _maximumSoundChannelcount = 0;
+        for (Species s : _species)
         {
-            _species.add(new Species());
+            if (s.getSoundChannelCount() > _maximumSoundChannelcount)
+            {
+                _maximumSoundChannelcount = s.getSoundChannelCount();
+            }
         }
     }
 
@@ -165,13 +185,14 @@ public class WorldVariables implements Serializable
         }
     }
 
-    public Species getSpecies(int i)
+    public int getMaximumSoundChannelCount()
     {
-        return _species.get(i);
+        return _maximumSoundChannelcount;
     }
 
     public ArrayList<Species> getSpecies()
     {
         return _species;
     }
+
 }
