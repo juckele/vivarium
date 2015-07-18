@@ -6,6 +6,7 @@ import java.util.List;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
+import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class NeuralNetworkBrain extends Brain
 {
@@ -304,6 +305,19 @@ public class NeuralNetworkBrain extends Brain
             }
             // Scale for sigmoid
             outputs[i] = Functions.sigmoid(outputs[i]);
+        }
+    }
+
+    @Override
+    public String render(RenderCode code)
+    {
+        if (code == RenderCode.BRAIN_WEIGHTS)
+        {
+            return this.toString();
+        }
+        else
+        {
+            throw new IllegalArgumentException("RenderCode " + code + " not supported for type " + this.getClass());
         }
     }
 

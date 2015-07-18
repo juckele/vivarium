@@ -30,8 +30,8 @@ public class WorldViewer extends JFrame
     public WorldViewer(World w)
     {
         _w = w;
-        _overviewRenders.add(_w.toString(RenderCode.WORLD_MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
-        _ratListRenders.add(_w.toString(RenderCode.FULL_CREATURE_LIST));
+        _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.BRAIN_WEIGHTS));
+        _ratListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
 
         _overviewRender = new JTextArea(_overviewRenders.get(_renderIndex));
         _ratListRender = new JTextArea(_ratListRenders.get(_renderIndex));
@@ -65,8 +65,8 @@ public class WorldViewer extends JFrame
             _w.tick();
             if (tick % renderEvery == 0)
             {
-                _overviewRenders.add(_w.toString(RenderCode.WORLD_MAP) + "\n" + _w.toString(RenderCode.BRAIN_WEIGHTS));
-                _ratListRenders.add(_w.toString(RenderCode.LIVE_CREATURE_LIST));
+                _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.BRAIN_WEIGHTS));
+                _ratListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
                 System.out.println("Population " + _w.getCount(WorldObject.CREATURE));
             }
         }
@@ -118,7 +118,7 @@ public class WorldViewer extends JFrame
 
         // Run simulation
         WorldViewer wh = new WorldViewer(w);
-        wh.runAndRenderTicks(2000000, 2000);
+        wh.runAndRenderTicks(200000, 2000);
         // wh.runAndRenderTicks(20000, 1);
 
         System.out.println("Finished simulations");

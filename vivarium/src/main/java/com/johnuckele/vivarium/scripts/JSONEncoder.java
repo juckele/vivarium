@@ -99,8 +99,6 @@ public class JSONEncoder
 
         // Store basic values
         creatureJSON.put("id", u.getID());
-        creatureJSON.put("r", u.getR());
-        creatureJSON.put("c", u.getC());
         creatureJSON.put("generation", u.getGeneration());
         creatureJSON.put("isFemale", u.getIsFemale());
         creatureJSON.put("randomSeed", u.getRandomSeed());

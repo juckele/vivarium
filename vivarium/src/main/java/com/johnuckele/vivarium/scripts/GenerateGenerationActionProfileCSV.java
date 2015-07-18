@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import com.johnuckele.vivarium.core.Action;
 import com.johnuckele.vivarium.core.ActionProfile;
-import com.johnuckele.vivarium.core.Gender;
 import com.johnuckele.vivarium.core.World;
 
 public class GenerateGenerationActionProfileCSV extends Script
@@ -39,8 +38,10 @@ public class GenerateGenerationActionProfileCSV extends Script
 
         // Build the CSV data
         StringBuilder csvStringBuilder = new StringBuilder("generation,action,action_success,female,count\n");
-        LinkedList<ActionProfile> femaleActionProfiles = w.getAllActionProfilesForGender(Gender.FEMALE);
-        LinkedList<ActionProfile> maleActionProfiles = w.getAllActionProfilesForGender(Gender.MALE);
+        System.out.println(w);// TODO IFX ACTION PROFILES
+        LinkedList<ActionProfile> femaleActionProfiles = new LinkedList<ActionProfile>();// w.getAllActionProfilesForGender(Gender.FEMALE);
+        LinkedList<ActionProfile> maleActionProfiles = new LinkedList<ActionProfile>();
+        ;// w.getAllActionProfilesForGender(Gender.MALE);
 
         int generation = 0;
         Iterator<ActionProfile> femaleIterator = femaleActionProfiles.iterator();

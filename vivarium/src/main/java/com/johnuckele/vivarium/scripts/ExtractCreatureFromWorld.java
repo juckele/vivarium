@@ -62,8 +62,10 @@ public class ExtractCreatureFromWorld extends Script
         }
 
         // Disconnect the Creature and save it
-        u.disconnectFromWorld();
-        ScriptIO.saveUckeleloid(u, args[1], Format.JAVA_SERIALIZABLE);
+        throw new Error("Action Profiles need to be reimplemented");
+        // TODO: FIX ACTION PROFILES
+        // u.disconnectFromWorld();
+        // ScriptIO.saveUckeleloid(u, args[1], Format.JAVA_SERIALIZABLE);
     }
 
     public static void main(String[] args)

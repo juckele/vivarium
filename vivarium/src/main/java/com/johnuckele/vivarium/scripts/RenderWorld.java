@@ -30,8 +30,8 @@ public class RenderWorld extends Script
     protected void run(String[] args)
     {
         World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
-        System.out.println(w.toString(RenderCode.WORLD_MAP));
-        System.out.println(w.toString(RenderCode.BRAIN_WEIGHTS));
+        System.out.println(w.render(RenderCode.WORLD_MAP));
+        System.out.println(w.render(RenderCode.BRAIN_WEIGHTS));
         // System.out.println(w.toString(RenderCode.CREATURE_LIST));
         // System.out.println(w.toString(RenderCode.DEAD_CREATURE_LIST));
     }

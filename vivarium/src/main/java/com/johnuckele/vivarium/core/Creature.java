@@ -23,9 +23,7 @@ public class Creature implements Serializable
     // Meta information
     private int               _id;
     private Species           _species;
-    private World             _world;
-    private int               _r;
-    private int               _c;
+    private WorldVariables    _variables;
     private double            _generation;
 
     // Brain
@@ -36,6 +34,8 @@ public class Creature implements Serializable
     private double[]          _soundOutputs;
 
     // State
+    private boolean           _hasActed          = true; // Defaults to true to prevent a newborn from acting before it
+                                                         // plans
     private Gender            _gender;
     private double            _randomSeed;
     private int               _age;
@@ -48,31 +48,24 @@ public class Creature implements Serializable
     private Creature          _fetus;
 
     // Action history
-    private ActionProfile     _actionProfile;
-    private ActionProfile     _generationGenderActionProfile;
+    // TODO FIX ACTION PROIFLES
+    // private ActionProfile _actionProfile;
+    // private ActionProfile _generationGenderActionProfile;
 
-    public Creature(World world, Species species, int r, int c)
+    public Creature(Species species, WorldVariables variables)
     {
-        this(null, null, world, species, world.requestNewCreatureID(), r, c);
+        this(species, variables, null, null);
     }
 
-    public Creature(World world, Species species, int id, int r, int c)
+    public Creature(Creature parent1, Creature parent2)
     {
-        this(null, null, world, species, id, r, c);
+        this(parent1._species, parent1._variables, parent1, parent2);
     }
 
-    public Creature(Creature parent1, Creature parent2, World world)
+    public Creature(Species species, WorldVariables variables, Creature parent1, Creature parent2)
     {
-        this(parent1, parent2, world, parent1._species, world.requestNewCreatureID(), 0, 0);
-    }
-
-    public Creature(Creature parent1, Creature parent2, World world, Species species, int id, int r, int c)
-    {
-        this._world = world;
+        this._variables = variables;
         this._species = species;
-        this._id = id;
-        this._r = r;
-        this._c = c;
 
         if (parent1 != null)
         {
@@ -100,8 +93,8 @@ public class Creature implements Serializable
         }
         _inputs = new double[_species.getTotalBrainInputCount()];
         _memoryUnits = new double[_species.getMemoryUnitCount()];
-        _soundInputs = new double[world.getWorldVariables().getMaximumSoundChannelCount()];
-        _soundOutputs = new double[world.getWorldVariables().getMaximumSoundChannelCount()];
+        _soundInputs = new double[_variables.getMaximumSoundChannelCount()];
+        _soundOutputs = new double[_variables.getMaximumSoundChannelCount()];
 
         // Set gender
         double randomNumber = Rand.getRandomPositiveDouble();
@@ -126,16 +119,18 @@ public class Creature implements Serializable
         this._facing = Direction.NORTH;
         this._action = Action.REST;
 
-        if (this._world.getWorldVariables().getKeepGenerationActionProfile())
-        {
-            this._actionProfile = new ActionProfile();
-            this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int) this._generation,
-                    this._gender);
-        }
+        // TODO MOVE ACTION PROFILE GENERATION
+        /*
+         * if (this._world.getWorldVariables().getKeepGenerationActionProfile()) { this._actionProfile = new
+         * ActionProfile(); this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int)
+         * this._generation, this._gender); }
+         */
     }
 
     public void tick()
     {
+        // Reset action
+        this._hasActed = false;
         // Age
         this._age++;
 
@@ -157,9 +152,8 @@ public class Creature implements Serializable
         return (_action);
     }
 
-    public void listenToCreature(Creature u)
+    public void listenToCreature(Creature u, double distanceSquared)
     {
-        int distanceSquared = (this._r - u._r) * (this._r - u._r) + (this._c - u._c) * (this._c - u._c);
         int soundChannels = Math.min(this._species.getSoundChannelCount(), u._species.getSoundChannelCount());
         for (int i = 0; i < soundChannels; i++)
         {
@@ -167,12 +161,12 @@ public class Creature implements Serializable
         }
     }
 
-    public void planAction()
+    public void planAction(World w, int r, int c)
     {
-        _action = determineAction();
+        _action = determineAction(w, r, c);
     }
 
-    private Action determineAction()
+    private Action determineAction(World w, int r, int c)
     {
         Action involuntaryAction = getInvoluntaryAction();
         if (involuntaryAction != null)
@@ -182,9 +176,9 @@ public class Creature implements Serializable
         else
         {
             // Hard coded inputs
-            int facingR = this._r + Direction.getVerticalComponent(this._facing);
-            int facingC = this._c + Direction.getHorizontalComponent(this._facing);
-            WorldObject facingObject = this._world.getWorldObject(facingR, facingC);
+            int facingR = r + Direction.getVerticalComponent(this._facing);
+            int facingC = c + Direction.getHorizontalComponent(this._facing);
+            WorldObject facingObject = w.getWorldObject(facingR, facingC);
             _inputs[0] = this._gender == Gender.FEMALE ? 1 : 0;
             _inputs[1] = facingObject == WorldObject.FOOD ? 1 : 0;
             _inputs[2] = facingObject == WorldObject.CREATURE ? 1 : 0;
@@ -255,22 +249,6 @@ public class Creature implements Serializable
         return (this._randomSeed);
     }
 
-    public void setPosition(int r, int c)
-    {
-        this._r = r;
-        this._c = c;
-    }
-
-    public int getR()
-    {
-        return (this._r);
-    }
-
-    public int getC()
-    {
-        return (this._c);
-    }
-
     public void setIsFemale(boolean isFemale)
     {
         this._gender = isFemale ? Gender.FEMALE : Gender.MALE;
@@ -293,6 +271,7 @@ public class Creature implements Serializable
 
     public void executeAction(Action action)
     {
+        this._hasActed = true;
         executeAction(action, null);
     }
 
@@ -314,8 +293,6 @@ public class Creature implements Serializable
                 break;
             case MOVE:
                 this._food += Creature.MOVING_FOOD_RATE;
-                this._r += Direction.getVerticalComponent(this._facing);
-                this._c += Direction.getHorizontalComponent(this._facing);
                 break;
             case REST:
             case DIE:
@@ -339,11 +316,12 @@ public class Creature implements Serializable
                 new Error().printStackTrace();
                 break;
         }
-        if (this._world.getWorldVariables().getKeepGenerationActionProfile())
-        {
-            this._actionProfile.recordAction(action, true);
-            this._generationGenderActionProfile.recordAction(action, true);
-        }
+        // TODO FIX ACTION PROFILES
+        /*
+         * if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
+         * this._actionProfile.recordAction(action, true); this._generationGenderActionProfile.recordAction(action,
+         * true); }
+         */
 
     }
 
@@ -379,43 +357,40 @@ public class Creature implements Serializable
                 new Error().printStackTrace();
                 break;
         }
-        if (this._world.getWorldVariables().getKeepGenerationActionProfile())
-        {
-            this._actionProfile.recordAction(action, false);
-            this._generationGenderActionProfile.recordAction(action, false);
-        }
+        // TODO FIX ACTION PROFILES
+        /*
+         * if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
+         * this._actionProfile.recordAction(action, false); this._generationGenderActionProfile.recordAction(action,
+         * false); }
+         */
     }
 
     private Creature createOffspringWith(Creature breedingTarget)
     {
-        return new Creature(this, breedingTarget, _world);
+        return new Creature(this, breedingTarget);
     }
 
-    public String toString(RenderCode code)
+    public String render(RenderCode code, int r, int c)
     {
         if (code == RenderCode.COMPLEX_CREATURE || code == RenderCode.SIMPLE_CREATURE)
         {
-            return this.renderSelf(code);
-        }
-        else if (code == RenderCode.BRAIN_WEIGHTS)
-        {
-            return (this._brain.toString());
+            return this.renderSelf(code, r, c);
         }
         else
         {
-            throw new Error("Invalid Code " + code);
+            throw new IllegalArgumentException("RenderCode " + code + " not supported for type " + this.getClass());
         }
     }
 
-    private String renderSelf(RenderCode code)
+    private String renderSelf(RenderCode code, int r, int c)
     {
         StringBuilder output = new StringBuilder();
         output.append(code == RenderCode.COMPLEX_CREATURE ? "Creature ID: " : "U_");
         output.append(this._id);
         output.append(code == RenderCode.COMPLEX_CREATURE ? "\nCoordinates: (" : " @(");
-        output.append(this._r);
+        output.append(r);
         output.append(',');
-        output.append(this._c);
+        output.append(c);
         output.append(")");
         output.append(code == RenderCode.COMPLEX_CREATURE ? "\nGeneration: " : " GEN-");
         output.append(this._generation);
@@ -536,40 +511,35 @@ public class Creature implements Serializable
         this._brain = brain;
     }
 
-    public ActionProfile getActionHistory()
+    /*
+     * Returns true if the creature has already acted during this simulation tick.
+     */
+    public boolean hasActed()
     {
-        if (this._world.getWorldVariables().getKeepGenerationActionProfile())
-        {
-            return _actionProfile;
-        }
-        else
-        {
-            throw new Error("Action Profiles are not supported in this world");
-        }
+        return this._hasActed;
     }
 
-    public void setActionHistory(ActionProfile _actionHistory)
+    public void setID(int id)
     {
-        this._actionProfile = _actionHistory;
+        this._id = id;
     }
 
-    public void disconnectFromWorld()
-    {
-        this._world = null;
-        this._generationGenderActionProfile = null;
-    }
+    // TODO FIX ACTION PROFILES
+    /*
+     * public ActionProfile getActionHistory() { if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
+     * return _actionProfile; } else { throw new Error("Action Profiles are not supported in this world"); } }
+     */
 
-    public void connectToWorld(World w)
-    {
-        this._world = w;
-        if (this._world.getWorldVariables().getKeepGenerationActionProfile())
-        {
-            if (this._actionProfile == null)
-            {
-                this._actionProfile = new ActionProfile();
-            }
-            this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int) this._generation,
-                    this._gender);
-        }
-    }
+    /*
+     * public void setActionHistory(ActionProfile _actionHistory) { this._actionProfile = _actionHistory; }
+     */
+
+    // TODO FIX ACTION PROFILES
+    /*
+     * public void disconnectFromWorld() { this._world = null; this._generationGenderActionProfile = null; } public void
+     * connectToWorld(World w) { this._world = w; if (this._world.getWorldVariables().getKeepGenerationActionProfile())
+     * { if (this._actionProfile == null) { this._actionProfile = new ActionProfile(); }
+     * this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int) this._generation,
+     * this._gender); } }
+     */
 }

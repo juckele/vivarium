@@ -29,9 +29,9 @@ public class RenderCreature extends Script
     @Override
     protected void run(String[] args)
     {
-        Creature u = ScriptIO.loadCreature(args[0], Format.JAVA_SERIALIZABLE);
-        System.out.println(u.toString(RenderCode.BRAIN_WEIGHTS));
-        System.out.println(u.toString(RenderCode.COMPLEX_CREATURE));
+        Creature c = ScriptIO.loadCreature(args[0], Format.JAVA_SERIALIZABLE);
+        System.out.println(c.getBrain().render(RenderCode.BRAIN_WEIGHTS));
+        System.out.println(c.render(RenderCode.COMPLEX_CREATURE, -1, -1));
 
     }
 

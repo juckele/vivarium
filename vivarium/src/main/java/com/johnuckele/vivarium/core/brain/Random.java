@@ -2,6 +2,7 @@ package com.johnuckele.vivarium.core.brain;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.util.Rand;
+import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class Random extends Brain
 {
@@ -34,6 +35,12 @@ public class Random extends Brain
             _outputs[i] = Rand.getRandomDouble();
         }
         return _outputs;
+    }
+
+    @Override
+    public String render(RenderCode code)
+    {
+        return "Hand coded brain: no render available";
     }
 
 }

@@ -34,7 +34,8 @@ public class GenerateCensusCSV extends Script
     {
         // Setup
         World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
-        CensusRecord census = w.getCensus();
+        System.out.println("Fix Census " + w);// TODO FIX CENSUS
+        CensusRecord census = new CensusRecord(0);// w.getCensus();
 
         // Build the CSV data
         StringBuilder csvStringBuilder = new StringBuilder("tick,population\n");

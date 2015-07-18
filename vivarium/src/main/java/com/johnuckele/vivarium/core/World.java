@@ -14,23 +14,23 @@ public class World implements Serializable
     /**
      * serialVersion
      */
-    private static final long         serialVersionUID = 4L;
+    private static final long    serialVersionUID = 4L;
 
-    private WorldVariables            _worldVariables;
+    private WorldVariables       _worldVariables;
 
-    private int                       _maximumCreatureID;
-    private int                       _tickCounter;
-    protected int                     _worldDimensions;
+    private int                  _maximumCreatureID;
+    private int                  _tickCounter;
+    protected int                _worldDimensions;
 
-    protected WorldObject[][]         _worldObjectGrid;
-    protected Creature[][]            _creatureGrid;
-    protected LinkedList<Creature>    _liveCreatureList;
-    private LinkedList<Creature>      _deadCreatureList;
+    protected WorldObject[][]    _worldObjectGrid;
+    protected Creature[][]       _creatureGrid;
+    private LinkedList<Creature> _deadCreatureList;
 
     // Auxiliary data strucures
-    private CensusRecord              _census;
-    private LinkedList<ActionProfile> _generationalMaleActionProfiles;
-    private LinkedList<ActionProfile> _generationalFemaleActionProfiles;
+    // TODO FIX CENSUS DATA AND ACTION PROFILES
+    // private CensusRecord _census;
+    // private LinkedList<ActionProfile> _generationalMaleActionProfiles;
+    // private LinkedList<ActionProfile> _generationalFemaleActionProfiles;
 
     public World(int worldDimensions, WorldVariables worldVariables)
     {
@@ -43,20 +43,21 @@ public class World implements Serializable
         this.setWorldDimensions(worldDimensions);
 
         // Build the action profile data structures
-        if (this._worldVariables.getKeepGenerationActionProfile())
-        {
-            _generationalMaleActionProfiles = new LinkedList<ActionProfile>();
-            _generationalFemaleActionProfiles = new LinkedList<ActionProfile>();
-        }
+        // TODO ACTION PROFILES
+        /*
+         * if (this._worldVariables.getKeepGenerationActionProfile()) { _generationalMaleActionProfiles = new
+         * LinkedList<ActionProfile>(); _generationalFemaleActionProfiles = new LinkedList<ActionProfile>(); }
+         */
 
         // Final step
         this.populatateWorld();
 
         // Take an initial census
-        if (this._worldVariables.getKeepCensusData())
-        {
-            this._census = new CensusRecord(this.getCount(WorldObject.CREATURE));
-        }
+        // TODO FIX CENSUS
+        /*
+         * if (this._worldVariables.getKeepCensusData()) { this._census = new
+         * CensusRecord(this.getCount(WorldObject.CREATURE)); }
+         */
     }
 
     public int getWorldDimensions()
@@ -74,42 +75,41 @@ public class World implements Serializable
         {
             for (int c = 0; c < _worldDimensions; c++)
             {
-                _worldObjectGrid[r][c] = WorldObject.EMPTY;
+                setObject(WorldObject.EMPTY, r, c);
                 _creatureGrid[r][c] = null;
                 if (r < 1 || c < 1 || r > _worldDimensions - 2 || c > _worldDimensions - 2)
                 {
-                    _worldObjectGrid[r][c] = WorldObject.WALL;
+                    setObject(WorldObject.WALL, r, c);
                 }
                 else
                 {
                     WorldObject object = populator.getNextWorldObject();
-                    _worldObjectGrid[r][c] = object;
                     if (object == WorldObject.CREATURE)
                     {
                         Species species = populator.getNextCreatureSpecies();
-                        Creature creature = new Creature(this, species, r, c);
-                        _creatureGrid[r][c] = creature;
-                        _liveCreatureList.add(creature);
+                        Creature creature = new Creature(species, this._worldVariables);
+                        addCreature(creature, r, c);
+                    }
+                    else
+                    {
+                        setObject(object, r, c);
                     }
                 }
             }
         }
     }
 
-    public int requestNewCreatureID()
+    public int getNewCreatureID()
     {
         return (++_maximumCreatureID);
     }
 
     /**
-     * Top level simulation step of the entire world and all denizens within it.
-     * Simulations are divided into four phases: 1, each creature will age and
-     * compute other time based values. 2, each creatur will decide on an action
-     * to attempt. 3, each creature will attempt to execute the planned action
-     * (the order of execution on the actions is currently left to right, top to
-     * bottom, so some creature will get priority if actions conflict). 4,
-     * finally, food is spawned at a constant chance in empty spaces in the
-     * world.
+     * Top level simulation step of the entire world and all denizens within it. Simulations are divided into four
+     * phases: 1, each creature will age and compute other time based values. 2, each creatur will decide on an action
+     * to attempt. 3, each creature will attempt to execute the planned action (the order of execution on the actions is
+     * currently left to right, top to bottom, so some creature will get priority if actions conflict). 4, finally, food
+     * is spawned at a constant chance in empty spaces in the world.
      */
     public void tick()
     {
@@ -134,10 +134,7 @@ public class World implements Serializable
 
         // Keep the census up to date
         this._tickCounter++;
-        if (this._worldVariables.getKeepCensusData())
-        {
-            this._census.updateRecords(this._tickCounter, this._liveCreatureList.size());
-        }
+        // TODO FIX CENSUS DATA
     }
 
     private void tickCreatures()
@@ -158,105 +155,144 @@ public class World implements Serializable
     {
         if (this._worldVariables.getMaximumSoundChannelCount() > 0)
         {
-            for (Creature speaker : this._liveCreatureList)
+            for (int r = 0; r < this._worldDimensions; r++)
             {
-                for (Creature listener : this._liveCreatureList)
+                for (int c = 0; c < this._worldDimensions; c++)
                 {
-                    if (listener != speaker)
+                    if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
                     {
-                        listener.listenToCreature(speaker);
+                        transmitSoundsFrom(r, c);
                     }
                 }
             }
         }
     }
 
+    private void transmitSoundsFrom(int r1, int c1)
+    {
+        for (int c2 = c1 + 1; c2 < this._worldDimensions; c2++)
+        {
+            int r2 = r1;
+            if (_worldObjectGrid[r2][c2] == WorldObject.CREATURE)
+            {
+                transmitSoundsFromTo(r1, c1, r2, c2);
+            }
+        }
+        for (int r2 = r1 + 1; r2 < this._worldDimensions; r2++)
+        {
+            for (int c2 = c1; c2 < this._worldDimensions; c2++)
+            {
+                if (_worldObjectGrid[r2][c2] == WorldObject.CREATURE)
+                {
+                    transmitSoundsFromTo(r1, c1, r2, c2);
+                }
+            }
+        }
+    }
+
+    private void transmitSoundsFromTo(int r1, int c1, int r2, int c2)
+    {
+        int distanceSquared = (r1 - r2) * (r1 - r2) + (c1 - c2) * (c1 - c2);
+        _creatureGrid[r1][c1].listenToCreature(_creatureGrid[r2][c2], distanceSquared);
+        _creatureGrid[r2][c2].listenToCreature(_creatureGrid[r1][c1], distanceSquared);
+    }
+
     private void letCreaturesPlan()
     {
-        for (Creature creature : this._liveCreatureList)
+        for (int r = 0; r < _worldDimensions; r++)
         {
-            creature.planAction();
+            for (int c = 0; c < _worldDimensions; c++)
+            {
+                if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                {
+                    _creatureGrid[r][c].planAction(this, r, c);
+                }
+            }
         }
     }
 
     private void executeCreaturePlans()
     {
         // Creatures act
-        LinkedList<Creature> dyingCreatures = new LinkedList<Creature>();
-        LinkedList<Creature> spawningCreatures = new LinkedList<Creature>();
-        for (Creature creature : this._liveCreatureList)
+        for (int r = 0; r < _worldDimensions; r++)
         {
-            Action action = creature.getAction();
-            Direction facing = creature.getFacing();
-            int r = creature.getR();
-            int c = creature.getC();
-            int facingR = r + Direction.getVerticalComponent(facing);
-            int facingC = c + Direction.getHorizontalComponent(facing);
-            // Death
-            if (action == Action.DIE)
+            for (int c = 0; c < _worldDimensions; c++)
             {
-                creature.executeAction(action);
-                removeObject(r, c);
-                dyingCreatures.add(creature);
-            }
-            // Various actions that always succeed and are simple
-            else if (action == Action.TURN_LEFT || action == Action.TURN_RIGHT || action == Action.REST)
-            {
-                creature.executeAction(action);
-            }
-            // Movement
-            else if (action == Action.MOVE && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
-            {
-                creature.executeAction(action);
-                moveObject(r, c, facing);
-            }
-            // Eating
-            else if (action == Action.EAT && _worldObjectGrid[facingR][facingC] == WorldObject.FOOD)
-            {
-                creature.executeAction(action);
-                removeObject(r, c, facing);
-            }
-            // Attempt to breed
-            else if (action == Action.BREED
-            // Make sure we're facing another creature
-                    && _worldObjectGrid[facingR][facingC] == WorldObject.CREATURE
-                    // And that creature is the same species as us
-                    && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
-                    // And that creature also is trying to breed
-                    && _creatureGrid[facingR][facingC].getAction() == Action.BREED
-                    // Make sure the creatures are facing each other
-                    && creature.getFacing() == Direction.flipDirection(_creatureGrid[facingR][facingC].getFacing()))
-            {
-                creature.executeAction(action, _creatureGrid[facingR][facingC]);
-            }
-            // Giving Birth
-            else if (action == Action.BIRTH && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
-            {
-                Creature spawningCreature = creature.getFetus();
-                creature.executeAction(action);
-                setCreature(spawningCreature, facingR, facingC);
-                spawningCreatures.add(spawningCreature);
-            }
-            // Action failed
-            else
-            {
-                creature.failAction(action);
+                if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                {
+                    if (!_creatureGrid[r][c].hasActed())
+                    {
+                        executeCreaturePlan(r, c);
+                    }
+                }
             }
         }
-        // Remove dead creatures
-        for (Creature deadCreatures : dyingCreatures)
+    }
+
+    private void executeCreaturePlan(int r, int c)
+    {
+        Creature creature = _creatureGrid[r][c];
+        Action action = creature.getAction();
+        Direction facing = creature.getFacing();
+        int facingR = r + Direction.getVerticalComponent(facing);
+        int facingC = c + Direction.getHorizontalComponent(facing);
+        // Death
+        if (action == Action.DIE)
         {
-            this._liveCreatureList.remove(deadCreatures);
-            if (this._worldVariables.getRememberTheDead())
-            {
-                this._deadCreatureList.add(deadCreatures);
-            }
+            creature.executeAction(action);
+            killCreature(r, c);
         }
-        // Add newborn rats
-        for (Creature spawningCreature : spawningCreatures)
+        // Various actions that always succeed and are simple
+        else if (action == Action.TURN_LEFT || action == Action.TURN_RIGHT || action == Action.REST)
         {
-            this._liveCreatureList.add(spawningCreature);
+            creature.executeAction(action);
         }
+        // Movement
+        else if (action == Action.MOVE && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
+        {
+            creature.executeAction(action);
+            moveObject(r, c, facing);
+        }
+        // Eating
+        else if (action == Action.EAT && _worldObjectGrid[facingR][facingC] == WorldObject.FOOD)
+        {
+            creature.executeAction(action);
+            removeObject(r, c, facing);
+        }
+        // Attempt to breed
+        else if (action == Action.BREED
+        // Make sure we're facing another creature
+                && _worldObjectGrid[facingR][facingC] == WorldObject.CREATURE
+                // And that creature is the same species as us
+                && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
+                // And that creature also is trying to breed
+                && _creatureGrid[facingR][facingC].getAction() == Action.BREED
+                // Make sure the creatures are facing each other
+                && creature.getFacing() == Direction.flipDirection(_creatureGrid[facingR][facingC].getFacing()))
+        {
+            creature.executeAction(action, _creatureGrid[facingR][facingC]);
+        }
+        // Giving Birth
+        else if (action == Action.BIRTH && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
+        {
+            Creature spawningCreature = creature.getFetus();
+            creature.executeAction(action);
+            addCreature(spawningCreature, facingR, facingC);
+        }
+        // Action failed
+        else
+        {
+            creature.failAction(action);
+        }
+    }
+
+    private void killCreature(int r, int c)
+    {
+        if (this._worldVariables.getRememberTheDead())
+        {
+            this._deadCreatureList.add(_creatureGrid[r][c]);
+        }
+        removeObject(r, c);
     }
 
     private void spawnFood()
@@ -353,41 +389,55 @@ public class World implements Serializable
     public LinkedList<Creature> getAllCreatures()
     {
         LinkedList<Creature> allCreatures = new LinkedList<Creature>();
-        allCreatures.addAll(this._liveCreatureList);
+        for (int r = 0; r < this._worldDimensions; r++)
+        {
+            for (int c = 0; c < this._worldDimensions; c++)
+            {
+                if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                {
+                    allCreatures.add(_creatureGrid[r][c]);
+                }
+            }
+        }
         allCreatures.addAll(this._deadCreatureList);
         Collections.sort(allCreatures, new Comparator<Creature>()
         {
             @Override
-            public int compare(Creature o1, Creature o2)
+            public int compare(Creature c1, Creature c2)
             {
-                if (o1.getGeneration() > o2.getGeneration())
+                if (c1.getGeneration() > c2.getGeneration())
                 {
                     return 1;
                 }
-                else if (o1.getGeneration() < o2.getGeneration())
+                else if (c1.getGeneration() < c2.getGeneration())
                 {
                     return -1;
                 }
                 else
                 {
-                    return 0;
+                    if (c1.getID() > c2.getID())
+                    {
+                        return 1;
+                    }
+                    else if (c1.getID() < c2.getID())
+                    {
+                        return -1;
+                    }
+                    else
+                    {
+                        return 0;
+                    }
                 }
             }
         });
         return allCreatures;
     }
 
-    public CensusRecord getCensus()
-    {
-        if (this._worldVariables.getKeepCensusData())
-        {
-            return this._census;
-        }
-        else
-        {
-            throw new Error("Census data not available due to world configuration settings");
-        }
-    }
+    // TODO Fix census data
+    /*
+     * public CensusRecord getCensus() { if (this._worldVariables.getKeepCensusData()) { return this._census; } else {
+     * throw new Error("Census data not available due to world configuration settings"); } }
+     */
 
     public int getCount(WorldObject obj)
     {
@@ -446,14 +496,9 @@ public class World implements Serializable
         return this._creatureGrid[r][c];
     }
 
-    public void addCreatureAtPosition(Creature creature, int r, int c)
+    private void addCreature(Creature creature, int r, int c)
     {
-        setObject(WorldObject.CREATURE, creature, r, c);
-        this._liveCreatureList.add(creature);
-    }
-
-    private void setCreature(Creature creature, int r, int c)
-    {
+        creature.setID(this.getNewCreatureID());
         setObject(WorldObject.CREATURE, creature, r, c);
     }
 
@@ -463,7 +508,6 @@ public class World implements Serializable
 
         this._worldObjectGrid = new WorldObject[_worldDimensions][_worldDimensions];
         this._creatureGrid = new Creature[_worldDimensions][_worldDimensions];
-        this._liveCreatureList = new LinkedList<Creature>();
         this._deadCreatureList = new LinkedList<Creature>();
     }
 
@@ -489,54 +533,25 @@ public class World implements Serializable
     private void setObject(WorldObject obj, Creature creature, int r, int c)
     {
         _worldObjectGrid[r][c] = obj;
-        if (creature != null)
-        {
-            creature.setPosition(r, c);
-        }
         _creatureGrid[r][c] = creature;
     }
 
-    public ActionProfile getActionProfileForGeneration(int generation, Gender gender)
-    {
-        // Populate new generation trackers as required
-        while (_generationalFemaleActionProfiles.size() < generation)
-        {
-            _generationalFemaleActionProfiles.add(new ActionProfile());
-            _generationalMaleActionProfiles.add(new ActionProfile());
-        }
-        // Get the requested generationalActionProfile
-        if (gender == Gender.FEMALE)
-        {
-            return _generationalFemaleActionProfiles.get(generation - 1);
-        }
-        else
-        {
-            return _generationalMaleActionProfiles.get(generation - 1);
-        }
-    }
+    // TODO ACTION PROFILES
+    /*
+     * public ActionProfile getActionProfileForGeneration(int generation, Gender gender) { // Populate new generation
+     * trackers as required while (_generationalFemaleActionProfiles.size() < generation) {
+     * _generationalFemaleActionProfiles.add(new ActionProfile()); _generationalMaleActionProfiles.add(new
+     * ActionProfile()); } // Get the requested generationalActionProfile if (gender == Gender.FEMALE) { return
+     * _generationalFemaleActionProfiles.get(generation - 1); } else { return
+     * _generationalMaleActionProfiles.get(generation - 1); } } public LinkedList<ActionProfile>
+     * getAllActionProfilesForGender(Gender gender) { if (this._worldVariables.getKeepGenerationActionProfile()) {
+     * LinkedList<ActionProfile> actionProfiles = new LinkedList<ActionProfile>(); if (gender == Gender.FEMALE) {
+     * actionProfiles.addAll(this._generationalFemaleActionProfiles); } if (gender == Gender.MALE) {
+     * actionProfiles.addAll(this._generationalMaleActionProfiles); } return actionProfiles; } else { throw new
+     * Error("Generational Action Profile data not available due to world configuration settings"); } }
+     */
 
-    public LinkedList<ActionProfile> getAllActionProfilesForGender(Gender gender)
-    {
-        if (this._worldVariables.getKeepGenerationActionProfile())
-        {
-            LinkedList<ActionProfile> actionProfiles = new LinkedList<ActionProfile>();
-            if (gender == Gender.FEMALE)
-            {
-                actionProfiles.addAll(this._generationalFemaleActionProfiles);
-            }
-            if (gender == Gender.MALE)
-            {
-                actionProfiles.addAll(this._generationalMaleActionProfiles);
-            }
-            return actionProfiles;
-        }
-        else
-        {
-            throw new Error("Generational Action Profile data not available due to world configuration settings");
-        }
-    }
-
-    public String toString(RenderCode code)
+    public String render(RenderCode code)
     {
         if (code == RenderCode.WORLD_MAP)
         {
@@ -546,23 +561,19 @@ public class World implements Serializable
         {
             return (renderBrainWeights());
         }
-        else if (code == RenderCode.FULL_CREATURE_LIST)
-        {
-            StringBuilder creatureOutput = new StringBuilder();
-            for (Creature creature : this.getAllCreatures())
-            {
-                creatureOutput.append(creature.toString(RenderCode.SIMPLE_CREATURE));
-                creatureOutput.append('\n');
-            }
-            return (creatureOutput.toString());
-        }
         else if (code == RenderCode.LIVE_CREATURE_LIST)
         {
             StringBuilder creatureOutput = new StringBuilder();
-            for (Creature creature : this._liveCreatureList)
+            for (int r = 0; r < this._worldDimensions; r++)
             {
-                creatureOutput.append(creature.toString(RenderCode.SIMPLE_CREATURE));
-                creatureOutput.append('\n');
+                for (int c = 0; c < this._worldDimensions; c++)
+                {
+                    if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                    {
+                        creatureOutput.append(_creatureGrid[r][c].render(RenderCode.SIMPLE_CREATURE, r, c));
+                        creatureOutput.append('\n');
+                    }
+                }
             }
             return (creatureOutput.toString());
         }
@@ -571,14 +582,14 @@ public class World implements Serializable
             StringBuilder creatureOutput = new StringBuilder();
             for (Creature creature : this._deadCreatureList)
             {
-                creatureOutput.append(creature.toString(RenderCode.SIMPLE_CREATURE));
+                creatureOutput.append(creature.render(RenderCode.SIMPLE_CREATURE, -1, -1));
                 creatureOutput.append('\n');
             }
             return (creatureOutput.toString());
         }
         else
         {
-            throw new Error("Invalid Code " + code);
+            throw new IllegalArgumentException("RenderCode " + code + " not supported for type " + this.getClass());
         }
     }
 
@@ -637,11 +648,14 @@ public class World implements Serializable
         // Draw average brain
         // Draw creature readouts
         LinkedList<Brain> brains = new LinkedList<Brain>();
-        for (Creature creature : this._liveCreatureList)
+        for (int r = 0; r < this._worldDimensions; r++)
         {
-            if (creature.getSpecies().equals(s))
+            for (int c = 0; c < this._worldDimensions; c++)
             {
-                brains.add(creature.getBrain());
+                if (_worldObjectGrid[r][c] == WorldObject.CREATURE && _creatureGrid[r][c].getSpecies().equals(s))
+                {
+                    brains.add(_creatureGrid[r][c].getBrain());
+                }
             }
         }
         if (brains.size() > 0)

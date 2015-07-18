@@ -34,7 +34,8 @@ public class GeneratePopulationSummaryCSV extends Script
     {
         // Setup
         World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
-        CensusRecord census = w.getCensus();
+        // TODO FIX CENSUS
+        CensusRecord census = new CensusRecord(0); // w.getCensus();
 
         // Header, this CSV is always a single row so we build the header with
         // the single row
