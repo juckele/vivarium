@@ -7,7 +7,7 @@ import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class Creature implements Serializable
+public class Creature implements Comparable<Creature>, Serializable
 {
     /**
      * serialVersion
@@ -187,29 +187,29 @@ public class Creature implements Serializable
             // Read memory units
             for (int i = 0; i < this._memoryUnits.length; i++)
             {
-                _inputs[_species.getBrainInputs() - 1 + i] = _memoryUnits[i];
+                _inputs[_species.getHardBrainInputs() - 1 + i] = _memoryUnits[i];
             }
             // Read sound inputs
             for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {
-                _inputs[_species.getBrainInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
+                _inputs[_species.getHardBrainInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
             }
             // Main brain computation
             double[] outputs = this._brain.outputs(_inputs);
             // Save memory units
             for (int i = 0; i < this._memoryUnits.length; i++)
             {
-                _memoryUnits[i] = outputs[_species.getBrainOutputs() + i - 1];
+                _memoryUnits[i] = outputs[_species.getHardBrainOutputs() + i - 1];
             }
             // Clear the sound inputs and set the sound outputs
             for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {
                 this._soundInputs[i] = 0;
-                this._soundOutputs[i] = outputs[_species.getBrainOutputs() - 1 + this._memoryUnits.length + i];
+                this._soundOutputs[i] = outputs[_species.getHardBrainOutputs() - 1 + this._memoryUnits.length + i];
             }
             // Hard coded outputs (actionable outputs)
             int maxActionOutput = 0;
-            for (int i = 1; i < _species.getBrainOutputs(); i++)
+            for (int i = 1; i < _species.getHardBrainOutputs(); i++)
             {
                 if (outputs[i] > outputs[maxActionOutput])
                 {
@@ -522,6 +522,12 @@ public class Creature implements Serializable
     public void setID(int id)
     {
         this._id = id;
+    }
+
+    @Override
+    public int compareTo(Creature c)
+    {
+        return this.toString().compareTo(c.toString());
     }
 
     // TODO FIX ACTION PROFILES

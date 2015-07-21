@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class WorldVariables implements Serializable
+public class WorldVariables implements Cloneable, Serializable
 {
     private static final long     serialVersionUID                            = 2L;
 
@@ -64,6 +64,18 @@ public class WorldVariables implements Serializable
         return species;
     }
 
+    public WorldVariables(Species s)
+    {
+        this(createSingleSpeciesCollection(s));
+    }
+
+    private static Collection<Species> createSingleSpeciesCollection(Species s)
+    {
+        LinkedList<Species> species = new LinkedList<Species>();
+        species.add(s);
+        return species;
+    }
+
     public WorldVariables(Collection<Species> species)
     {
         // Program Options
@@ -88,8 +100,7 @@ public class WorldVariables implements Serializable
     }
 
     /**
-     * Returns the names in string form of all variables tracked by a
-     * WorldVariables objects.
+     * Returns the names in string form of all variables tracked by a WorldVariables objects.
      *
      * @return
      */
@@ -195,4 +206,23 @@ public class WorldVariables implements Serializable
         return _species;
     }
 
+    @Override
+    public WorldVariables clone()
+    {
+        try
+        {
+            WorldVariables clonedVariables = (WorldVariables) super.clone();
+            ArrayList<Species> clonedSpecies = new ArrayList<Species>(_species.size());
+            for (Species s : this._species)
+            {
+                clonedSpecies.add(s.clone());
+            }
+            clonedVariables._species = clonedSpecies;
+            return clonedVariables;
+        }
+        catch (CloneNotSupportedException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
 }

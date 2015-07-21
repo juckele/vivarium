@@ -28,13 +28,15 @@ public class NeuralNetworkBrain extends Brain
     private int               _inputCount;
     private int               _hiddenLayers;
     private double[][]        _hiddenNodes;
+    private boolean           _randomInitialization;
 
-    public NeuralNetworkBrain(int inputCount, int outputCount, int hiddenLayers)
+    public NeuralNetworkBrain(int inputCount, int outputCount, int hiddenLayers, boolean randomInitialization)
     {
         super();
         this._outputCount = outputCount;
         this._inputCount = inputCount;
         this._hiddenLayers = hiddenLayers;
+        this._randomInitialization = randomInitialization;
         resetOptimizingDataStructures();
     }
 
@@ -66,7 +68,7 @@ public class NeuralNetworkBrain extends Brain
             {
                 for (int j = 0; j < _weights[i].length; j++)
                 {
-                    _weights[i][j][j] = 1;
+                    _weights[i][j][j] = _randomInitialization ? Rand.getRandomDouble() : 1;
                 }
             }
             // And then set the weights on the last layer to one
@@ -97,7 +99,7 @@ public class NeuralNetworkBrain extends Brain
     {
         // Construct the weight layer and store variables with the int based
         // constructor
-        this(brain1._inputCount, brain1._outputCount, brain1._hiddenLayers);
+        this(brain1._inputCount, brain1._outputCount, brain1._hiddenLayers, false);
 
         // Set all the weights with
         for (int i = 0; i < _weights.length; i++)
@@ -383,7 +385,7 @@ public class NeuralNetworkBrain extends Brain
 
     public static void main(String[] args)
     {
-        NeuralNetworkBrain brain = new NeuralNetworkBrain(3, 10, 0);
+        NeuralNetworkBrain brain = new NeuralNetworkBrain(3, 10, 0, false);
         System.out.println("Creating Brain...");
         System.out.println(brain);
         System.out.println("Brain Outputs for inputs");
@@ -405,7 +407,7 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain minBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain minBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
-                brains.get(0)._hiddenLayers);
+                brains.get(0)._hiddenLayers, false);
         // Set all the weights with
         for (NeuralNetworkBrain brain : brains)
         {
@@ -427,7 +429,7 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain maxBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain maxBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
-                brains.get(0)._hiddenLayers);
+                brains.get(0)._hiddenLayers, false);
         // Set all the weights with
         for (NeuralNetworkBrain brain : brains)
         {
@@ -448,7 +450,7 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain medianBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain medianBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
-                brains.get(0)._hiddenLayers);
+                brains.get(0)._hiddenLayers, false);
         // Set all the weights with
         for (int i = 0; i < medianBrain._weights.length; i++)
         {
@@ -491,7 +493,7 @@ public class NeuralNetworkBrain extends Brain
             NeuralNetworkBrain medianBrain)
     {
         NeuralNetworkBrain standardDeviationBrain = new NeuralNetworkBrain(medianBrain._inputCount,
-                medianBrain._outputCount, brains.get(0)._hiddenLayers);
+                medianBrain._outputCount, brains.get(0)._hiddenLayers, false);
         for (int i = 0; i < standardDeviationBrain._weights.length; i++)
         {
             for (int j = 0; j < standardDeviationBrain._weights[i].length; j++)

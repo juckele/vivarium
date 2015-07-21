@@ -286,15 +286,6 @@ public class World implements Serializable
         }
     }
 
-    private void killCreature(int r, int c)
-    {
-        if (this._worldVariables.getRememberTheDead())
-        {
-            this._deadCreatureList.add(_creatureGrid[r][c]);
-        }
-        removeObject(r, c);
-    }
-
     private void spawnFood()
     {
         // Generate food at a given rate
@@ -500,6 +491,31 @@ public class World implements Serializable
     {
         creature.setID(this.getNewCreatureID());
         setObject(WorldObject.CREATURE, creature, r, c);
+    }
+
+    private void killCreature(int r, int c)
+    {
+        if (this._worldVariables.getRememberTheDead())
+        {
+            this._deadCreatureList.add(_creatureGrid[r][c]);
+        }
+        removeObject(r, c);
+    }
+
+    public void addImmigrant(Species species)
+    {
+        boolean immigrantPlaced = false;
+        while (!immigrantPlaced)
+        {
+            int r = Rand.getRandomInt(this._worldDimensions);
+            int c = Rand.getRandomInt(this._worldDimensions);
+            if (_worldObjectGrid[r][c] == WorldObject.EMPTY)
+            {
+                Creature creature = new Creature(species, this._worldVariables);
+                addCreature(creature, r, c);
+                immigrantPlaced = true;
+            }
+        }
     }
 
     public void setWorldDimensions(int worldDimensions)

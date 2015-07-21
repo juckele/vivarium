@@ -4,59 +4,62 @@ import java.io.Serializable;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
 
-public class Species implements Serializable
+public class Species implements Cloneable, Serializable
 {
-    private static final long   serialVersionUID                                = 1L;
+    private static final long    serialVersionUID                                = 1L;
 
     // Creature Constants
-    private static final double DEFAULT_FEMALE_THRESHOLD                        = 0.6;
-    private static final int    MAXIMUM_AGE                                     = 20000;
-    private static final int    MAXIMUM_GESTATION                               = 2000;
-    private static final int    MAXIMUM_FOOD                                    = 2000;
+    private static final double  DEFAULT_FEMALE_THRESHOLD                        = 0.6;
+    private static final int     MAXIMUM_AGE                                     = 20000;
+    private static final int     MAXIMUM_GESTATION                               = 2000;
+    private static final int     MAXIMUM_FOOD                                    = 2000;
 
-    private static final int    BRAIN_INPUTS                                    = 5;
-    private static final int    BRAIN_OUTPUTS                                   = 6;
+    private static final int     HARD_BRAIN_INPUTS                               = 5;
+    private static final int     HARD_BRAIN_OUTPUTS                              = 6;
 
     // Per species settings
-    private static final double DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY = 0.2;
-    private static final int    DEFAULT_CREATURE_MEMORY_UNIT_COUNT              = 0;
-    private static final int    DEFAULT_CREATURE_SOUND_CHANNEL_COUNT            = 0;
+    private static final double  DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY = 0.2;
+    private static final boolean DEFAULT_RANDOM_INITIALIZATION                   = false;
+    private static final int     DEFAULT_CREATURE_MEMORY_UNIT_COUNT              = 0;
+    private static final int     DEFAULT_CREATURE_SOUND_CHANNEL_COUNT            = 0;
 
     // Per species - Model settings
-    private static final double DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE           = 0.8;
-    private static final double DEFAULT_MUTATION_RATE_EXPONENT                  = -7;
-    private static final double DEFAULT_MUTATION_SMALL_SCALE_RATE               = 0.5;
-    private static final double DEFAULT_MUTATION_RANDOM_RATE                    = 0.25;
-    private static final double DEFAULT_MUTATION_FLIP_RATE                      = 0.25;
+    private static final double  DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE           = 0.8;
+    private static final double  DEFAULT_MUTATION_RATE_EXPONENT                  = -7;
+    private static final double  DEFAULT_MUTATION_SMALL_SCALE_RATE               = 0.5;
+    private static final double  DEFAULT_MUTATION_RANDOM_RATE                    = 0.25;
+    private static final double  DEFAULT_MUTATION_FLIP_RATE                      = 0.25;
 
-    private double              _femaleThreshold                                = DEFAULT_FEMALE_THRESHOLD;
-    private int                 _maximumAge                                     = MAXIMUM_AGE;
-    private int                 _maximumGestation                               = MAXIMUM_GESTATION;
-    private int                 _maximumFood                                    = MAXIMUM_FOOD;
+    private double               _femaleThreshold                                = DEFAULT_FEMALE_THRESHOLD;
+    private int                  _maximumAge                                     = MAXIMUM_AGE;
+    private int                  _maximumGestation                               = MAXIMUM_GESTATION;
+    private int                  _maximumFood                                    = MAXIMUM_FOOD;
 
-    private BrainType           _brainType                                      = BrainType.NEURALNETWORK;
-    private int                 _brainInputs                                    = BRAIN_INPUTS;
-    private int                 _brainOutputs                                   = BRAIN_OUTPUTS;
+    // Creature brains
+    private BrainType            _brainType                                      = BrainType.NEURALNETWORK;
+    private int                  _hardBrainInputs                                = HARD_BRAIN_INPUTS;
+    private int                  _hardBrainOutputs                               = HARD_BRAIN_OUTPUTS;
+    private int                  _memoryUnitCount                                = DEFAULT_CREATURE_MEMORY_UNIT_COUNT;
+    private int                  _soundChannelCount                              = DEFAULT_CREATURE_SOUND_CHANNEL_COUNT;
 
-    // Creaturology
-    private int                 _memoryUnitCount                                = DEFAULT_CREATURE_MEMORY_UNIT_COUNT;
-    private int                 _soundChannelCount                              = DEFAULT_CREATURE_SOUND_CHANNEL_COUNT;
-    // Neurology
-    private double              _inheritanceGaussianMixRate                     = DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE;
-    private double              _mutationRateExponent                           = DEFAULT_MUTATION_RATE_EXPONENT;
-    private double              _mutationRate                                   = Math.pow(2,
-                                                                                        DEFAULT_MUTATION_RATE_EXPONENT);
-    private double              _mutationSmallScaleRate                         = DEFAULT_MUTATION_SMALL_SCALE_RATE;
-    private double              _mutationRandomRate                             = DEFAULT_MUTATION_RANDOM_RATE;
-    private double              _mutationFlipRate                               = DEFAULT_MUTATION_FLIP_RATE;
-    private double              _initialGenerationProbability                   = DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY;
+    // Mutation
+    private double               _inheritanceGaussianMixRate                     = DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE;
+    private boolean              _randomInitialization                           = DEFAULT_RANDOM_INITIALIZATION;
+    private boolean              _mutationEnabled;
+    private double               _mutationRateExponent                           = DEFAULT_MUTATION_RATE_EXPONENT;
+    private double               _mutationRate                                   = Math.pow(2,
+                                                                                         DEFAULT_MUTATION_RATE_EXPONENT);
+    private double               _mutationSmallScaleRate                         = DEFAULT_MUTATION_SMALL_SCALE_RATE;
+    private double               _mutationRandomRate                             = DEFAULT_MUTATION_RANDOM_RATE;
+    private double               _mutationFlipRate                               = DEFAULT_MUTATION_FLIP_RATE;
+    private double               _initialGenerationProbability                   = DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY;
 
     // private Action[] _involuntaryActions;
     // private Action[] _voluntaryActions;
 
-    private static int          _existingSpecies                                = 0;
-    private static String[]     GLYPHS                                          = { "中", "马", "心" };
-    private String              _glyph                                          = "U";
+    private static int           _existingSpecies                                = 0;
+    private static String[]      GLYPHS                                          = { "中", "马", "心" };
+    private String               _glyph                                          = "U";
 
     public Species()
     {
@@ -69,14 +72,14 @@ public class Species implements Serializable
         return this._glyph;
     }
 
-    public int getBrainInputs()
+    public int getHardBrainInputs()
     {
-        return _brainInputs;
+        return _hardBrainInputs;
     }
 
-    public int getBrainOutputs()
+    public int getHardBrainOutputs()
     {
-        return _brainOutputs;
+        return _hardBrainOutputs;
     }
 
     public double getFemaleThreshold()
@@ -106,12 +109,26 @@ public class Species implements Serializable
 
     public double getMutationRateExponent()
     {
-        return this._mutationRateExponent;
+        if (this._mutationEnabled)
+        {
+            return this._mutationRateExponent;
+        }
+        else
+        {
+            return Double.NaN;
+        }
     }
 
     public double getMutationRate()
     {
-        return this._mutationRate;
+        if (this._mutationEnabled)
+        {
+            return this._mutationRate;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public double getMutationFlipRate()
@@ -177,16 +194,49 @@ public class Species implements Serializable
 
     public int getTotalBrainInputCount()
     {
-        return this._brainInputs + this._memoryUnitCount + this._soundChannelCount;
+        return this._hardBrainInputs + this._memoryUnitCount + this._soundChannelCount;
     }
 
     public int getTotalBrainOutputCount()
     {
-        return this._brainOutputs + this._memoryUnitCount + this._soundChannelCount;
+        return this._hardBrainOutputs + this._memoryUnitCount + this._soundChannelCount;
     }
 
     public int getHiddenLayerCount()
     {
         return 0;
+    }
+
+    public void setMutationEnabled(boolean b)
+    {
+        this._mutationEnabled = false;
+    }
+
+    public void setRandomInitialization(boolean b)
+    {
+        this._randomInitialization = b;
+    }
+
+    public boolean getRandomInitialization()
+    {
+        return this._randomInitialization;
+    }
+
+    @Override
+    public Species clone()
+    {
+        try
+        {
+            return (Species) super.clone();
+        }
+        catch (CloneNotSupportedException e)
+        {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void setMaximumFood(int maximumFood)
+    {
+        this._maximumFood = maximumFood;
     }
 }

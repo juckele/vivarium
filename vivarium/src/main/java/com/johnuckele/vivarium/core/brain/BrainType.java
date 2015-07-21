@@ -26,17 +26,13 @@ public enum BrainType
             brainOutput.append("Std. Deviation on creature NNs:\n");
             brainOutput.append(standardDeviationBrain.toString());
             /*
-             * Brain minBrain = Brain.minBrain(brains);
-             * brainOutput.append("Min creature NN:\n");
-             * brainOutput.append(minBrain.toString()); Brain maxBrain =
-             * Brain.maxBrain(brains); brainOutput.append("Max creature NN:\n");
-             * brainOutput.append(maxBrain.toString());
+             * Brain minBrain = Brain.minBrain(brains); brainOutput.append("Min creature NN:\n");
+             * brainOutput.append(minBrain.toString()); Brain maxBrain = Brain.maxBrain(brains);
+             * brainOutput.append("Max creature NN:\n"); brainOutput.append(maxBrain.toString());
              */
             /*
-             * brainOutput.append("Oldest creature NN:\n");
-             * brainOutput.append(brains.get(0).toString());
-             * brainOutput.append("Random creature NN:\n");
-             * brainOutput.append(brains
+             * brainOutput.append("Oldest creature NN:\n"); brainOutput.append(brains.get(0).toString());
+             * brainOutput.append("Random creature NN:\n"); brainOutput.append(brains
              * .get(Rand.getRandomInt(brains.size())).toString());
              */
             return brainOutput.toString();
@@ -55,7 +51,8 @@ public enum BrainType
         public Brain ConstructBrain(Species species)
         {
             NeuralNetworkBrain brain = new NeuralNetworkBrain(species.getTotalBrainInputCount(),
-                    species.getTotalBrainOutputCount(), species.getHiddenLayerCount());
+                    species.getTotalBrainOutputCount(), species.getHiddenLayerCount(),
+                    species.getRandomInitialization());
             return brain;
         }
     },
