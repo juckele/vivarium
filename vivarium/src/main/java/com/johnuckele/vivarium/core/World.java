@@ -502,7 +502,7 @@ public class World implements Serializable
         removeObject(r, c);
     }
 
-    public void addImmigrant(Species species)
+    public void addImmigrant(Creature creature)
     {
         boolean immigrantPlaced = false;
         while (!immigrantPlaced)
@@ -511,7 +511,6 @@ public class World implements Serializable
             int c = Rand.getRandomInt(this._worldDimensions);
             if (_worldObjectGrid[r][c] == WorldObject.EMPTY)
             {
-                Creature creature = new Creature(species, this._worldVariables);
                 addCreature(creature, r, c);
                 immigrantPlaced = true;
             }

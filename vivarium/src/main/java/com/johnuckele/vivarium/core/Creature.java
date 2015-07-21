@@ -7,7 +7,7 @@ import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class Creature implements Comparable<Creature>, Serializable
+public class Creature implements Cloneable, Comparable<Creature>, Serializable
 {
     /**
      * serialVersion
@@ -57,6 +57,16 @@ public class Creature implements Comparable<Creature>, Serializable
         this(species, variables, null, null);
     }
 
+    public Creature(Species species, WorldVariables variables, Creature prototype)
+    {
+        this(species, variables, prototype, null);
+    }
+
+    public Creature(Creature prototype)
+    {
+        this(prototype._species, prototype._variables, prototype, null);
+    }
+
     public Creature(Creature parent1, Creature parent2)
     {
         this(parent1._species, parent1._variables, parent1, parent2);
@@ -77,10 +87,18 @@ public class Creature implements Comparable<Creature>, Serializable
         }
 
         // Create brain to control the Creature
-        if (parent1 != null && parent2 != null)
+        if (parent1 != null)
         {
-            // Brain combined from genetic legacy
-            this._brain = _species.getBrainType().ConstructBrain(_species, parent1._brain, parent2._brain);
+            if (parent2 != null)
+            {
+                // Brain combined from genetic legacy
+                this._brain = _species.getBrainType().ConstructBrain(_species, parent1._brain, parent2._brain);
+            }
+            else
+            {
+                // Brain cloned from the panret (might still mutate)
+                this._brain = _species.getBrainType().ConstructBrain(_species, parent1._brain, parent1._brain);
+            }
         }
         else if (parent1 == null && parent1 == null)
         {
@@ -89,6 +107,7 @@ public class Creature implements Comparable<Creature>, Serializable
         }
         else
         {
+            // Only an error if parent2 is non-null, otherwise assumed to be a cloneS
             throw new Error("Creature with single parent");
         }
         _inputs = new double[_species.getTotalBrainInputCount()];

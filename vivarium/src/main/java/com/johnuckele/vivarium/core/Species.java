@@ -30,6 +30,8 @@ public class Species implements Cloneable, Serializable
     private static final double  DEFAULT_MUTATION_RANDOM_RATE                    = 0.25;
     private static final double  DEFAULT_MUTATION_FLIP_RATE                      = 0.25;
 
+    private static String[]      GLYPHS                                          = { "中", "马", "心" };
+
     private double               _femaleThreshold                                = DEFAULT_FEMALE_THRESHOLD;
     private int                  _maximumAge                                     = MAXIMUM_AGE;
     private int                  _maximumGestation                               = MAXIMUM_GESTATION;
@@ -57,14 +59,13 @@ public class Species implements Cloneable, Serializable
     // private Action[] _involuntaryActions;
     // private Action[] _voluntaryActions;
 
-    private static int           _existingSpecies                                = 0;
-    private static String[]      GLYPHS                                          = { "中", "马", "心" };
+    private int                  _speciesID;
     private String               _glyph                                          = "U";
 
-    public Species()
+    public Species(int speciesID)
     {
-        _glyph = GLYPHS[_existingSpecies];
-        _existingSpecies++;
+        _speciesID = speciesID;
+        _glyph = GLYPHS[_speciesID];
     }
 
     public Object getGlyph()

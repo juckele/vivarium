@@ -1,7 +1,5 @@
 package com.johnuckele.vivarium.ga;
 
-import java.util.ArrayList;
-
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
@@ -26,15 +24,15 @@ public class TimeToExtinctionFF extends FitnessFunction
     {
         // Build world
         WorldVariables instanceVariables = _variables.clone();
-        ArrayList<Species> instanceSpecies = instanceVariables.getSpecies();
+        assert (instanceVariables.getSpecies().size() == 1);
+        Species instanceSpecies = instanceVariables.getSpecies().get(0);
+        instanceSpecies.setMutationEnabled(false);
+        Creature instanceCreature = new Creature(instanceSpecies, instanceVariables, c);
+
         World w = new World(_worldSize, instanceVariables);
-        for (Species s : instanceSpecies)
+        for (int i = 0; i < _initialPopulation; i++)
         {
-            s.setMutationEnabled(false);
-            for (int i = 0; i < _initialPopulation; i++)
-            {
-                w.addImmigrant(s);
-            }
+            w.addImmigrant(new Creature(instanceCreature));
         }
 
         // Run simulation

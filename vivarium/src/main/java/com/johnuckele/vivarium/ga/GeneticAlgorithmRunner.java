@@ -9,6 +9,7 @@ import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.WorldVariables;
 import com.johnuckele.vivarium.util.Rand;
+import com.johnuckele.vivarium.visualization.RenderCode;
 
 /**
  * A class for running a standard genetic algorithm across a population of creatures testing them with one or more
@@ -80,6 +81,8 @@ public class GeneticAlgorithmRunner
         System.out.println("3rd Best member " + _population.get(_population.size() - 3).getValue0());
         System.out.println("2nd Best member " + _population.get(_population.size() - 2).getValue0());
         System.out.println("1st Best member " + _population.get(_population.size() - 1).getValue0());
+        System.out.println("1st Best member "
+                + _population.get(_population.size() - 1).getValue1().getBrain().render(RenderCode.BRAIN_WEIGHTS));
         ArrayList<Pair<Double, Creature>> newPopulation = new ArrayList<Pair<Double, Creature>>(_populationSize);
         for (int i = 0; i < _populationSize; i++)
         {
@@ -96,7 +99,7 @@ public class GeneticAlgorithmRunner
 
     public static void main(String[] args)
     {
-        Species species = new Species();
+        Species species = new Species(0);
         species.setRandomInitialization(true);
         species.setInitialGenerationProbability(0);
         species.setMaximumFood(300);

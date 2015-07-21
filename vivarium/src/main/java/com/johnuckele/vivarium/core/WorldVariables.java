@@ -60,7 +60,7 @@ public class WorldVariables implements Cloneable, Serializable
     private static Collection<Species> createSingleSpeciesCollection()
     {
         LinkedList<Species> species = new LinkedList<Species>();
-        species.add(new Species());
+        species.add(new Species(0));
         return species;
     }
 
