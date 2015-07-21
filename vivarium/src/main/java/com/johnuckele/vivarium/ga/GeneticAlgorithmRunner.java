@@ -77,12 +77,16 @@ public class GeneticAlgorithmRunner
         System.out.println("Gen... " + this._currentGeneration);
         System.out.println("Worst member " + _population.get(0).getValue0());
         System.out.println("Median member " + _population.get(_population.size() / 2).getValue0());
-        System.out.println("Best member " + _population.get(_population.size() - 1).getValue0());
+        System.out.println("3rd Best member " + _population.get(_population.size() - 3).getValue0());
+        System.out.println("2nd Best member " + _population.get(_population.size() - 2).getValue0());
+        System.out.println("1st Best member " + _population.get(_population.size() - 1).getValue0());
         ArrayList<Pair<Double, Creature>> newPopulation = new ArrayList<Pair<Double, Creature>>(_populationSize);
         for (int i = 0; i < _populationSize; i++)
         {
-            int parent1Index = Math.max(Rand.getRandomInt(_populationSize), Rand.getRandomInt(_populationSize));
-            int parent2Index = Math.max(Rand.getRandomInt(_populationSize), Rand.getRandomInt(_populationSize));
+            int parent1Index = Math.max(Rand.getRandomInt(_populationSize - i) + i,
+                    Rand.getRandomInt(_populationSize - i) + i);
+            int parent2Index = Math.max(Rand.getRandomInt(_populationSize - i) + i,
+                    Rand.getRandomInt(_populationSize - i) + i);
             Creature parent1 = _population.get(parent1Index).getValue1();
             Creature parent2 = _population.get(parent2Index).getValue1();
             Creature child = new Creature(parent1, parent2);
