@@ -85,6 +85,12 @@ public class GeneticAlgorithmRunner
         System.out.println("1st Best member\n"
                 + _population.get(_population.size() - 1).getValue1().getBrain().render(RenderCode.BRAIN_WEIGHTS));
         ArrayList<Pair<Double, Creature>> newPopulation = new ArrayList<Pair<Double, Creature>>(_populationSize);
+        double fitnessSum = 0;
+        for (int i = 0; i < _populationSize; i++)
+        {
+            fitnessSum += _population.get(i).getValue0();
+        }
+        System.out.println("Total fitness is " + fitnessSum);
         for (int i = 0; i < _populationSize; i++)
         {
             int parent1Index = Math.max(Rand.getRandomInt(_populationSize - i) + i,
@@ -96,6 +102,7 @@ public class GeneticAlgorithmRunner
             Creature child = new Creature(parent1, parent2);
             newPopulation.add(new Pair<Double, Creature>(0.0, child));
         }
+        _population = newPopulation;
         System.out.println("random new member\n"
                 + _population.get(_population.size() - 1).getValue1().getBrain().render(RenderCode.BRAIN_WEIGHTS));
     }
@@ -105,8 +112,7 @@ public class GeneticAlgorithmRunner
         Species species = new Species(0);
         species.setRandomInitialization(true);
         species.setInitialGenerationProbability(0);
-        species.setMutationRateExponent(-10);
-        species.setMaximumFood(2000);
+        species.setMaximumFood(200);
         System.out.println("Species " + species);
 
         WorldVariables variables = new WorldVariables(species);
@@ -115,5 +121,4 @@ public class GeneticAlgorithmRunner
         GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(species, new TimeToExtinctionFF(30, variables, 100));
         runner.run();
     }
-
 }
