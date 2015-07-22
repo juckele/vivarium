@@ -6,7 +6,7 @@ import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
 import com.johnuckele.vivarium.core.WorldVariables;
 
-public class TimeToExtinctionFF extends FitnessFunction
+public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
 {
     private int            _initialPopulation;
     private int            _worldSize;
