@@ -76,7 +76,7 @@ public class NeuralNetworkBrain extends Brain
             {
                 for (int k = 0; k < _weights[_hiddenLayers][j].length; k++)
                 {
-                    _weights[_hiddenLayers][j][k] = 1;
+                    _weights[_hiddenLayers][j][k] = _randomInitialization ? Rand.getRandomDouble() : 1;
                 }
             }
         }
@@ -89,7 +89,7 @@ public class NeuralNetworkBrain extends Brain
             {
                 for (int k = 0; k < _weights[0][j].length; k++)
                 {
-                    _weights[0][j][k] = 1;
+                    _weights[0][j][k] = _randomInitialization ? Rand.getRandomDouble() : 1;
                 }
             }
         }

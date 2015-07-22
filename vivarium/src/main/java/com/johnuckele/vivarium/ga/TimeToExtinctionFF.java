@@ -36,7 +36,7 @@ public class TimeToExtinctionFF extends FitnessFunction
         }
 
         // Run simulation
-        double tenLifespans = c.getSpecies().getMaximumAge() * 2;
+        double tenLifespans = c.getSpecies().getMaximumAge() * 10;
         for (int i = 0; i < tenLifespans; i++)
         {
             int count = w.getCount(WorldObject.CREATURE);

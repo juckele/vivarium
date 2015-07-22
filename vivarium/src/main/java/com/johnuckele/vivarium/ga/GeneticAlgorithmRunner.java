@@ -39,6 +39,7 @@ public class GeneticAlgorithmRunner
         for (int i = 0; i < _populationSize; i++)
         {
             Creature c = new Creature(_species, wv);
+            System.out.println(c.getBrain().render(RenderCode.BRAIN_WEIGHTS));
             _population.add(new Pair<Double, Creature>(0.0, c));
         }
     }
@@ -81,7 +82,7 @@ public class GeneticAlgorithmRunner
         System.out.println("3rd Best member " + _population.get(_population.size() - 3).getValue0());
         System.out.println("2nd Best member " + _population.get(_population.size() - 2).getValue0());
         System.out.println("1st Best member " + _population.get(_population.size() - 1).getValue0());
-        System.out.println("1st Best member "
+        System.out.println("1st Best member\n"
                 + _population.get(_population.size() - 1).getValue1().getBrain().render(RenderCode.BRAIN_WEIGHTS));
         ArrayList<Pair<Double, Creature>> newPopulation = new ArrayList<Pair<Double, Creature>>(_populationSize);
         for (int i = 0; i < _populationSize; i++)
@@ -95,6 +96,8 @@ public class GeneticAlgorithmRunner
             Creature child = new Creature(parent1, parent2);
             newPopulation.add(new Pair<Double, Creature>(0.0, child));
         }
+        System.out.println("random new member\n"
+                + _population.get(_population.size() - 1).getValue1().getBrain().render(RenderCode.BRAIN_WEIGHTS));
     }
 
     public static void main(String[] args)
@@ -102,7 +105,9 @@ public class GeneticAlgorithmRunner
         Species species = new Species(0);
         species.setRandomInitialization(true);
         species.setInitialGenerationProbability(0);
-        species.setMaximumFood(300);
+        species.setMutationRateExponent(-10);
+        species.setMaximumFood(2000);
+        System.out.println("Species " + species);
 
         WorldVariables variables = new WorldVariables(species);
         variables.setInitialFoodGenerationProbability(0);

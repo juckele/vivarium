@@ -79,7 +79,14 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
 
         if (parent1 != null)
         {
-            this._generation = Functions.logarithmicAverage(parent1._generation, parent2._generation) + 1;
+            if (parent2 != null)
+            {
+                this._generation = Functions.logarithmicAverage(parent1._generation, parent2._generation) + 1;
+            }
+            else
+            {
+                this._generation = parent1._generation;
+            }
         }
         else
         {
