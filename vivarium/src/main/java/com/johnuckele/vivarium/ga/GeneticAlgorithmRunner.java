@@ -118,7 +118,9 @@ public class GeneticAlgorithmRunner
         WorldVariables variables = new WorldVariables(species);
         variables.setInitialFoodGenerationProbability(0);
 
-        GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(species, new TimeToExtinctionFF(30, variables, 100));
+        int tenLifespans = species.getMaximumAge() * 10;
+        GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(species, new TimeToExtinctionFF(30, variables, 100,
+                tenLifespans));
         runner.run();
     }
 }

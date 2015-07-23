@@ -7,50 +7,37 @@ import java.util.LinkedList;
 
 public class WorldVariables implements Cloneable, Serializable
 {
-    private static final long     serialVersionUID                            = 2L;
+    private static final long    serialVersionUID                            = 2L;
 
     /**
      * Default values
      */
     // Program Options
-    private static final boolean  DEFAULT_REMEMBER_THE_DEAD                   = false;
-    private static final boolean  DEFAULT_KEEP_CENSUS_DATA                    = false;
-    private static final boolean  DEFAULT_KEEP_GENERATION_ACTION_PROFILE      = false;
+    private static final boolean DEFAULT_REMEMBER_THE_DEAD                   = false;
+    private static final boolean DEFAULT_KEEP_CENSUS_DATA                    = false;
+    private static final boolean DEFAULT_KEEP_GENERATION_ACTION_PROFILE      = false;
 
     // World Gen
-    private static final double   DEFAULT_FOOD_GENERATION_PROBABILITY         = 0.01;
-    private static final double   DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY = 0.2;
-    private static final double   DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY = 0.1;
-
-    private static final String[] VARIABLE_NAMES                              = {
-            // Program Options
-            "rememberTheDead", "keepCensusData",
-            "keepGenerationActionProfile",
-            // World Gen
-            "foodGenerationProbability", "initialFoodGenerationProbability", "initialCreatureGenerationProbability",
-            "initialWallGenerationProbability",
-            // Creaturology
-            "creatureMemoryUnitCount", "creatureSoundChannelCount",
-            // Neurology
-            "inheritanceGaussianMixRate", "inheritanceSinglePickRate", "mutationRateExponent",
-            "mutationSmallScaleRate", "mutationRandomRate", "mutationFlipRate" };
+    private static final double  DEFAULT_FOOD_GENERATION_PROBABILITY         = 0.01;
+    private static final double  DEFAULT_INITIAL_FOOD_GENERATION_PROBABILITY = 0.2;
+    private static final double  DEFAULT_INITIAL_WALL_GENERATION_PROBABILITY = 0.1;
 
     /**
      * Instance variables
      */
     // Program Options
-    private boolean               _rememberTheDead;
-    private boolean               _keepCensusData;
-    private boolean               _keepGenerationActionProfile;
+    private boolean              _rememberTheDead;
+    private boolean              _keepCensusData;
+    private boolean              _keepGenerationActionProfile;
 
     // World Gen
-    private double                _foodGenerationProbability;
-    private double                _initialFoodGenerationProbability;
-    private double                _initialWallGenerationProbability;
+    private double               _foodGenerationProbability;
+    private double               _initialFoodGenerationProbability;
+    private double               _initialWallGenerationProbability;
 
-    private ArrayList<Species>    _species;
+    private ArrayList<Species>   _species;
 
-    private int                   _maximumSoundChannelcount;
+    private int                  _maximumSoundChannelcount;
 
     public WorldVariables()
     {
@@ -97,16 +84,6 @@ public class WorldVariables implements Cloneable, Serializable
                 _maximumSoundChannelcount = s.getSoundChannelCount();
             }
         }
-    }
-
-    /**
-     * Returns the names in string form of all variables tracked by a WorldVariables objects.
-     *
-     * @return
-     */
-    public static String[] getVariablesNames()
-    {
-        return WorldVariables.VARIABLE_NAMES;
     }
 
     public boolean getRememberTheDead()

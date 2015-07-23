@@ -11,12 +11,14 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     private int            _initialPopulation;
     private int            _worldSize;
     private WorldVariables _variables;
+    private double         _simulationDuration;
 
-    public TimeToExtinctionFF(int worldSize, WorldVariables variables, int initialPopulation)
+    public TimeToExtinctionFF(int worldSize, WorldVariables variables, int initialPopulation, int simulationDuration)
     {
         this._worldSize = worldSize;
         this._variables = variables;
         this._initialPopulation = initialPopulation;
+        this._simulationDuration = simulationDuration;
     }
 
     @Override
@@ -36,13 +38,12 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
         }
 
         // Run simulation
-        double tenLifespans = c.getSpecies().getMaximumAge() * 10;
-        for (int i = 0; i < tenLifespans; i++)
+        for (int i = 0; i < _simulationDuration; i++)
         {
             int count = w.getCount(WorldObject.CREATURE);
             if (count == 0)
             {
-                return i / tenLifespans;
+                return i / _simulationDuration;
             }
             w.tick();
         }
