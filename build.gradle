@@ -1,6 +1,15 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+    dependencies {
+        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+    }
+}
+
 allprojects {
     task magic << { 
-        task -> println "I'm $task.project.name"
+        task -> println "Running magic task on $task.project.name"
     }
 }
 
@@ -8,13 +17,15 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
 
+    version = '0.2'
+
     magic << {
         println "Setting up eclipse for project"
-        cleanEclipseProject
-        cleanEclipseClasspath
-        eclipseProject
-        eclipseClasspath
     }
+    magic.dependsOn cleanEclipseProject
+    magic.dependsOn eclipseProject
+    magic.dependsOn cleanEclipseClasspath
+    magic.dependsOn eclipseClasspath
 
     repositories {
         jcenter()
@@ -24,6 +35,11 @@ subprojects {
     }
 
     dependencies {
+    }
+}
+
+project(':core') {
+    dependencies {
         compile 'org.json:json:20140107'
         compile 'org.javatuples:javatuples:1.2'
         testCompile group: 'junit', name: 'junit', version: '4.+'
@@ -31,6 +47,18 @@ subprojects {
     }
 }
 
+project(':webvisualizer') {
+    apply plugin: 'war'
+    apply plugin: 'gwt'
 
+    gwt {
+    	modules 'VivariumWeb'
+    }
 
-
+    dependencies {
+        compile 'com.google.gwt:gwt:2.7.0'
+        compile 'com.google.gwt:gwt-user:2.7.0'
+        compile 'com.google.gwt:gwt-dev:2.7.0'
+        compile project(':core')
+    }
+}
