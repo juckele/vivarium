@@ -1,1 +1,1 @@
-include 'core', 'webvisualizer'
+include 'vivarium-core', 'vivarium-web'

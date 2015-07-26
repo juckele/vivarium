@@ -47,7 +47,7 @@ subprojects {
     }
 }
 
-project(':core') {
+project(':vivarium-core') {
     apply plugin: 'gwt-base'
 
     gwt {
@@ -64,7 +64,7 @@ project(':core') {
     }
 }
 
-project(':webvisualizer') {
+project(':vivarium-web') {
     apply plugin: 'war'
     apply plugin: 'gwt'
 
@@ -73,10 +73,10 @@ project(':webvisualizer') {
 
     	modules 'com.johnuckele.vivarium.web.VivariumWeb'
 
-	src += files(project(':core').sourceSets.main.allJava.srcDirs)
+	src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
     }
 
     dependencies {
-        compile project(':core')
+        compile project(':vivarium-core')
     }
 }
