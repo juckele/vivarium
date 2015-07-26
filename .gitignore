@@ -2,6 +2,6 @@
 .classpath
 .gradle/
 bin/
-webvisualizer/war/
+vivarium-web/war/
 build/
 test.*
