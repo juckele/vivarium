@@ -40,7 +40,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
          * response) { world = JSONDecoder.convertJSONToWorld(response.getText()); displayWorld(); } }); }
          */
         WorldVariables variables = new WorldVariables();
-        world = new WebWorld(20, variables);
+        world = new WebWorld(40, variables);
         displayWorld();
         /*
          * catch(RequestException e) { Window.alert("Couldn't retrieve JSON duck"); }
