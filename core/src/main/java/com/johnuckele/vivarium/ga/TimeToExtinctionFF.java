@@ -25,7 +25,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     public double evaluate(Creature c)
     {
         // Build world
-        WorldVariables instanceVariables = _variables.clone();
+        WorldVariables instanceVariables = new WorldVariables(_variables);
         assert (instanceVariables.getSpecies().size() == 1);
         Species instanceSpecies = instanceVariables.getSpecies().get(0);
         instanceSpecies.setMutationEnabled(false);

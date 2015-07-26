@@ -4,7 +4,7 @@ import java.io.Serializable;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
 
-public class Species implements Cloneable, Serializable
+public class Species implements Serializable
 {
     private static final long    serialVersionUID                                = 1L;
 
@@ -66,6 +66,28 @@ public class Species implements Cloneable, Serializable
     {
         _speciesID = speciesID;
         _glyph = GLYPHS[_speciesID];
+    }
+
+    public Species(Species s)
+    {
+        this._femaleThreshold = s._femaleThreshold;
+        this._maximumAge = s._maximumAge;
+        this._maximumGestation = s._maximumGestation;
+        this._maximumFood = s._maximumFood;
+        this._brainType = s._brainType;
+        this._hardBrainInputs = s._hardBrainInputs;
+        this._hardBrainOutputs = s._hardBrainOutputs;
+        this._memoryUnitCount = s._memoryUnitCount;
+        this._soundChannelCount = s._soundChannelCount;
+        this._inheritanceGaussianMixRate = s._inheritanceGaussianMixRate;
+        this._randomInitialization = s._randomInitialization;
+        this._mutationEnabled = s._mutationEnabled;
+        this._mutationRateExponent = s._mutationRateExponent;
+        this._mutationRate = s._mutationRate;
+        this._mutationSmallScaleRate = s._mutationSmallScaleRate;
+        this._mutationRandomRate = s._mutationRandomRate;
+        this._mutationFlipRate = s._mutationFlipRate;
+        this._initialGenerationProbability = s._initialGenerationProbability;
     }
 
     public Object getGlyph()
@@ -221,19 +243,6 @@ public class Species implements Cloneable, Serializable
     public boolean getRandomInitialization()
     {
         return this._randomInitialization;
-    }
-
-    @Override
-    public Species clone()
-    {
-        try
-        {
-            return (Species) super.clone();
-        }
-        catch (CloneNotSupportedException e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 
     public void setMaximumFood(int maximumFood)

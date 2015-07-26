@@ -27,6 +27,15 @@ subprojects {
     magic.dependsOn cleanEclipseClasspath
     magic.dependsOn eclipseClasspath
 
+    buildscript {
+        repositories {
+            jcenter()
+        }
+        dependencies {
+            classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+        }
+    }
+
     repositories {
         jcenter()
         maven {
@@ -39,6 +48,14 @@ subprojects {
 }
 
 project(':core') {
+    apply plugin: 'gwt-base'
+
+    gwt {
+        gwtVersion='2.7.0'
+
+    	modules 'com.johnuckele.vivarium.Vivarium'
+    }
+
     dependencies {
         compile 'org.json:json:20140107'
         compile 'org.javatuples:javatuples:1.2'
@@ -52,13 +69,14 @@ project(':webvisualizer') {
     apply plugin: 'gwt'
 
     gwt {
-    	modules 'VivariumWeb'
+        gwtVersion='2.7.0'
+
+    	modules 'com.johnuckele.vivarium.web.VivariumWeb'
+
+	src += files(project(':core').sourceSets.main.allJava.srcDirs)
     }
 
     dependencies {
-        compile 'com.google.gwt:gwt:2.7.0'
-        compile 'com.google.gwt:gwt-user:2.7.0'
-        compile 'com.google.gwt:gwt-dev:2.7.0'
         compile project(':core')
     }
 }

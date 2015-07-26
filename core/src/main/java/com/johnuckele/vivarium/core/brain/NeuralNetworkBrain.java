@@ -369,7 +369,7 @@ public class NeuralNetworkBrain extends Brain
                 for (int k = 0; k < _weights[i][j].length; k++)
                 {
                     double weight = _weights[i][j][k];
-                    output.append(String.format("%.3f", weight));
+                    output.append(weight);
                     output.append('\t');
                 }
                 if (i == _weights.length - 1)

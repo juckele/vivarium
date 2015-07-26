@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-public class WorldVariables implements Cloneable, Serializable
+public class WorldVariables implements Serializable
 {
     private static final long    serialVersionUID                            = 2L;
 
@@ -79,6 +79,27 @@ public class WorldVariables implements Cloneable, Serializable
         _maximumSoundChannelcount = 0;
         for (Species s : _species)
         {
+            if (s.getSoundChannelCount() > _maximumSoundChannelcount)
+            {
+                _maximumSoundChannelcount = s.getSoundChannelCount();
+            }
+        }
+    }
+
+    public WorldVariables(WorldVariables that)
+    {
+        this._rememberTheDead = that._rememberTheDead;
+        this._keepCensusData = that._keepCensusData;
+        this._keepGenerationActionProfile = that._keepGenerationActionProfile;
+        this._foodGenerationProbability = that._foodGenerationProbability;
+        this._initialFoodGenerationProbability = that._initialFoodGenerationProbability;
+        this._initialWallGenerationProbability = that._initialWallGenerationProbability;
+
+        this._species = new ArrayList<Species>(that._species.size());
+        this._maximumSoundChannelcount = 0;
+        for (Species s : that._species)
+        {
+            this._species.add(new Species(s));
             if (s.getSoundChannelCount() > _maximumSoundChannelcount)
             {
                 _maximumSoundChannelcount = s.getSoundChannelCount();
@@ -181,25 +202,5 @@ public class WorldVariables implements Cloneable, Serializable
     public ArrayList<Species> getSpecies()
     {
         return _species;
-    }
-
-    @Override
-    public WorldVariables clone()
-    {
-        try
-        {
-            WorldVariables clonedVariables = (WorldVariables) super.clone();
-            ArrayList<Species> clonedSpecies = new ArrayList<Species>(_species.size());
-            for (Species s : this._species)
-            {
-                clonedSpecies.add(s.clone());
-            }
-            clonedVariables._species = clonedSpecies;
-            return clonedVariables;
-        }
-        catch (CloneNotSupportedException e)
-        {
-            throw new RuntimeException(e);
-        }
     }
 }
