@@ -18,7 +18,7 @@
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
   <!-- Other module inherits                                      -->
-  <inherits name='com.johnuckele.Vivarium' />
+  <inherits name='com.johnuckele.vivarium.Vivarium' />
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='com.johnuckele.vivarium.web.client.VivariumWeb'/>
