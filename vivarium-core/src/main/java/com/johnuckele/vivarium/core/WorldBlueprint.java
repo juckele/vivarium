@@ -41,7 +41,7 @@ public class WorldBlueprint
 
     public WorldBlueprint(int size)
     {
-        this(size, new Species());
+        this(size, Species.makeDefaultSpeciesObject());
     }
 
     public WorldBlueprint(int size, LinkedList<Species> species)
@@ -135,7 +135,7 @@ public class WorldBlueprint
         newprint._species = new ArrayList<Species>();
         for (Species s : blueprint._species)
         {
-            newprint._species.add(new Species(s));
+            newprint._species.add(Species.makeCopySpeciesObject(s));
         }
         return newprint;
     }
@@ -167,7 +167,7 @@ public class WorldBlueprint
         }
 
         // Build species by default
-        Species s = new Species();
+        Species s = Species.makeDefaultSpeciesObject();
         blueprint._species = new ArrayList<Species>();
         blueprint._species.add(s);
 

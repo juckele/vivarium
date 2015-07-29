@@ -108,7 +108,7 @@ public class GeneticAlgorithmRunner
 
     public static void main(String[] args)
     {
-        Species species = new Species();
+        Species species = Species.makeDefaultSpeciesObject();
         species.setRandomInitialization(true);
         species.setInitialGenerationProbability(0);
         species.setMaximumFood(200);

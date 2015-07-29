@@ -86,30 +86,8 @@ public class Species implements MapSerializer, Serializable
         _mutationRate = Math.pow(2, _mutationRateExponent);
     }
 
-    public Species()
+    private Species()
     {
-        SerializationEngine.deserialize(this, SerializationEngine.EMPTY_OBJECT_MAP);
-    }
-
-    public Species(Species s)
-    {
-        this._femaleProportion = s._femaleProportion;
-        this._maximumAge = s._maximumAge;
-        this._maximumGestation = s._maximumGestation;
-        this._maximumFood = s._maximumFood;
-        this._brainType = s._brainType;
-        this._hardBrainInputs = s._hardBrainInputs;
-        this._hardBrainOutputs = s._hardBrainOutputs;
-        this._memoryUnitCount = s._memoryUnitCount;
-        this._soundChannelCount = s._soundChannelCount;
-        this._inheritanceGaussianMixRate = s._inheritanceGaussianMixRate;
-        this._randomInitialization = s._randomInitialization;
-        this._mutationRateExponent = s._mutationRateExponent;
-        this._mutationRate = s._mutationRate;
-        this._mutationTypeSmallScaleRate = s._mutationTypeSmallScaleRate;
-        this._mutationTypeRandomRate = s._mutationTypeRandomRate;
-        this._mutationTypeFlipRate = s._mutationTypeFlipRate;
-        this._initialGenerationProbability = s._initialGenerationProbability;
     }
 
     public int getHardBrainInputs()
@@ -329,5 +307,41 @@ public class Species implements MapSerializer, Serializable
     public void finalizeDeserialization(Map<String, String> map, Map<Integer, MapSerializer> dereferenceMap)
     {
         updateMutationRate();
+    }
+
+    public static Species makeUninitializedSpeciesObject()
+    {
+        return new Species();
+    }
+
+    public static Species makeDefaultSpeciesObject()
+    {
+        Species s = new Species();
+        SerializationEngine.deserialize(s, SerializationEngine.EMPTY_OBJECT_MAP);
+        return s;
+    }
+
+    public static Species makeCopySpeciesObject(Species original)
+    {
+        // TODO: Use serialization
+        Species copy = new Species();
+        copy._femaleProportion = original._femaleProportion;
+        copy._maximumAge = original._maximumAge;
+        copy._maximumGestation = original._maximumGestation;
+        copy._maximumFood = original._maximumFood;
+        copy._brainType = original._brainType;
+        copy._hardBrainInputs = original._hardBrainInputs;
+        copy._hardBrainOutputs = original._hardBrainOutputs;
+        copy._memoryUnitCount = original._memoryUnitCount;
+        copy._soundChannelCount = original._soundChannelCount;
+        copy._inheritanceGaussianMixRate = original._inheritanceGaussianMixRate;
+        copy._randomInitialization = original._randomInitialization;
+        copy._mutationRateExponent = original._mutationRateExponent;
+        copy._mutationRate = original._mutationRate;
+        copy._mutationTypeSmallScaleRate = original._mutationTypeSmallScaleRate;
+        copy._mutationTypeRandomRate = original._mutationTypeRandomRate;
+        copy._mutationTypeFlipRate = original._mutationTypeFlipRate;
+        copy._initialGenerationProbability = original._initialGenerationProbability;
+        return copy;
     }
 }
