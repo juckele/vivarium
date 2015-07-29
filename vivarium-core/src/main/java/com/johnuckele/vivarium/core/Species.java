@@ -1,76 +1,117 @@
 package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
+import java.util.HashMap;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
+import com.johnuckele.vivarium.serialization.DoubleParameter;
+import com.johnuckele.vivarium.serialization.IntegerParameter;
 
 public class Species implements Serializable
 {
-    private static final long    serialVersionUID                                = 1L;
+    private static final long      serialVersionUID               = 3L;
 
-    // Creature Constants
-    private static final double  DEFAULT_FEMALE_THRESHOLD                        = 0.6;
-    private static final int     MAXIMUM_AGE                                     = 20000;
-    private static final int     MAXIMUM_GESTATION                               = 2000;
-    private static final int     MAXIMUM_FOOD                                    = 2000;
+    // Energy Uses
+    private static final int       EATING_FOOD_RATE               = 500;
+    private static final int       MOVING_FOOD_RATE               = -1;
+    private static final int       BASE_FOOD_RATE                 = -1;
+    private static final int       PREGNANT_FOOD_RATE             = -2;
 
-    private static final int     HARD_BRAIN_INPUTS                               = 5;
-    private static final int     HARD_BRAIN_OUTPUTS                              = 6;
+    // World Generation
+    private static final double    INITIAL_GENERATION_PROBABILITY = 0.2;
 
-    // Per species settings
-    private static final double  DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY = 0.2;
-    private static final boolean DEFAULT_RANDOM_INITIALIZATION                   = false;
-    private static final int     DEFAULT_CREATURE_MEMORY_UNIT_COUNT              = 0;
-    private static final int     DEFAULT_CREATURE_SOUND_CHANNEL_COUNT            = 0;
-
-    // Per species - Model settings
-    private static final double  DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE           = 0.8;
-    private static final double  DEFAULT_MUTATION_RATE_EXPONENT                  = -7;
-    private static final double  DEFAULT_MUTATION_SMALL_SCALE_RATE               = 0.5;
-    private static final double  DEFAULT_MUTATION_RANDOM_RATE                    = 0.25;
-    private static final double  DEFAULT_MUTATION_FLIP_RATE                      = 0.25;
-
-    private static String[]      GLYPHS                                          = { "中", "马", "心" };
-
-    private double               _femaleThreshold                                = DEFAULT_FEMALE_THRESHOLD;
-    private int                  _maximumAge                                     = MAXIMUM_AGE;
-    private int                  _maximumGestation                               = MAXIMUM_GESTATION;
-    private int                  _maximumFood                                    = MAXIMUM_FOOD;
-
-    // Creature brains
-    private BrainType            _brainType                                      = BrainType.NEURALNETWORK;
-    private int                  _hardBrainInputs                                = HARD_BRAIN_INPUTS;
-    private int                  _hardBrainOutputs                               = HARD_BRAIN_OUTPUTS;
-    private int                  _memoryUnitCount                                = DEFAULT_CREATURE_MEMORY_UNIT_COUNT;
-    private int                  _soundChannelCount                              = DEFAULT_CREATURE_SOUND_CHANNEL_COUNT;
+    // Neurology
+    private static final BrainType BRAIN_TYPE                     = BrainType.NEURALNETWORK;
+    private static final int       HARD_BRAIN_INPUTS              = 5;
+    private static final int       HARD_BRAIN_OUTPUTS             = 6;
+    private static final boolean   RANDOM_INITIALIZATION          = false;
+    private static final int       MEMORY_UNIT_COUNT              = 0;
+    private static final int       SOUND_CHANNEL_COUNT            = 0;
 
     // Mutation
-    private double               _inheritanceGaussianMixRate                     = DEFAULT_INHERITANCE_GAUSSIAN_MIX_RATE;
-    private boolean              _randomInitialization                           = DEFAULT_RANDOM_INITIALIZATION;
-    private boolean              _mutationEnabled;
-    private double               _mutationRateExponent                           = DEFAULT_MUTATION_RATE_EXPONENT;
-    private double               _mutationRate                                   = Math.pow(2,
-                                                                                         DEFAULT_MUTATION_RATE_EXPONENT);
-    private double               _mutationSmallScaleRate                         = DEFAULT_MUTATION_SMALL_SCALE_RATE;
-    private double               _mutationRandomRate                             = DEFAULT_MUTATION_RANDOM_RATE;
-    private double               _mutationFlipRate                               = DEFAULT_MUTATION_FLIP_RATE;
-    private double               _initialGenerationProbability                   = DEFAULT_INITIAL_CREATURE_GENERATION_PROBABILITY;
+    private static final boolean   MUTATION_ENABLED               = true;
+    private static final double    INHERITANCE_GAUSSIAN_MIX_RATE  = 0.8;
+    private static final double    MUTATION_RATE_EXPONENT         = -7;
+    private static final double    MUTATION_TYPE_SMALL_SCALE_RATE = 0.5;
+    private static final double    MUTATION_TYPE_RANDOM_RATE      = 0.25;
+    private static final double    MUTATION_TYPE_FLIP_RATE        = 0.25;
+
+    // Physical traits
+    @DoubleParameter(required = false, defaultValue = 0.6)
+    private double                 _femaleProportion;
+
+    @IntegerParameter(required = false, defaultValue = 20000)
+    private int                    _maximumAge;
+
+    @IntegerParameter(required = false, defaultValue = 2000)
+    private int                    _maximumGestation;
+
+    @IntegerParameter(required = false, defaultValue = 2000)
+    private int                    _maximumFood;
+
+    // Energy Uses
+    @IntegerParameter(required = false, defaultValue = -10)
+    private int                    _breedingFoodRate;
+    private int                    _eatingFoodRate                = EATING_FOOD_RATE;
+    private int                    _movingFoodRate                = MOVING_FOOD_RATE;
+    private int                    _baseFoodRate                  = BASE_FOOD_RATE;
+    private int                    _pregnantFoodRate              = PREGNANT_FOOD_RATE;
+
+    // World Generation
+    private double                 _initialGenerationProbability  = INITIAL_GENERATION_PROBABILITY;
+
+    // Neurology
+    private BrainType              _brainType                     = BRAIN_TYPE;
+    private int                    _hardBrainInputs               = HARD_BRAIN_INPUTS;
+    private int                    _hardBrainOutputs              = HARD_BRAIN_OUTPUTS;
+    private int                    _memoryUnitCount               = MEMORY_UNIT_COUNT;
+    private int                    _soundChannelCount             = SOUND_CHANNEL_COUNT;
+    private boolean                _randomInitialization          = RANDOM_INITIALIZATION;
+
+    // Mutation
+    private boolean                _mutationEnabled               = MUTATION_ENABLED;
+    private double                 _inheritanceGaussianMixRate    = INHERITANCE_GAUSSIAN_MIX_RATE;
+    private double                 _mutationRateExponent          = MUTATION_RATE_EXPONENT;
+    private double                 _mutationRate                  = Math.pow(2, MUTATION_RATE_EXPONENT);
+    private double                 _mutationTypeSmallScaleRate    = MUTATION_TYPE_SMALL_SCALE_RATE;
+    private double                 _mutationTypeRandomRate        = MUTATION_TYPE_RANDOM_RATE;
+    private double                 _mutationTypeFlipRate          = MUTATION_TYPE_FLIP_RATE;
 
     // private Action[] _involuntaryActions;
     // private Action[] _voluntaryActions;
 
-    private int                  _speciesID;
-    private String               _glyph                                          = "U";
-
-    public Species(int speciesID)
+    public Species()
     {
-        _speciesID = speciesID;
-        _glyph = GLYPHS[_speciesID];
+        try
+        {
+            for (Field f : Species.class.getDeclaredFields())
+            {
+                DoubleParameter doubleParameter = f.getAnnotation(DoubleParameter.class);
+                if (doubleParameter != null)
+                {
+                    f.setDouble(this, doubleParameter.defaultValue());
+                }
+                IntegerParameter intParameter = f.getAnnotation(IntegerParameter.class);
+                if (intParameter != null)
+                {
+                    f.setInt(this, intParameter.defaultValue());
+                }
+            }
+        }
+        catch (IllegalArgumentException e)
+        {
+            e.printStackTrace();
+        }
+        catch (IllegalAccessException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public Species(Species s)
     {
-        this._femaleThreshold = s._femaleThreshold;
+        this._femaleProportion = s._femaleProportion;
         this._maximumAge = s._maximumAge;
         this._maximumGestation = s._maximumGestation;
         this._maximumFood = s._maximumFood;
@@ -84,15 +125,10 @@ public class Species implements Serializable
         this._mutationEnabled = s._mutationEnabled;
         this._mutationRateExponent = s._mutationRateExponent;
         this._mutationRate = s._mutationRate;
-        this._mutationSmallScaleRate = s._mutationSmallScaleRate;
-        this._mutationRandomRate = s._mutationRandomRate;
-        this._mutationFlipRate = s._mutationFlipRate;
+        this._mutationTypeSmallScaleRate = s._mutationTypeSmallScaleRate;
+        this._mutationTypeRandomRate = s._mutationTypeRandomRate;
+        this._mutationTypeFlipRate = s._mutationTypeFlipRate;
         this._initialGenerationProbability = s._initialGenerationProbability;
-    }
-
-    public Object getGlyph()
-    {
-        return this._glyph;
     }
 
     public int getHardBrainInputs()
@@ -107,7 +143,7 @@ public class Species implements Serializable
 
     public double getFemaleThreshold()
     {
-        return _femaleThreshold;
+        return _femaleProportion;
     }
 
     public int getMaximumAge()
@@ -127,7 +163,7 @@ public class Species implements Serializable
 
     public double getMutationSmallScaleRate()
     {
-        return this._mutationSmallScaleRate;
+        return this._mutationTypeSmallScaleRate;
     }
 
     public double getMutationRateExponent()
@@ -156,12 +192,12 @@ public class Species implements Serializable
 
     public double getMutationFlipRate()
     {
-        return this._mutationFlipRate;
+        return this._mutationTypeFlipRate;
     }
 
     public double getMutationRandomRate()
     {
-        return this._mutationRandomRate;
+        return this._mutationTypeRandomRate;
     }
 
     public double getInheritanceGaussianMixRate()
@@ -248,5 +284,67 @@ public class Species implements Serializable
     public void setMaximumFood(int maximumFood)
     {
         this._maximumFood = maximumFood;
+    }
+
+    public HashMap<String, String> serialize()
+    {
+        HashMap<String, String> map = new HashMap<String, String>();
+        return map;
+    }
+
+    public int getBreedingFoodRate()
+    {
+        return _breedingFoodRate;
+    }
+
+    public void setBreedingFoodRate(int breedingFoodRate)
+    {
+        _breedingFoodRate = breedingFoodRate;
+    }
+
+    public int getEatingFoodRate()
+    {
+        return _eatingFoodRate;
+    }
+
+    public void setEatingFoodRate(int eatingFoodRate)
+    {
+        _eatingFoodRate = eatingFoodRate;
+    }
+
+    public int getMovingFoodRate()
+    {
+        return _movingFoodRate;
+    }
+
+    public void setMovingFoodRate(int movingFoodRate)
+    {
+        _movingFoodRate = movingFoodRate;
+    }
+
+    public int getBaseFoodRate()
+    {
+        return _baseFoodRate;
+    }
+
+    public void setBaseFoodRate(int baseFoodRate)
+    {
+        _baseFoodRate = baseFoodRate;
+    }
+
+    public int getPregnantFoodRate()
+    {
+        return _pregnantFoodRate;
+    }
+
+    public void setPregnantFoodRate(int pregnantFoodRate)
+    {
+        _pregnantFoodRate = pregnantFoodRate;
+    }
+
+    public static void main(String[] args)
+    {
+        Species s = new Species();
+        System.out.println(s._femaleProportion);
     }
 }

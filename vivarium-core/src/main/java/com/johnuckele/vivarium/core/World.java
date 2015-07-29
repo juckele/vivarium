@@ -3,6 +3,7 @@ package com.johnuckele.vivarium.core;
 import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.LinkedList;
 
 import com.johnuckele.vivarium.core.brain.Brain;
@@ -14,33 +15,27 @@ public class World implements Serializable
     /**
      * serialVersion
      */
-    private static final long    serialVersionUID = 4L;
+    private static final long serialVersionUID = 4L;
 
-    private WorldVariables       _worldVariables;
+    //
+    private int               _maximumCreatureID;
+    protected int             _worldDimensions;
 
-    private int                  _maximumCreatureID;
-    private int                  _tickCounter;
-    protected int                _worldDimensions;
+    protected WorldObject[][] _worldObjectGrid;
+    protected Creature[][]    _creatureGrid;
 
-    protected WorldObject[][]    _worldObjectGrid;
-    protected Creature[][]       _creatureGrid;
-    private LinkedList<Creature> _deadCreatureList;
+    private WorldBlueprint    _blueprint;
 
-    // Auxiliary data strucures
-    // TODO FIX CENSUS DATA AND ACTION PROFILES
-    // private CensusRecord _census;
-    // private LinkedList<ActionProfile> _generationalMaleActionProfiles;
-    // private LinkedList<ActionProfile> _generationalFemaleActionProfiles;
-
-    public World(int worldDimensions, WorldVariables worldVariables)
+    public World(WorldBlueprint blueprint)
     {
+        // Store the blueprint
+        this._blueprint = blueprint;
+
         // Set up base variables
-        this._worldVariables = worldVariables;
         this._maximumCreatureID = 0;
-        this._tickCounter = 0;
 
         // Size the world
-        this.setWorldDimensions(worldDimensions);
+        this.setWorldDimensions(blueprint.getSize());
 
         // Build the action profile data structures
         // TODO ACTION PROFILES
@@ -68,9 +63,9 @@ public class World implements Serializable
     private void populatateWorld()
     {
         WorldPopulator populator = new WorldPopulator();
-        populator.setSpecies(_worldVariables.getSpecies());
-        populator.setWallProbability(_worldVariables.getInitialWallGenerationProbability());
-        populator.setFoodProbability(_worldVariables.getInitialFoodGenerationProbability());
+        populator.setSpecies(_blueprint.getSpecies());
+        populator.setWallProbability(_blueprint.getInitialWallGenerationProbability());
+        populator.setFoodProbability(_blueprint.getInitialFoodGenerationProbability());
         for (int r = 0; r < _worldDimensions; r++)
         {
             for (int c = 0; c < _worldDimensions; c++)
@@ -87,7 +82,7 @@ public class World implements Serializable
                     if (object == WorldObject.CREATURE)
                     {
                         Species species = populator.getNextCreatureSpecies();
-                        Creature creature = new Creature(species, this._worldVariables);
+                        Creature creature = new Creature(species);
                         addCreature(creature, r, c);
                     }
                     else
@@ -131,10 +126,6 @@ public class World implements Serializable
 
         // New food resources will be spawned in the world
         spawnFood();
-
-        // Keep the census up to date
-        this._tickCounter++;
-        // TODO FIX CENSUS DATA
     }
 
     private void tickCreatures()
@@ -153,7 +144,7 @@ public class World implements Serializable
 
     private void transmitSounds()
     {
-        if (this._worldVariables.getMaximumSoundChannelCount() > 0)
+        if (this._blueprint.getSoundEnabled())
         {
             for (int r = 0; r < this._worldDimensions; r++)
             {
@@ -296,7 +287,7 @@ public class World implements Serializable
                 if (_worldObjectGrid[r][c] == WorldObject.EMPTY)
                 {
                     double randomNumber = Rand.getRandomPositiveDouble();
-                    if (randomNumber < this._worldVariables.getFoodGenerationProbability())
+                    if (randomNumber < this._blueprint.getFoodGenerationProbability())
                     {
                         setObject(WorldObject.FOOD, r, c);
                         _worldObjectGrid[r][c] = WorldObject.FOOD;
@@ -390,7 +381,6 @@ public class World implements Serializable
                 }
             }
         }
-        allCreatures.addAll(this._deadCreatureList);
         Collections.sort(allCreatures, new Comparator<Creature>()
         {
             @Override
@@ -472,16 +462,6 @@ public class World implements Serializable
         this._maximumCreatureID = maximumCreatureID;
     }
 
-    public int getTickCounter()
-    {
-        return this._tickCounter;
-    }
-
-    public void setTickCounter(int tickCounter)
-    {
-        this._tickCounter = tickCounter;
-    }
-
     public Creature getCreature(int r, int c)
     {
         return this._creatureGrid[r][c];
@@ -495,10 +475,6 @@ public class World implements Serializable
 
     private void killCreature(int r, int c)
     {
-        if (this._worldVariables.getRememberTheDead())
-        {
-            this._deadCreatureList.add(_creatureGrid[r][c]);
-        }
         removeObject(r, c);
     }
 
@@ -523,7 +499,6 @@ public class World implements Serializable
 
         this._worldObjectGrid = new WorldObject[_worldDimensions][_worldDimensions];
         this._creatureGrid = new Creature[_worldDimensions][_worldDimensions];
-        this._deadCreatureList = new LinkedList<Creature>();
     }
 
     public WorldObject getWorldObject(int r, int c)
@@ -538,11 +513,6 @@ public class World implements Serializable
             throw new Error("Creature WorldObjects should not be assinged directly, use setCreature");
         }
         setObject(obj, null, r, c);
-    }
-
-    public WorldVariables getWorldVariables()
-    {
-        return _worldVariables;
     }
 
     private void setObject(WorldObject obj, Creature creature, int r, int c)
@@ -592,16 +562,6 @@ public class World implements Serializable
             }
             return (creatureOutput.toString());
         }
-        else if (code == RenderCode.DEAD_CREATURE_LIST)
-        {
-            StringBuilder creatureOutput = new StringBuilder();
-            for (Creature creature : this._deadCreatureList)
-            {
-                creatureOutput.append(creature.render(RenderCode.SIMPLE_CREATURE, -1, -1));
-                creatureOutput.append('\n');
-            }
-            return (creatureOutput.toString());
-        }
         else
         {
             throw new IllegalArgumentException("RenderCode " + code + " not supported for type " + this.getClass());
@@ -610,13 +570,16 @@ public class World implements Serializable
 
     private String renderMap()
     {
+        String[] glyphs = { "中", "马", "心" };
         // Draw world map
         StringBuilder worldOutput = new StringBuilder();
         worldOutput.append("Walls: ");
         worldOutput.append(this.getCount(WorldObject.WALL));
-        for (Species s : this._worldVariables.getSpecies())
+        HashMap<Species, String> speciesToGlyphMap = new HashMap<Species, String>();
+        for (Species s : this._blueprint.getSpecies())
         {
-            worldOutput.append(", ").append(s.getGlyph()).append("-creatures: ");
+            speciesToGlyphMap.put(s, glyphs[speciesToGlyphMap.size()]);
+            worldOutput.append(", ").append(speciesToGlyphMap.get(s)).append("-creatures: ");
             worldOutput.append(this.getCount(s));
         }
         worldOutput.append(", Food: ");
@@ -640,7 +603,7 @@ public class World implements Serializable
                 }
                 else if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
                 {
-                    worldOutput.append(_creatureGrid[r][c].getSpecies().getGlyph());
+                    worldOutput.append(speciesToGlyphMap.get(_creatureGrid[r][c].getSpecies()));
                 }
             }
             worldOutput.append('\n');
@@ -651,7 +614,7 @@ public class World implements Serializable
     private String renderBrainWeights()
     {
         StringBuilder multiSpeciesOutput = new StringBuilder();
-        for (Species species : this._worldVariables.getSpecies())
+        for (Species species : this._blueprint.getSpecies())
         {
             multiSpeciesOutput.append(this.renderBrainWeights(species));
         }

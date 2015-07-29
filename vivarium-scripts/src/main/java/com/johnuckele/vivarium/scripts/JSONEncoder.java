@@ -7,7 +7,6 @@ import org.json.JSONObject;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldObject;
-import com.johnuckele.vivarium.core.WorldVariables;
 import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
 
 public class JSONEncoder
@@ -17,12 +16,12 @@ public class JSONEncoder
         JSONObject worldJSON = new JSONObject();
         // Store basic values
         worldJSON.put("maximumCreatureID", w.getMaximimCreatureID());
-        worldJSON.put("tickCounter", w.getTickCounter());
+        // worldJSON.put("tickCounter", w.getTickCounter());
         worldJSON.put("worldDimensions", w.getWorldDimensions());
 
         // Store world variables
-        JSONObject worldVariableJSON = convertWorldVariablesToJSON(w.getWorldVariables());
-        worldJSON.put("worldVariables", worldVariableJSON);
+        // JSONObject worldVariableJSON = convertWorldVariablesToJSON(w.getWorldVariables());
+        // worldJSON.put("worldVariables", worldVariableJSON);
 
         JSONArray worldObjects = new JSONArray();
         // Store what lives where
@@ -49,48 +48,33 @@ public class JSONEncoder
         return worldJSON;
     }
 
-    private static JSONObject convertWorldVariablesToJSON(WorldVariables worldVariables) throws JSONException
-    {
-        JSONObject worldVariablesJSON = new JSONObject();
+    // private static JSONObject convertWorldVariablesToJSON(WorldVariables worldVariables) throws JSONException
+    // {
+    // JSONObject worldVariablesJSON = new JSONObject();
 
-        // TODO FIX THIS
-        /*
-         * // Program options worldVariablesJSON.put("rememberTheDead",
-         * worldVariables.getRememberTheDead());
-         *
-         * // World gen worldVariablesJSON.put("foodGenerationProbability",
-         * worldVariables.getFoodGenerationProbability());
-         * worldVariablesJSON.put("initialFoodGenerationProbability",
-         * worldVariables.getInitialFoodGenerationProbability());
-         * worldVariablesJSON.put("initialCreatureGenerationProbability",
-         * worldVariables.getInitialCreatureGenerationProbability());
-         * worldVariablesJSON.put("initialWallGenerationProbability",
-         * worldVariables.getInitialWallGenerationProbability());
-         *
-         * // Neurology worldVariablesJSON.put("creatureMemoryUnitCount",
-         * worldVariables.getCreatureMemoryUnitCount());
-         * worldVariablesJSON.put("inheritanceGaussianMixRate",
-         * worldVariables.getInheritanceGaussianMixRate());
-         * worldVariablesJSON.put("inheritanceSinglePickRate",
-         * worldVariables.getInheritanceSinglePickRate());
-         * worldVariablesJSON.put("mutationRateExponent",
-         * worldVariables.getMutationRateExponent());
-         * worldVariablesJSON.put("mutationSmallScaleRate",
-         * worldVariables.getMutationSmallScaleRate());
-         * worldVariablesJSON.put("mutationRandomRate",
-         * worldVariables.getMutationRandomRate());
-         * worldVariablesJSON.put("mutationFlipRate",
-         * worldVariables.getMutationFlipRate());
-         */
+    // TODO FIX THIS
+    /*
+     * // Program options worldVariablesJSON.put("rememberTheDead", worldVariables.getRememberTheDead()); // World gen
+     * worldVariablesJSON.put("foodGenerationProbability", worldVariables.getFoodGenerationProbability());
+     * worldVariablesJSON.put("initialFoodGenerationProbability", worldVariables.getInitialFoodGenerationProbability());
+     * worldVariablesJSON.put("initialCreatureGenerationProbability",
+     * worldVariables.getInitialCreatureGenerationProbability());
+     * worldVariablesJSON.put("initialWallGenerationProbability", worldVariables.getInitialWallGenerationProbability());
+     * // Neurology worldVariablesJSON.put("creatureMemoryUnitCount", worldVariables.getCreatureMemoryUnitCount());
+     * worldVariablesJSON.put("inheritanceGaussianMixRate", worldVariables.getInheritanceGaussianMixRate());
+     * worldVariablesJSON.put("inheritanceSinglePickRate", worldVariables.getInheritanceSinglePickRate());
+     * worldVariablesJSON.put("mutationRateExponent", worldVariables.getMutationRateExponent());
+     * worldVariablesJSON.put("mutationSmallScaleRate", worldVariables.getMutationSmallScaleRate());
+     * worldVariablesJSON.put("mutationRandomRate", worldVariables.getMutationRandomRate());
+     * worldVariablesJSON.put("mutationFlipRate", worldVariables.getMutationFlipRate());
+     */
 
-        return worldVariablesJSON;
-    }
+    // return worldVariablesJSON;
+    // }
 
     // Unsaved crap
     /*
-     * private Brain _brain; private double[] _memoryUnits;
-     *
-     * private Action _action;
+     * private Brain _brain; private double[] _memoryUnits; private Action _action;
      */
     private static JSONObject convertCreatureToJSON(Creature u) throws JSONException
     {
