@@ -8,8 +8,8 @@ import javax.swing.JTextArea;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.WorldObject;
-import com.johnuckele.vivarium.core.WorldVariables;
 import com.johnuckele.vivarium.core.brain.BrainType;
 
 public class WorldViewer extends JFrame
@@ -100,20 +100,20 @@ public class WorldViewer extends JFrame
         LinkedList<Species> species = new LinkedList<Species>();
 
         // Build 1 species
-        Species species1 = new Species(0);
+        Species species1 = new Species();
         species1.setMutationRateExponent(-9);
         species1.setCreatureMemoryUnitCount(1);
         species1.setCreatureSoundChannelCount(1);
         species.add(species1);
 
         // Build another
-        Species species2 = new Species(1);
+        Species species2 = new Species();
         species2.setBrainType(BrainType.RANDOM);
         species.add(species2);
 
         // Construct the world proper
-        WorldVariables wv = new WorldVariables(species);
-        World w = new World(worldDimensions, wv);
+        WorldBlueprint blueprint = new WorldBlueprint(worldDimensions, species);
+        World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
         // Run simulation

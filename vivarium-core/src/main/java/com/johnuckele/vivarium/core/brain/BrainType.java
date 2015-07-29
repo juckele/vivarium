@@ -62,7 +62,7 @@ public enum BrainType
         public String render(Collection<Brain> brains)
         {
             StringBuilder brainOutput = new StringBuilder();
-            brainOutput.append("Hand coded brain: no render available");
+            brainOutput.append("Random action brain: no model render available");
             return brainOutput.toString();
         }
 

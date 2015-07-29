@@ -1,8 +1,10 @@
 package com.johnuckele.vivarium.scripts;
 
+import java.util.HashMap;
+
 import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.WorldObject;
-import com.johnuckele.vivarium.core.WorldVariables;
 
 public class CreateWorld extends Script
 {
@@ -36,15 +38,17 @@ public class CreateWorld extends Script
     @Override
     protected void run(String[] args)
     {
-        WorldVariables worldVariables = new WorldVariables();
+        HashMap<String, String> blueprintValues = new HashMap<String, String>();
+        blueprintValues.put("size", args[1]);
         // For each pair of extra arguments after the first two, set a
-        // worldVariable value
+        // blueprint value
         for (int i = 2; i + 1 < args.length; i += 2)
         {
-            worldVariables.setKeyValue(args[i], args[i + 1]);
+            blueprintValues.put(args[i], args[i + 1]);
         }
+        WorldBlueprint blueprint = WorldBlueprint.deserialize(blueprintValues);
 
-        World w = new World(Integer.parseInt(args[1]), worldVariables);
+        World w = new World(blueprint);
 
         int creatureCount = w.getCount(WorldObject.CREATURE);
         System.out.println("Creature count in new world: " + creatureCount);

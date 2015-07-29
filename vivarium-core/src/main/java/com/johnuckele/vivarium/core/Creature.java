@@ -12,18 +12,11 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
     /**
      * serialVersion
      */
-    private static final long serialVersionUID   = 4L;
-
-    private static final int  BREEDING_FOOD_RATE = -10;
-    private static final int  EATING_FOOD_RATE   = 500;
-    private static final int  MOVING_FOOD_RATE   = -1;
-    private static final int  BASE_FOOD_RATE     = -1;
-    private static final int  PREGNANT_FOOD_RATE = -2;
+    private static final long serialVersionUID = 4L;
 
     // Meta information
     private int               _id;
     private Species           _species;
-    private WorldVariables    _variables;
     private double            _generation;
 
     // Brain
@@ -34,8 +27,8 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
     private double[]          _soundOutputs;
 
     // State
-    private boolean           _hasActed          = true; // Defaults to true to prevent a newborn from acting before it
-                                                         // plans
+    private boolean           _hasActed        = true; // Defaults to true to prevent a newborn from acting before it
+                                                       // plans
     private Gender            _gender;
     private double            _randomSeed;
     private int               _age;
@@ -52,29 +45,28 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
     // private ActionProfile _actionProfile;
     // private ActionProfile _generationGenderActionProfile;
 
-    public Creature(Species species, WorldVariables variables)
+    public Creature(Species species)
     {
-        this(species, variables, null, null);
+        this(species, null, null);
     }
 
-    public Creature(Species species, WorldVariables variables, Creature prototype)
+    public Creature(Species species, Creature prototype)
     {
-        this(species, variables, prototype, null);
+        this(species, prototype, null);
     }
 
     public Creature(Creature prototype)
     {
-        this(prototype._species, prototype._variables, prototype, null);
+        this(prototype._species, prototype, null);
     }
 
     public Creature(Creature parent1, Creature parent2)
     {
-        this(parent1._species, parent1._variables, parent1, parent2);
+        this(parent1._species, parent1, parent2);
     }
 
-    public Creature(Species species, WorldVariables variables, Creature parent1, Creature parent2)
+    public Creature(Species species, Creature parent1, Creature parent2)
     {
-        this._variables = variables;
         this._species = species;
 
         if (parent1 != null)
@@ -119,8 +111,8 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
         }
         _inputs = new double[_species.getTotalBrainInputCount()];
         _memoryUnits = new double[_species.getMemoryUnitCount()];
-        _soundInputs = new double[_variables.getMaximumSoundChannelCount()];
-        _soundOutputs = new double[_variables.getMaximumSoundChannelCount()];
+        _soundInputs = new double[_species.getSoundChannelCount()];
+        _soundOutputs = new double[_species.getSoundChannelCount()];
 
         // Set gender
         double randomNumber = Rand.getRandomPositiveDouble();
@@ -164,13 +156,9 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
         if (this._gestation > 0)
         {
             this._gestation++;
-            this._food += Creature.PREGNANT_FOOD_RATE;
+            this._food += _species.getPregnantFoodRate();
         }
-        else
-        {
-            this._food += Creature.BASE_FOOD_RATE;
-        }
-
+        this._food += _species.getBaseFoodRate();
     }
 
     public Action getAction()
@@ -315,10 +303,10 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
                     this._gestation = 1;
                     this._fetus = createOffspringWith(breedingTarget);
                 }
-                this._food += Creature.BREEDING_FOOD_RATE;
+                this._food += _species.getBreedingFoodRate();
                 break;
             case MOVE:
-                this._food += Creature.MOVING_FOOD_RATE;
+                this._food += _species.getMovingFoodRate();
                 break;
             case REST:
             case DIE:
@@ -331,7 +319,7 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
                 this._facing = Direction.stepClockwise(this._facing);
                 break;
             case EAT:
-                this._food += Creature.EATING_FOOD_RATE;
+                this._food += _species.getEatingFoodRate();
                 if (this._food > _species.getMaximumFood())
                 {
                     this._food = _species.getMaximumFood();
@@ -555,23 +543,4 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
     {
         return this.toString().compareTo(c.toString());
     }
-
-    // TODO FIX ACTION PROFILES
-    /*
-     * public ActionProfile getActionHistory() { if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
-     * return _actionProfile; } else { throw new Error("Action Profiles are not supported in this world"); } }
-     */
-
-    /*
-     * public void setActionHistory(ActionProfile _actionHistory) { this._actionProfile = _actionHistory; }
-     */
-
-    // TODO FIX ACTION PROFILES
-    /*
-     * public void disconnectFromWorld() { this._world = null; this._generationGenderActionProfile = null; } public void
-     * connectToWorld(World w) { this._world = w; if (this._world.getWorldVariables().getKeepGenerationActionProfile())
-     * { if (this._actionProfile == null) { this._actionProfile = new ActionProfile(); }
-     * this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int) this._generation,
-     * this._gender); } }
-     */
 }

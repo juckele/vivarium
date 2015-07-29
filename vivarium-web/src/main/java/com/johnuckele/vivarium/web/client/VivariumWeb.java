@@ -10,7 +10,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.johnuckele.vivarium.core.WorldVariables;
+import com.johnuckele.vivarium.core.WorldBlueprint;
 
 public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 {
@@ -39,8 +39,8 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
          * Window.alert("Couldn't retrieve JSON cow"); } public void onResponseReceived(Request request, Response
          * response) { world = JSONDecoder.convertJSONToWorld(response.getText()); displayWorld(); } }); }
          */
-        WorldVariables variables = new WorldVariables();
-        world = new WebWorld(40, variables);
+        WorldBlueprint blueprint = new WorldBlueprint(40);
+        world = new WebWorld(blueprint);
         displayWorld();
         /*
          * catch(RequestException e) { Window.alert("Couldn't retrieve JSON duck"); }
