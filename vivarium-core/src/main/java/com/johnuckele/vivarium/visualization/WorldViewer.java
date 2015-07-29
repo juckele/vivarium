@@ -100,14 +100,14 @@ public class WorldViewer extends JFrame
         LinkedList<Species> species = new LinkedList<Species>();
 
         // Build 1 species
-        Species species1 = new Species();
+        Species species1 = Species.makeDefaultSpeciesObject();
         species1.setMutationRateExponent(-9);
         species1.setCreatureMemoryUnitCount(1);
         species1.setCreatureSoundChannelCount(1);
         species.add(species1);
 
         // Build another
-        Species species2 = new Species();
+        Species species2 = Species.makeDefaultSpeciesObject();
         species2.setBrainType(BrainType.RANDOM);
         species.add(species2);
 

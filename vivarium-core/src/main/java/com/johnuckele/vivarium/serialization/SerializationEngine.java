@@ -25,7 +25,7 @@ public class SerializationEngine
         String type = map.get("+type");
         if (type.equals(Species.class.getSimpleName()))
         {
-            Species s = new Species();
+            Species s = Species.makeUninitializedSpeciesObject();
             deserialize(s, map);
             return s;
         }
