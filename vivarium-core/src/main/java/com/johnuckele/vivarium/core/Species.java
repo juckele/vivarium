@@ -1,112 +1,94 @@
 package com.johnuckele.vivarium.core;
 
 import java.io.Serializable;
-import java.lang.reflect.Field;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
+import com.johnuckele.vivarium.serialization.BooleanParameter;
+import com.johnuckele.vivarium.serialization.BrainTypeParameter;
 import com.johnuckele.vivarium.serialization.DoubleParameter;
 import com.johnuckele.vivarium.serialization.IntegerParameter;
+import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
 
-public class Species implements Serializable
+public class Species implements MapSerializer, Serializable
 {
-    private static final long      serialVersionUID               = 3L;
-
-    // Energy Uses
-    private static final int       EATING_FOOD_RATE               = 500;
-    private static final int       MOVING_FOOD_RATE               = -1;
-    private static final int       BASE_FOOD_RATE                 = -1;
-    private static final int       PREGNANT_FOOD_RATE             = -2;
-
-    // World Generation
-    private static final double    INITIAL_GENERATION_PROBABILITY = 0.2;
-
-    // Neurology
-    private static final BrainType BRAIN_TYPE                     = BrainType.NEURALNETWORK;
-    private static final int       HARD_BRAIN_INPUTS              = 5;
-    private static final int       HARD_BRAIN_OUTPUTS             = 6;
-    private static final boolean   RANDOM_INITIALIZATION          = false;
-    private static final int       MEMORY_UNIT_COUNT              = 0;
-    private static final int       SOUND_CHANNEL_COUNT            = 0;
-
-    // Mutation
-    private static final boolean   MUTATION_ENABLED               = true;
-    private static final double    INHERITANCE_GAUSSIAN_MIX_RATE  = 0.8;
-    private static final double    MUTATION_RATE_EXPONENT         = -7;
-    private static final double    MUTATION_TYPE_SMALL_SCALE_RATE = 0.5;
-    private static final double    MUTATION_TYPE_RANDOM_RATE      = 0.25;
-    private static final double    MUTATION_TYPE_FLIP_RATE        = 0.25;
+    private static final long serialVersionUID = 4L;
 
     // Physical traits
     @DoubleParameter(required = false, defaultValue = 0.6)
-    private double                 _femaleProportion;
+    private double            _femaleProportion;
 
     @IntegerParameter(required = false, defaultValue = 20000)
-    private int                    _maximumAge;
+    private int               _maximumAge;
 
     @IntegerParameter(required = false, defaultValue = 2000)
-    private int                    _maximumGestation;
+    private int               _maximumGestation;
 
     @IntegerParameter(required = false, defaultValue = 2000)
-    private int                    _maximumFood;
+    private int               _maximumFood;
 
     // Energy Uses
     @IntegerParameter(required = false, defaultValue = -10)
-    private int                    _breedingFoodRate;
-    private int                    _eatingFoodRate                = EATING_FOOD_RATE;
-    private int                    _movingFoodRate                = MOVING_FOOD_RATE;
-    private int                    _baseFoodRate                  = BASE_FOOD_RATE;
-    private int                    _pregnantFoodRate              = PREGNANT_FOOD_RATE;
+    private int               _breedingFoodRate;
+
+    @IntegerParameter(required = false, defaultValue = 500)
+    private int               _eatingFoodRate;
+
+    @IntegerParameter(required = false, defaultValue = -2)
+    private int               _movingFoodRate;
+
+    @IntegerParameter(required = false, defaultValue = -1)
+    private int               _turningFoodRate;
+
+    @IntegerParameter(required = false, defaultValue = -1)
+    private int               _baseFoodRate;
+
+    @IntegerParameter(required = false, defaultValue = -1)
+    private int               _pregnantFoodRate;
 
     // World Generation
-    private double                 _initialGenerationProbability  = INITIAL_GENERATION_PROBABILITY;
+    @DoubleParameter(required = false, defaultValue = 0.2)
+    private double            _initialGenerationProbability;
 
     // Neurology
-    private BrainType              _brainType                     = BRAIN_TYPE;
-    private int                    _hardBrainInputs               = HARD_BRAIN_INPUTS;
-    private int                    _hardBrainOutputs              = HARD_BRAIN_OUTPUTS;
-    private int                    _memoryUnitCount               = MEMORY_UNIT_COUNT;
-    private int                    _soundChannelCount             = SOUND_CHANNEL_COUNT;
-    private boolean                _randomInitialization          = RANDOM_INITIALIZATION;
+    @BrainTypeParameter(required = false, defaultValue = BrainType.NEURALNETWORK)
+    private BrainType         _brainType;
+    @IntegerParameter(required = false, defaultValue = 5)
+    private int               _hardBrainInputs;
+    @IntegerParameter(required = false, defaultValue = 6)
+    private int               _hardBrainOutputs;
+    @IntegerParameter(required = false, defaultValue = 0)
+    private int               _memoryUnitCount;
+    @IntegerParameter(required = false, defaultValue = 0)
+    private int               _soundChannelCount;
+    @BooleanParameter(required = false, defaultValue = false)
+    private boolean           _randomInitialization;
 
     // Mutation
-    private boolean                _mutationEnabled               = MUTATION_ENABLED;
-    private double                 _inheritanceGaussianMixRate    = INHERITANCE_GAUSSIAN_MIX_RATE;
-    private double                 _mutationRateExponent          = MUTATION_RATE_EXPONENT;
-    private double                 _mutationRate                  = Math.pow(2, MUTATION_RATE_EXPONENT);
-    private double                 _mutationTypeSmallScaleRate    = MUTATION_TYPE_SMALL_SCALE_RATE;
-    private double                 _mutationTypeRandomRate        = MUTATION_TYPE_RANDOM_RATE;
-    private double                 _mutationTypeFlipRate          = MUTATION_TYPE_FLIP_RATE;
+    @DoubleParameter(required = false, defaultValue = 0.8)
+    private double            _inheritanceGaussianMixRate;
+    @DoubleParameter(required = false, defaultValue = -7)
+    private double            _mutationRateExponent;
+    private double            _mutationRate    = Double.NaN;
+    @DoubleParameter(required = false, defaultValue = 0.5)
+    private double            _mutationTypeSmallScaleRate;
+    @DoubleParameter(required = false, defaultValue = 0.25)
+    private double            _mutationTypeRandomRate;
+    @DoubleParameter(required = false, defaultValue = 0.25)
+    private double            _mutationTypeFlipRate;
 
-    // private Action[] _involuntaryActions;
-    // private Action[] _voluntaryActions;
+    private void updateMutationRate()
+    {
+        _mutationRate = Math.pow(2, _mutationRateExponent);
+    }
 
     public Species()
     {
-        try
-        {
-            for (Field f : Species.class.getDeclaredFields())
-            {
-                DoubleParameter doubleParameter = f.getAnnotation(DoubleParameter.class);
-                if (doubleParameter != null)
-                {
-                    f.setDouble(this, doubleParameter.defaultValue());
-                }
-                IntegerParameter intParameter = f.getAnnotation(IntegerParameter.class);
-                if (intParameter != null)
-                {
-                    f.setInt(this, intParameter.defaultValue());
-                }
-            }
-        }
-        catch (IllegalArgumentException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
-        {
-            e.printStackTrace();
-        }
+        SerializationEngine.deserialize(this, SerializationEngine.EMPTY_OBJECT_MAP);
     }
 
     public Species(Species s)
@@ -122,7 +104,6 @@ public class Species implements Serializable
         this._soundChannelCount = s._soundChannelCount;
         this._inheritanceGaussianMixRate = s._inheritanceGaussianMixRate;
         this._randomInitialization = s._randomInitialization;
-        this._mutationEnabled = s._mutationEnabled;
         this._mutationRateExponent = s._mutationRateExponent;
         this._mutationRate = s._mutationRate;
         this._mutationTypeSmallScaleRate = s._mutationTypeSmallScaleRate;
@@ -168,26 +149,12 @@ public class Species implements Serializable
 
     public double getMutationRateExponent()
     {
-        if (this._mutationEnabled)
-        {
-            return this._mutationRateExponent;
-        }
-        else
-        {
-            return Double.NaN;
-        }
+        return this._mutationRateExponent;
     }
 
     public double getMutationRate()
     {
-        if (this._mutationEnabled)
-        {
-            return this._mutationRate;
-        }
-        else
-        {
-            return 0;
-        }
+        return this._mutationRate;
     }
 
     public double getMutationFlipRate()
@@ -266,11 +233,6 @@ public class Species implements Serializable
         return 0;
     }
 
-    public void setMutationEnabled(boolean b)
-    {
-        this._mutationEnabled = false;
-    }
-
     public void setRandomInitialization(boolean b)
     {
         this._randomInitialization = b;
@@ -284,12 +246,6 @@ public class Species implements Serializable
     public void setMaximumFood(int maximumFood)
     {
         this._maximumFood = maximumFood;
-    }
-
-    public HashMap<String, String> serialize()
-    {
-        HashMap<String, String> map = new HashMap<String, String>();
-        return map;
     }
 
     public int getBreedingFoodRate()
@@ -344,7 +300,34 @@ public class Species implements Serializable
 
     public static void main(String[] args)
     {
-        Species s = new Species();
+        SerializationEngine engine = new SerializationEngine(null);
+        HashMap<String, String> speciesMap = new HashMap<String, String>();
+        speciesMap.put("+type", "Species");
+        speciesMap.put("+id", "0");
+        speciesMap.put("initialGenerationProbability", "0.5");
+        Species s = (Species) engine.deserialize(speciesMap);
+        // Species s = new Species();
         System.out.println(s._femaleProportion);
+        HashMap<String, String> map = engine.serialize(s);
+        System.out.println(map);
+        System.out.println(s.getMutationRate());
+    }
+
+    @Override
+    public Set<MapSerializer> getReferences()
+    {
+        return new HashSet<MapSerializer>();
+    }
+
+    @Override
+    public Map<String, String> finalizeSerialization(Map<String, String> map, Map<MapSerializer, Integer> referenceMap)
+    {
+        return map;
+    }
+
+    @Override
+    public void finalizeDeserialization(Map<String, String> map, Map<Integer, MapSerializer> dereferenceMap)
+    {
+        updateMutationRate();
     }
 }
