@@ -278,7 +278,7 @@ public class Species implements MapSerializer, Serializable
 
     public static void main(String[] args)
     {
-        SerializationEngine engine = new SerializationEngine(null);
+        SerializationEngine engine = new SerializationEngine();
         HashMap<String, String> speciesMap = new HashMap<String, String>();
         speciesMap.put("+type", "Species");
         speciesMap.put("+id", "0");
@@ -326,7 +326,7 @@ public class Species implements MapSerializer, Serializable
     public static Species makeCopy(Species original)
     {
         // TODO: Use serialization
-        SerializationEngine se = new SerializationEngine(null);
+        SerializationEngine se = new SerializationEngine();
         HashMap<String, String> map = se.serializeObject(original, 0);
         Species copy = (Species) se.deserialize(map);
         return copy;
