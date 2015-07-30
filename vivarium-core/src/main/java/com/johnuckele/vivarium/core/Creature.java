@@ -40,11 +40,6 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
     // Fetus
     private Creature          _fetus;
 
-    // Action history
-    // TODO FIX ACTION PROIFLES
-    // private ActionProfile _actionProfile;
-    // private ActionProfile _generationGenderActionProfile;
-
     public Creature(Species species)
     {
         this(species, null, null);
@@ -192,11 +187,11 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
             // Hard coded inputs
             int facingR = r + Direction.getVerticalComponent(this._facing);
             int facingC = c + Direction.getHorizontalComponent(this._facing);
-            WorldObject facingObject = w.getWorldObject(facingR, facingC);
+            EntityType facingObject = w.getEntityType(facingR, facingC);
             _inputs[0] = this._gender == Gender.FEMALE ? 1 : 0;
-            _inputs[1] = facingObject == WorldObject.FOOD ? 1 : 0;
-            _inputs[2] = facingObject == WorldObject.CREATURE ? 1 : 0;
-            _inputs[3] = facingObject == WorldObject.WALL ? 1 : 0;
+            _inputs[1] = facingObject == EntityType.FOOD ? 1 : 0;
+            _inputs[2] = facingObject == EntityType.CREATURE ? 1 : 0;
+            _inputs[3] = facingObject == EntityType.WALL ? 1 : 0;
             _inputs[4] = ((double) this._food) / _species.getMaximumFood();
             // Read memory units
             for (int i = 0; i < this._memoryUnits.length; i++)
@@ -330,13 +325,6 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
                 new Error().printStackTrace();
                 break;
         }
-        // TODO FIX ACTION PROFILES
-        /*
-         * if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
-         * this._actionProfile.recordAction(action, true); this._generationGenderActionProfile.recordAction(action,
-         * true); }
-         */
-
     }
 
     public void failAction(Action action)
@@ -371,12 +359,6 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
                 new Error().printStackTrace();
                 break;
         }
-        // TODO FIX ACTION PROFILES
-        /*
-         * if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
-         * this._actionProfile.recordAction(action, false); this._generationGenderActionProfile.recordAction(action,
-         * false); }
-         */
     }
 
     private Creature createOffspringWith(Creature breedingTarget)

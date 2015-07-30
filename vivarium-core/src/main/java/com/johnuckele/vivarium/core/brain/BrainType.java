@@ -8,7 +8,7 @@ import com.johnuckele.vivarium.core.Species;
 
 public enum BrainType
 {
-    NEURALNETWORK
+    NEURAL_NETWORK
     {
         @Override
         public String render(Collection<Brain> untypedBrains)

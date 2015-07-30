@@ -1,10 +1,10 @@
 package com.johnuckele.vivarium.ga;
 
 import com.johnuckele.vivarium.core.Creature;
+import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldBlueprint;
-import com.johnuckele.vivarium.core.WorldObject;
 
 public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
 {
@@ -23,7 +23,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     public double evaluate(Creature c)
     {
         // Build world
-        WorldBlueprint instanceBlueprint = WorldBlueprint.createCopyOf(_blueprint);
+        WorldBlueprint instanceBlueprint = WorldBlueprint.makeCopy(_blueprint);
         assert (instanceBlueprint.getSpecies().size() == 1);
         Species instanceSpecies = instanceBlueprint.getSpecies().get(0);
         instanceSpecies.setMutationRateExponent(Double.NEGATIVE_INFINITY);
@@ -38,7 +38,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
         // Run simulation
         for (int i = 0; i < _simulationDuration; i++)
         {
-            int count = w.getCount(WorldObject.CREATURE);
+            int count = w.getCount(EntityType.CREATURE);
             if (count == 0)
             {
                 return i / _simulationDuration;

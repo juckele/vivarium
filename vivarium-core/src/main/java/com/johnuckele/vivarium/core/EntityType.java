@@ -1,10 +1,10 @@
 package com.johnuckele.vivarium.core;
 
-public enum WorldObject
+public enum EntityType
 {
     EMPTY, CREATURE, FOOD, WALL;
 
-    public static WorldObject parseString(String string)
+    public static EntityType parseString(String string)
     {
         String processedString = string.toUpperCase().trim();
         if (processedString == "EMPTY")

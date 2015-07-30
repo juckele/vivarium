@@ -39,7 +39,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
          * Window.alert("Couldn't retrieve JSON cow"); } public void onResponseReceived(Request request, Response
          * response) { world = JSONDecoder.convertJSONToWorld(response.getText()); displayWorld(); } }); }
          */
-        WorldBlueprint blueprint = new WorldBlueprint(40);
+        WorldBlueprint blueprint = WorldBlueprint.makeWithSize(40);
         world = new WebWorld(blueprint);
         displayWorld();
         /*

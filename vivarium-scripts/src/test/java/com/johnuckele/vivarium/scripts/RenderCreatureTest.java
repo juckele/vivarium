@@ -4,7 +4,6 @@ import static org.junit.Assert.assertTrue;
 
 public class RenderCreatureTest
 {
-    // TODO FIX AUDIT FUNCTIONS
     public void test()
     {
         int worldSize = 10;

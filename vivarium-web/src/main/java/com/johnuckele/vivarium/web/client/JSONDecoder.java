@@ -1,6 +1,5 @@
 package com.johnuckele.vivarium.web.client;
 
-
 public class JSONDecoder
 {
 
@@ -28,7 +27,6 @@ public class JSONDecoder
 
     // private static WorldVariables convertJSONtoWorldVariables()// JSONObject worldVariablesJSON)
     // {
-    // TODO : FIX SERIALIZATION / DESERIALIZATION
     /*
      * WorldVariables worldVariables = new WorldVariables(); String[] variables = WorldVariables.getVariablesNames();
      * for (int i = 0; i < variables.length; i++) { JSONValue variableJSON = worldVariablesJSON.get(variables[i]); if
@@ -40,7 +38,6 @@ public class JSONDecoder
 
     // private static Creature convertJSONToCreature(World w)// , JSONObject creatureJSON)
     // {
-    // TODO : FIX SERIALIZATION / DESERIALIZATION
     /*
      * int id = (int) creatureJSON.get("id").isNumber().doubleValue(); int r = (int)
      * creatureJSON.get("r").isNumber().doubleValue(); int c = (int) creatureJSON.get("c").isNumber().doubleValue();
@@ -60,7 +57,6 @@ public class JSONDecoder
     // }
 
     // private static Brain convertJSONToBrain(World w, JSONObject brainJSON) {
-    // TODO : FIX SERIALIZATION / DESERIALIZATION
     /*
      * int inputCount = (int) brainJSON.get("inputCount").isNumber() .doubleValue(); int outputCount = (int)
      * brainJSON.get("outputCount").isNumber() .doubleValue(); int hiddenLayers = (int)
