@@ -14,6 +14,7 @@ import com.johnuckele.vivarium.serialization.annotations.IntegerParameter;
 public class SerializationEngine
 {
     public static final HashMap<String, String>         EMPTY_OBJECT_MAP      = new HashMap<String, String>();
+    public static final HashMap<MapSerializer, Integer> EMPTY_REFERENCE_MAP   = new HashMap<MapSerializer, Integer>();
     public static final HashMap<Integer, MapSerializer> EMPTY_DEREFERENCE_MAP = new HashMap<Integer, MapSerializer>();
 
     private HashMap<MapSerializer, Integer>             _referenceMap;
@@ -38,13 +39,28 @@ public class SerializationEngine
         return null;
     }
 
-    public HashMap<String, String> serialize(MapSerializer obj)
+    public SerializedCollection serialize(MapSerializer obj)
     {
-        int id = _referenceMap.size();
-        if (!_referenceMap.containsKey(obj))
+        SerializedCollection collection = new SerializedCollection();
+        // Serialize all references first
+        for (MapSerializer reference : obj.getReferences())
         {
-            _referenceMap.put(obj, id);
+            if (!_referenceMap.containsKey(reference))
+            {
+                HashMap<String, String> map = serializeObject(reference, 0);
+                collection.addObject("Species", map);
+            }
         }
+        // Serialize the top level object
+        HashMap<String, String> map = serializeObject(obj, 0);
+        collection.addObject("WorldBlueprint", map);
+
+        return collection;
+    }
+
+    public HashMap<String, String> serializeObject(MapSerializer obj, int id)
+    {
+        System.out.println("Serializing... " + obj);
         HashMap<String, String> map = new HashMap<String, String>();
         map.put("+id", "" + id);
         map.put("+type", "" + obj.getClass().getSimpleName());
@@ -83,7 +99,7 @@ public class SerializationEngine
         {
             e.printStackTrace();
         }
-        obj.finalizeSerialization(map, this._referenceMap);
+        obj.finalizeSerialization(map, EMPTY_REFERENCE_MAP);
         return map;
     }
 
@@ -94,7 +110,7 @@ public class SerializationEngine
 
     public static void deserialize(MapSerializer obj, Map<String, String> map)
     {
-        System.out.println("Deserializing an object");
+        System.out.println("Deserializing an object " + obj);
         try
         {
             for (Field f : obj.getClass().getDeclaredFields())

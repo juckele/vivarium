@@ -286,7 +286,7 @@ public class Species implements MapSerializer, Serializable
         Species s = (Species) engine.deserialize(speciesMap);
         // Species s = new Species();
         System.out.println(s._femaleProportion);
-        HashMap<String, String> map = engine.serialize(s);
+        HashMap<String, String> map = engine.serializeObject(s, 0);
         System.out.println(map);
         System.out.println(s.getMutationRate());
     }
@@ -327,7 +327,7 @@ public class Species implements MapSerializer, Serializable
     {
         // TODO: Use serialization
         SerializationEngine se = new SerializationEngine(null);
-        HashMap<String, String> map = se.serialize(original);
+        HashMap<String, String> map = se.serializeObject(original, 0);
         Species copy = (Species) se.deserialize(map);
         return copy;
     }
