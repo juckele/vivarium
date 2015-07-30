@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Map;
 import java.util.Set;
 
@@ -187,8 +188,15 @@ public class WorldBlueprint implements MapSerializer
 
     public static void main(String[] args)
     {
-        WorldBlueprint wb = WorldBlueprint.makeDefault();
-        SerializationEngine se = new SerializationEngine(null);
+        LinkedList<Species> species = new LinkedList<Species>();
+        Species s1 = Species.makeDefault();
+        s1.setBaseFoodRate(0);
+        species.add(s1);
+        Species s2 = Species.makeDefault();
+        s2.setMutationRateExponent(-10);
+        species.add(s2);
+        WorldBlueprint wb = WorldBlueprint.makeWithSizeAndSpecies(25, species);
+        SerializationEngine se = new SerializationEngine();
         SerializedCollection collection = se.serialize(wb);
         System.out.println(collection);
     }

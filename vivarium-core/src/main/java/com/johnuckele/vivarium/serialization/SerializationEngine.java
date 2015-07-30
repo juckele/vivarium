@@ -20,7 +20,7 @@ public class SerializationEngine
     private HashMap<MapSerializer, Integer>             _referenceMap;
     private HashMap<Integer, MapSerializer>             _dereferenceMap;
 
-    public SerializationEngine(SerializationWorker worker)
+    public SerializationEngine()
     {
         _referenceMap = new HashMap<MapSerializer, Integer>();
         _dereferenceMap = new HashMap<Integer, MapSerializer>();
