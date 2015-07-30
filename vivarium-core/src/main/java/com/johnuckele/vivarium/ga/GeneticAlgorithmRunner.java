@@ -108,13 +108,13 @@ public class GeneticAlgorithmRunner
 
     public static void main(String[] args)
     {
-        Species species = Species.makeDefaultSpeciesObject();
+        Species species = Species.makeDefault();
         species.setRandomInitialization(true);
         species.setInitialGenerationProbability(0);
         species.setMaximumFood(200);
         System.out.println("Species " + species);
 
-        WorldBlueprint blueprint = new WorldBlueprint(30, species);
+        WorldBlueprint blueprint = WorldBlueprint.makeWithSizeAndSpecies(30, species);
         blueprint.setInitialFoodGenerationProbability(0);
 
         int tenLifespans = species.getMaximumAge() * 10;

@@ -21,7 +21,7 @@ public class World implements Serializable
     private int               _maximumCreatureID;
     protected int             _worldDimensions;
 
-    protected WorldObject[][] _worldObjectGrid;
+    protected EntityType[][]  _entityGrid;
     protected Creature[][]    _creatureGrid;
 
     private WorldBlueprint    _blueprint;
@@ -37,22 +37,8 @@ public class World implements Serializable
         // Size the world
         this.setWorldDimensions(blueprint.getSize());
 
-        // Build the action profile data structures
-        // TODO ACTION PROFILES
-        /*
-         * if (this._worldVariables.getKeepGenerationActionProfile()) { _generationalMaleActionProfiles = new
-         * LinkedList<ActionProfile>(); _generationalFemaleActionProfiles = new LinkedList<ActionProfile>(); }
-         */
-
         // Final step
         this.populatateWorld();
-
-        // Take an initial census
-        // TODO FIX CENSUS
-        /*
-         * if (this._worldVariables.getKeepCensusData()) { this._census = new
-         * CensusRecord(this.getCount(WorldObject.CREATURE)); }
-         */
     }
 
     public int getWorldDimensions()
@@ -70,16 +56,16 @@ public class World implements Serializable
         {
             for (int c = 0; c < _worldDimensions; c++)
             {
-                setObject(WorldObject.EMPTY, r, c);
+                setObject(EntityType.EMPTY, r, c);
                 _creatureGrid[r][c] = null;
                 if (r < 1 || c < 1 || r > _worldDimensions - 2 || c > _worldDimensions - 2)
                 {
-                    setObject(WorldObject.WALL, r, c);
+                    setObject(EntityType.WALL, r, c);
                 }
                 else
                 {
-                    WorldObject object = populator.getNextWorldObject();
-                    if (object == WorldObject.CREATURE)
+                    EntityType object = populator.getNextEntityType();
+                    if (object == EntityType.CREATURE)
                     {
                         Species species = populator.getNextCreatureSpecies();
                         Creature creature = new Creature(species);
@@ -134,7 +120,7 @@ public class World implements Serializable
         {
             for (int c = 0; c < _worldDimensions; c++)
             {
-                if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
                     _creatureGrid[r][c].tick();
                 }
@@ -150,7 +136,7 @@ public class World implements Serializable
             {
                 for (int c = 0; c < this._worldDimensions; c++)
                 {
-                    if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                    if (_entityGrid[r][c] == EntityType.CREATURE)
                     {
                         transmitSoundsFrom(r, c);
                     }
@@ -164,7 +150,7 @@ public class World implements Serializable
         for (int c2 = c1 + 1; c2 < this._worldDimensions; c2++)
         {
             int r2 = r1;
-            if (_worldObjectGrid[r2][c2] == WorldObject.CREATURE)
+            if (_entityGrid[r2][c2] == EntityType.CREATURE)
             {
                 transmitSoundsFromTo(r1, c1, r2, c2);
             }
@@ -173,7 +159,7 @@ public class World implements Serializable
         {
             for (int c2 = c1; c2 < this._worldDimensions; c2++)
             {
-                if (_worldObjectGrid[r2][c2] == WorldObject.CREATURE)
+                if (_entityGrid[r2][c2] == EntityType.CREATURE)
                 {
                     transmitSoundsFromTo(r1, c1, r2, c2);
                 }
@@ -194,7 +180,7 @@ public class World implements Serializable
         {
             for (int c = 0; c < _worldDimensions; c++)
             {
-                if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
                     _creatureGrid[r][c].planAction(this, r, c);
                 }
@@ -209,7 +195,7 @@ public class World implements Serializable
         {
             for (int c = 0; c < _worldDimensions; c++)
             {
-                if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
                     if (!_creatureGrid[r][c].hasActed())
                     {
@@ -239,13 +225,13 @@ public class World implements Serializable
             creature.executeAction(action);
         }
         // Movement
-        else if (action == Action.MOVE && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
+        else if (action == Action.MOVE && _entityGrid[facingR][facingC] == EntityType.EMPTY)
         {
             creature.executeAction(action);
             moveObject(r, c, facing);
         }
         // Eating
-        else if (action == Action.EAT && _worldObjectGrid[facingR][facingC] == WorldObject.FOOD)
+        else if (action == Action.EAT && _entityGrid[facingR][facingC] == EntityType.FOOD)
         {
             creature.executeAction(action);
             removeObject(r, c, facing);
@@ -253,7 +239,7 @@ public class World implements Serializable
         // Attempt to breed
         else if (action == Action.BREED
         // Make sure we're facing another creature
-                && _worldObjectGrid[facingR][facingC] == WorldObject.CREATURE
+                && _entityGrid[facingR][facingC] == EntityType.CREATURE
                 // And that creature is the same species as us
                 && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
                 // And that creature also is trying to breed
@@ -264,7 +250,7 @@ public class World implements Serializable
             creature.executeAction(action, _creatureGrid[facingR][facingC]);
         }
         // Giving Birth
-        else if (action == Action.BIRTH && _worldObjectGrid[facingR][facingC] == WorldObject.EMPTY)
+        else if (action == Action.BIRTH && _entityGrid[facingR][facingC] == EntityType.EMPTY)
         {
             Creature spawningCreature = creature.getFetus();
             creature.executeAction(action);
@@ -284,13 +270,13 @@ public class World implements Serializable
         {
             for (int c = 0; c < _worldDimensions; c++)
             {
-                if (_worldObjectGrid[r][c] == WorldObject.EMPTY)
+                if (_entityGrid[r][c] == EntityType.EMPTY)
                 {
                     double randomNumber = Rand.getRandomPositiveDouble();
                     if (randomNumber < this._blueprint.getFoodGenerationProbability())
                     {
-                        setObject(WorldObject.FOOD, r, c);
-                        _worldObjectGrid[r][c] = WorldObject.FOOD;
+                        setObject(EntityType.FOOD, r, c);
+                        _entityGrid[r][c] = EntityType.FOOD;
                     }
                 }
             }
@@ -323,10 +309,10 @@ public class World implements Serializable
         }
 
         // Default object move
-        _worldObjectGrid[r2][c2] = _worldObjectGrid[r1][c1];
-        _worldObjectGrid[r1][c1] = WorldObject.EMPTY;
+        _entityGrid[r2][c2] = _entityGrid[r1][c1];
+        _entityGrid[r1][c1] = EntityType.EMPTY;
         // Special creatures move extras
-        if (_worldObjectGrid[r2][c2] == WorldObject.CREATURE)
+        if (_entityGrid[r2][c2] == EntityType.CREATURE)
         {
             _creatureGrid[r2][c2] = _creatureGrid[r1][c1];
             _creatureGrid[r1][c1] = null;
@@ -364,7 +350,7 @@ public class World implements Serializable
                 new Error().printStackTrace();
         }
 
-        _worldObjectGrid[r][c] = WorldObject.EMPTY;
+        _entityGrid[r][c] = EntityType.EMPTY;
         _creatureGrid[r][c] = null;
     }
 
@@ -375,7 +361,7 @@ public class World implements Serializable
         {
             for (int c = 0; c < this._worldDimensions; c++)
             {
-                if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
                     allCreatures.add(_creatureGrid[r][c]);
                 }
@@ -414,20 +400,14 @@ public class World implements Serializable
         return allCreatures;
     }
 
-    // TODO Fix census data
-    /*
-     * public CensusRecord getCensus() { if (this._worldVariables.getKeepCensusData()) { return this._census; } else {
-     * throw new Error("Census data not available due to world configuration settings"); } }
-     */
-
-    public int getCount(WorldObject obj)
+    public int getCount(EntityType obj)
     {
         int count = 0;
         for (int r = 0; r < _worldDimensions; r++)
         {
             for (int c = 0; c < _worldDimensions; c++)
             {
-                if (this._worldObjectGrid[r][c] == obj)
+                if (this._entityGrid[r][c] == obj)
                 {
                     count++;
                 }
@@ -470,7 +450,7 @@ public class World implements Serializable
     private void addCreature(Creature creature, int r, int c)
     {
         creature.setID(this.getNewCreatureID());
-        setObject(WorldObject.CREATURE, creature, r, c);
+        setObject(EntityType.CREATURE, creature, r, c);
     }
 
     private void killCreature(int r, int c)
@@ -485,7 +465,7 @@ public class World implements Serializable
         {
             int r = Rand.getRandomInt(this._worldDimensions);
             int c = Rand.getRandomInt(this._worldDimensions);
-            if (_worldObjectGrid[r][c] == WorldObject.EMPTY)
+            if (_entityGrid[r][c] == EntityType.EMPTY)
             {
                 addCreature(creature, r, c);
                 immigrantPlaced = true;
@@ -497,44 +477,29 @@ public class World implements Serializable
     {
         this._worldDimensions = worldDimensions;
 
-        this._worldObjectGrid = new WorldObject[_worldDimensions][_worldDimensions];
+        this._entityGrid = new EntityType[_worldDimensions][_worldDimensions];
         this._creatureGrid = new Creature[_worldDimensions][_worldDimensions];
     }
 
-    public WorldObject getWorldObject(int r, int c)
+    public EntityType getEntityType(int r, int c)
     {
-        return (this._worldObjectGrid[r][c]);
+        return (this._entityGrid[r][c]);
     }
 
-    public void setObject(WorldObject obj, int r, int c)
+    public void setObject(EntityType obj, int r, int c)
     {
-        if (obj == WorldObject.CREATURE)
+        if (obj == EntityType.CREATURE)
         {
-            throw new Error("Creature WorldObjects should not be assinged directly, use setCreature");
+            throw new Error("Creature EntityTypes should not be assinged directly, use setCreature");
         }
         setObject(obj, null, r, c);
     }
 
-    private void setObject(WorldObject obj, Creature creature, int r, int c)
+    private void setObject(EntityType obj, Creature creature, int r, int c)
     {
-        _worldObjectGrid[r][c] = obj;
+        _entityGrid[r][c] = obj;
         _creatureGrid[r][c] = creature;
     }
-
-    // TODO ACTION PROFILES
-    /*
-     * public ActionProfile getActionProfileForGeneration(int generation, Gender gender) { // Populate new generation
-     * trackers as required while (_generationalFemaleActionProfiles.size() < generation) {
-     * _generationalFemaleActionProfiles.add(new ActionProfile()); _generationalMaleActionProfiles.add(new
-     * ActionProfile()); } // Get the requested generationalActionProfile if (gender == Gender.FEMALE) { return
-     * _generationalFemaleActionProfiles.get(generation - 1); } else { return
-     * _generationalMaleActionProfiles.get(generation - 1); } } public LinkedList<ActionProfile>
-     * getAllActionProfilesForGender(Gender gender) { if (this._worldVariables.getKeepGenerationActionProfile()) {
-     * LinkedList<ActionProfile> actionProfiles = new LinkedList<ActionProfile>(); if (gender == Gender.FEMALE) {
-     * actionProfiles.addAll(this._generationalFemaleActionProfiles); } if (gender == Gender.MALE) {
-     * actionProfiles.addAll(this._generationalMaleActionProfiles); } return actionProfiles; } else { throw new
-     * Error("Generational Action Profile data not available due to world configuration settings"); } }
-     */
 
     public String render(RenderCode code)
     {
@@ -553,7 +518,7 @@ public class World implements Serializable
             {
                 for (int c = 0; c < this._worldDimensions; c++)
                 {
-                    if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                    if (_entityGrid[r][c] == EntityType.CREATURE)
                     {
                         creatureOutput.append(_creatureGrid[r][c].render(RenderCode.SIMPLE_CREATURE, r, c));
                         creatureOutput.append('\n');
@@ -574,7 +539,7 @@ public class World implements Serializable
         // Draw world map
         StringBuilder worldOutput = new StringBuilder();
         worldOutput.append("Walls: ");
-        worldOutput.append(this.getCount(WorldObject.WALL));
+        worldOutput.append(this.getCount(EntityType.WALL));
         HashMap<Species, String> speciesToGlyphMap = new HashMap<Species, String>();
         for (Species s : this._blueprint.getSpecies())
         {
@@ -583,25 +548,25 @@ public class World implements Serializable
             worldOutput.append(this.getCount(s));
         }
         worldOutput.append(", Food: ");
-        worldOutput.append(this.getCount(WorldObject.FOOD));
+        worldOutput.append(this.getCount(EntityType.FOOD));
         worldOutput.append('\n');
         for (int r = 0; r < _worldDimensions; r++)
         {
             for (int c = 0; c < _worldDimensions; c++)
             {
-                if (_worldObjectGrid[r][c] == WorldObject.EMPTY)
+                if (_entityGrid[r][c] == EntityType.EMPTY)
                 {
                     worldOutput.append('\u3000');
                 }
-                else if (_worldObjectGrid[r][c] == WorldObject.WALL)
+                else if (_entityGrid[r][c] == EntityType.WALL)
                 {
                     worldOutput.append('口');
                 }
-                else if (_worldObjectGrid[r][c] == WorldObject.FOOD)
+                else if (_entityGrid[r][c] == EntityType.FOOD)
                 {
                     worldOutput.append('一');
                 }
-                else if (_worldObjectGrid[r][c] == WorldObject.CREATURE)
+                else if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
                     worldOutput.append(speciesToGlyphMap.get(_creatureGrid[r][c].getSpecies()));
                 }
@@ -630,7 +595,7 @@ public class World implements Serializable
         {
             for (int c = 0; c < this._worldDimensions; c++)
             {
-                if (_worldObjectGrid[r][c] == WorldObject.CREATURE && _creatureGrid[r][c].getSpecies().equals(s))
+                if (_entityGrid[r][c] == EntityType.CREATURE && _creatureGrid[r][c].getSpecies().equals(s))
                 {
                     brains.add(_creatureGrid[r][c].getBrain());
                 }

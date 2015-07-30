@@ -7,78 +7,78 @@ import java.util.Map;
 import java.util.Set;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
-import com.johnuckele.vivarium.serialization.BooleanParameter;
-import com.johnuckele.vivarium.serialization.BrainTypeParameter;
-import com.johnuckele.vivarium.serialization.DoubleParameter;
-import com.johnuckele.vivarium.serialization.IntegerParameter;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.annotations.BooleanParameter;
+import com.johnuckele.vivarium.serialization.annotations.BrainTypeParameter;
+import com.johnuckele.vivarium.serialization.annotations.DoubleParameter;
+import com.johnuckele.vivarium.serialization.annotations.IntegerParameter;
 
 public class Species implements MapSerializer, Serializable
 {
     private static final long serialVersionUID = 4L;
 
     // Physical traits
-    @DoubleParameter(required = false, defaultValue = 0.6)
+    @DoubleParameter(defaultValue = 0.6)
     private double            _femaleProportion;
 
-    @IntegerParameter(required = false, defaultValue = 20000)
+    @IntegerParameter(defaultValue = 20000)
     private int               _maximumAge;
 
-    @IntegerParameter(required = false, defaultValue = 2000)
+    @IntegerParameter(defaultValue = 2000)
     private int               _maximumGestation;
 
-    @IntegerParameter(required = false, defaultValue = 2000)
+    @IntegerParameter(defaultValue = 2000)
     private int               _maximumFood;
 
     // Energy Uses
-    @IntegerParameter(required = false, defaultValue = -10)
+    @IntegerParameter(defaultValue = -10)
     private int               _breedingFoodRate;
 
-    @IntegerParameter(required = false, defaultValue = 500)
+    @IntegerParameter(defaultValue = 500)
     private int               _eatingFoodRate;
 
-    @IntegerParameter(required = false, defaultValue = -2)
+    @IntegerParameter(defaultValue = -2)
     private int               _movingFoodRate;
 
-    @IntegerParameter(required = false, defaultValue = -1)
+    @IntegerParameter(defaultValue = -1)
     private int               _turningFoodRate;
 
-    @IntegerParameter(required = false, defaultValue = -1)
+    @IntegerParameter(defaultValue = -1)
     private int               _baseFoodRate;
 
-    @IntegerParameter(required = false, defaultValue = -1)
+    @IntegerParameter(defaultValue = -1)
     private int               _pregnantFoodRate;
 
     // World Generation
-    @DoubleParameter(required = false, defaultValue = 0.2)
+    @DoubleParameter(defaultValue = 0.2)
     private double            _initialGenerationProbability;
 
     // Neurology
-    @BrainTypeParameter(required = false, defaultValue = BrainType.NEURALNETWORK)
+    @BrainTypeParameter(defaultValue = BrainType.NEURAL_NETWORK)
     private BrainType         _brainType;
-    @IntegerParameter(required = false, defaultValue = 5)
+    @IntegerParameter(defaultValue = 5)
     private int               _hardBrainInputs;
-    @IntegerParameter(required = false, defaultValue = 6)
+    @IntegerParameter(defaultValue = 6)
     private int               _hardBrainOutputs;
-    @IntegerParameter(required = false, defaultValue = 0)
+    @IntegerParameter(defaultValue = 0)
     private int               _memoryUnitCount;
-    @IntegerParameter(required = false, defaultValue = 0)
+    @IntegerParameter(defaultValue = 0)
     private int               _soundChannelCount;
-    @BooleanParameter(required = false, defaultValue = false)
+    @BooleanParameter(defaultValue = false)
     private boolean           _randomInitialization;
 
     // Mutation
-    @DoubleParameter(required = false, defaultValue = 0.8)
+    @DoubleParameter(defaultValue = 0.8)
     private double            _inheritanceGaussianMixRate;
-    @DoubleParameter(required = false, defaultValue = -7)
+    @DoubleParameter(defaultValue = -7)
     private double            _mutationRateExponent;
-    private double            _mutationRate    = Double.NaN;
-    @DoubleParameter(required = false, defaultValue = 0.5)
+    private double            _mutationRate;
+    @DoubleParameter(defaultValue = 0.5)
     private double            _mutationTypeSmallScaleRate;
-    @DoubleParameter(required = false, defaultValue = 0.25)
+    @DoubleParameter(defaultValue = 0.25)
     private double            _mutationTypeRandomRate;
-    @DoubleParameter(required = false, defaultValue = 0.25)
+    @DoubleParameter(defaultValue = 0.25)
     private double            _mutationTypeFlipRate;
 
     private void updateMutationRate()
@@ -309,39 +309,26 @@ public class Species implements MapSerializer, Serializable
         updateMutationRate();
     }
 
-    public static Species makeUninitializedSpeciesObject()
+    public static Species makeUninitialized()
     {
-        return new Species();
+        Species s = new Species();
+        s.updateMutationRate();
+        return s;
     }
 
-    public static Species makeDefaultSpeciesObject()
+    public static Species makeDefault()
     {
         Species s = new Species();
         SerializationEngine.deserialize(s, SerializationEngine.EMPTY_OBJECT_MAP);
         return s;
     }
 
-    public static Species makeCopySpeciesObject(Species original)
+    public static Species makeCopy(Species original)
     {
         // TODO: Use serialization
-        Species copy = new Species();
-        copy._femaleProportion = original._femaleProportion;
-        copy._maximumAge = original._maximumAge;
-        copy._maximumGestation = original._maximumGestation;
-        copy._maximumFood = original._maximumFood;
-        copy._brainType = original._brainType;
-        copy._hardBrainInputs = original._hardBrainInputs;
-        copy._hardBrainOutputs = original._hardBrainOutputs;
-        copy._memoryUnitCount = original._memoryUnitCount;
-        copy._soundChannelCount = original._soundChannelCount;
-        copy._inheritanceGaussianMixRate = original._inheritanceGaussianMixRate;
-        copy._randomInitialization = original._randomInitialization;
-        copy._mutationRateExponent = original._mutationRateExponent;
-        copy._mutationRate = original._mutationRate;
-        copy._mutationTypeSmallScaleRate = original._mutationTypeSmallScaleRate;
-        copy._mutationTypeRandomRate = original._mutationTypeRandomRate;
-        copy._mutationTypeFlipRate = original._mutationTypeFlipRate;
-        copy._initialGenerationProbability = original._initialGenerationProbability;
+        SerializationEngine se = new SerializationEngine(null);
+        HashMap<String, String> map = se.serialize(original);
+        Species copy = (Species) se.deserialize(map);
         return copy;
     }
 }

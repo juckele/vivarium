@@ -1,60 +1,41 @@
 package com.johnuckele.vivarium.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.LinkedList;
+import java.util.Map;
+import java.util.Set;
 
-public class WorldBlueprint
+import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.annotations.BooleanParameter;
+import com.johnuckele.vivarium.serialization.annotations.ComplexParameter;
+import com.johnuckele.vivarium.serialization.annotations.DoubleParameter;
+import com.johnuckele.vivarium.serialization.annotations.IntegerParameter;
+
+public class WorldBlueprint implements MapSerializer
 {
     // World Generation
-    private static final double  FOOD_GENERATION_PROBABILITY             = 0.01;
-    private static final double  INITIAL_FOOD_GENERATION_PROBABILITY     = 0.2;
-    private static final double  INITIAL_WALL_GENERATION_PROBABILITY     = 0.1;
+    @IntegerParameter(defaultValue = 25)
+    private int                _size;
+    @DoubleParameter(defaultValue = 0.01)
+    private double             _foodGenerationProbability;
+    @DoubleParameter(defaultValue = 0.2)
+    private double             _initialFoodGenerationProbability;
+    @DoubleParameter(defaultValue = 0.1)
+    private double             _initialWallGenerationProbability;
 
     // Simulation Details
-    private static final boolean SOUND_ENABLED                           = false;
+    @BooleanParameter(defaultValue = false)
+    private boolean            _soundEnabled;
 
-    // Serialization keys
-    private static final String  SIZE_KEY                                = "size";
-    private static final String  FOOD_GENERATION_PROBABILITY_KEY         = "foodGenerationProbability";
-    private static final String  INITIAL_FOOD_GENERATION_PROBABILITY_KEY = "initialFoodGenerationProbability";
-    private static final String  INITIAL_WALL_GENERATION_PROBABILITY_KEY = "initialWallGenerationProbability";
-
-    // Simulation Details
-    private static final String  SOUND_ENABLED_KEY                       = "soundEnabled";
-
-    // World Generation
-    private int                  _size;
-    private double               _foodGenerationProbability              = FOOD_GENERATION_PROBABILITY;
-    private double               _initialFoodGenerationProbability       = INITIAL_FOOD_GENERATION_PROBABILITY;
-    private double               _initialWallGenerationProbability       = INITIAL_WALL_GENERATION_PROBABILITY;
-
-    // Simulation Details
-    private boolean              _soundEnabled                           = SOUND_ENABLED;
-
-    private ArrayList<Species>   _species;
+    // Species
+    @ComplexParameter
+    private ArrayList<Species> _species;
 
     // Private constructor for deserialization
     private WorldBlueprint()
     {
-    }
-
-    public WorldBlueprint(int size)
-    {
-        this(size, Species.makeDefaultSpeciesObject());
-    }
-
-    public WorldBlueprint(int size, LinkedList<Species> species)
-    {
-        this._size = size;
-        this._species = new ArrayList<Species>(species);
-    }
-
-    public WorldBlueprint(int size, Species species)
-    {
-        this._size = size;
-        this._species = new ArrayList<Species>();
-        this._species.add(species);
     }
 
     public double getFoodGenerationProbability()
@@ -123,55 +104,83 @@ public class WorldBlueprint
         this._species = _species;
     }
 
-    // TODO : Remove this and replace with a serialize / deserialize routine
-    public static WorldBlueprint createCopyOf(WorldBlueprint blueprint)
+    public static WorldBlueprint makeUninitialized()
     {
-        WorldBlueprint newprint = new WorldBlueprint();
-        newprint._size = blueprint._size;
-        newprint._foodGenerationProbability = blueprint._foodGenerationProbability;
-        newprint._initialFoodGenerationProbability = blueprint._initialFoodGenerationProbability;
-        newprint._initialWallGenerationProbability = blueprint._initialWallGenerationProbability;
-        newprint._soundEnabled = blueprint._soundEnabled;
-        newprint._species = new ArrayList<Species>();
-        for (Species s : blueprint._species)
-        {
-            newprint._species.add(Species.makeCopySpeciesObject(s));
-        }
-        return newprint;
+        WorldBlueprint wb = new WorldBlueprint();
+        return wb;
     }
 
-    public static WorldBlueprint deserialize(HashMap<String, String> blueprintValues)
+    public static WorldBlueprint makeDefault()
     {
-        // Make a new clean WorldBlueprint object to fill out
-        WorldBlueprint blueprint = new WorldBlueprint();
+        WorldBlueprint wb = new WorldBlueprint();
+        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        wb._species = new ArrayList<Species>();
+        wb._species.add(Species.makeDefault());
+        return wb;
+    }
 
-        // Deserialize required variables (not checked so we die if they're missing)
-        blueprint._size = Integer.parseInt(blueprintValues.remove(SIZE_KEY));
+    public static WorldBlueprint makeFromMap(HashMap<String, String> blueprintValues)
+    {
+        WorldBlueprint wb = new WorldBlueprint();
+        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        wb._species = new ArrayList<Species>();
+        wb._species.add(Species.makeDefault());
+        return wb;
+    }
 
-        // Deserialize optional variables, use defaults if not present
-        blueprint._foodGenerationProbability = blueprintValues.containsKey(FOOD_GENERATION_PROBABILITY_KEY) ? Double
-                .parseDouble(blueprintValues.remove(FOOD_GENERATION_PROBABILITY_KEY)) : FOOD_GENERATION_PROBABILITY;
-        blueprint._initialFoodGenerationProbability = blueprintValues
-                .containsKey(INITIAL_FOOD_GENERATION_PROBABILITY_KEY) ? Double.parseDouble(blueprintValues
-                .remove(INITIAL_FOOD_GENERATION_PROBABILITY_KEY)) : INITIAL_FOOD_GENERATION_PROBABILITY;
-        blueprint._initialWallGenerationProbability = blueprintValues
-                .containsKey(INITIAL_WALL_GENERATION_PROBABILITY_KEY) ? Double.parseDouble(blueprintValues
-                .remove(INITIAL_WALL_GENERATION_PROBABILITY_KEY)) : INITIAL_WALL_GENERATION_PROBABILITY;
-        blueprint._soundEnabled = blueprintValues.containsKey(SOUND_ENABLED_KEY) ? Boolean.parseBoolean(blueprintValues
-                .remove(SOUND_ENABLED_KEY)) : SOUND_ENABLED;
+    public static WorldBlueprint makeWithSize(int size)
+    {
+        WorldBlueprint wb = new WorldBlueprint();
+        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        wb.setSize(size);
+        wb._species = new ArrayList<Species>();
+        wb._species.add(Species.makeDefault());
+        return wb;
+    }
 
-        // Die if there are unused variables
-        if (!blueprintValues.isEmpty())
-        {
-            throw new IllegalArgumentException("WorldBlueprint could not deserialize keys " + blueprintValues.keySet());
-        }
+    public static WorldBlueprint makeWithSizeAndSpecies(int size, Species s)
+    {
+        WorldBlueprint wb = new WorldBlueprint();
+        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        wb.setSize(size);
+        wb._species = new ArrayList<Species>();
+        wb._species.add(s);
+        return wb;
+    }
 
-        // Build species by default
-        Species s = Species.makeDefaultSpeciesObject();
-        blueprint._species = new ArrayList<Species>();
-        blueprint._species.add(s);
+    public static WorldBlueprint makeWithSizeAndSpecies(int size, Collection<Species> s)
+    {
+        WorldBlueprint wb = new WorldBlueprint();
+        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        wb.setSize(size);
+        wb._species = new ArrayList<Species>(s);
+        return wb;
+    }
 
-        // Return the new object
-        return blueprint;
+    public static WorldBlueprint makeCopy(WorldBlueprint original)
+    {
+        // TODO Fixup
+        throw new UnsupportedOperationException("Here");
+    }
+
+    @Override
+    public Set<MapSerializer> getReferences()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public Map<String, String> finalizeSerialization(Map<String, String> map, Map<MapSerializer, Integer> referenceMap)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    public void finalizeDeserialization(Map<String, String> map, Map<Integer, MapSerializer> dereferenceMap)
+    {
+        // TODO Auto-generated method stub
+
     }
 }

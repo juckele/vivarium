@@ -1,9 +1,9 @@
 package com.johnuckele.vivarium.web.client;
 
 import com.johnuckele.vivarium.core.Creature;
+import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldBlueprint;
-import com.johnuckele.vivarium.core.WorldObject;
 
 public class WebWorld extends World
 {
@@ -29,7 +29,7 @@ public class WebWorld extends World
         {
             for (int j = 1; j < this._worldDimensions - 1; j++)
             {
-                if (this._worldObjectGrid[i][j] == WorldObject.WALL)
+                if (this._entityGrid[i][j] == EntityType.WALL)
                 {
                     renderer.draw(Sprite.WALL, i, j);
                 }
@@ -48,12 +48,12 @@ public class WebWorld extends World
         {
             for (int j = 1; j < this._worldDimensions - 1; j++)
             {
-                if (this._worldObjectGrid[i][j] == WorldObject.FOOD)
+                if (this._entityGrid[i][j] == EntityType.FOOD)
                 {
                     renderer.draw(Sprite.FLOOR, i, j);
                     renderer.draw(Sprite.FOOD, i, j);
                 }
-                else if (this._worldObjectGrid[i][j] == WorldObject.CREATURE)
+                else if (this._entityGrid[i][j] == EntityType.CREATURE)
                 {
                     Creature creature = this._creatureGrid[i][j];
                     int offsetMilliseconds = (int) (milliseconds + creature.getRandomSeed() * 1000) % 1000;

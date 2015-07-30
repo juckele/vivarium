@@ -2,9 +2,9 @@ package com.johnuckele.vivarium.scripts;
 
 import java.util.HashMap;
 
+import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldBlueprint;
-import com.johnuckele.vivarium.core.WorldObject;
 
 public class CreateWorld extends Script
 {
@@ -46,11 +46,11 @@ public class CreateWorld extends Script
         {
             blueprintValues.put(args[i], args[i + 1]);
         }
-        WorldBlueprint blueprint = WorldBlueprint.deserialize(blueprintValues);
+        WorldBlueprint blueprint = WorldBlueprint.makeFromMap(blueprintValues);
 
         World w = new World(blueprint);
 
-        int creatureCount = w.getCount(WorldObject.CREATURE);
+        int creatureCount = w.getCount(EntityType.CREATURE);
         System.out.println("Creature count in new world: " + creatureCount);
 
         ScriptIO.saveWorld(w, args[0], Format.JAVA_SERIALIZABLE);

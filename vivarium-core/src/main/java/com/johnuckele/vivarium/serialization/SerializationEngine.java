@@ -5,6 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.core.brain.BrainType;
+import com.johnuckele.vivarium.serialization.annotations.BooleanParameter;
+import com.johnuckele.vivarium.serialization.annotations.BrainTypeParameter;
+import com.johnuckele.vivarium.serialization.annotations.DoubleParameter;
+import com.johnuckele.vivarium.serialization.annotations.IntegerParameter;
 
 public class SerializationEngine
 {
@@ -25,8 +30,9 @@ public class SerializationEngine
         String type = map.get("+type");
         if (type.equals(Species.class.getSimpleName()))
         {
-            Species s = Species.makeUninitializedSpeciesObject();
+            Species s = Species.makeUninitialized();
             deserialize(s, map);
+            s.finalizeDeserialization(map, EMPTY_DEREFERENCE_MAP);
             return s;
         }
         return null;
@@ -62,6 +68,11 @@ public class SerializationEngine
                 {
                     map.put(getKeyFromFieldName(f.getName()), "" + f.getBoolean(obj));
                 }
+                BrainTypeParameter brainTypeParameter = f.getAnnotation(BrainTypeParameter.class);
+                if (brainTypeParameter != null)
+                {
+                    map.put(getKeyFromFieldName(f.getName()), "" + f.get(obj));
+                }
             }
         }
         catch (IllegalArgumentException e)
@@ -86,11 +97,10 @@ public class SerializationEngine
         System.out.println("Deserializing an object");
         try
         {
-            for (Field f : Species.class.getDeclaredFields())
+            for (Field f : obj.getClass().getDeclaredFields())
             {
                 f.setAccessible(true);
                 String key = getKeyFromFieldName(f.getName());
-
                 DoubleParameter doubleParameter = f.getAnnotation(DoubleParameter.class);
                 if (doubleParameter != null)
                 {
@@ -125,6 +135,18 @@ public class SerializationEngine
                     else
                     {
                         f.setBoolean(obj, boolParameter.defaultValue());
+                    }
+                }
+                BrainTypeParameter brainTypeParameter = f.getAnnotation(BrainTypeParameter.class);
+                if (brainTypeParameter != null)
+                {
+                    if (map.containsKey(key))
+                    {
+                        f.set(obj, BrainType.valueOf(map.get(key)));
+                    }
+                    else
+                    {
+                        f.set(obj, brainTypeParameter.defaultValue());
                     }
                 }
             }

@@ -536,6 +536,6 @@ public class NeuralNetworkBrain extends Brain
     @Override
     public BrainType getBrainType()
     {
-        return BrainType.NEURALNETWORK;
+        return BrainType.NEURAL_NETWORK;
     }
 }
