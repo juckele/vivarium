@@ -7,7 +7,7 @@ public class SerializedCollection
 {
     private HashMap<String, LinkedList<HashMap<String, String>>> _data;
 
-    private SerializedCollection()
+    public SerializedCollection()
     {
         _data = new HashMap<String, LinkedList<HashMap<String, String>>>();
     }
@@ -22,6 +22,7 @@ public class SerializedCollection
         else
         {
             list = new LinkedList<HashMap<String, String>>();
+            _data.put(type, list);
         }
         list.add(obj);
     }

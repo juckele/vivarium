@@ -3,11 +3,13 @@ package com.johnuckele.vivarium.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.SerializedCollection;
 import com.johnuckele.vivarium.serialization.annotations.BooleanParameter;
 import com.johnuckele.vivarium.serialization.annotations.ComplexParameter;
 import com.johnuckele.vivarium.serialization.annotations.DoubleParameter;
@@ -166,8 +168,7 @@ public class WorldBlueprint implements MapSerializer
     @Override
     public Set<MapSerializer> getReferences()
     {
-        // TODO Auto-generated method stub
-        return null;
+        return new HashSet<MapSerializer>(_species);
     }
 
     @Override
@@ -182,5 +183,13 @@ public class WorldBlueprint implements MapSerializer
     {
         // TODO Auto-generated method stub
 
+    }
+
+    public static void main(String[] args)
+    {
+        WorldBlueprint wb = WorldBlueprint.makeDefault();
+        SerializationEngine se = new SerializationEngine(null);
+        SerializedCollection collection = se.serialize(wb);
+        System.out.println(collection);
     }
 }
