@@ -8,7 +8,9 @@ import java.util.Set;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.SerializedCollection;
 import com.johnuckele.vivarium.serialization.annotations.BooleanParameter;
 import com.johnuckele.vivarium.serialization.annotations.BrainTypeParameter;
 import com.johnuckele.vivarium.serialization.annotations.DoubleParameter;
@@ -286,8 +288,8 @@ public class Species implements MapSerializer, Serializable
         Species s = (Species) engine.deserialize(speciesMap);
         // Species s = new Species();
         System.out.println(s._femaleProportion);
-        HashMap<String, String> map = engine.serializeObject(s, 0);
-        System.out.println(map);
+        SerializedCollection collection = engine.serialize(s);
+        System.out.println(collection);
         System.out.println(s.getMutationRate());
     }
 
@@ -326,9 +328,15 @@ public class Species implements MapSerializer, Serializable
     public static Species makeCopy(Species original)
     {
         // TODO: Use serialization
-        SerializationEngine se = new SerializationEngine();
-        HashMap<String, String> map = se.serializeObject(original, 0);
-        Species copy = (Species) se.deserialize(map);
-        return copy;
+        // SerializationEngine se = new SerializationEngine();
+        // collection = se.serialize(original);
+        // Species copy = (Species) se.deserialize(map);
+        return null;
+    }
+
+    @Override
+    public SerializationCategory getSerializationCategory()
+    {
+        return SerializationCategory.SPECIES;
     }
 }

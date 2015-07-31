@@ -2,18 +2,20 @@ package com.johnuckele.vivarium.serialization;
 
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 public class SerializedCollection
 {
-    private HashMap<String, LinkedList<HashMap<String, String>>> _data;
+    private Map<String, LinkedList<HashMap<String, String>>> _data;
 
     public SerializedCollection()
     {
         _data = new HashMap<String, LinkedList<HashMap<String, String>>>();
     }
 
-    public void addObject(String type, HashMap<String, String> obj)
+    public void addObject(HashMap<String, String> obj)
     {
+        String type = obj.get(SerializationEngine.CATEGORY_KEY);
         LinkedList<HashMap<String, String>> list;
         if (_data.containsKey(type))
         {
@@ -27,11 +29,24 @@ public class SerializedCollection
         list.add(obj);
     }
 
-    public boolean hasNext(String type)
+    public int categoryCount(SerializationCategory type)
     {
-        if (_data.containsKey(type))
+        if (_data.containsKey(type.name()))
         {
-            return !_data.get(type).isEmpty();
+            LinkedList<HashMap<String, String>> list = _data.get(type.name());
+            return list.size();
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    public boolean hasNext(SerializationCategory type)
+    {
+        if (_data.containsKey(type.name()))
+        {
+            return !_data.get(type.name()).isEmpty();
         }
         else
         {
@@ -39,9 +54,9 @@ public class SerializedCollection
         }
     }
 
-    public HashMap<String, String> popNext(String type)
+    public HashMap<String, String> popNext(SerializationCategory type)
     {
-        LinkedList<HashMap<String, String>> list = _data.get(type);
+        LinkedList<HashMap<String, String>> list = _data.get(type.name());
         return list.pop();
     }
 

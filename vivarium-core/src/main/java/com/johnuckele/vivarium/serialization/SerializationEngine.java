@@ -13,6 +13,9 @@ import com.johnuckele.vivarium.serialization.annotations.IntegerParameter;
 
 public class SerializationEngine
 {
+    public static final String                          ID_KEY                = "+id";
+    public static final String                          CATEGORY_KEY          = "+category";
+    public static final String                          CLASS_KEY             = "+class";
     public static final HashMap<String, String>         EMPTY_OBJECT_MAP      = new HashMap<String, String>();
     public static final HashMap<MapSerializer, Integer> EMPTY_REFERENCE_MAP   = new HashMap<MapSerializer, Integer>();
     public static final HashMap<Integer, MapSerializer> EMPTY_DEREFERENCE_MAP = new HashMap<Integer, MapSerializer>();
@@ -39,55 +42,63 @@ public class SerializationEngine
         return null;
     }
 
-    public SerializedCollection serialize(MapSerializer obj)
+    public SerializedCollection serialize(MapSerializer object)
     {
         SerializedCollection collection = new SerializedCollection();
-        // Serialize all references first
-        for (MapSerializer reference : obj.getReferences())
-        {
-            if (!_referenceMap.containsKey(reference))
-            {
-                HashMap<String, String> map = serializeObject(reference, 0);
-                collection.addObject("Species", map);
-            }
-        }
-        // Serialize the top level object
-        HashMap<String, String> map = serializeObject(obj, 0);
-        collection.addObject("WorldBlueprint", map);
-
+        // Start by recursively serializing the top level object
+        serializeObjectIntoCollection(object, collection);
         return collection;
     }
 
-    public HashMap<String, String> serializeObject(MapSerializer obj, int id)
+    private void serializeObjectIntoCollection(MapSerializer object, SerializedCollection collection)
     {
-        System.out.println("Serializing... " + obj);
+        if (!_referenceMap.containsKey(object))
+        {
+            // Serialize all references first
+            for (MapSerializer reference : object.getReferences())
+            {
+                serializeObjectIntoCollection(reference, collection);
+            }
+            // Serialize the current object
+            int objectID = collection.categoryCount(object.getSerializationCategory());
+            System.out.println("ID " + objectID);
+            _referenceMap.put(object, objectID);
+            HashMap<String, String> map = serializeObject(object, objectID);
+            collection.addObject(map);
+        }
+    }
+
+    private HashMap<String, String> serializeObject(MapSerializer object, int id)
+    {
+        System.out.println("Serializing... " + object);
         HashMap<String, String> map = new HashMap<String, String>();
-        map.put("+id", "" + id);
-        map.put("+type", "" + obj.getClass().getSimpleName());
+        map.put(ID_KEY, "" + id);
+        map.put(CATEGORY_KEY, "" + object.getSerializationCategory());
+        map.put(CLASS_KEY, "" + object.getClass().getSimpleName());
         try
         {
-            for (Field f : obj.getClass().getDeclaredFields())
+            for (Field f : object.getClass().getDeclaredFields())
             {
                 f.setAccessible(true);
                 DoubleParameter doubleParameter = f.getAnnotation(DoubleParameter.class);
                 if (doubleParameter != null)
                 {
-                    map.put(getKeyFromFieldName(f.getName()), "" + f.getDouble(obj));
+                    map.put(getKeyFromFieldName(f.getName()), "" + f.getDouble(object));
                 }
                 IntegerParameter intParameter = f.getAnnotation(IntegerParameter.class);
                 if (intParameter != null)
                 {
-                    map.put(getKeyFromFieldName(f.getName()), "" + f.getInt(obj));
+                    map.put(getKeyFromFieldName(f.getName()), "" + f.getInt(object));
                 }
                 BooleanParameter boolParameter = f.getAnnotation(BooleanParameter.class);
                 if (boolParameter != null)
                 {
-                    map.put(getKeyFromFieldName(f.getName()), "" + f.getBoolean(obj));
+                    map.put(getKeyFromFieldName(f.getName()), "" + f.getBoolean(object));
                 }
                 BrainTypeParameter brainTypeParameter = f.getAnnotation(BrainTypeParameter.class);
                 if (brainTypeParameter != null)
                 {
-                    map.put(getKeyFromFieldName(f.getName()), "" + f.get(obj));
+                    map.put(getKeyFromFieldName(f.getName()), "" + f.get(object));
                 }
             }
         }
@@ -99,7 +110,7 @@ public class SerializationEngine
         {
             e.printStackTrace();
         }
-        obj.finalizeSerialization(map, EMPTY_REFERENCE_MAP);
+        object.finalizeSerialization(map, EMPTY_REFERENCE_MAP);
         return map;
     }
 
@@ -108,12 +119,12 @@ public class SerializationEngine
         return fieldName.substring(fieldName.lastIndexOf('_') + 1);
     }
 
-    public static void deserialize(MapSerializer obj, Map<String, String> map)
+    public static void deserialize(MapSerializer object, Map<String, String> map)
     {
-        System.out.println("Deserializing an object " + obj);
+        System.out.println("Deserializing an object " + object);
         try
         {
-            for (Field f : obj.getClass().getDeclaredFields())
+            for (Field f : object.getClass().getDeclaredFields())
             {
                 f.setAccessible(true);
                 String key = getKeyFromFieldName(f.getName());
@@ -122,11 +133,11 @@ public class SerializationEngine
                 {
                     if (map.containsKey(key))
                     {
-                        f.setDouble(obj, Double.parseDouble(map.get(key)));
+                        f.setDouble(object, Double.parseDouble(map.get(key)));
                     }
                     else
                     {
-                        f.setDouble(obj, doubleParameter.defaultValue());
+                        f.setDouble(object, doubleParameter.defaultValue());
                     }
                 }
                 IntegerParameter intParameter = f.getAnnotation(IntegerParameter.class);
@@ -134,11 +145,11 @@ public class SerializationEngine
                 {
                     if (map.containsKey(key))
                     {
-                        f.setInt(obj, Integer.parseInt(map.get(key)));
+                        f.setInt(object, Integer.parseInt(map.get(key)));
                     }
                     else
                     {
-                        f.setInt(obj, intParameter.defaultValue());
+                        f.setInt(object, intParameter.defaultValue());
                     }
                 }
                 BooleanParameter boolParameter = f.getAnnotation(BooleanParameter.class);
@@ -146,11 +157,11 @@ public class SerializationEngine
                 {
                     if (map.containsKey(key))
                     {
-                        f.setBoolean(obj, Boolean.parseBoolean(map.get(key)));
+                        f.setBoolean(object, Boolean.parseBoolean(map.get(key)));
                     }
                     else
                     {
-                        f.setBoolean(obj, boolParameter.defaultValue());
+                        f.setBoolean(object, boolParameter.defaultValue());
                     }
                 }
                 BrainTypeParameter brainTypeParameter = f.getAnnotation(BrainTypeParameter.class);
@@ -158,11 +169,11 @@ public class SerializationEngine
                 {
                     if (map.containsKey(key))
                     {
-                        f.set(obj, BrainType.valueOf(map.get(key)));
+                        f.set(object, BrainType.valueOf(map.get(key)));
                     }
                     else
                     {
-                        f.set(obj, brainTypeParameter.defaultValue());
+                        f.set(object, brainTypeParameter.defaultValue());
                     }
                 }
             }
@@ -175,6 +186,6 @@ public class SerializationEngine
         {
             e.printStackTrace();
         }
-        obj.finalizeDeserialization(map, EMPTY_DEREFERENCE_MAP);
+        object.finalizeDeserialization(map, EMPTY_DEREFERENCE_MAP);
     }
 }

@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.Set;
 
 import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedCollection;
 import com.johnuckele.vivarium.serialization.annotations.BooleanParameter;
@@ -186,6 +187,12 @@ public class WorldBlueprint implements MapSerializer
 
     }
 
+    @Override
+    public SerializationCategory getSerializationCategory()
+    {
+        return SerializationCategory.BLUEPRINT;
+    }
+
     public static void main(String[] args)
     {
         LinkedList<Species> species = new LinkedList<Species>();
@@ -200,4 +207,5 @@ public class WorldBlueprint implements MapSerializer
         SerializedCollection collection = se.serialize(wb);
         System.out.println(collection);
     }
+
 }
