@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -12,30 +13,32 @@ import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedCollection;
-import com.johnuckele.vivarium.serialization.annotations.BooleanParameter;
-import com.johnuckele.vivarium.serialization.annotations.ComplexParameter;
-import com.johnuckele.vivarium.serialization.annotations.DoubleParameter;
-import com.johnuckele.vivarium.serialization.annotations.IntegerParameter;
+import com.johnuckele.vivarium.serialization.SerializedParameter;
 
 public class WorldBlueprint implements MapSerializer
 {
     // World Generation
-    @IntegerParameter(defaultValue = 25)
-    private int                _size;
-    @DoubleParameter(defaultValue = 0.01)
-    private double             _foodGenerationProbability;
-    @DoubleParameter(defaultValue = 0.2)
-    private double             _initialFoodGenerationProbability;
-    @DoubleParameter(defaultValue = 0.1)
-    private double             _initialWallGenerationProbability;
+    private int    _size;
+    private double _foodGenerationProbability;
+    private double _initialFoodGenerationProbability;
+    private double _initialWallGenerationProbability;
 
     // Simulation Details
-    @BooleanParameter(defaultValue = false)
-    private boolean            _soundEnabled;
+    private boolean _soundEnabled;
 
     // Species
-    @ComplexParameter
     private ArrayList<Species> _species;
+
+    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
+
+    static
+    {
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("size", 25));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("foodGenerationProbability", 0.01));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("initialFoodGenerationProbability", 0.2));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("initialWallGenerationProbability", 0.1));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("soundEnabled", false));
+    }
 
     // Private constructor for deserialization
     private WorldBlueprint()
@@ -206,6 +209,57 @@ public class WorldBlueprint implements MapSerializer
         SerializationEngine se = new SerializationEngine();
         SerializedCollection collection = se.serialize(wb);
         System.out.println(collection);
+    }
+
+    @Override
+    public List<SerializedParameter> getMappedParameters()
+    {
+        return WorldBlueprint.SERIALIZED_PARAMETERS;
+    }
+
+    @Override
+    public String getValue(String key)
+    {
+        switch (key)
+        {
+            case "size":
+                return "" + this._size;
+            case "foodGenerationProbability":
+                return "" + this._foodGenerationProbability;
+            case "initialFoodGenerationProbability":
+                return "" + this._initialFoodGenerationProbability;
+            case "initialWallGenerationProbability":
+                return "" + this._initialWallGenerationProbability;
+            case "soundEnabled":
+                return "" + this._soundEnabled;
+            default:
+                throw new IllegalArgumentException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    @Override
+    public void setValue(String key, String value)
+    {
+        switch (key)
+        {
+            case "size":
+                this._size = Integer.parseInt(value);
+                break;
+            case "foodGenerationProbability":
+                this._foodGenerationProbability = Double.parseDouble(value);
+                break;
+            case "initialFoodGenerationProbability":
+                this._initialFoodGenerationProbability = Double.parseDouble(value);
+                break;
+            case "initialWallGenerationProbability":
+                this._initialWallGenerationProbability = Double.parseDouble(value);
+                break;
+            case "soundEnabled":
+                this._soundEnabled = Boolean.parseBoolean(value);
+                break;
+            default:
+                throw new IllegalArgumentException("Key " + key + " not in mapped parameters");
+        }
     }
 
 }

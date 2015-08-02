@@ -1,15 +1,9 @@
 package com.johnuckele.vivarium.serialization;
 
-import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.johnuckele.vivarium.core.Species;
-import com.johnuckele.vivarium.core.brain.BrainType;
-import com.johnuckele.vivarium.serialization.annotations.BooleanParameter;
-import com.johnuckele.vivarium.serialization.annotations.BrainTypeParameter;
-import com.johnuckele.vivarium.serialization.annotations.DoubleParameter;
-import com.johnuckele.vivarium.serialization.annotations.IntegerParameter;
 
 public class SerializationEngine
 {
@@ -20,8 +14,8 @@ public class SerializationEngine
     public static final HashMap<MapSerializer, Integer> EMPTY_REFERENCE_MAP   = new HashMap<MapSerializer, Integer>();
     public static final HashMap<Integer, MapSerializer> EMPTY_DEREFERENCE_MAP = new HashMap<Integer, MapSerializer>();
 
-    private HashMap<MapSerializer, Integer>             _referenceMap;
-    private HashMap<Integer, MapSerializer>             _dereferenceMap;
+    private HashMap<MapSerializer, Integer> _referenceMap;
+    private HashMap<Integer, MapSerializer> _dereferenceMap;
 
     public SerializationEngine()
     {
@@ -77,36 +71,12 @@ public class SerializationEngine
         map.put(CLASS_KEY, "" + object.getClass().getSimpleName());
         try
         {
-            for (Field f : object.getClass().getDeclaredFields())
+            for (SerializedParameter parameter : object.getMappedParameters())
             {
-                f.setAccessible(true);
-                DoubleParameter doubleParameter = f.getAnnotation(DoubleParameter.class);
-                if (doubleParameter != null)
-                {
-                    map.put(getKeyFromFieldName(f.getName()), "" + f.getDouble(object));
-                }
-                IntegerParameter intParameter = f.getAnnotation(IntegerParameter.class);
-                if (intParameter != null)
-                {
-                    map.put(getKeyFromFieldName(f.getName()), "" + f.getInt(object));
-                }
-                BooleanParameter boolParameter = f.getAnnotation(BooleanParameter.class);
-                if (boolParameter != null)
-                {
-                    map.put(getKeyFromFieldName(f.getName()), "" + f.getBoolean(object));
-                }
-                BrainTypeParameter brainTypeParameter = f.getAnnotation(BrainTypeParameter.class);
-                if (brainTypeParameter != null)
-                {
-                    map.put(getKeyFromFieldName(f.getName()), "" + f.get(object));
-                }
+                map.put(parameter.getName(), object.getValue(parameter.getName()));
             }
         }
         catch (IllegalArgumentException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
         {
             e.printStackTrace();
         }
@@ -124,65 +94,19 @@ public class SerializationEngine
         System.out.println("Deserializing an object " + object);
         try
         {
-            for (Field f : object.getClass().getDeclaredFields())
+            for (SerializedParameter parameter : object.getMappedParameters())
             {
-                f.setAccessible(true);
-                String key = getKeyFromFieldName(f.getName());
-                DoubleParameter doubleParameter = f.getAnnotation(DoubleParameter.class);
-                if (doubleParameter != null)
+                if (map.containsKey(parameter.getName()))
                 {
-                    if (map.containsKey(key))
-                    {
-                        f.setDouble(object, Double.parseDouble(map.get(key)));
-                    }
-                    else
-                    {
-                        f.setDouble(object, doubleParameter.defaultValue());
-                    }
+                    object.setValue(parameter.getName(), map.get(parameter.getName()));
                 }
-                IntegerParameter intParameter = f.getAnnotation(IntegerParameter.class);
-                if (intParameter != null)
+                else
                 {
-                    if (map.containsKey(key))
-                    {
-                        f.setInt(object, Integer.parseInt(map.get(key)));
-                    }
-                    else
-                    {
-                        f.setInt(object, intParameter.defaultValue());
-                    }
-                }
-                BooleanParameter boolParameter = f.getAnnotation(BooleanParameter.class);
-                if (boolParameter != null)
-                {
-                    if (map.containsKey(key))
-                    {
-                        f.setBoolean(object, Boolean.parseBoolean(map.get(key)));
-                    }
-                    else
-                    {
-                        f.setBoolean(object, boolParameter.defaultValue());
-                    }
-                }
-                BrainTypeParameter brainTypeParameter = f.getAnnotation(BrainTypeParameter.class);
-                if (brainTypeParameter != null)
-                {
-                    if (map.containsKey(key))
-                    {
-                        f.set(object, BrainType.valueOf(map.get(key)));
-                    }
-                    else
-                    {
-                        f.set(object, brainTypeParameter.defaultValue());
-                    }
+                    object.setValue(parameter.getName(), parameter.getDefaultValue());
                 }
             }
         }
         catch (IllegalArgumentException e)
-        {
-            e.printStackTrace();
-        }
-        catch (IllegalAccessException e)
         {
             e.printStackTrace();
         }
