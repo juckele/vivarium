@@ -75,7 +75,46 @@ public class SerializationEngine
         {
             for (SerializedParameter parameter : object.getMappedParameters())
             {
-                map.put(parameter.getName(), "" + object.getValue(parameter.getName()));
+                // Get the value
+                Object valueObject = object.getValue(parameter.getName());
+
+                // Serialize value
+                Class<?> parameterClazz = parameter.getValueClass();
+                String valueString = null;
+                if (parameterClazz == ArrayList.class)
+                {
+                    ArrayList<?> valueArray = (ArrayList) valueObject;
+                    ArrayList<Integer> referenceArray = new ArrayList<Integer>();
+                    SerializationCategory referenceCategory = parameter.getReferenceCategory();
+                    for (Object reference : valueArray)
+                    {
+                        referenceArray.add(_referenceMap.get(reference));
+                    }
+                    valueString = referenceArray.toString();
+                }
+                else if (parameterClazz == Boolean.class)
+                {
+                    valueString = "" + valueObject;
+                }
+                else if (parameterClazz == BrainType.class)
+                {
+                    valueString = ((BrainType) valueObject).name();
+                }
+                else if (parameterClazz == Double.class)
+                {
+                    valueString = "" + valueObject;
+                }
+                else if (parameterClazz == Integer.class)
+                {
+                    valueString = "" + valueObject;
+                }
+                else
+                {
+                    throw new UnsupportedOperationException("Cannot handle parameter type " + parameterClazz);
+                }
+
+                // Add value to the map
+                map.put(parameter.getName(), valueString);
             }
         }
         catch (IllegalArgumentException e)
@@ -136,6 +175,8 @@ public class SerializationEngine
                 {
                     throw new UnsupportedOperationException("Cannot handle parameter type " + parameterClazz);
                 }
+
+                // Set value on the object
                 object.setValue(parameter.getName(), valueObject);
             }
         }

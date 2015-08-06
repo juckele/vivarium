@@ -341,54 +341,54 @@ public class Species implements MapSerializer
     }
 
     @Override
-    public String getValue(String key)
+    public Object getValue(String key)
     {
         switch (key)
         {
             case "femaleProportion":
-                return "" + this._femaleProportion;
+                return this._femaleProportion;
             case "maximumAge":
-                return "" + this._maximumAge;
+                return this._maximumAge;
             case "maximumGestation":
-                return "" + this._maximumGestation;
+                return this._maximumGestation;
             case "maximumFood":
-                return "" + this._maximumFood;
+                return this._maximumFood;
             case "breedingFoodRate":
-                return "" + this._breedingFoodRate;
+                return this._breedingFoodRate;
             case "eatingFoodRate":
-                return "" + this._eatingFoodRate;
+                return this._eatingFoodRate;
             case "movingFoodRate":
-                return "" + this._movingFoodRate;
+                return this._movingFoodRate;
             case "turningFoodRate":
-                return "" + this._turningFoodRate;
+                return this._turningFoodRate;
             case "baseFoodRate":
-                return "" + this._baseFoodRate;
+                return this._baseFoodRate;
             case "pregnantFoodRate":
-                return "" + this._pregnantFoodRate;
+                return this._pregnantFoodRate;
             case "initialGenerationProbability":
-                return "" + this._initialGenerationProbability;
+                return this._initialGenerationProbability;
             case "brainType":
-                return this._brainType.name();
+                return this._brainType;
             case "hardBrainInputs":
-                return "" + this._hardBrainInputs;
+                return this._hardBrainInputs;
             case "hardBrainOutputs":
-                return "" + this._hardBrainOutputs;
+                return this._hardBrainOutputs;
             case "memoryUnitCount":
-                return "" + this._memoryUnitCount;
+                return this._memoryUnitCount;
             case "soundChannelCount":
-                return "" + this._soundChannelCount;
+                return this._soundChannelCount;
             case "randomInitialization":
-                return "" + this._randomInitialization;
+                return this._randomInitialization;
             case "inheritanceGaussianMixRate":
-                return "" + this._inheritanceGaussianMixRate;
+                return this._inheritanceGaussianMixRate;
             case "mutationRateExponent":
-                return "" + this._mutationRateExponent;
+                return this._mutationRateExponent;
             case "mutationTypeSmallScaleRate":
-                return "" + this._mutationTypeSmallScaleRate;
+                return this._mutationTypeSmallScaleRate;
             case "mutationTypeRandomRate":
-                return "" + this._mutationTypeRandomRate;
+                return this._mutationTypeRandomRate;
             case "mutationTypeFlipRate":
-                return "" + this._mutationTypeFlipRate;
+                return this._mutationTypeFlipRate;
             default:
                 throw new IllegalArgumentException("Key " + key + " not in mapped parameters");
         }
