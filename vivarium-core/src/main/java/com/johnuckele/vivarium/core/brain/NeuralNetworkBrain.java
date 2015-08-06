@@ -10,11 +10,6 @@ import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class NeuralNetworkBrain extends Brain
 {
-    /**
-     * serialVersion
-     */
-    private static final long serialVersionUID = 5L;
-
     // Weights represents all the weights in the neural network
     // weight[i][j][k] corresponds to the weight of the connection
     // for the jth node in the layer coming from the kth node in
@@ -22,13 +17,13 @@ public class NeuralNetworkBrain extends Brain
     // Each node has a two special previous values, a constant
     // bias unit with a value of 1 and a stochastic bias unit
     // with a normally distributed value between -1 and 1.
-    private double[][][]      _weights;
-    private int               _outputCount;
-    private double[]          _outputs;
-    private int               _inputCount;
-    private int               _hiddenLayers;
-    private double[][]        _hiddenNodes;
-    private boolean           _randomInitialization;
+    private double[][][] _weights;
+    private int          _outputCount;
+    private double[]     _outputs;
+    private int          _inputCount;
+    private int          _hiddenLayers;
+    private double[][]   _hiddenNodes;
+    private boolean      _randomInitialization;
 
     public NeuralNetworkBrain(int inputCount, int outputCount, int hiddenLayers, boolean randomInitialization)
     {

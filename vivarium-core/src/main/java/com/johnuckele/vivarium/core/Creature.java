@@ -1,44 +1,37 @@
 package com.johnuckele.vivarium.core;
 
-import java.io.Serializable;
-
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class Creature implements Cloneable, Comparable<Creature>, Serializable
+public class Creature implements Cloneable, Comparable<Creature>
 {
-    /**
-     * serialVersion
-     */
-    private static final long serialVersionUID = 4L;
-
     // Meta information
-    private int               _id;
-    private Species           _species;
-    private double            _generation;
+    private int     _id;
+    private Species _species;
+    private double  _generation;
 
     // Brain
-    private Brain             _brain;
-    private double[]          _inputs;
-    private double[]          _memoryUnits;
-    private double[]          _soundInputs;
-    private double[]          _soundOutputs;
+    private Brain    _brain;
+    private double[] _inputs;
+    private double[] _memoryUnits;
+    private double[] _soundInputs;
+    private double[] _soundOutputs;
 
     // State
-    private boolean           _hasActed        = true; // Defaults to true to prevent a newborn from acting before it
-                                                       // plans
-    private Gender            _gender;
-    private double            _randomSeed;
-    private int               _age;
-    private int               _gestation;
-    private int               _food;
-    private Direction         _facing;
-    private Action            _action;
+    private boolean   _hasActed = true; // Defaults to true to prevent a newborn from acting before it
+                                        // plans
+    private Gender    _gender;
+    private double    _randomSeed;
+    private int       _age;
+    private int       _gestation;
+    private int       _food;
+    private Direction _facing;
+    private Action    _action;
 
     // Fetus
-    private Creature          _fetus;
+    private Creature _fetus;
 
     public Creature(Species species)
     {

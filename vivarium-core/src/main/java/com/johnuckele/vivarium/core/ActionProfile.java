@@ -1,12 +1,8 @@
 package com.johnuckele.vivarium.core;
 
-import java.io.Serializable;
-
-public class ActionProfile implements Serializable
+public class ActionProfile
 {
-    private static final long serialVersionUID = 1L;
-
-    int[][]                   _actionCount;
+    int[][] _actionCount;
 
     public ActionProfile()
     {

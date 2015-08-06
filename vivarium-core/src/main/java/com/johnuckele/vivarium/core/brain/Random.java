@@ -6,8 +6,7 @@ import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class Random extends Brain
 {
-    private static final long serialVersionUID = 8592165653290086781L;
-    private double[]          _outputs;
+    private double[] _outputs;
 
     public Random(Species species, Random parentBrain1, Random parentBrain2)
     {

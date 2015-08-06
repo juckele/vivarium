@@ -1,6 +1,5 @@
 package com.johnuckele.vivarium.core;
 
-import java.io.Serializable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -10,21 +9,16 @@ import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class World implements Serializable
+public class World
 {
-    /**
-     * serialVersion
-     */
-    private static final long serialVersionUID = 4L;
-
     //
-    private int               _maximumCreatureID;
-    protected int             _worldDimensions;
+    private int   _maximumCreatureID;
+    protected int _worldDimensions;
 
-    protected EntityType[][]  _entityGrid;
-    protected Creature[][]    _creatureGrid;
+    protected EntityType[][] _entityGrid;
+    protected Creature[][]   _creatureGrid;
 
-    private WorldBlueprint    _blueprint;
+    private WorldBlueprint _blueprint;
 
     public World(WorldBlueprint blueprint)
     {
@@ -238,7 +232,7 @@ public class World implements Serializable
         }
         // Attempt to breed
         else if (action == Action.BREED
-        // Make sure we're facing another creature
+                // Make sure we're facing another creature
                 && _entityGrid[facingR][facingC] == EntityType.CREATURE
                 // And that creature is the same species as us
                 && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
