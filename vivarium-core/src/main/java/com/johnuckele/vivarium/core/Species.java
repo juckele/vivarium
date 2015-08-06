@@ -1,11 +1,9 @@
 package com.johnuckele.vivarium.core;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
@@ -288,9 +286,9 @@ public class Species implements MapSerializer
     }
 
     @Override
-    public Set<MapSerializer> getReferences()
+    public LinkedList<MapSerializer> getReferences()
     {
-        return new HashSet<MapSerializer>();
+        return new LinkedList<MapSerializer>();
     }
 
     @Override

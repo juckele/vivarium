@@ -3,11 +3,9 @@ package com.johnuckele.vivarium.core;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
@@ -172,9 +170,9 @@ public class WorldBlueprint implements MapSerializer
     }
 
     @Override
-    public Set<MapSerializer> getReferences()
+    public List<MapSerializer> getReferences()
     {
-        return new HashSet<MapSerializer>(_species);
+        return new LinkedList<MapSerializer>(_species);
     }
 
     @Override
