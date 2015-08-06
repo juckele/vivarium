@@ -9,30 +9,29 @@ import com.johnuckele.vivarium.core.brain.BrainType;
 
 public class SerializationEngine
 {
-    public static final String                          ID_KEY                = "+id";
-    public static final String                          CATEGORY_KEY          = "+category";
-    public static final String                          CLASS_KEY             = "+class";
-    public static final HashMap<String, String>         EMPTY_OBJECT_MAP      = new HashMap<String, String>();
-    public static final HashMap<MapSerializer, Integer> EMPTY_REFERENCE_MAP   = new HashMap<MapSerializer, Integer>();
-    public static final HashMap<Integer, MapSerializer> EMPTY_DEREFERENCE_MAP = new HashMap<Integer, MapSerializer>();
+    public static final String                                                          ID_KEY                = "+id";
+    public static final String                                                          CATEGORY_KEY          = "+category";
+    public static final String                                                          CLASS_KEY             = "+class";
+    public static final HashMap<String, String>                                         EMPTY_OBJECT_MAP      = new HashMap<String, String>();
+    public static final HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> EMPTY_REFERENCE_MAP   = new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>();
+    public static final HashMap<SerializationCategory, HashMap<Integer, MapSerializer>> EMPTY_DEREFERENCE_MAP = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
 
-    private HashMap<MapSerializer, Integer> _referenceMap;
-    private HashMap<Integer, MapSerializer> _dereferenceMap;
+    private HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> _referenceMap;
+    private HashMap<SerializationCategory, HashMap<Integer, MapSerializer>> _dereferenceMap;
 
     public SerializationEngine()
     {
-        _referenceMap = new HashMap<MapSerializer, Integer>();
-        _dereferenceMap = new HashMap<Integer, MapSerializer>();
+        _referenceMap = new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>();
+        _dereferenceMap = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
     }
 
-    public MapSerializer deserialize(HashMap<String, String> map)
+    public MapSerializer deserializeMap(HashMap<String, String> map)
     {
         String type = map.get("+type");
         if (type.equals(Species.class.getSimpleName()))
         {
             Species s = Species.makeUninitialized();
             deserialize(s, map);
-            s.finalizeDeserialization(map, EMPTY_DEREFERENCE_MAP);
             return s;
         }
         return null;
@@ -48,7 +47,8 @@ public class SerializationEngine
 
     private void serializeObjectIntoCollection(MapSerializer object, SerializedCollection collection)
     {
-        if (!_referenceMap.containsKey(object))
+        if (!_referenceMap.containsKey(object.getSerializationCategory())
+                || !_referenceMap.get(object.getSerializationCategory()).containsKey(object))
         {
             // Serialize all references first
             for (MapSerializer reference : object.getReferences())
@@ -58,10 +58,29 @@ public class SerializationEngine
             // Serialize the current object
             int objectID = collection.categoryCount(object.getSerializationCategory());
             System.out.println("ID " + objectID);
-            _referenceMap.put(object, objectID);
+            storeReferenceID(object, objectID);
             HashMap<String, String> map = serializeObject(object, objectID);
             collection.addObject(map);
         }
+    }
+
+    private void storeReferenceID(MapSerializer object, int objectID)
+    {
+        if (!_referenceMap.containsKey(object.getSerializationCategory()))
+        {
+            _referenceMap.put(object.getSerializationCategory(), new HashMap<MapSerializer, Integer>());
+        }
+        _referenceMap.get(object.getSerializationCategory()).put(object, objectID);
+    }
+
+    private Integer getReferenceID(MapSerializer object)
+    {
+        return _referenceMap.get(object.getSerializationCategory()).get(object);
+    }
+
+    private MapSerializer getReferenceObject(SerializationCategory category, int objectID)
+    {
+        return _dereferenceMap.get(category).get(objectID);
     }
 
     private HashMap<String, String> serializeObject(MapSerializer object, int id)
@@ -88,7 +107,7 @@ public class SerializationEngine
                     SerializationCategory referenceCategory = parameter.getReferenceCategory();
                     for (Object reference : valueArray)
                     {
-                        referenceArray.add(_referenceMap.get(reference));
+                        referenceArray.add(getReferenceID((MapSerializer) reference));
                     }
                     valueString = referenceArray.toString();
                 }
@@ -129,7 +148,7 @@ public class SerializationEngine
         return fieldName.substring(fieldName.lastIndexOf('_') + 1);
     }
 
-    public static void deserialize(MapSerializer object, Map<String, String> map)
+    public void deserialize(MapSerializer object, Map<String, String> map)
     {
         System.out.println("Deserializing an object " + object);
         try
@@ -153,6 +172,17 @@ public class SerializationEngine
                 if (parameterClazz == ArrayList.class)
                 {
                     valueObject = new ArrayList<Object>();
+                    ArrayList<MapSerializer> valueArray = new ArrayList<MapSerializer>();
+                    SerializationCategory referenceCategory = parameter.getReferenceCategory();
+                    String[] referenceStrings = valueString.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
+                    if (referenceStrings.length != 1 || !referenceStrings[0].equals(""))
+                    {
+                        for (String referenceString : referenceStrings)
+                        {
+                            valueArray.add(getReferenceObject(parameter.getReferenceCategory(),
+                                    Integer.parseInt(referenceString)));
+                        }
+                    }
                 }
                 else if (parameterClazz == Boolean.class)
                 {

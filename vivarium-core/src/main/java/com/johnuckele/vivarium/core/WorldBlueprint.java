@@ -119,7 +119,7 @@ public class WorldBlueprint implements MapSerializer
     public static WorldBlueprint makeDefault()
     {
         WorldBlueprint wb = new WorldBlueprint();
-        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
         return wb;
@@ -128,7 +128,7 @@ public class WorldBlueprint implements MapSerializer
     public static WorldBlueprint makeFromMap(HashMap<String, String> blueprintValues)
     {
         WorldBlueprint wb = new WorldBlueprint();
-        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
         return wb;
@@ -137,7 +137,7 @@ public class WorldBlueprint implements MapSerializer
     public static WorldBlueprint makeWithSize(int size)
     {
         WorldBlueprint wb = new WorldBlueprint();
-        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
@@ -147,7 +147,7 @@ public class WorldBlueprint implements MapSerializer
     public static WorldBlueprint makeWithSizeAndSpecies(int size, Species s)
     {
         WorldBlueprint wb = new WorldBlueprint();
-        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>();
         wb._species.add(s);
@@ -157,7 +157,7 @@ public class WorldBlueprint implements MapSerializer
     public static WorldBlueprint makeWithSizeAndSpecies(int size, Collection<Species> s)
     {
         WorldBlueprint wb = new WorldBlueprint();
-        SerializationEngine.deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>(s);
         return wb;

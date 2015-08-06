@@ -277,7 +277,7 @@ public class Species implements MapSerializer
         speciesMap.put("+type", "Species");
         speciesMap.put("+id", "0");
         speciesMap.put("initialGenerationProbability", "0.5");
-        Species s = (Species) engine.deserialize(speciesMap);
+        Species s = (Species) engine.deserializeMap(speciesMap);
         // Species s = new Species();
         System.out.println(s._femaleProportion);
         SerializedCollection collection = engine.serialize(s);
@@ -297,7 +297,6 @@ public class Species implements MapSerializer
         return map;
     }
 
-
     public static Species makeUninitialized()
     {
         Species s = new Species();
@@ -308,7 +307,7 @@ public class Species implements MapSerializer
     public static Species makeDefault()
     {
         Species s = new Species();
-        SerializationEngine.deserialize(s, SerializationEngine.EMPTY_OBJECT_MAP);
+        new SerializationEngine().deserialize(s, SerializationEngine.EMPTY_OBJECT_MAP);
         return s;
     }
 
