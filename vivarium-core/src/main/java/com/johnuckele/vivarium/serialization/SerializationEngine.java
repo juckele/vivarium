@@ -1,9 +1,11 @@
 package com.johnuckele.vivarium.serialization;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.core.brain.BrainType;
 
 public class SerializationEngine
 {
@@ -73,7 +75,7 @@ public class SerializationEngine
         {
             for (SerializedParameter parameter : object.getMappedParameters())
             {
-                map.put(parameter.getName(), object.getValue(parameter.getName()));
+                map.put(parameter.getName(), "" + object.getValue(parameter.getName()));
             }
         }
         catch (IllegalArgumentException e)
@@ -96,14 +98,45 @@ public class SerializationEngine
         {
             for (SerializedParameter parameter : object.getMappedParameters())
             {
+                // Determine string to deserialize (default vs in map value)
+                String valueString;
                 if (map.containsKey(parameter.getName()))
                 {
-                    object.setValue(parameter.getName(), map.get(parameter.getName()));
+                    valueString = map.get(parameter.getName());
                 }
                 else
                 {
-                    object.setValue(parameter.getName(), parameter.getDefaultValue());
+                    valueString = parameter.getDefaultValue();
                 }
+
+                // Deserialize value
+                Class<?> parameterClazz = parameter.getValueClass();
+                Object valueObject = null;
+                if (parameterClazz == ArrayList.class)
+                {
+                    valueObject = new ArrayList<Object>();
+                }
+                else if (parameterClazz == Boolean.class)
+                {
+                    valueObject = Boolean.parseBoolean(valueString);
+                }
+                else if (parameterClazz == BrainType.class)
+                {
+                    valueObject = BrainType.valueOf(valueString);
+                }
+                else if (parameterClazz == Double.class)
+                {
+                    valueObject = Double.parseDouble(valueString);
+                }
+                else if (parameterClazz == Integer.class)
+                {
+                    valueObject = Integer.parseInt(valueString);
+                }
+                else
+                {
+                    throw new UnsupportedOperationException("Cannot handle parameter type " + parameterClazz);
+                }
+                object.setValue(parameter.getName(), valueObject);
             }
         }
         catch (IllegalArgumentException e)

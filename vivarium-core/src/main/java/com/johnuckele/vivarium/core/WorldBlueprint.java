@@ -33,11 +33,12 @@ public class WorldBlueprint implements MapSerializer
 
     static
     {
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("size", 25));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("foodGenerationProbability", 0.01));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("initialFoodGenerationProbability", 0.2));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("initialWallGenerationProbability", 0.1));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("soundEnabled", false));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("size", Integer.class, 25));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("foodGenerationProbability", Double.class, 0.01));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("initialFoodGenerationProbability", Double.class, 0.2));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("initialWallGenerationProbability", Double.class, 0.1));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("soundEnabled", Boolean.class, false));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("species", ArrayList.class, "[]"));
     }
 
     // Private constructor for deserialization
@@ -218,47 +219,52 @@ public class WorldBlueprint implements MapSerializer
     }
 
     @Override
-    public String getValue(String key)
+    public Object getValue(String key)
     {
         switch (key)
         {
             case "size":
-                return "" + this._size;
+                return this._size;
             case "foodGenerationProbability":
-                return "" + this._foodGenerationProbability;
+                return this._foodGenerationProbability;
             case "initialFoodGenerationProbability":
                 return "" + this._initialFoodGenerationProbability;
             case "initialWallGenerationProbability":
                 return "" + this._initialWallGenerationProbability;
             case "soundEnabled":
                 return "" + this._soundEnabled;
+            case "species":
+                return this._species;
             default:
-                throw new IllegalArgumentException("Key " + key + " not in mapped parameters");
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
         }
     }
 
     @Override
-    public void setValue(String key, String value)
+    public void setValue(String key, Object value)
     {
         switch (key)
         {
             case "size":
-                this._size = Integer.parseInt(value);
+                this._size = (Integer) value;
                 break;
             case "foodGenerationProbability":
-                this._foodGenerationProbability = Double.parseDouble(value);
+                this._foodGenerationProbability = (Double) value;
                 break;
             case "initialFoodGenerationProbability":
-                this._initialFoodGenerationProbability = Double.parseDouble(value);
+                this._initialFoodGenerationProbability = (Double) value;
                 break;
             case "initialWallGenerationProbability":
-                this._initialWallGenerationProbability = Double.parseDouble(value);
+                this._initialWallGenerationProbability = (Double) value;
                 break;
             case "soundEnabled":
-                this._soundEnabled = Boolean.parseBoolean(value);
+                this._soundEnabled = (Boolean) value;
+                break;
+            case "species":
+                this._species = (ArrayList<Species>) value;
                 break;
             default:
-                throw new IllegalArgumentException("Key " + key + " not in mapped parameters");
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
         }
     }
 

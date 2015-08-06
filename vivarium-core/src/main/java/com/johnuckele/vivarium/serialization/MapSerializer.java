@@ -14,9 +14,9 @@ public interface MapSerializer
 
     List<SerializedParameter> getMappedParameters();
 
-    String getValue(String key);
+    Object getValue(String key);
 
-    void setValue(String key, String value);
+    void setValue(String key, Object value);
 
     SerializationCategory getSerializationCategory();
 }
