@@ -14,14 +14,14 @@ import com.johnuckele.vtest.Tester;
 
 public class SerializationCompletenessTest
 {
-    private Class[]  mapSerializers = { WorldBlueprint.class, Species.class };
-    private String[] ignoredFields  = { "SERIALIZED_PARAMETERS", "_mutationRate" };
+    private Class<?>[] mapSerializers = { WorldBlueprint.class, Species.class };
+    private String[]   ignoredFields  = { "SERIALIZED_PARAMETERS", "_mutationRate" };
 
     @Test
     public void testCompleteness() throws NoSuchMethodException, SecurityException, IllegalAccessException,
             IllegalArgumentException, InvocationTargetException
     {
-        for (Class mapSerializerClazz : mapSerializers)
+        for (Class<?> mapSerializerClazz : mapSerializers)
         {
             // Find the fields on the class
             HashMap<String, Field> fields = new HashMap<String, Field>();

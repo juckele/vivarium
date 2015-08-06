@@ -231,6 +231,7 @@ public class WorldBlueprint implements MapSerializer
         }
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void setValue(String key, Object value)
     {

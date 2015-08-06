@@ -120,9 +120,8 @@ public class SerializationEngine
                 String valueString = null;
                 if (parameterClazz == ArrayList.class)
                 {
-                    ArrayList<?> valueArray = (ArrayList) valueObject;
+                    ArrayList<?> valueArray = (ArrayList<?>) valueObject;
                     ArrayList<Integer> referenceArray = new ArrayList<Integer>();
-                    SerializationCategory referenceCategory = parameter.getReferenceCategory();
                     for (Object reference : valueArray)
                     {
                         referenceArray.add(getReferenceID((MapSerializer) reference));
@@ -191,7 +190,6 @@ public class SerializationEngine
                 {
                     valueObject = new ArrayList<Object>();
                     ArrayList<MapSerializer> valueArray = new ArrayList<MapSerializer>();
-                    SerializationCategory referenceCategory = parameter.getReferenceCategory();
                     String[] referenceStrings = valueString.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
                     if (referenceStrings.length != 1 || !referenceStrings[0].equals(""))
                     {

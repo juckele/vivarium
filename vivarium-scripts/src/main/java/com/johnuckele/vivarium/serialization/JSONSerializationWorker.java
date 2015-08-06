@@ -1,7 +1,5 @@
 package com.johnuckele.vivarium.serialization;
 
-import com.johnuckele.vivarium.core.Species;
-
 public class JSONSerializationWorker extends StringBufferBasedSerializationWorker
 {
 
@@ -10,8 +8,7 @@ public class JSONSerializationWorker extends StringBufferBasedSerializationWorke
     }
 
     @Override
-    public void serialize(Species s)
+    public void serialize(MapSerializer object)
     {
-        StringBuffer buffer = this.getStringBuffer();
     }
 }
