@@ -121,7 +121,6 @@ public class SerializationEngine
         {
             e.printStackTrace();
         }
-        object.finalizeSerialization(map, EMPTY_REFERENCE_MAP);
         return map;
     }
 
@@ -184,6 +183,5 @@ public class SerializationEngine
         {
             e.printStackTrace();
         }
-        object.finalizeDeserialization(map, EMPTY_DEREFERENCE_MAP);
     }
 }

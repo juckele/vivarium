@@ -297,11 +297,6 @@ public class Species implements MapSerializer
         return map;
     }
 
-    @Override
-    public void finalizeDeserialization(Map<String, String> map, Map<Integer, MapSerializer> dereferenceMap)
-    {
-        updateMutationRate();
-    }
 
     public static Species makeUninitialized()
     {
@@ -453,6 +448,7 @@ public class Species implements MapSerializer
                 break;
             case "mutationRateExponent":
                 this._mutationRateExponent = (Double) value;
+                updateMutationRate();
                 break;
             case "mutationTypeSmallScaleRate":
                 this._mutationTypeSmallScaleRate = (Double) value;

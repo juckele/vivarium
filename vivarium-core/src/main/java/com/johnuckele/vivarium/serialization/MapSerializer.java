@@ -9,8 +9,6 @@ public interface MapSerializer
 
     Map<String, String> finalizeSerialization(Map<String, String> map, Map<MapSerializer, Integer> referenceMap);
 
-    void finalizeDeserialization(Map<String, String> map, Map<Integer, MapSerializer> dereferenceMap);
-
     List<SerializedParameter> getMappedParameters();
 
     Object getValue(String key);

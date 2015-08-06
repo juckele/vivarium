@@ -183,13 +183,6 @@ public class WorldBlueprint implements MapSerializer
     }
 
     @Override
-    public void finalizeDeserialization(Map<String, String> map, Map<Integer, MapSerializer> dereferenceMap)
-    {
-        // TODO Auto-generated method stub
-
-    }
-
-    @Override
     public SerializationCategory getSerializationCategory()
     {
         return SerializationCategory.BLUEPRINT;
