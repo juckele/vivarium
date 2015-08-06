@@ -313,11 +313,7 @@ public class Species implements MapSerializer
 
     public static Species makeCopy(Species original)
     {
-        // TODO: Use serialization
-        // SerializationEngine se = new SerializationEngine();
-        // collection = se.serialize(original);
-        // Species copy = (Species) se.deserialize(map);
-        return null;
+        return (Species) new SerializationEngine().makeCopy(original);
     }
 
     @Override

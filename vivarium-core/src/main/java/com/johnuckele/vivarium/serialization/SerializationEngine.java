@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
 
 public class SerializationEngine
@@ -27,14 +28,22 @@ public class SerializationEngine
 
     public MapSerializer deserializeMap(HashMap<String, String> map)
     {
-        String type = map.get("+type");
-        if (type.equals(Species.class.getSimpleName()))
+        String clazzName = map.get(CLASS_KEY);
+        MapSerializer object;
+        if (clazzName.equals(Species.class.getSimpleName()))
         {
-            Species s = Species.makeUninitialized();
-            deserialize(s, map);
-            return s;
+            object = Species.makeUninitialized();
         }
-        return null;
+        else if (clazzName.equals(WorldBlueprint.class.getSimpleName()))
+        {
+            object = WorldBlueprint.makeUninitialized();
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
+        }
+        deserialize(object, map);
+        return object;
     }
 
     public SerializedCollection serialize(MapSerializer object)
@@ -58,19 +67,28 @@ public class SerializationEngine
             // Serialize the current object
             int objectID = collection.categoryCount(object.getSerializationCategory());
             System.out.println("ID " + objectID);
-            storeReferenceID(object, objectID);
+            storeReferenceToID(object, objectID);
             HashMap<String, String> map = serializeObject(object, objectID);
             collection.addObject(map);
         }
     }
 
-    private void storeReferenceID(MapSerializer object, int objectID)
+    private void storeReferenceToID(MapSerializer object, int objectID)
     {
         if (!_referenceMap.containsKey(object.getSerializationCategory()))
         {
             _referenceMap.put(object.getSerializationCategory(), new HashMap<MapSerializer, Integer>());
         }
         _referenceMap.get(object.getSerializationCategory()).put(object, objectID);
+    }
+
+    private void storeIDToReference(int objectID, MapSerializer object)
+    {
+        if (!_dereferenceMap.containsKey(object.getSerializationCategory()))
+        {
+            _dereferenceMap.put(object.getSerializationCategory(), new HashMap<Integer, MapSerializer>());
+        }
+        _dereferenceMap.get(object.getSerializationCategory()).put(objectID, object);
     }
 
     private Integer getReferenceID(MapSerializer object)
@@ -213,5 +231,27 @@ public class SerializationEngine
         {
             e.printStackTrace();
         }
+    }
+
+    public MapSerializer makeCopy(MapSerializer original)
+    {
+        SerializedCollection collection = serialize(original);
+        MapSerializer copy = deserialize(collection);
+        return copy;
+    }
+
+    private MapSerializer deserialize(SerializedCollection collection)
+    {
+        MapSerializer object = null;
+        for (SerializationCategory category : SerializationCategory.rankedValues())
+        {
+            while (collection.hasNext(category))
+            {
+                HashMap<String, String> map = collection.popNext(category);
+                object = deserializeMap(map);
+                storeIDToReference(Integer.parseInt(map.get(ID_KEY)), object);
+            }
+        }
+        return object;
     }
 }

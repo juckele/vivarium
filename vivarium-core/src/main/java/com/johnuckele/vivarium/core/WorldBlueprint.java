@@ -36,7 +36,8 @@ public class WorldBlueprint implements MapSerializer
         SERIALIZED_PARAMETERS.add(new SerializedParameter("initialFoodGenerationProbability", Double.class, 0.2));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("initialWallGenerationProbability", Double.class, 0.1));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("soundEnabled", Boolean.class, false));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("species", ArrayList.class, "[]"));
+        SERIALIZED_PARAMETERS
+                .add(new SerializedParameter("species", ArrayList.class, SerializationCategory.SPECIES, "[]"));
     }
 
     // Private constructor for deserialization
@@ -165,8 +166,7 @@ public class WorldBlueprint implements MapSerializer
 
     public static WorldBlueprint makeCopy(WorldBlueprint original)
     {
-        // TODO Fixup
-        throw new UnsupportedOperationException("Here");
+        return (WorldBlueprint) new SerializationEngine().makeCopy(original);
     }
 
     @Override
