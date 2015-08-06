@@ -136,7 +136,7 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
         // Set the per Creature random seed (this is
         // currently only used to set animation offsets in
         // GWT viewer)
-        this._randomSeed = Rand.getRandomDouble();
+        this._randomSeed = Rand.getRandomPositiveDouble();
 
         // Set defaults
         this._age = 0;
