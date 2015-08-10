@@ -1,13 +1,10 @@
 package com.johnuckele.vivarium.serialization;
 
 import java.util.List;
-import java.util.Map;
 
 public interface MapSerializer
 {
     List<MapSerializer> getReferences();
-
-    Map<String, String> finalizeSerialization(Map<String, String> map, Map<MapSerializer, Integer> referenceMap);
 
     List<SerializedParameter> getMappedParameters();
 

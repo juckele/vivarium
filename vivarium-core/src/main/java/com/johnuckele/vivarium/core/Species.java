@@ -3,7 +3,6 @@ package com.johnuckele.vivarium.core;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
@@ -289,12 +288,6 @@ public class Species implements MapSerializer
     public LinkedList<MapSerializer> getReferences()
     {
         return new LinkedList<MapSerializer>();
-    }
-
-    @Override
-    public Map<String, String> finalizeSerialization(Map<String, String> map, Map<MapSerializer, Integer> referenceMap)
-    {
-        return map;
     }
 
     public static Species makeUninitialized()

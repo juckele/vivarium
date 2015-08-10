@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
@@ -173,13 +172,6 @@ public class WorldBlueprint implements MapSerializer
     public List<MapSerializer> getReferences()
     {
         return new LinkedList<MapSerializer>(_species);
-    }
-
-    @Override
-    public Map<String, String> finalizeSerialization(Map<String, String> map, Map<MapSerializer, Integer> referenceMap)
-    {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override

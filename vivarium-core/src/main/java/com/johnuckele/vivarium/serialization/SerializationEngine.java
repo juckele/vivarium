@@ -167,7 +167,6 @@ public class SerializationEngine
 
     public void deserialize(MapSerializer object, Map<String, String> map)
     {
-        System.out.println("Deserializing an object " + object);
         try
         {
             for (SerializedParameter parameter : object.getMappedParameters())
