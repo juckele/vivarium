@@ -1,8 +1,10 @@
 package com.johnuckele.vivarium.core.brain;
 
+import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public abstract class Brain
+public abstract class Brain implements MapSerializer
 {
     public abstract BrainType getBrainType();
 
@@ -15,9 +17,15 @@ public abstract class Brain
      * code to map the arrays from world state and into actions.
      *
      * @param inputs
-     * @return outputs
+     * @return outputsS
      */
     public abstract double[] outputs(double[] inputs);
+
+    @Override
+    public SerializationCategory getSerializationCategory()
+    {
+        return SerializationCategory.BRAIN;
+    }
 
     public abstract String render(RenderCode code);
 }

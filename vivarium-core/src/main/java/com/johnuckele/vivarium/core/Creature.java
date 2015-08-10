@@ -79,18 +79,18 @@ public class Creature implements Cloneable, Comparable<Creature>
             if (parent2 != null)
             {
                 // Brain combined from genetic legacy
-                this._brain = _species.getBrainType().ConstructBrain(_species, parent1._brain, parent2._brain);
+                this._brain = _species.getBrainType().makeWithParents(_species, parent1._brain, parent2._brain);
             }
             else
             {
-                // Brain cloned from the panret (might still mutate)
-                this._brain = _species.getBrainType().ConstructBrain(_species, parent1._brain, parent1._brain);
+                // Brain from single parent (might still mutate)
+                this._brain = _species.getBrainType().makeWithParents(_species, parent1._brain, parent1._brain);
             }
         }
         else if (parent1 == null && parent1 == null)
         {
             // Create a new default brain
-            this._brain = _species.getBrainType().ConstructBrain(_species);
+            this._brain = _species.getBrainType().makeWithSpecies(_species);
         }
         else
         {

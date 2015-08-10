@@ -1,9 +1,13 @@
 package com.johnuckele.vivarium.core.brain;
 
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
@@ -18,74 +22,37 @@ public class NeuralNetworkBrain extends Brain
     // bias unit with a value of 1 and a stochastic bias unit
     // with a normally distributed value between -1 and 1.
     private double[][][] _weights;
-    private int          _outputCount;
     private double[]     _outputs;
-    private int          _inputCount;
-    private int          _hiddenLayers;
-    private double[][]   _hiddenNodes;
-    private boolean      _randomInitialization;
 
-    public NeuralNetworkBrain(int inputCount, int outputCount, int hiddenLayers, boolean randomInitialization)
+    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
+
+    static
     {
-        super();
-        this._outputCount = outputCount;
-        this._inputCount = inputCount;
-        this._hiddenLayers = hiddenLayers;
-        this._randomInitialization = randomInitialization;
-        resetOptimizingDataStructures();
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("weights", double[][][].class, "[[[]]]"));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("outputs", double[].class, "[]"));
     }
 
-    private void resetOptimizingDataStructures()
+    public NeuralNetworkBrain()
     {
-        this._outputs = new double[_outputCount];
-        this._hiddenNodes = new double[this._hiddenLayers][];
-        for (int i = 0; i < this._hiddenLayers; i++)
-        {
-            this._hiddenNodes[i] = new double[this._inputCount];
-        }
-        this._weights = new double[this._hiddenLayers + 1][][];
-        if (this._hiddenLayers > 0)
-        {
-            // A NN with at least 1 hidden layer
-            this._weights[0] = new double[_inputCount][_inputCount + 2];
-            for (int i = 1; i < this._hiddenLayers - 1; i++)
-            {
-                this._weights[i] = new double[_inputCount][_inputCount + 2];
-            }
-            this._weights[_hiddenLayers] = new double[_outputCount][_inputCount + 2];
+    }
 
-            // With one or more hidden layers, copy inputs to the last layer
-            // initially
-            // This code assumes that all hidden layers have as many outputs as
-            // the overall
-            // network has for inputs
-            for (int i = 0; i < _weights.length; i++)
-            {
-                for (int j = 0; j < _weights[i].length; j++)
-                {
-                    _weights[i][j][j] = _randomInitialization ? Rand.getRandomDouble() : 1;
-                }
-            }
-            // And then set the weights on the last layer to one
-            for (int j = 0; j < _weights[_hiddenLayers].length; j++)
-            {
-                for (int k = 0; k < _weights[_hiddenLayers][j].length; k++)
-                {
-                    _weights[_hiddenLayers][j][k] = _randomInitialization ? Rand.getRandomDouble() : 1;
-                }
-            }
-        }
-        else
+    private NeuralNetworkBrain(int inputCount, int outputCount, boolean randomInitialization)
+    {
+        super();
+        assert(inputCount > 0);
+        assert(outputCount > 0);
+        constructWithDimensions(outputCount, inputCount, randomInitialization);
+    }
+
+    private void constructWithDimensions(int inputCount, int outputCount, boolean randomInitialization)
+    {
+        this._outputs = new double[outputCount];
+        this._weights[0] = new double[outputCount][inputCount + 2];
+        for (int j = 0; j < _weights[0].length; j++)
         {
-            // A NN with no hidden layers
-            this._weights[0] = new double[_outputCount][_inputCount + 2];
-            // With zero hidden layers, set all weights to one
-            for (int j = 0; j < _weights[0].length; j++)
+            for (int k = 0; k < _weights[0][j].length; k++)
             {
-                for (int k = 0; k < _weights[0][j].length; k++)
-                {
-                    _weights[0][j][k] = _randomInitialization ? Rand.getRandomDouble() : 1;
-                }
+                _weights[0][j][k] = randomInitialization ? Rand.getRandomDouble() : 1;
             }
         }
     }
@@ -94,7 +61,7 @@ public class NeuralNetworkBrain extends Brain
     {
         // Construct the weight layer and store variables with the int based
         // constructor
-        this(brain1._inputCount, brain1._outputCount, brain1._hiddenLayers, false);
+        this(brain1.getInputCount(), brain1.getOutputCount(), false);
 
         // Set all the weights with
         for (int i = 0; i < _weights.length; i++)
@@ -141,7 +108,7 @@ public class NeuralNetworkBrain extends Brain
                         randomValue = Rand.getRandomPositiveDouble();
                         if (randomValue < species.getMutationSmallScaleRate())
                         {
-                            // Gaussian multipliplication mutation,
+                            // Gaussian multiplication mutation,
                             // μ = 1 and σ = 0.2
                             double gaussianRandomValue = Rand.getRandomGaussian() / 5 + 1;
                             _weights[i][j][k] = gaussianRandomValue * _weights[i][j][k];
@@ -174,110 +141,34 @@ public class NeuralNetworkBrain extends Brain
         }
     }
 
-    public int getOutputCount()
-    {
-        return (this._outputCount);
-    }
-
-    public int getInputCount()
-    {
-        return (this._inputCount);
-    }
-
-    public int getHiddenLayers()
-    {
-        return (this._hiddenLayers);
-    }
-
     public double[][][] getWeights()
     {
         return (this._weights);
     }
 
-    public void setOutputCount(int outputCount)
+    public int getInputCount()
     {
-        this._outputCount = outputCount;
-        resetOptimizingDataStructures();
+        return _weights.length;
     }
 
-    public void setInputCount(int inputCount)
+    public int getOutputCount()
     {
-        this._inputCount = inputCount;
-        resetOptimizingDataStructures();
-    }
-
-    public void setHiddenLayers(int hiddenLayers)
-    {
-        this._hiddenLayers = hiddenLayers;
-        resetOptimizingDataStructures();
-    }
-
-    public void setWeights(double[][][] weights)
-    {
-        if (!this.validateWeights(weights))
-        {
-            throw new Error("Invalid weights shape");
-        }
-        this._weights = weights;
-    }
-
-    public boolean validateWeights(double[][][] weights)
-    {
-        // Special case that requires empty array
-        if (this._outputCount == 0)
-        {
-            return weights != null && weights.length == 1 && weights[0].length == 0;
-        }
-        int exptectedInput = this._inputCount + 2;
-        int actualInput = 0;
-        int layerOutput = 0;
-        for (int i = 0; i < weights.length; i++)
-        {
-            layerOutput = 0;
-            for (int j = 0; j < weights[i].length; j++)
-            {
-                layerOutput++;
-                for (int k = 0; k < weights[i][j].length; k++)
-                {
-                    actualInput++;
-                }
-                // For each output, test that is had the correct number of
-                // inputs
-                // and then reset the input counter
-                if (exptectedInput != actualInput)
-                {
-                    return false;
-                }
-                actualInput = 0;
-            }
-        }
-        if (layerOutput != this._outputCount)
-        {
-            // The last matrix output count must match the output count for the
-            // NN
-            return false;
-        }
-        return true;
+        return _weights[0].length;
     }
 
     @Override
     public double[] outputs(double[] inputs)
     {
         // Clear the output units
-        for (int i = 0; i < _outputCount; i++)
+        for (int i = 0; i < _outputs.length; i++)
         {
             _outputs[i] = 0;
         }
 
         // Compute the full NN
-        if (_hiddenLayers > 0)
+        if (_weights.length > 0)
         {
-            computeLayerInPlace(inputs, _hiddenNodes[0], _weights[0]);
-            for (int i = 1; i < _hiddenNodes.length; i++)
-            {
-                computeLayerInPlace(_hiddenNodes[i - 1], _hiddenNodes[i], _weights[i]);
-            }
-            computeLayerInPlace(_hiddenNodes[_hiddenNodes.length - 1], _outputs, _weights[_weights.length - 1]);
+            throw new UnsupportedOperationException("Hidden layer NNs are currently not fully implemented.");
         }
         else
         {
@@ -310,7 +201,7 @@ public class NeuralNetworkBrain extends Brain
     {
         if (code == RenderCode.BRAIN_WEIGHTS)
         {
-            return this.toString();
+            return this.renderBrainWeights();
         }
         else
         {
@@ -318,13 +209,12 @@ public class NeuralNetworkBrain extends Brain
         }
     }
 
-    @Override
-    public String toString()
+    private String renderBrainWeights()
     {
         StringBuffer output = new StringBuffer();
 
         String[] baseLineEndLabel = { "_", "M", "L", "R", "E", "B" };
-        String[] lineEndLabel = new String[this._outputCount];
+        String[] lineEndLabel = new String[this.getOutputCount()];
         for (int i = 0; i < lineEndLabel.length; i++)
         {
             if (i < baseLineEndLabel.length)
@@ -337,7 +227,7 @@ public class NeuralNetworkBrain extends Brain
             }
         }
         String[] baseColumnHeaderLabel = { "cB", "rB", "女", "一", "中", "口", "%" };
-        String[] columnHeaderLabel = new String[this._inputCount + 2];
+        String[] columnHeaderLabel = new String[this.getInputCount() + 2];
         for (int i = 0; i < columnHeaderLabel.length; i++)
         {
             if (i < baseColumnHeaderLabel.length)
@@ -380,7 +270,7 @@ public class NeuralNetworkBrain extends Brain
 
     public static void main(String[] args)
     {
-        NeuralNetworkBrain brain = new NeuralNetworkBrain(3, 10, 0, false);
+        NeuralNetworkBrain brain = new NeuralNetworkBrain(3, 10, false);
         System.out.println("Creating Brain...");
         System.out.println(brain);
         System.out.println("Brain Outputs for inputs");
@@ -401,8 +291,8 @@ public class NeuralNetworkBrain extends Brain
 
     public static NeuralNetworkBrain minBrain(List<NeuralNetworkBrain> brains)
     {
-        NeuralNetworkBrain minBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
-                brains.get(0)._hiddenLayers, false);
+        NeuralNetworkBrain minBrain = new NeuralNetworkBrain(brains.get(0).getInputCount(),
+                brains.get(0).getOutputCount(), false);
         // Set all the weights with
         for (NeuralNetworkBrain brain : brains)
         {
@@ -423,8 +313,8 @@ public class NeuralNetworkBrain extends Brain
 
     public static NeuralNetworkBrain maxBrain(List<NeuralNetworkBrain> brains)
     {
-        NeuralNetworkBrain maxBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
-                brains.get(0)._hiddenLayers, false);
+        NeuralNetworkBrain maxBrain = new NeuralNetworkBrain(brains.get(0).getInputCount(),
+                brains.get(0).getOutputCount(), false);
         // Set all the weights with
         for (NeuralNetworkBrain brain : brains)
         {
@@ -444,8 +334,8 @@ public class NeuralNetworkBrain extends Brain
 
     public static NeuralNetworkBrain medianBrain(List<NeuralNetworkBrain> brains)
     {
-        NeuralNetworkBrain medianBrain = new NeuralNetworkBrain(brains.get(0)._inputCount, brains.get(0)._outputCount,
-                brains.get(0)._hiddenLayers, false);
+        NeuralNetworkBrain medianBrain = new NeuralNetworkBrain(brains.get(0).getInputCount(),
+                brains.get(0).getOutputCount(), false);
         // Set all the weights with
         for (int i = 0; i < medianBrain._weights.length; i++)
         {
@@ -487,8 +377,8 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain standardDeviationBrain(List<NeuralNetworkBrain> brains,
             NeuralNetworkBrain medianBrain)
     {
-        NeuralNetworkBrain standardDeviationBrain = new NeuralNetworkBrain(medianBrain._inputCount,
-                medianBrain._outputCount, brains.get(0)._hiddenLayers, false);
+        NeuralNetworkBrain standardDeviationBrain = new NeuralNetworkBrain(medianBrain.getInputCount(),
+                medianBrain.getOutputCount(), false);
         for (int i = 0; i < standardDeviationBrain._weights.length; i++)
         {
             for (int j = 0; j < standardDeviationBrain._weights[i].length; j++)
@@ -532,5 +422,81 @@ public class NeuralNetworkBrain extends Brain
     public BrainType getBrainType()
     {
         return BrainType.NEURAL_NETWORK;
+    }
+
+    @Override
+    public List<MapSerializer> getReferences()
+    {
+        return new LinkedList<MapSerializer>();
+    }
+
+    @Override
+    public List<SerializedParameter> getMappedParameters()
+    {
+        return NeuralNetworkBrain.SERIALIZED_PARAMETERS;
+    }
+
+    @Override
+    public Object getValue(String key)
+    {
+        switch (key)
+        {
+            case "outputs":
+                return this._outputs;
+            case "weights":
+                return this._weights;
+            default:
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    @Override
+    public void setValue(String key, Object value)
+    {
+        switch (key)
+        {
+            case "outputs":
+                this._outputs = (double[]) value;
+                break;
+            case "weights":
+                this._weights = (double[][][]) value;
+                break;
+            default:
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    public static NeuralNetworkBrain makeUninitialized()
+    {
+        return new NeuralNetworkBrain();
+    }
+
+    public static NeuralNetworkBrain makeDefault()
+    {
+        NeuralNetworkBrain brain = new NeuralNetworkBrain();
+        new SerializationEngine().deserialize(brain, SerializationEngine.EMPTY_OBJECT_MAP);
+        return brain;
+    }
+
+    public static NeuralNetworkBrain makeCopy(NeuralNetworkBrain original)
+    {
+        return (NeuralNetworkBrain) new SerializationEngine().makeCopy(original);
+    }
+
+    public static NeuralNetworkBrain makeWithSpecies(Species species)
+    {
+        return new NeuralNetworkBrain(species.getTotalBrainInputCount(), species.getTotalBrainOutputCount(),
+                species.getRandomInitialization());
+    }
+
+    public static NeuralNetworkBrain makeWithParents(Species species, NeuralNetworkBrain parentBrain1,
+            NeuralNetworkBrain parentBrain2)
+    {
+        return new NeuralNetworkBrain(species, parentBrain1, parentBrain2);
+    }
+
+    public static NeuralNetworkBrain makeWithDimensions(int inputCount, int outputCount, boolean b)
+    {
+        return new NeuralNetworkBrain(inputCount, outputCount, b);
     }
 }

@@ -2,11 +2,16 @@ package com.johnuckele.vivarium.serialization;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
+import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
+import com.johnuckele.vivarium.core.brain.RandomBrain;
+import com.johnuckele.vivarium.util.HierarchicalListParser;
 
 public class SerializationEngine
 {
@@ -37,6 +42,14 @@ public class SerializationEngine
         else if (clazzName.equals(WorldBlueprint.class.getSimpleName()))
         {
             object = WorldBlueprint.makeUninitialized();
+        }
+        else if (clazzName.equals(RandomBrain.class.getSimpleName()))
+        {
+            object = RandomBrain.makeUninitialized();
+        }
+        else if (clazzName.equals(NeuralNetworkBrain.class.getSimpleName()))
+        {
+            object = NeuralNetworkBrain.makeUninitialized();
         }
         else
         {
@@ -103,7 +116,6 @@ public class SerializationEngine
 
     private HashMap<String, String> serializeObject(MapSerializer object, int id)
     {
-        System.out.println("Serializing... " + object);
         HashMap<String, String> map = new HashMap<String, String>();
         map.put(ID_KEY, "" + id);
         map.put(CATEGORY_KEY, "" + object.getSerializationCategory());
@@ -143,6 +155,36 @@ public class SerializationEngine
                 else if (parameterClazz == Integer.class)
                 {
                     valueString = "" + valueObject;
+                }
+                else if (parameterClazz == double[].class)
+                {
+                    double[] valueArray = (double[]) valueObject;
+                    List<Object> valueList = new LinkedList<Object>();
+                    for (double i : valueArray)
+                    {
+                        valueList.add(i);
+                    }
+                    valueString = HierarchicalListParser.generateString(valueList);
+                }
+                else if (parameterClazz == double[][][].class)
+                {
+                    double[][][] valueArray = (double[][][]) valueObject;
+                    List<Object> outerValueList = new LinkedList<Object>();
+                    for (double[][] i : valueArray)
+                    {
+                        List<Object> valueList = new LinkedList<Object>();
+                        outerValueList.add(valueList);
+                        for (double[] j : i)
+                        {
+                            List<Object> innerValueList = new LinkedList<Object>();
+                            outerValueList.add(valueList);
+                            for (double k : j)
+                            {
+                                innerValueList.add(k);
+                            }
+                        }
+                    }
+                    valueString = HierarchicalListParser.generateString(outerValueList);
                 }
                 else
                 {
@@ -214,6 +256,46 @@ public class SerializationEngine
                 else if (parameterClazz == Integer.class)
                 {
                     valueObject = Integer.parseInt(valueString);
+                }
+                else if (parameterClazz == double[].class)
+                {
+                    List<Object> valueList = HierarchicalListParser.parseList(valueString);
+                    double[] valueArray = new double[valueList.size()];
+                    int i = 0;
+                    for (Object objectI : valueList)
+                    {
+                        valueArray[i] = Double.parseDouble((String) objectI);
+                        i++;
+                    }
+                    valueObject = valueArray;
+                }
+                else if (parameterClazz == double[][][].class)
+                {
+                    List<Object> valueList = HierarchicalListParser.parseList(valueString);
+                    double[][][] valueArray = new double[valueList.size()][][];
+                    int i = 0;
+                    for (Object objectI : valueList)
+                    {
+                        @SuppressWarnings("unchecked")
+                        List<Object> listI = (List<Object>) objectI;
+                        valueArray[i] = new double[listI.size()][];
+                        int j = 0;
+                        for (Object objectJ : listI)
+                        {
+                            @SuppressWarnings("unchecked")
+                            List<Object> listJ = (List<Object>) objectJ;
+                            valueArray[i][j] = new double[listJ.size()];
+                            int k = 0;
+                            for (Object objectK : listJ)
+                            {
+                                valueArray[i][j][k] = Double.parseDouble((String) objectK);
+                                k++;
+                            }
+                            j++;
+                        }
+                        i++;
+                    }
+                    valueObject = valueArray;
                 }
                 else
                 {

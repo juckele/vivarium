@@ -4,6 +4,8 @@ import org.junit.Test;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.WorldBlueprint;
+import com.johnuckele.vivarium.core.brain.Brain;
+import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vtest.Tester;
 
 public class SerializationMakeTest
@@ -36,5 +38,26 @@ public class SerializationMakeTest
         Species species = Species.makeDefault();
         Species copy = Species.makeCopy(species);
         Tester.isNotNull("Species copy should exist", copy);
+    }
+
+    @Test
+    public void testBrainMakeDefault() throws Exception
+    {
+        for (BrainType brainType : BrainType.values())
+        {
+            Brain brain = brainType.makeDefault();
+            Tester.isNotNull("Brain of type " + brainType + " should exist", brain);
+        }
+    }
+
+    @Test
+    public void testBrainMakeCopy() throws Exception
+    {
+        for (BrainType brainType : BrainType.values())
+        {
+            Brain brain = brainType.makeDefault();
+            Brain copy = brainType.makeCopy(brain);
+            Tester.isNotNull("Brain copy of type " + brainType + "should exist", copy);
+        }
     }
 }

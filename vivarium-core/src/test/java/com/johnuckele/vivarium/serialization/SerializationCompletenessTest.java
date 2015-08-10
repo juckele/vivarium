@@ -1,8 +1,8 @@
 package com.johnuckele.vivarium.serialization;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.HashMap;
 import java.util.HashSet;
 
@@ -10,45 +10,68 @@ import org.junit.Test;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.WorldBlueprint;
+import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vtest.Tester;
 
 public class SerializationCompletenessTest
 {
-    private Class<?>[] mapSerializers = { WorldBlueprint.class, Species.class };
-    private String[]   ignoredFields  = { "SERIALIZED_PARAMETERS", "_mutationRate" };
+    @Test
+    public void testWorldBlueprintCompleteness() throws Exception
+    {
+        String[] ignoredFields = { };
+        completenessTestHelper(WorldBlueprint.class, ignoredFields);
+    }
 
     @Test
-    public void testCompleteness() throws NoSuchMethodException, SecurityException, IllegalAccessException,
-            IllegalArgumentException, InvocationTargetException
+    public void testSpeciesCompleteness() throws Exception
     {
-        for (Class<?> mapSerializerClazz : mapSerializers)
+        String[] ignoredFields = { "_mutationRate" };
+        completenessTestHelper(Species.class, ignoredFields);
+    }
+
+    @Test
+    public void testBrainCompleteness() throws Exception
+    {
+        for (BrainType brainType : BrainType.values())
         {
-            // Find the fields on the class
-            HashMap<String, Field> fields = new HashMap<String, Field>();
-            for (Field field : mapSerializerClazz.getDeclaredFields())
+            String[] ignoredFields = { };
+            completenessTestHelper(brainType.getBrainClass(), ignoredFields);
+        }
+    }
+
+    private void completenessTestHelper(Class<?> clazz, String[] ignoredFields) throws Exception
+    {
+        // Find the non-static fields on the class
+        HashMap<String, Field> fields = new HashMap<String, Field>();
+        for (Field field : clazz.getDeclaredFields())
+        {
+            if ((field.getModifiers() & Modifier.STATIC) != Modifier.STATIC)
             {
                 fields.put(field.getName(), field);
             }
-            // Create an instance of the MapSerializer class
-            Method makeUnitializedMethod = mapSerializerClazz.getMethod("makeUninitialized");
-            MapSerializer mapObject = (MapSerializer) makeUnitializedMethod.invoke(mapSerializerClazz);
-
-            // Get the serializedParameters from the instance
-            HashSet<SerializedParameter> serializedParameters = new HashSet<SerializedParameter>(
-                    mapObject.getMappedParameters());
-            for (String ignoredField : ignoredFields)
-            {
-                fields.remove(ignoredField);
-            }
-
-            // Find any fields that are not serializedParameters
-            for (SerializedParameter parameter : serializedParameters)
-            {
-                String fieldName = parameter.getFieldName();
-                Tester.contains("All mapped parameters must have a matching field", fields, fieldName);
-                fields.remove(fieldName);
-            }
-            Tester.equal("No unmatched fields should remain:", fields.size(), 0);
         }
+        // Create an instance of the MapSerializer class
+        Method makeUnitializedMethod = clazz.getMethod("makeUninitialized");
+        MapSerializer mapObject = (MapSerializer) makeUnitializedMethod.invoke(clazz);
+
+        // Get the serializedParameters from the instance
+        HashSet<SerializedParameter> serializedParameters = new HashSet<SerializedParameter>(
+                mapObject.getMappedParameters());
+
+        // Strip out explicitly ignored fields
+        for (String ignoredField : ignoredFields)
+        {
+            Tester.contains("All ignored fields must have a matching field", fields, ignoredField);
+            fields.remove(ignoredField);
+        }
+
+        // Find any fields that are not serializedParameters
+        for (SerializedParameter parameter : serializedParameters)
+        {
+            String parameterFieldName = parameter.getFieldName();
+            Tester.contains("All mapped parameters must have a matching field", fields, parameterFieldName);
+            fields.remove(parameterFieldName);
+        }
+        Tester.equal("No unmatched fields should remain:", fields.size(), 0);
     }
 }
