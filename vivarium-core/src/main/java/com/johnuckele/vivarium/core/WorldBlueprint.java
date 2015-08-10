@@ -116,6 +116,11 @@ public class WorldBlueprint implements MapSerializer
         return wb;
     }
 
+    public static WorldBlueprint makeCopy(WorldBlueprint original)
+    {
+        return (WorldBlueprint) new SerializationEngine().makeCopy(original);
+    }
+
     public static WorldBlueprint makeDefault()
     {
         WorldBlueprint wb = new WorldBlueprint();
@@ -161,11 +166,6 @@ public class WorldBlueprint implements MapSerializer
         wb.setSize(size);
         wb._species = new ArrayList<Species>(s);
         return wb;
-    }
-
-    public static WorldBlueprint makeCopy(WorldBlueprint original)
-    {
-        return (WorldBlueprint) new SerializationEngine().makeCopy(original);
     }
 
     @Override

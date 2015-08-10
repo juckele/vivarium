@@ -14,14 +14,14 @@ import com.johnuckele.vivarium.core.brain.BrainType;
 
 public class WorldViewer extends JFrame
 {
-    public static final int            OVERVIEW_ONLY    = 1;
-    public static final int            RAT_LIST_ONLY    = 2;
-    private static final long          serialVersionUID = 8857256647972270073L;
+    public static final int   OVERVIEW_ONLY    = 1;
+    public static final int   RAT_LIST_ONLY    = 2;
+    private static final long serialVersionUID = 8857256647972270073L;
 
-    private World                      _w;
-    private ArrayList<String>          _overviewRenders = new ArrayList<String>(50000);
-    private ArrayList<String>          _ratListRenders  = new ArrayList<String>(50000);
-    private int                        _renderIndex     = 0;
+    private World             _w;
+    private ArrayList<String> _overviewRenders = new ArrayList<String>(50000);
+    private ArrayList<String> _ratListRenders  = new ArrayList<String>(50000);
+    private int               _renderIndex     = 0;
 
     private JTextArea                  _overviewRender;
     private JTextArea                  _ratListRender;
@@ -113,7 +113,7 @@ public class WorldViewer extends JFrame
 
         // Construct the world proper
         WorldBlueprint blueprint = WorldBlueprint.makeWithSizeAndSpecies(worldDimensions, species);
-        World w = new World(blueprint);
+        World w = World.makeWithBlueprint(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
         // Run simulation

@@ -4,12 +4,18 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 
 import com.johnuckele.vivarium.core.brain.Brain;
+import com.johnuckele.vivarium.core.brain.RandomBrain;
+import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationCategory;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class World
+public class World implements MapSerializer
 {
     //
     private int   _maximumCreatureID;
@@ -19,6 +25,17 @@ public class World
     protected Creature[][]   _creatureGrid;
 
     private WorldBlueprint _blueprint;
+
+    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
+
+    static
+    {
+        // TODO FILL
+    }
+
+    private World()
+    {
+    }
 
     public World(WorldBlueprint blueprint)
     {
@@ -600,5 +617,78 @@ public class World
             return brains.getFirst().getBrainType().render(brains);
         }
         return "";
+    }
+
+    @Override
+    public List<MapSerializer> getReferences()
+    {
+        return new LinkedList<MapSerializer>();
+    }
+
+    @Override
+    public List<SerializedParameter> getMappedParameters()
+    {
+        return World.SERIALIZED_PARAMETERS;
+    }
+
+    @Override
+    public Object getValue(String key)
+    {
+        switch (key)
+        {
+            case "x":
+                return null;
+            case "y":
+                return null;
+            case "z":
+                return null;
+            default:
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    @Override
+    public void setValue(String key, Object value)
+    {
+        switch (key)
+        {
+            case "x":
+                break;
+            case "y":
+                break;
+            case "z":
+                break;
+            default:
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    @Override
+    public SerializationCategory getSerializationCategory()
+    {
+        return SerializationCategory.WORLD;
+    }
+
+    public static World makeUninitialized()
+    {
+        return new World();
+    }
+
+    public static World makeDefault()
+    {
+        World world = new World();
+        new SerializationEngine().deserialize(world, SerializationEngine.EMPTY_OBJECT_MAP);
+        return world;
+    }
+
+    public static World makeCopy(RandomBrain original)
+    {
+        return (World) new SerializationEngine().makeCopy(original);
+    }
+
+    public static World makeWithBlueprint(WorldBlueprint blueprint)
+    {
+        // TODO FIX
+        throw new UnsupportedOperationException("FIX ME!");
     }
 }

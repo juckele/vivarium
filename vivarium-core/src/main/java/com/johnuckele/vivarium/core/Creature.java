@@ -1,11 +1,18 @@
 package com.johnuckele.vivarium.core;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.johnuckele.vivarium.core.brain.Brain;
+import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationCategory;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class Creature implements Cloneable, Comparable<Creature>
+public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
 {
     // Meta information
     private int     _id;
@@ -32,6 +39,18 @@ public class Creature implements Cloneable, Comparable<Creature>
 
     // Fetus
     private Creature _fetus;
+
+    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
+
+    static
+    {
+        // TODO FILL
+    }
+
+    private Creature()
+    {
+
+    }
 
     public Creature(Species species)
     {
@@ -518,4 +537,72 @@ public class Creature implements Cloneable, Comparable<Creature>
     {
         return this.toString().compareTo(c.toString());
     }
+
+    @Override
+    public List<MapSerializer> getReferences()
+    {
+        return new LinkedList<MapSerializer>();
+    }
+
+    @Override
+    public List<SerializedParameter> getMappedParameters()
+    {
+        return Creature.SERIALIZED_PARAMETERS;
+    }
+
+    @Override
+    public Object getValue(String key)
+    {
+        switch (key)
+        {
+            case "x":
+                return null;
+            case "y":
+                return null;
+            case "z":
+                return null;
+            default:
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    @Override
+    public void setValue(String key, Object value)
+    {
+        switch (key)
+        {
+            case "x":
+                break;
+            case "y":
+                break;
+            case "z":
+                break;
+            default:
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    @Override
+    public SerializationCategory getSerializationCategory()
+    {
+        return SerializationCategory.CREATURE;
+    }
+
+    public static Creature makeUninitialized()
+    {
+        return new Creature();
+    }
+
+    public static Creature makeDefault()
+    {
+        Creature creature = new Creature();
+        new SerializationEngine().deserialize(creature, SerializationEngine.EMPTY_OBJECT_MAP);
+        return creature;
+    }
+
+    public static Creature makeCopy(Creature original)
+    {
+        return (Creature) new SerializationEngine().makeCopy(original);
+    }
+
 }
