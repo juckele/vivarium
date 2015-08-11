@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.johnuckele.vivarium.core.brain.Brain;
-import com.johnuckele.vivarium.core.brain.RandomBrain;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
@@ -30,7 +29,13 @@ public class World implements MapSerializer
 
     static
     {
-        // TODO FILL
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("maximumCreatureID", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("worldDimensions", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("entityGrid", EntityType[][].class));
+        SERIALIZED_PARAMETERS
+                .add(new SerializedParameter("creatureGrid", Creature[][].class, SerializationCategory.CREATURE));
+        SERIALIZED_PARAMETERS
+                .add(new SerializedParameter("blueprint", WorldBlueprint.class, SerializationCategory.BLUEPRINT));
     }
 
     private World()
@@ -622,7 +627,10 @@ public class World implements MapSerializer
     @Override
     public List<MapSerializer> getReferences()
     {
-        return new LinkedList<MapSerializer>();
+        LinkedList<MapSerializer> list = new LinkedList<MapSerializer>();
+        list.add(_blueprint);
+        list.addAll(getAllCreatures());
+        return list;
     }
 
     @Override
@@ -636,12 +644,16 @@ public class World implements MapSerializer
     {
         switch (key)
         {
-            case "x":
-                return null;
-            case "y":
-                return null;
-            case "z":
-                return null;
+            case "maximumCreatureID":
+                return _maximumCreatureID;
+            case "worldDimensions":
+                return _worldDimensions;
+            case "entityGrid":
+                return _entityGrid;
+            case "creatureGrid":
+                return _creatureGrid;
+            case "blueprint":
+                return _blueprint;
             default:
                 throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
         }
@@ -652,11 +664,20 @@ public class World implements MapSerializer
     {
         switch (key)
         {
-            case "x":
+            case "maximumCreatureID":
+                _maximumCreatureID = (Integer) value;
                 break;
-            case "y":
+            case "worldDimensions":
+                _worldDimensions = (Integer) value;
                 break;
-            case "z":
+            case "entityGrid":
+                _entityGrid = (EntityType[][]) value;
+                break;
+            case "creatureGrid":
+                _creatureGrid = (Creature[][]) value;
+                break;
+            case "blueprint":
+                _blueprint = (WorldBlueprint) value;
                 break;
             default:
                 throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
@@ -674,21 +695,8 @@ public class World implements MapSerializer
         return new World();
     }
 
-    public static World makeDefault()
-    {
-        World world = new World();
-        new SerializationEngine().deserialize(world, SerializationEngine.EMPTY_OBJECT_MAP);
-        return world;
-    }
-
-    public static World makeCopy(RandomBrain original)
+    public static World makeCopy(World original)
     {
         return (World) new SerializationEngine().makeCopy(original);
-    }
-
-    public static World makeWithBlueprint(WorldBlueprint blueprint)
-    {
-        // TODO FIX
-        throw new UnsupportedOperationException("FIX ME!");
     }
 }

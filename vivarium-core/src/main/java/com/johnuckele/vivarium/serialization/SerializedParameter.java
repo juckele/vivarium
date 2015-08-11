@@ -53,16 +53,19 @@ public class SerializedParameter
 
     public SerializationCategory getReferenceCategory()
     {
+        if (_referenceCategory == null)
+        {
+            throw new IllegalStateException("Parameter " + this._parameterName + " has no _referenceCategory");
+        }
         return _referenceCategory;
-    }
-
-    public boolean hasDefaultValue()
-    {
-        return _hasDefaultValue;
     }
 
     public String getDefaultValue()
     {
+        if (!_hasDefaultValue)
+        {
+            throw new IllegalStateException("Parameter " + this._parameterName + " has no _defaultValue");
+        }
         return _defaultValue;
     }
 

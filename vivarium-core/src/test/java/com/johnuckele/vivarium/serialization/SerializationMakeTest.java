@@ -4,6 +4,7 @@ import org.junit.Test;
 
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.core.brain.BrainType;
@@ -69,5 +70,14 @@ public class SerializationMakeTest
         Creature creature = new Creature(species);
         Creature copy = Creature.makeCopy(creature);
         Tester.isNotNull("Creature copy should exist", copy);
+    }
+
+    @Test
+    public void testWorldMakeCopy() throws Exception
+    {
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
+        World world = new World(blueprint);
+        World copy = World.makeCopy(world);
+        Tester.isNotNull("World copy should exist", copy);
     }
 }

@@ -48,16 +48,6 @@ public class HierarchicalListParser
                 builder.append(',');
             }
         }
-        for (Object o : list)
-        {
-            if (o instanceof List)
-            {
-
-            }
-            else
-            {
-            }
-        }
     }
 
     public static List<Object> parseList(String listString)
@@ -84,6 +74,7 @@ public class HierarchicalListParser
 
     private static void innerParse(List<Object> list, StringTokenizer tokenizer)
     {
+        boolean emptyString = true;
         while (tokenizer.hasMoreTokens())
         {
             String token = tokenizer.nextToken();
@@ -92,17 +83,25 @@ public class HierarchicalListParser
                 ArrayList<Object> innerList = new ArrayList<Object>();
                 list.add(innerList);
                 innerParse(innerList, tokenizer);
+                emptyString = false;
             }
             else if (token.equals(","))
             {
+                if (emptyString)
+                {
+                    list.add("");
+                }
+                emptyString = true;
                 continue;
             }
             else if (token.equals("]"))
             {
+                emptyString = false;
                 return;
             }
             else
             {
+                emptyString = false;
                 list.add(token.trim());
             }
         }

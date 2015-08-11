@@ -113,7 +113,7 @@ public class WorldViewer extends JFrame
 
         // Construct the world proper
         WorldBlueprint blueprint = WorldBlueprint.makeWithSizeAndSpecies(worldDimensions, species);
-        World w = World.makeWithBlueprint(blueprint);
+        World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
         // Run simulation

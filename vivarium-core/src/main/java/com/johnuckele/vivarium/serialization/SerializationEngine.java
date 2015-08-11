@@ -9,8 +9,10 @@ import java.util.Map;
 import com.johnuckele.vivarium.core.Action;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Direction;
+import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Gender;
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.core.brain.BrainType;
@@ -59,6 +61,10 @@ public class SerializationEngine
         else if (clazzName.equals(Creature.class.getSimpleName()))
         {
             object = Creature.makeUninitialized();
+        }
+        else if (clazzName.equals(World.class.getSimpleName()))
+        {
+            object = World.makeUninitialized();
         }
         else
         {
@@ -120,7 +126,8 @@ public class SerializationEngine
 
     private MapSerializer getReferenceObject(SerializationCategory category, int objectID)
     {
-        return _dereferenceMap.get(category).get(objectID);
+        HashMap<Integer, MapSerializer> categoryMap = _dereferenceMap.get(category);
+        return categoryMap.get(objectID);
     }
 
     private HashMap<String, String> serializeObject(MapSerializer object, int id)
@@ -154,6 +161,10 @@ public class SerializationEngine
                     valueString = "" + getReferenceID((MapSerializer) valueObject);
                 }
                 else if (parameterClazz == Brain.class)
+                {
+                    valueString = "" + getReferenceID((MapSerializer) valueObject);
+                }
+                else if (parameterClazz == WorldBlueprint.class)
                 {
                     valueString = "" + getReferenceID((MapSerializer) valueObject);
                 }
@@ -226,6 +237,43 @@ public class SerializationEngine
                     }
                     valueString = HierarchicalListParser.generateString(outerValueList);
                 }
+                else if (parameterClazz == EntityType[][].class)
+                {
+                    EntityType[][] valueArray = (EntityType[][]) valueObject;
+                    List<Object> outerValueList = new LinkedList<Object>();
+                    for (EntityType[] i : valueArray)
+                    {
+                        List<Object> valueList = new LinkedList<Object>();
+                        outerValueList.add(valueList);
+                        for (EntityType j : i)
+                        {
+                            valueList.add(j);
+                        }
+                    }
+                    valueString = HierarchicalListParser.generateString(outerValueList);
+                }
+                else if (parameterClazz == Creature[][].class)
+                {
+                    Creature[][] valueArray = (Creature[][]) valueObject;
+                    List<Object> outerValueList = new LinkedList<Object>();
+                    for (Creature[] i : valueArray)
+                    {
+                        List<Object> valueList = new LinkedList<Object>();
+                        outerValueList.add(valueList);
+                        for (Creature j : i)
+                        {
+                            if (j != null)
+                            {
+                                valueList.add(getReferenceID(j));
+                            }
+                            else
+                            {
+                                valueList.add("");
+                            }
+                        }
+                    }
+                    valueString = HierarchicalListParser.generateString(outerValueList);
+                }
                 else
                 {
                     throw new UnsupportedOperationException("Cannot handle parameter type " + parameterClazz);
@@ -286,6 +334,10 @@ public class SerializationEngine
                     valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
                 }
                 else if (parameterClazz == Brain.class)
+                {
+                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
+                }
+                else if (parameterClazz == WorldBlueprint.class)
                 {
                     valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
                 }
@@ -362,6 +414,55 @@ public class SerializationEngine
                             {
                                 valueArray[i][j][k] = Double.parseDouble((String) objectK);
                                 k++;
+                            }
+                            j++;
+                        }
+                        i++;
+                    }
+                    valueObject = valueArray;
+                }
+                else if (parameterClazz == EntityType[][].class)
+                {
+                    List<Object> valueList = HierarchicalListParser.parseList(valueString);
+                    EntityType[][] valueArray = new EntityType[valueList.size()][];
+                    int i = 0;
+                    for (Object objectI : valueList)
+                    {
+                        @SuppressWarnings("unchecked")
+                        List<Object> listI = (List<Object>) objectI;
+                        valueArray[i] = new EntityType[listI.size()];
+                        int j = 0;
+                        for (Object objectJ : listI)
+                        {
+                            valueArray[i][j] = EntityType.valueOf((String) objectJ);
+                            j++;
+                        }
+                        i++;
+                    }
+                    valueObject = valueArray;
+                }
+                else if (parameterClazz == Creature[][].class)
+                {
+                    List<Object> valueList = HierarchicalListParser.parseList(valueString);
+                    Creature[][] valueArray = new Creature[valueList.size()][];
+                    int i = 0;
+                    for (Object objectI : valueList)
+                    {
+                        @SuppressWarnings("unchecked")
+                        List<Object> listI = (List<Object>) objectI;
+                        valueArray[i] = new Creature[listI.size()];
+                        int j = 0;
+                        for (Object objectJ : listI)
+                        {
+                            String stringJ = (String) objectJ;
+                            if (!stringJ.equals(""))
+                            {
+                                valueArray[i][j] = (Creature) getReferenceObject(parameter.getReferenceCategory(),
+                                        Integer.parseInt(stringJ));
+                            }
+                            else
+                            {
+                                valueArray[i][j] = null;
                             }
                             j++;
                         }
