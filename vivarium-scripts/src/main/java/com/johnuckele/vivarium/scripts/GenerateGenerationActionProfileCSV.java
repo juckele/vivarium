@@ -55,7 +55,7 @@ public class GenerateGenerationActionProfileCSV extends Script
             // Generate CSV rows
             for (int i = 0; i < 2; i++)
             {
-                for (int j = 0; j < Action.getDistinctActionCount(); j++)
+                for (int j = 0; j < Action.values().length; j++)
                 {
                     for (int k = 0; k < 2; k++)
                     {

@@ -2,6 +2,7 @@ package com.johnuckele.vivarium.serialization;
 
 import org.junit.Test;
 
+import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.Brain;
@@ -59,5 +60,14 @@ public class SerializationMakeTest
             Brain copy = brainType.makeCopy(brain);
             Tester.isNotNull("Brain copy of type " + brainType + "should exist", copy);
         }
+    }
+
+    @Test
+    public void testCreatureMakeCopy() throws Exception
+    {
+        Species species = Species.makeDefault();
+        Creature creature = new Creature(species);
+        Creature copy = Creature.makeCopy(creature);
+        Tester.isNotNull("Creature copy should exist", copy);
     }
 }

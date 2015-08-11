@@ -4,23 +4,41 @@ public class SerializedParameter
 {
     private String                _parameterName;
     private Class<?>              _clazz;
-    private SerializationCategory _references;
+    private SerializationCategory _referenceCategory;
+    private boolean               _hasDefaultValue;
     private String                _defaultValue;
 
-    public SerializedParameter(String parameterType, Class<?> clazz, Object defaultValue)
+    public SerializedParameter(String parameterName, Class<?> clazz, Object defaultValue)
     {
-        _parameterName = parameterType;
+        _parameterName = parameterName;
         _clazz = clazz;
+        _hasDefaultValue = true;
         _defaultValue = "" + defaultValue;
     }
 
-    public SerializedParameter(String parameterType, Class<?> clazz, SerializationCategory references,
+    public SerializedParameter(String parameterName, Class<?> clazz, SerializationCategory referenceCategory,
             Object defaultValue)
     {
-        _parameterName = parameterType;
+        _parameterName = parameterName;
         _clazz = clazz;
-        _references = references;
+        _referenceCategory = referenceCategory;
+        _hasDefaultValue = true;
         _defaultValue = "" + defaultValue;
+    }
+
+    public SerializedParameter(String parameterName, Class<?> clazz)
+    {
+        _parameterName = parameterName;
+        _clazz = clazz;
+        _hasDefaultValue = false;
+    }
+
+    public SerializedParameter(String parameterName, Class<?> clazz, SerializationCategory referenceCategory)
+    {
+        _parameterName = parameterName;
+        _clazz = clazz;
+        _referenceCategory = referenceCategory;
+        _hasDefaultValue = false;
     }
 
     public String getName()
@@ -35,7 +53,12 @@ public class SerializedParameter
 
     public SerializationCategory getReferenceCategory()
     {
-        return _references;
+        return _referenceCategory;
+    }
+
+    public boolean hasDefaultValue()
+    {
+        return _hasDefaultValue;
     }
 
     public String getDefaultValue()

@@ -8,6 +8,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
@@ -18,7 +19,7 @@ public class SerializationCompletenessTest
     @Test
     public void testWorldBlueprintCompleteness() throws Exception
     {
-        String[] ignoredFields = { };
+        String[] ignoredFields = {};
         completenessTestHelper(WorldBlueprint.class, ignoredFields);
     }
 
@@ -34,9 +35,16 @@ public class SerializationCompletenessTest
     {
         for (BrainType brainType : BrainType.values())
         {
-            String[] ignoredFields = { };
+            String[] ignoredFields = {};
             completenessTestHelper(brainType.getBrainClass(), ignoredFields);
         }
+    }
+
+    @Test
+    public void testCreatureCompleteness() throws Exception
+    {
+        String[] ignoredFields = {};
+        completenessTestHelper(Creature.class, ignoredFields);
     }
 
     private void completenessTestHelper(Class<?> clazz, String[] ignoredFields) throws Exception

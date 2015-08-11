@@ -27,15 +27,16 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
     private double[] _soundOutputs;
 
     // State
-    private boolean   _hasActed = true; // Defaults to true to prevent a newborn from acting before it
-                                        // plans
+    private boolean   _hasActed      = true;        // Defaults to true to prevent a newborn from acting before it
+                                                    // plans
+    private boolean   _wasSuccessful = true;
     private Gender    _gender;
     private double    _randomSeed;
     private int       _age;
     private int       _gestation;
     private int       _food;
     private Direction _facing;
-    private Action    _action;
+    private Action    _action        = Action.SPAWN;
 
     // Fetus
     private Creature _fetus;
@@ -44,7 +45,24 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
 
     static
     {
-        // TODO FILL
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("id", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("species", Species.class, SerializationCategory.SPECIES));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("generation", Double.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("brain", Brain.class, SerializationCategory.BRAIN));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("inputs", double[].class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("memoryUnits", double[].class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("soundInputs", double[].class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("soundOutputs", double[].class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("hasActed", Boolean.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("wasSuccessful", Boolean.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("gender", Gender.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("randomSeed", Double.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("age", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("gestation", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("food", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("facing", Direction.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("action", Action.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("fetus", Creature.class, SerializationCategory.CREATURE));
     }
 
     private Creature()
@@ -541,7 +559,14 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
     @Override
     public List<MapSerializer> getReferences()
     {
-        return new LinkedList<MapSerializer>();
+        LinkedList<MapSerializer> list = new LinkedList<MapSerializer>();
+        list.add(_species);
+        list.add(_brain);
+        if (_fetus != null)
+        {
+            list.add(_fetus);
+        }
+        return list;
     }
 
     @Override
@@ -555,12 +580,42 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
     {
         switch (key)
         {
-            case "x":
-                return null;
-            case "y":
-                return null;
-            case "z":
-                return null;
+            case "id":
+                return _id;
+            case "species":
+                return _species;
+            case "generation":
+                return _generation;
+            case "brain":
+                return _brain;
+            case "inputs":
+                return _inputs;
+            case "memoryUnits":
+                return _memoryUnits;
+            case "soundInputs":
+                return _soundInputs;
+            case "soundOutputs":
+                return _soundOutputs;
+            case "hasActed":
+                return _hasActed;
+            case "wasSuccessful":
+                return _wasSuccessful;
+            case "gender":
+                return _gender;
+            case "randomSeed":
+                return _randomSeed;
+            case "age":
+                return _age;
+            case "gestation":
+                return _gestation;
+            case "food":
+                return _food;
+            case "facing":
+                return _facing;
+            case "action":
+                return _action;
+            case "fetus":
+                return _fetus;
             default:
                 throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
         }
@@ -571,11 +626,59 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
     {
         switch (key)
         {
-            case "x":
+            case "id":
+                _id = (Integer) value;
                 break;
-            case "y":
+            case "species":
+                _species = (Species) value;
                 break;
-            case "z":
+            case "generation":
+                _generation = (Double) value;
+                break;
+            case "brain":
+                _brain = (Brain) value;
+                break;
+            case "inputs":
+                _inputs = (double[]) value;
+                break;
+            case "memoryUnits":
+                _memoryUnits = (double[]) value;
+                break;
+            case "soundInputs":
+                _soundInputs = (double[]) value;
+                break;
+            case "soundOutputs":
+                _soundOutputs = (double[]) value;
+                break;
+            case "hasActed":
+                _hasActed = (Boolean) value;
+                break;
+            case "wasSuccessful":
+                _wasSuccessful = (Boolean) value;
+                break;
+            case "gender":
+                _gender = (Gender) value;
+                break;
+            case "randomSeed":
+                _randomSeed = (Double) value;
+                break;
+            case "age":
+                _age = (Integer) value;
+                break;
+            case "gestation":
+                _gestation = (Integer) value;
+                break;
+            case "food":
+                _food = (Integer) value;
+                break;
+            case "facing":
+                _facing = (Direction) value;
+                break;
+            case "action":
+                _action = (Action) value;
+                break;
+            case "fetus":
+                _fetus = (Creature) value;
                 break;
             default:
                 throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
@@ -593,16 +696,8 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
         return new Creature();
     }
 
-    public static Creature makeDefault()
-    {
-        Creature creature = new Creature();
-        new SerializationEngine().deserialize(creature, SerializationEngine.EMPTY_OBJECT_MAP);
-        return creature;
-    }
-
     public static Creature makeCopy(Creature original)
     {
         return (Creature) new SerializationEngine().makeCopy(original);
     }
-
 }

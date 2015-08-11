@@ -32,11 +32,11 @@ public class NeuralNetworkBrain extends Brain
         SERIALIZED_PARAMETERS.add(new SerializedParameter("outputs", double[].class, "[]"));
     }
 
-    public NeuralNetworkBrain()
+    private NeuralNetworkBrain()
     {
     }
 
-    private NeuralNetworkBrain(int inputCount, int outputCount, boolean randomInitialization)
+    public NeuralNetworkBrain(int inputCount, int outputCount, boolean randomInitialization)
     {
         super();
         assert(inputCount > 0);
@@ -47,6 +47,7 @@ public class NeuralNetworkBrain extends Brain
     private void constructWithDimensions(int inputCount, int outputCount, boolean randomInitialization)
     {
         this._outputs = new double[outputCount];
+        this._weights = new double[1][][]; // Store all NNs as multi-layer with no hidden layer for now
         this._weights[0] = new double[outputCount][inputCount + 2];
         for (int j = 0; j < _weights[0].length; j++)
         {

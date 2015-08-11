@@ -6,8 +6,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.johnuckele.vivarium.core.Action;
+import com.johnuckele.vivarium.core.Creature;
+import com.johnuckele.vivarium.core.Direction;
+import com.johnuckele.vivarium.core.Gender;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.WorldBlueprint;
+import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
 import com.johnuckele.vivarium.core.brain.RandomBrain;
@@ -50,6 +55,10 @@ public class SerializationEngine
         else if (clazzName.equals(NeuralNetworkBrain.class.getSimpleName()))
         {
             object = NeuralNetworkBrain.makeUninitialized();
+        }
+        else if (clazzName.equals(Creature.class.getSimpleName()))
+        {
+            object = Creature.makeUninitialized();
         }
         else
         {
@@ -140,6 +149,25 @@ public class SerializationEngine
                     }
                     valueString = referenceArray.toString();
                 }
+                else if (parameterClazz == Species.class)
+                {
+                    valueString = "" + getReferenceID((MapSerializer) valueObject);
+                }
+                else if (parameterClazz == Brain.class)
+                {
+                    valueString = "" + getReferenceID((MapSerializer) valueObject);
+                }
+                else if (parameterClazz == Creature.class)
+                {
+                    if (valueObject != null)
+                    {
+                        valueString = "" + getReferenceID((MapSerializer) valueObject);
+                    }
+                    else
+                    {
+                        valueString = "";
+                    }
+                }
                 else if (parameterClazz == Boolean.class)
                 {
                     valueString = "" + valueObject;
@@ -147,6 +175,18 @@ public class SerializationEngine
                 else if (parameterClazz == BrainType.class)
                 {
                     valueString = ((BrainType) valueObject).name();
+                }
+                else if (parameterClazz == Gender.class)
+                {
+                    valueString = ((Gender) valueObject).name();
+                }
+                else if (parameterClazz == Direction.class)
+                {
+                    valueString = ((Direction) valueObject).name();
+                }
+                else if (parameterClazz == Action.class)
+                {
+                    valueString = ((Action) valueObject).name();
                 }
                 else if (parameterClazz == Double.class)
                 {
@@ -241,6 +281,26 @@ public class SerializationEngine
                         }
                     }
                 }
+                else if (parameterClazz == Species.class)
+                {
+                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
+                }
+                else if (parameterClazz == Brain.class)
+                {
+                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
+                }
+                else if (parameterClazz == Creature.class)
+                {
+                    if (!valueString.equals(""))
+                    {
+                        valueObject = getReferenceObject(parameter.getReferenceCategory(),
+                                Integer.parseInt(valueString));
+                    }
+                    else
+                    {
+                        valueObject = null;
+                    }
+                }
                 else if (parameterClazz == Boolean.class)
                 {
                     valueObject = Boolean.parseBoolean(valueString);
@@ -248,6 +308,18 @@ public class SerializationEngine
                 else if (parameterClazz == BrainType.class)
                 {
                     valueObject = BrainType.valueOf(valueString);
+                }
+                else if (parameterClazz == Gender.class)
+                {
+                    valueObject = Gender.valueOf(valueString);
+                }
+                else if (parameterClazz == Direction.class)
+                {
+                    valueObject = Direction.valueOf(valueString);
+                }
+                else if (parameterClazz == Action.class)
+                {
+                    valueObject = Action.valueOf(valueString);
                 }
                 else if (parameterClazz == Double.class)
                 {
