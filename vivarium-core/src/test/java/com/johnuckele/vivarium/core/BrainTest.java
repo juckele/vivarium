@@ -24,13 +24,13 @@ public class BrainTest
     {
         double[] inputs = { 1.0, 0.5, 0.0 };
         double[] expectedOutputs = { Functions.sigmoid(1.5), Functions.sigmoid(2), Functions.sigmoid(-1), 0.5 };
-        double[] actialOutputs = new double[4];
+        double[] actualOutputs = new double[4];
         double[][] weights = { { 0, 0, 1, 1, 1 }, { 0, 0, 2, 0, 0 }, { 0, 0, -2, 2, 0 }, { 0, 0, 0, 0, 1 } };
-        NeuralNetworkBrain.computeLayerInPlace(inputs, actialOutputs, weights);
-        Tester.equal("3 inputs, 1st output", actialOutputs[0], expectedOutputs[0], 0.0);
-        Tester.equal("3 inputs, 2nd output", actialOutputs[1], expectedOutputs[1], 0.0);
-        Tester.equal("3 inputs, 3rd output", actialOutputs[2], expectedOutputs[2], 0.0);
-        Tester.equal("3 inputs, 4th output", actialOutputs[3], expectedOutputs[3], 0.0);
+        NeuralNetworkBrain.computeLayerInPlace(inputs, actualOutputs, weights);
+        Tester.equal("3 inputs, 1st output", actualOutputs[0], expectedOutputs[0], 0.0);
+        Tester.equal("3 inputs, 2nd output", actualOutputs[1], expectedOutputs[1], 0.0);
+        Tester.equal("3 inputs, 3rd output", actualOutputs[2], expectedOutputs[2], 0.0);
+        Tester.equal("3 inputs, 4th output", actualOutputs[3], expectedOutputs[3], 0.0);
     }
 
     @Test

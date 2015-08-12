@@ -43,11 +43,13 @@ public class SerializationMakeTest
     }
 
     @Test
-    public void testBrainMakeDefault() throws Exception
+    public void testBrainMakeWithSpecies() throws Exception
     {
         for (BrainType brainType : BrainType.values())
         {
-            Brain brain = brainType.makeDefault();
+            Species species = Species.makeDefault();
+            species.setBrainType(brainType);
+            Brain brain = brainType.makeWithSpecies(species);
             Tester.isNotNull("Brain of type " + brainType + " should exist", brain);
         }
     }
@@ -57,7 +59,9 @@ public class SerializationMakeTest
     {
         for (BrainType brainType : BrainType.values())
         {
-            Brain brain = brainType.makeDefault();
+            Species species = Species.makeDefault();
+            species.setBrainType(brainType);
+            Brain brain = brainType.makeWithSpecies(species);
             Brain copy = brainType.makeCopy(brain);
             Tester.isNotNull("Brain copy of type " + brainType + "should exist", copy);
         }

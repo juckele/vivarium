@@ -101,13 +101,6 @@ public class RandomBrain extends Brain
         return new RandomBrain();
     }
 
-    public static RandomBrain makeDefault()
-    {
-        RandomBrain brain = new RandomBrain();
-        new SerializationEngine().deserialize(brain, SerializationEngine.EMPTY_OBJECT_MAP);
-        return brain;
-    }
-
     public static RandomBrain makeCopy(RandomBrain original)
     {
         return (RandomBrain) new SerializationEngine().makeCopy(original);

@@ -24,6 +24,7 @@ public class NeuralNetworkBrain extends Brain
     private double[][][] _weights;
     private double[]     _outputs;
 
+    private static int                             BIAS_UNIT_COUNT       = 2;
     private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
 
     static
@@ -48,7 +49,7 @@ public class NeuralNetworkBrain extends Brain
     {
         this._outputs = new double[outputCount];
         this._weights = new double[1][][]; // Store all NNs as multi-layer with no hidden layer for now
-        this._weights[0] = new double[outputCount][inputCount + 2];
+        this._weights[0] = new double[outputCount][inputCount + BIAS_UNIT_COUNT];
         for (int j = 0; j < _weights[0].length; j++)
         {
             for (int k = 0; k < _weights[0][j].length; k++)
@@ -149,12 +150,12 @@ public class NeuralNetworkBrain extends Brain
 
     public int getInputCount()
     {
-        return _weights.length;
+        return _weights[0].length;
     }
 
     public int getOutputCount()
     {
-        return _weights[0].length;
+        return _weights[0][0].length - BIAS_UNIT_COUNT;
     }
 
     @Override
@@ -167,7 +168,7 @@ public class NeuralNetworkBrain extends Brain
         }
 
         // Compute the full NN
-        if (_weights.length > 0)
+        if (_weights.length != 1)
         {
             throw new UnsupportedOperationException("Hidden layer NNs are currently not fully implemented.");
         }
@@ -190,7 +191,7 @@ public class NeuralNetworkBrain extends Brain
             // prior units
             for (int j = 0; j < inputs.length; j++)
             {
-                outputs[i] += weights[i][j + 2] * inputs[j];
+                outputs[i] += weights[i][j + BIAS_UNIT_COUNT] * inputs[j];
             }
             // Scale for sigmoid
             outputs[i] = Functions.sigmoid(outputs[i]);
@@ -258,7 +259,7 @@ public class NeuralNetworkBrain extends Brain
                     output.append(weight);
                     output.append('\t');
                 }
-                if (i == _weights.length - 1)
+                if (j == _weights[0].length - 1)
                 {
                     output.append(lineEndLabel[j]);
                 }
@@ -470,13 +471,6 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain makeUninitialized()
     {
         return new NeuralNetworkBrain();
-    }
-
-    public static NeuralNetworkBrain makeDefault()
-    {
-        NeuralNetworkBrain brain = new NeuralNetworkBrain();
-        new SerializationEngine().deserialize(brain, SerializationEngine.EMPTY_OBJECT_MAP);
-        return brain;
     }
 
     public static NeuralNetworkBrain makeCopy(NeuralNetworkBrain original)
