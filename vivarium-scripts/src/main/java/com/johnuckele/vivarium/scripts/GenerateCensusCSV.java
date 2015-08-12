@@ -33,7 +33,7 @@ public class GenerateCensusCSV extends Script
     protected void run(String[] args)
     {
         // Setup
-        World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JAVA_SERIALIZABLE);
         System.out.println("Fix Census " + w);// TODO FIX CENSUS
         CensusRecord census = new CensusRecord(0);// w.getCensus();
 

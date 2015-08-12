@@ -27,6 +27,12 @@ public class JSONConverter
     public static SerializedCollection convertFromJSONObject(JSONObject jsonObject)
     {
         SerializedCollection collection = new SerializedCollection();
+        for (Object key : jsonObject.keySet())
+        {
+            String category = "" + key;
+            Object categoryArray = jsonObject.get(category);
+            System.out.println(categoryArray.getClass());
+        }
         return collection;
     }
 }

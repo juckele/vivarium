@@ -31,7 +31,7 @@ public class RunSimulation extends Script
     protected void run(String[] args)
     {
         // Load
-        World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JAVA_SERIALIZABLE);
         int creatureCount = w.getCount(EntityType.CREATURE);
         System.out.println("Creature count in loaded world: " + creatureCount);
 

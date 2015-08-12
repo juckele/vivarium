@@ -10,8 +10,6 @@ import java.io.ObjectOutputStream;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import com.johnuckele.vivarium.core.Creature;
-import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.scripts.json.JSONConverter;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
@@ -19,18 +17,6 @@ import com.johnuckele.vivarium.serialization.SerializedCollection;
 
 public class ScriptIO
 {
-    public static void saveUckeleloid(Creature u, String fileName, Format f)
-    {
-        if (f == Format.JAVA_SERIALIZABLE)
-        {
-            saveObjectWithDefaultSerialization(u, fileName);
-        }
-        else
-        {
-            throw new Error("Loading format " + f + " is not supported");
-        }
-    }
-
     public static void saveSerializer(MapSerializer serializer, String fileName, Format f)
     {
         if (f == Format.JAVA_SERIALIZABLE)
@@ -87,6 +73,12 @@ public class ScriptIO
         }
     }
 
+    public static void loadStringToFile(String dataString, String fileName)
+    {
+        // TODO WRITE
+        throw new UnsupportedOperationException("Write this");
+    }
+
     private static void saveObjectWithJSON(MapSerializer serializer, String fileName)
     {
         try
@@ -106,25 +98,24 @@ public class ScriptIO
         }
     }
 
-    public static World loadWorld(String fileName, Format f)
+    public static Object loadObject(String fileName, Format f)
     {
-        World w = (World) loadObject(fileName, f);
-        return w;
-
-    }
-
-    public static Creature loadCreature(String fileName, Format f)
-    {
-        Creature u = (Creature) loadObject(fileName, f);
-        return u;
-    }
-
-    private static Object loadObject(String fileName, Format f)
-    {
-        if (f != Format.JAVA_SERIALIZABLE)
+        if (f == Format.JAVA_SERIALIZABLE)
+        {
+            return loadObjectWithDefaultSerialization(fileName);
+        }
+        else if (f == Format.JSON)
+        {
+            return loadObjectWithJSON(fileName);
+        }
+        else
         {
             throw new Error("Loading format " + f + " is not supported");
         }
+    }
+
+    private static Object loadObjectWithDefaultSerialization(String fileName)
+    {
         Object o = null;
         File inputFile = new File(fileName);
         try
@@ -148,5 +139,11 @@ public class ScriptIO
             System.exit(1);
         }
         return (o);
+    }
+
+    private static Object loadObjectWithJSON(String fileName)
+    {
+        // TODO WRITE
+        throw new UnsupportedOperationException("Write this");
     }
 }

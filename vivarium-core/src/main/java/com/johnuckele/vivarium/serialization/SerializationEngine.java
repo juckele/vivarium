@@ -297,6 +297,7 @@ public class SerializationEngine
         return fieldName.substring(fieldName.lastIndexOf('_') + 1);
     }
 
+    @SuppressWarnings("unchecked")
     public void deserialize(MapSerializer object, Map<String, Object> map)
     {
         try
@@ -426,13 +427,11 @@ public class SerializationEngine
                     int i = 0;
                     for (Object objectI : valueList)
                     {
-                        @SuppressWarnings("unchecked")
                         List<Object> listI = (List<Object>) objectI;
                         valueArray[i] = new double[listI.size()][];
                         int j = 0;
                         for (Object objectJ : listI)
                         {
-                            @SuppressWarnings("unchecked")
                             List<Object> listJ = (List<Object>) objectJ;
                             valueArray[i][j] = new double[listJ.size()];
                             int k = 0;
@@ -454,7 +453,6 @@ public class SerializationEngine
                     int i = 0;
                     for (Object objectI : valueList)
                     {
-                        @SuppressWarnings("unchecked")
                         List<Object> listI = (List<Object>) objectI;
                         valueArray[i] = new EntityType[listI.size()];
                         int j = 0;
@@ -474,7 +472,6 @@ public class SerializationEngine
                     int i = 0;
                     for (Object objectI : valueList)
                     {
-                        @SuppressWarnings("unchecked")
                         List<Object> listI = (List<Object>) objectI;
                         valueArray[i] = new Creature[listI.size()];
                         int j = 0;

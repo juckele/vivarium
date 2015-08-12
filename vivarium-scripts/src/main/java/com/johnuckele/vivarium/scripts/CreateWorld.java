@@ -58,9 +58,11 @@ public class CreateWorld extends Script
 
     public static void main(String[] args)
     {
-        args = new String[] { "/tmp/dummyFilePath", "25" };
+        args = new String[] { "/tmp/dummyFilePath", "/tmp/dummyFilePath2", "25" };
         WorldBlueprint obj = WorldBlueprint.makeDefault();
         ScriptIO.saveSerializer(new World(obj), args[0], Format.JSON);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
+        ScriptIO.saveSerializer(w, args[1], Format.JSON);
         // new CreateWorld(args);
     }
 }

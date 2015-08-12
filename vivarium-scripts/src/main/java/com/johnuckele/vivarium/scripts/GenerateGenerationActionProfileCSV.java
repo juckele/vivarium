@@ -34,7 +34,7 @@ public class GenerateGenerationActionProfileCSV extends Script
     protected void run(String[] args)
     {
         // Setup
-        World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JAVA_SERIALIZABLE);
 
         // Build the CSV data
         StringBuilder csvStringBuilder = new StringBuilder("generation,action,action_success,female,count\n");
