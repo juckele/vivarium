@@ -372,6 +372,7 @@ public class SerializationEngine
                     }
                     else
                     {
+                        valueString = null;
                         valueObject = null;
                     }
                 }
@@ -448,7 +449,7 @@ public class SerializationEngine
                 }
                 else if (parameterClazz == EntityType[][].class)
                 {
-                    List<Object> valueList = HierarchicalListParser.parseList(valueString);
+                    List<Object> valueList = (List<Object>) valueObject;
                     EntityType[][] valueArray = new EntityType[valueList.size()][];
                     int i = 0;
                     for (Object objectI : valueList)
@@ -468,7 +469,7 @@ public class SerializationEngine
                 }
                 else if (parameterClazz == Creature[][].class)
                 {
-                    List<Object> valueList = HierarchicalListParser.parseList(valueString);
+                    List<Object> valueList = (List<Object>) valueObject;
                     Creature[][] valueArray = new Creature[valueList.size()][];
                     int i = 0;
                     for (Object objectI : valueList)
@@ -479,7 +480,8 @@ public class SerializationEngine
                         int j = 0;
                         for (Object objectJ : listI)
                         {
-                            String stringJ = (String) objectJ;
+                            String stringJ = "" + objectJ;
+
                             if (!stringJ.equals(""))
                             {
                                 valueArray[i][j] = (Creature) getReferenceObject(parameter.getReferenceCategory(),
