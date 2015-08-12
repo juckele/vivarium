@@ -12,6 +12,9 @@ import org.json.JSONObject;
 
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.scripts.json.JSONConverter;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.SerializedCollection;
 
 public class ScriptIO
 {
@@ -87,7 +90,10 @@ public class ScriptIO
     {
         try
         {
-            JSONObject jsonObject = JSONEncoder.convertWorldToJSON(w);
+            SerializationEngine engine = new SerializationEngine();
+            SerializedCollection collection = engine.serialize(w);
+            System.out.println(collection);
+            JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection);
             System.out.println(jsonObject.toString());
             saveStringToFile(jsonObject.toString(), fileName);
         }
