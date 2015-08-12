@@ -272,7 +272,7 @@ public class Species implements MapSerializer
     public static void main(String[] args)
     {
         SerializationEngine engine = new SerializationEngine();
-        HashMap<String, String> speciesMap = new HashMap<String, String>();
+        HashMap<String, Object> speciesMap = new HashMap<String, Object>();
         speciesMap.put("+type", "Species");
         speciesMap.put("+id", "0");
         speciesMap.put("initialGenerationProbability", "0.5");

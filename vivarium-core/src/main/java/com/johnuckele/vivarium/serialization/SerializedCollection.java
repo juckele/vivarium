@@ -6,24 +6,24 @@ import java.util.Map;
 
 public class SerializedCollection
 {
-    private Map<String, LinkedList<HashMap<String, String>>> _data;
+    private Map<String, LinkedList<HashMap<String, Object>>> _data;
 
     public SerializedCollection()
     {
-        _data = new HashMap<String, LinkedList<HashMap<String, String>>>();
+        _data = new HashMap<String, LinkedList<HashMap<String, Object>>>();
     }
 
-    public void addObject(HashMap<String, String> obj)
+    public void addObject(HashMap<String, Object> obj)
     {
-        String type = obj.get(SerializationEngine.CATEGORY_KEY);
-        LinkedList<HashMap<String, String>> list;
+        String type = (String) obj.get(SerializationEngine.CATEGORY_KEY);
+        LinkedList<HashMap<String, Object>> list;
         if (_data.containsKey(type))
         {
             list = _data.get(type);
         }
         else
         {
-            list = new LinkedList<HashMap<String, String>>();
+            list = new LinkedList<HashMap<String, Object>>();
             _data.put(type, list);
         }
         list.add(obj);
@@ -33,7 +33,7 @@ public class SerializedCollection
     {
         if (_data.containsKey(type.name()))
         {
-            LinkedList<HashMap<String, String>> list = _data.get(type.name());
+            LinkedList<HashMap<String, Object>> list = _data.get(type.name());
             return list.size();
         }
         else
@@ -54,9 +54,9 @@ public class SerializedCollection
         }
     }
 
-    public HashMap<String, String> popNext(SerializationCategory type)
+    public HashMap<String, Object> popNext(SerializationCategory type)
     {
-        LinkedList<HashMap<String, String>> list = _data.get(type.name());
+        LinkedList<HashMap<String, Object>> list = _data.get(type.name());
         return list.pop();
     }
 

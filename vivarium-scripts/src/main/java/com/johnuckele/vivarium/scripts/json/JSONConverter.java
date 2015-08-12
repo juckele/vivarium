@@ -2,7 +2,6 @@ package com.johnuckele.vivarium.scripts.json;
 
 import java.util.HashMap;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import com.johnuckele.vivarium.serialization.SerializationCategory;
@@ -15,16 +14,11 @@ public class JSONConverter
         JSONObject jsonObject = new JSONObject();
         for (SerializationCategory category : SerializationCategory.values())
         {
-            if (collection.categoryCount(category) > 0)
+            while (collection.hasNext(category))
             {
-                JSONArray categoryArray = new JSONArray();
-                jsonObject.append(category.name(), categoryArray);
-                while (collection.hasNext(category))
-                {
-                    HashMap<String, String> map = collection.popNext(category);
-                    JSONObject mapObject = new JSONObject(map);
-                    categoryArray.put(mapObject);
-                }
+                HashMap<String, Object> map = collection.popNext(category);
+                JSONObject categoryMapObject = new JSONObject(map);
+                jsonObject.append(category.name(), categoryMapObject);
             }
         }
         return jsonObject;

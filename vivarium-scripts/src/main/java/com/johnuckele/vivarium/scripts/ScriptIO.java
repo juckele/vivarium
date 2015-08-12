@@ -13,6 +13,7 @@ import org.json.JSONObject;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.scripts.json.JSONConverter;
+import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedCollection;
 
@@ -30,15 +31,15 @@ public class ScriptIO
         }
     }
 
-    public static void saveWorld(World w, String fileName, Format f)
+    public static void saveSerializer(MapSerializer serializer, String fileName, Format f)
     {
         if (f == Format.JAVA_SERIALIZABLE)
         {
-            saveObjectWithDefaultSerialization(w, fileName);
+            saveObjectWithDefaultSerialization(serializer, fileName);
         }
         else if (f == Format.JSON)
         {
-            saveWorldWithJSON(w, fileName);
+            saveObjectWithJSON(serializer, fileName);
         }
         else
         {
@@ -86,12 +87,12 @@ public class ScriptIO
         }
     }
 
-    private static void saveWorldWithJSON(World w, String fileName)
+    private static void saveObjectWithJSON(MapSerializer serializer, String fileName)
     {
         try
         {
             SerializationEngine engine = new SerializationEngine();
-            SerializedCollection collection = engine.serialize(w);
+            SerializedCollection collection = engine.serialize(serializer);
             System.out.println(collection);
             JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection);
             System.out.println(jsonObject.toString());

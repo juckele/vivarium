@@ -25,7 +25,7 @@ public class SerializationEngine
     public static final String                                                          ID_KEY                = "+id";
     public static final String                                                          CATEGORY_KEY          = "+category";
     public static final String                                                          CLASS_KEY             = "+class";
-    public static final HashMap<String, String>                                         EMPTY_OBJECT_MAP      = new HashMap<String, String>();
+    public static final HashMap<String, Object>                                         EMPTY_OBJECT_MAP      = new HashMap<String, Object>();
     public static final HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> EMPTY_REFERENCE_MAP   = new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>();
     public static final HashMap<SerializationCategory, HashMap<Integer, MapSerializer>> EMPTY_DEREFERENCE_MAP = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
 
@@ -38,9 +38,9 @@ public class SerializationEngine
         _dereferenceMap = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
     }
 
-    public MapSerializer deserializeMap(HashMap<String, String> map)
+    public MapSerializer deserializeMap(HashMap<String, Object> map)
     {
-        String clazzName = map.get(CLASS_KEY);
+        String clazzName = (String) map.get(CLASS_KEY);
         MapSerializer object;
         if (clazzName.equals(Species.class.getSimpleName()))
         {
@@ -96,7 +96,7 @@ public class SerializationEngine
             int objectID = collection.categoryCount(object.getSerializationCategory());
             System.out.println("ID " + objectID);
             storeReferenceToID(object, objectID);
-            HashMap<String, String> map = serializeObject(object, objectID);
+            HashMap<String, Object> map = serializeObject(object, objectID);
             collection.addObject(map);
         }
     }
@@ -130,9 +130,9 @@ public class SerializationEngine
         return categoryMap.get(objectID);
     }
 
-    private HashMap<String, String> serializeObject(MapSerializer object, int id)
+    private HashMap<String, Object> serializeObject(MapSerializer object, int id)
     {
-        HashMap<String, String> map = new HashMap<String, String>();
+        HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(ID_KEY, "" + id);
         map.put(CATEGORY_KEY, "" + object.getSerializationCategory());
         map.put(CLASS_KEY, "" + object.getClass().getSimpleName());
@@ -145,7 +145,6 @@ public class SerializationEngine
 
                 // Serialize value
                 Class<?> parameterClazz = parameter.getValueClass();
-                String valueString = null;
                 if (parameterClazz == ArrayList.class)
                 {
                     ArrayList<?> valueArray = (ArrayList<?>) valueObject;
@@ -154,58 +153,58 @@ public class SerializationEngine
                     {
                         referenceArray.add(getReferenceID((MapSerializer) reference));
                     }
-                    valueString = referenceArray.toString();
+                    valueObject = referenceArray;
                 }
                 else if (parameterClazz == Species.class)
                 {
-                    valueString = "" + getReferenceID((MapSerializer) valueObject);
+                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
                 else if (parameterClazz == Brain.class)
                 {
-                    valueString = "" + getReferenceID((MapSerializer) valueObject);
+                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
                 else if (parameterClazz == WorldBlueprint.class)
                 {
-                    valueString = "" + getReferenceID((MapSerializer) valueObject);
+                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
                 else if (parameterClazz == Creature.class)
                 {
                     if (valueObject != null)
                     {
-                        valueString = "" + getReferenceID((MapSerializer) valueObject);
+                        valueObject = "" + getReferenceID((MapSerializer) valueObject);
                     }
                     else
                     {
-                        valueString = "";
+                        valueObject = "";
                     }
                 }
                 else if (parameterClazz == Boolean.class)
                 {
-                    valueString = "" + valueObject;
+                    valueObject = "" + valueObject;
                 }
                 else if (parameterClazz == BrainType.class)
                 {
-                    valueString = ((BrainType) valueObject).name();
+                    valueObject = ((BrainType) valueObject).name();
                 }
                 else if (parameterClazz == Gender.class)
                 {
-                    valueString = ((Gender) valueObject).name();
+                    valueObject = ((Gender) valueObject).name();
                 }
                 else if (parameterClazz == Direction.class)
                 {
-                    valueString = ((Direction) valueObject).name();
+                    valueObject = ((Direction) valueObject).name();
                 }
                 else if (parameterClazz == Action.class)
                 {
-                    valueString = ((Action) valueObject).name();
+                    valueObject = ((Action) valueObject).name();
                 }
                 else if (parameterClazz == Double.class)
                 {
-                    valueString = "" + valueObject;
+                    valueObject = "" + valueObject;
                 }
                 else if (parameterClazz == Integer.class)
                 {
-                    valueString = "" + valueObject;
+                    valueObject = "" + valueObject;
                 }
                 else if (parameterClazz == double[].class)
                 {
@@ -215,7 +214,7 @@ public class SerializationEngine
                     {
                         valueList.add(i);
                     }
-                    valueString = HierarchicalListParser.generateString(valueList);
+                    valueObject = valueList;
                 }
                 else if (parameterClazz == double[][][].class)
                 {
@@ -228,14 +227,14 @@ public class SerializationEngine
                         for (double[] j : i)
                         {
                             List<Object> innerValueList = new LinkedList<Object>();
-                            outerValueList.add(valueList);
+                            valueList.add(innerValueList);
                             for (double k : j)
                             {
                                 innerValueList.add(k);
                             }
                         }
                     }
-                    valueString = HierarchicalListParser.generateString(outerValueList);
+                    valueObject = outerValueList;
                 }
                 else if (parameterClazz == EntityType[][].class)
                 {
@@ -247,10 +246,10 @@ public class SerializationEngine
                         outerValueList.add(valueList);
                         for (EntityType j : i)
                         {
-                            valueList.add(j);
+                            valueList.add(valueObject = (j).name());
                         }
                     }
-                    valueString = HierarchicalListParser.generateString(outerValueList);
+                    valueObject = outerValueList;
                 }
                 else if (parameterClazz == Creature[][].class)
                 {
@@ -272,7 +271,7 @@ public class SerializationEngine
                             }
                         }
                     }
-                    valueString = HierarchicalListParser.generateString(outerValueList);
+                    valueObject = outerValueList;
                 }
                 else
                 {
@@ -280,7 +279,10 @@ public class SerializationEngine
                 }
 
                 // Add value to the map
-                map.put(parameter.getName(), valueString);
+                if (valueObject != null)
+                {
+                    map.put(parameter.getName(), valueObject);
+                }
             }
         }
         catch (IllegalArgumentException e)
@@ -295,17 +297,25 @@ public class SerializationEngine
         return fieldName.substring(fieldName.lastIndexOf('_') + 1);
     }
 
-    public void deserialize(MapSerializer object, Map<String, String> map)
+    public void deserialize(MapSerializer object, Map<String, Object> map)
     {
         try
         {
             for (SerializedParameter parameter : object.getMappedParameters())
             {
                 // Determine string to deserialize (default vs in map value)
-                String valueString;
+                String valueString = null;
+                Object valueObject = null;
                 if (map.containsKey(parameter.getName()))
                 {
-                    valueString = map.get(parameter.getName());
+                    if (map.get(parameter.getName()) instanceof String)
+                    {
+                        valueString = (String) map.get(parameter.getName());
+                    }
+                    else
+                    {
+                        valueObject = map.get(parameter.getName());
+                    }
                 }
                 else
                 {
@@ -314,20 +324,32 @@ public class SerializationEngine
 
                 // Deserialize value
                 Class<?> parameterClazz = parameter.getValueClass();
-                Object valueObject = null;
                 if (parameterClazz == ArrayList.class)
                 {
-                    valueObject = new ArrayList<Object>();
-                    ArrayList<MapSerializer> valueArray = new ArrayList<MapSerializer>();
-                    String[] referenceStrings = valueString.replaceAll("\\[", "").replaceAll("\\]", "").split(",");
-                    if (referenceStrings.length != 1 || !referenceStrings[0].equals(""))
+                    List<Object> referenceList;
+                    if (valueString != null)
                     {
-                        for (String referenceString : referenceStrings)
-                        {
-                            valueArray.add(getReferenceObject(parameter.getReferenceCategory(),
-                                    Integer.parseInt(referenceString)));
-                        }
+                        referenceList = HierarchicalListParser.parseList(valueString);
                     }
+                    else
+                    {
+                        referenceList = (List<Object>) valueObject;
+                    }
+                    ArrayList<Object> valueList = new ArrayList<Object>();
+                    for (Object reference : referenceList)
+                    {
+                        int referenceID;
+                        if (reference instanceof String)
+                        {
+                            referenceID = Integer.parseInt((String) reference);
+                        }
+                        else
+                        {
+                            referenceID = (int) reference;
+                        }
+                        valueList.add(getReferenceObject(parameter.getReferenceCategory(), referenceID));
+                    }
+                    valueObject = valueList;
                 }
                 else if (parameterClazz == Species.class)
                 {
@@ -375,7 +397,10 @@ public class SerializationEngine
                 }
                 else if (parameterClazz == Double.class)
                 {
-                    valueObject = Double.parseDouble(valueString);
+                    if (valueString != null)
+                    {
+                        valueObject = Double.parseDouble(valueString);
+                    }
                 }
                 else if (parameterClazz == Integer.class)
                 {
@@ -383,19 +408,19 @@ public class SerializationEngine
                 }
                 else if (parameterClazz == double[].class)
                 {
-                    List<Object> valueList = HierarchicalListParser.parseList(valueString);
+                    List<Object> valueList = (List<Object>) valueObject;
                     double[] valueArray = new double[valueList.size()];
                     int i = 0;
                     for (Object objectI : valueList)
                     {
-                        valueArray[i] = Double.parseDouble((String) objectI);
+                        valueArray[i] = (double) objectI;
                         i++;
                     }
                     valueObject = valueArray;
                 }
                 else if (parameterClazz == double[][][].class)
                 {
-                    List<Object> valueList = HierarchicalListParser.parseList(valueString);
+                    List<Object> valueList = (List<Object>) valueObject;
                     double[][][] valueArray = new double[valueList.size()][][];
                     int i = 0;
                     for (Object objectI : valueList)
@@ -412,7 +437,7 @@ public class SerializationEngine
                             int k = 0;
                             for (Object objectK : listJ)
                             {
-                                valueArray[i][j][k] = Double.parseDouble((String) objectK);
+                                valueArray[i][j][k] = (double) objectK;
                                 k++;
                             }
                             j++;
@@ -476,7 +501,14 @@ public class SerializationEngine
                 }
 
                 // Set value on the object
-                object.setValue(parameter.getName(), valueObject);
+                if (valueObject != null)
+                {
+                    object.setValue(parameter.getName(), valueObject);
+                }
+                else if (valueString != null)
+                {
+                    object.setValue(parameter.getName(), valueString);
+                }
             }
         }
         catch (IllegalArgumentException e)
@@ -499,9 +531,10 @@ public class SerializationEngine
         {
             while (collection.hasNext(category))
             {
-                HashMap<String, String> map = collection.popNext(category);
+                HashMap<String, Object> map = collection.popNext(category);
                 object = deserializeMap(map);
-                storeIDToReference(Integer.parseInt(map.get(ID_KEY)), object);
+                int referenceID = Integer.parseInt((String) map.get(ID_KEY));
+                storeIDToReference(referenceID, object);
             }
         }
         return object;

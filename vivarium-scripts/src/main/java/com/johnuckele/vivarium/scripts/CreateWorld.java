@@ -53,12 +53,14 @@ public class CreateWorld extends Script
         int creatureCount = w.getCount(EntityType.CREATURE);
         System.out.println("Creature count in new world: " + creatureCount);
 
-        ScriptIO.saveWorld(w, args[0], Format.JSON);
+        ScriptIO.saveSerializer(w, args[0], Format.JSON);
     }
 
     public static void main(String[] args)
     {
         args = new String[] { "/tmp/dummyFilePath", "25" };
-        new CreateWorld(args);
+        WorldBlueprint obj = WorldBlueprint.makeDefault();
+        ScriptIO.saveSerializer(new World(obj), args[0], Format.JSON);
+        // new CreateWorld(args);
     }
 }

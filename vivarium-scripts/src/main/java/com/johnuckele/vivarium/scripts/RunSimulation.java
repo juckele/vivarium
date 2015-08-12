@@ -54,7 +54,7 @@ public class RunSimulation extends Script
         if (args.length == 3)
         {
             System.out.println("Saving file: " + args[2]);
-            ScriptIO.saveWorld(w, args[2], Format.JAVA_SERIALIZABLE);
+            ScriptIO.saveSerializer(w, args[2], Format.JAVA_SERIALIZABLE);
         }
         else
         {
