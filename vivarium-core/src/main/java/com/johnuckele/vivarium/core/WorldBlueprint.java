@@ -130,10 +130,10 @@ public class WorldBlueprint implements MapSerializer
         return wb;
     }
 
-    public static WorldBlueprint makeFromMap(HashMap<String, String> blueprintValues)
+    public static WorldBlueprint makeFromMap(HashMap<String, Object> blueprintValues)
     {
         WorldBlueprint wb = new WorldBlueprint();
-        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        new SerializationEngine().deserialize(wb, blueprintValues);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
         return wb;

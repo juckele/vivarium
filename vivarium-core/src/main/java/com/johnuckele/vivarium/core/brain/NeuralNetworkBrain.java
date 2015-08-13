@@ -42,7 +42,7 @@ public class NeuralNetworkBrain extends Brain
         super();
         assert(inputCount > 0);
         assert(outputCount > 0);
-        constructWithDimensions(outputCount, inputCount, randomInitialization);
+        constructWithDimensions(inputCount, outputCount, randomInitialization);
     }
 
     private void constructWithDimensions(int inputCount, int outputCount, boolean randomInitialization)
@@ -150,12 +150,12 @@ public class NeuralNetworkBrain extends Brain
 
     public int getInputCount()
     {
-        return _weights[0].length;
+        return _weights[0][0].length - BIAS_UNIT_COUNT;
     }
 
     public int getOutputCount()
     {
-        return _weights[0][0].length - BIAS_UNIT_COUNT;
+        return _weights[0].length;
     }
 
     @Override

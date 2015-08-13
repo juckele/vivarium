@@ -31,7 +31,7 @@ public class RunSimulation extends Script
     protected void run(String[] args)
     {
         // Load
-        World w = (World) ScriptIO.loadObject(args[0], Format.JAVA_SERIALIZABLE);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
         int creatureCount = w.getCount(EntityType.CREATURE);
         System.out.println("Creature count in loaded world: " + creatureCount);
 
@@ -54,7 +54,7 @@ public class RunSimulation extends Script
         if (args.length == 3)
         {
             System.out.println("Saving file: " + args[2]);
-            ScriptIO.saveSerializer(w, args[2], Format.JAVA_SERIALIZABLE);
+            ScriptIO.saveSerializer(w, args[2], Format.JSON);
         }
         else
         {

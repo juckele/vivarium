@@ -38,7 +38,7 @@ public class CreateWorld extends Script
     @Override
     protected void run(String[] args)
     {
-        HashMap<String, String> blueprintValues = new HashMap<String, String>();
+        HashMap<String, Object> blueprintValues = new HashMap<String, Object>();
         blueprintValues.put("size", args[1]);
         // For each pair of extra arguments after the first two, set a
         // blueprint value
@@ -58,11 +58,6 @@ public class CreateWorld extends Script
 
     public static void main(String[] args)
     {
-        args = new String[] { "/tmp/dummyFilePath", "/tmp/dummyFilePath2", "25" };
-        WorldBlueprint obj = WorldBlueprint.makeDefault();
-        ScriptIO.saveSerializer(new World(obj), args[0], Format.JSON);
-        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
-        ScriptIO.saveSerializer(w, args[1], Format.JSON);
-        // new CreateWorld(args);
+        new CreateWorld(args);
     }
 }

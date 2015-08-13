@@ -148,10 +148,10 @@ public class SerializationEngine
                 if (parameterClazz == ArrayList.class)
                 {
                     ArrayList<?> valueArray = (ArrayList<?>) valueObject;
-                    ArrayList<Integer> referenceArray = new ArrayList<Integer>();
+                    ArrayList<String> referenceArray = new ArrayList<String>();
                     for (Object reference : valueArray)
                     {
-                        referenceArray.add(getReferenceID((MapSerializer) reference));
+                        referenceArray.add("" + getReferenceID((MapSerializer) reference));
                     }
                     valueObject = referenceArray;
                 }
@@ -212,7 +212,7 @@ public class SerializationEngine
                     List<Object> valueList = new LinkedList<Object>();
                     for (double i : valueArray)
                     {
-                        valueList.add(i);
+                        valueList.add("" + i);
                     }
                     valueObject = valueList;
                 }
@@ -230,7 +230,7 @@ public class SerializationEngine
                             valueList.add(innerValueList);
                             for (double k : j)
                             {
-                                innerValueList.add(k);
+                                innerValueList.add("" + k);
                             }
                         }
                     }
@@ -263,7 +263,7 @@ public class SerializationEngine
                         {
                             if (j != null)
                             {
-                                valueList.add(getReferenceID(j));
+                                valueList.add("" + getReferenceID(j));
                             }
                             else
                             {
@@ -340,14 +340,7 @@ public class SerializationEngine
                     for (Object reference : referenceList)
                     {
                         int referenceID;
-                        if (reference instanceof String)
-                        {
-                            referenceID = Integer.parseInt((String) reference);
-                        }
-                        else
-                        {
-                            referenceID = (int) reference;
-                        }
+                        referenceID = Integer.parseInt((String) reference);
                         valueList.add(getReferenceObject(parameter.getReferenceCategory(), referenceID));
                     }
                     valueObject = valueList;
@@ -415,7 +408,7 @@ public class SerializationEngine
                     int i = 0;
                     for (Object objectI : valueList)
                     {
-                        valueArray[i] = (double) objectI;
+                        valueArray[i] = Double.parseDouble((String) objectI);
                         i++;
                     }
                     valueObject = valueArray;
@@ -437,7 +430,7 @@ public class SerializationEngine
                             int k = 0;
                             for (Object objectK : listJ)
                             {
-                                valueArray[i][j][k] = (double) objectK;
+                                valueArray[i][j][k] = Double.parseDouble((String) objectK);
                                 k++;
                             }
                             j++;
@@ -523,7 +516,7 @@ public class SerializationEngine
         return copy;
     }
 
-    private MapSerializer deserialize(SerializedCollection collection)
+    public MapSerializer deserialize(SerializedCollection collection)
     {
         MapSerializer object = null;
         for (SerializationCategory category : SerializationCategory.rankedValues())
