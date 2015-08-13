@@ -45,12 +45,6 @@ public enum BrainType
         }
 
         @Override
-        public Brain makeCopy(Brain untypedBrain)
-        {
-            return NeuralNetworkBrain.makeCopy((NeuralNetworkBrain) untypedBrain);
-        }
-
-        @Override
         public Brain makeWithSpecies(Species species)
         {
             return NeuralNetworkBrain.makeWithSpecies(species);
@@ -86,12 +80,6 @@ public enum BrainType
         }
 
         @Override
-        public Brain makeCopy(Brain untypedBrain)
-        {
-            return RandomBrain.makeCopy((RandomBrain) untypedBrain);
-        }
-
-        @Override
         public Brain makeWithSpecies(Species species)
         {
             return RandomBrain.makeWithSpecies(species);
@@ -115,7 +103,10 @@ public enum BrainType
 
     public abstract Brain makeUninitialized();
 
-    public abstract Brain makeCopy(Brain untypedBrain);
+    public Brain makeCopy(Brain untypedBrain)
+    {
+        return Brain.makeCopy(untypedBrain);
+    }
 
     public abstract Brain makeWithSpecies(Species species);
 

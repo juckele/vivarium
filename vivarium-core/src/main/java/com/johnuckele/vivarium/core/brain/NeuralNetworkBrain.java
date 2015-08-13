@@ -6,7 +6,6 @@ import java.util.List;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
@@ -471,11 +470,6 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain makeUninitialized()
     {
         return new NeuralNetworkBrain();
-    }
-
-    public static NeuralNetworkBrain makeCopy(NeuralNetworkBrain original)
-    {
-        return (NeuralNetworkBrain) new SerializationEngine().makeCopy(original);
     }
 
     public static NeuralNetworkBrain makeWithSpecies(Species species)
