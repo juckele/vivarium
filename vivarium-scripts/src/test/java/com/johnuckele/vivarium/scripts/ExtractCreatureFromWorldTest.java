@@ -22,7 +22,7 @@ public class ExtractCreatureFromWorldTest
             String[] commandArgs = { "test.viv", "test.uck" };
             ExtractCreatureFromWorld.main(commandArgs);
         }
-        Creature u = ScriptIO.loadCreature("test.uck", Format.JAVA_SERIALIZABLE);
+        Creature u = (Creature) ScriptIO.loadObject("test.uck", Format.JSON);
         assertNotNull("Creature is loaded from file correctly", u);
         assertNotNull("Creature has brain object correctly reloaded", u.getBrain());
         assertTrue("Creature has reasonable ID", u.getID() >= 0 && u.getID() < (worldSize - 2) * (worldSize - 2));
@@ -37,7 +37,7 @@ public class ExtractCreatureFromWorldTest
             String[] commandArgs = { "test.viv", "test.uck" };
             ExtractCreatureFromWorld.main(commandArgs);
         }
-        u = ScriptIO.loadCreature("test.uck", Format.JAVA_SERIALIZABLE);
+        u = (Creature) ScriptIO.loadObject("test.uck", Format.JSON);
         assertEquals("Creature age should match age of world", u.getAge(), 200);
     }
 }

@@ -33,7 +33,7 @@ public class ExtractCreatureFromWorld extends Script
     protected void run(String[] args)
     {
         // Load the world file
-        World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
 
         // Find the specific Creature requested if one was requested
         Creature u = null;

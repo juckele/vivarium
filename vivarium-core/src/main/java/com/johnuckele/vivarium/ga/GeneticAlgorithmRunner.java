@@ -7,7 +7,7 @@ import org.javatuples.Pair;
 
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
-import com.johnuckele.vivarium.core.WorldVariables;
+import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
@@ -35,10 +35,9 @@ public class GeneticAlgorithmRunner
 
     private void buildInitialPopulation()
     {
-        WorldVariables wv = new WorldVariables(_species);
         for (int i = 0; i < _populationSize; i++)
         {
-            Creature c = new Creature(_species, wv);
+            Creature c = new Creature(_species);
             System.out.println(c.getBrain().render(RenderCode.BRAIN_WEIGHTS));
             _population.add(new Pair<Double, Creature>(0.0, c));
         }
@@ -109,17 +108,17 @@ public class GeneticAlgorithmRunner
 
     public static void main(String[] args)
     {
-        Species species = new Species(0);
+        Species species = Species.makeDefault();
         species.setRandomInitialization(true);
         species.setInitialGenerationProbability(0);
         species.setMaximumFood(200);
         System.out.println("Species " + species);
 
-        WorldVariables variables = new WorldVariables(species);
-        variables.setInitialFoodGenerationProbability(0);
+        WorldBlueprint blueprint = WorldBlueprint.makeWithSizeAndSpecies(30, species);
+        blueprint.setInitialFoodGenerationProbability(0);
 
         int tenLifespans = species.getMaximumAge() * 10;
-        GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(species, new TimeToExtinctionFF(30, variables, 100,
+        GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(species, new TimeToExtinctionFF(blueprint, 100,
                 tenLifespans));
         runner.run();
     }

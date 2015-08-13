@@ -36,27 +36,27 @@ public class WorldPopulator
         _foodProbability = probability;
     }
 
-    public WorldObject getNextWorldObject()
+    public EntityType getNextEntityType()
     {
         double random = Rand.getRandomPositiveDouble();
         if (random < this._wallProbability)
         {
-            return WorldObject.WALL;
+            return EntityType.WALL;
         }
         random -= this._wallProbability;
 
         if (random < this._foodProbability)
         {
-            return WorldObject.FOOD;
+            return EntityType.FOOD;
         }
         random -= this._foodProbability;
 
         if (random < this._creatureProbability)
         {
-            return WorldObject.CREATURE;
+            return EntityType.CREATURE;
         }
 
-        return WorldObject.EMPTY;
+        return EntityType.EMPTY;
     }
 
     public Species getNextCreatureSpecies()

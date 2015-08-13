@@ -2,7 +2,7 @@ package com.johnuckele.vivarium.core;
 
 public enum Action
 {
-    REST, MOVE, TURN_LEFT, TURN_RIGHT, EAT, BREED, BIRTH, DIE;
+    REST, MOVE, TURN_LEFT, TURN_RIGHT, EAT, BREED, BIRTH, DIE, SPAWN;
 
     public static Action convertIntegerToAction(int i)
     {
@@ -24,6 +24,8 @@ public enum Action
                 return BIRTH;
             case 7:
                 return DIE;
+            case 8:
+                return SPAWN;
             default:
                 throw new Error("Conversion out of bounds error for value " + i);
         }
@@ -49,13 +51,10 @@ public enum Action
                 return 6;
             case DIE:
                 return 7;
+            case SPAWN:
+                return 8;
             default:
                 throw new Error("Conversion out of bounds error for value " + a);
         }
-    }
-
-    public static int getDistinctActionCount()
-    {
-        return 8;
     }
 }

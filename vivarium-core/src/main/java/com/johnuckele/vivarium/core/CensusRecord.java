@@ -1,15 +1,12 @@
 package com.johnuckele.vivarium.core;
 
-import java.io.Serializable;
 import java.util.LinkedList;
 
-public class CensusRecord implements Serializable
+public class CensusRecord
 {
-    private static final long    serialVersionUID = 4L;
-
     private LinkedList<IntTuple> _censusRecords;
 
-    private int                  _lastPopulationValue;
+    private int _lastPopulationValue;
 
     public CensusRecord(int initialPopulationValue)
     {

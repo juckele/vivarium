@@ -29,7 +29,7 @@ public class RenderWorld extends Script
     @Override
     protected void run(String[] args)
     {
-        World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
         System.out.println(w.render(RenderCode.WORLD_MAP));
         System.out.println(w.render(RenderCode.BRAIN_WEIGHTS));
         // System.out.println(w.toString(RenderCode.CREATURE_LIST));

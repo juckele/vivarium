@@ -1,22 +1,20 @@
 package com.johnuckele.vivarium.ga;
 
 import com.johnuckele.vivarium.core.Creature;
+import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldObject;
-import com.johnuckele.vivarium.core.WorldVariables;
+import com.johnuckele.vivarium.core.WorldBlueprint;
 
 public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
 {
     private int            _initialPopulation;
-    private int            _worldSize;
-    private WorldVariables _variables;
+    private WorldBlueprint _blueprint;
     private double         _simulationDuration;
 
-    public TimeToExtinctionFF(int worldSize, WorldVariables variables, int initialPopulation, int simulationDuration)
+    public TimeToExtinctionFF(WorldBlueprint blueprint, int initialPopulation, int simulationDuration)
     {
-        this._worldSize = worldSize;
-        this._variables = variables;
+        this._blueprint = blueprint;
         this._initialPopulation = initialPopulation;
         this._simulationDuration = simulationDuration;
     }
@@ -25,13 +23,13 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     public double evaluate(Creature c)
     {
         // Build world
-        WorldVariables instanceVariables = new WorldVariables(_variables);
-        assert (instanceVariables.getSpecies().size() == 1);
-        Species instanceSpecies = instanceVariables.getSpecies().get(0);
-        instanceSpecies.setMutationEnabled(false);
-        Creature instanceCreature = new Creature(instanceSpecies, instanceVariables, c);
+        WorldBlueprint instanceBlueprint = WorldBlueprint.makeCopy(_blueprint);
+        assert (instanceBlueprint.getSpecies().size() == 1);
+        Species instanceSpecies = instanceBlueprint.getSpecies().get(0);
+        instanceSpecies.setMutationRateExponent(Double.NEGATIVE_INFINITY);
+        Creature instanceCreature = new Creature(instanceSpecies, c);
 
-        World w = new World(_worldSize, instanceVariables);
+        World w = new World(instanceBlueprint);
         for (int i = 0; i < _initialPopulation; i++)
         {
             w.addImmigrant(new Creature(instanceCreature));
@@ -40,7 +38,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
         // Run simulation
         for (int i = 0; i < _simulationDuration; i++)
         {
-            int count = w.getCount(WorldObject.CREATURE);
+            int count = w.getCount(EntityType.CREATURE);
             if (count == 0)
             {
                 return i / _simulationDuration;

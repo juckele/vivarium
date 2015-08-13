@@ -33,7 +33,7 @@ public class GeneratePopulationSummaryCSV extends Script
     protected void run(String[] args)
     {
         // Setup
-        World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
         // TODO FIX CENSUS
         CensusRecord census = new CensusRecord(0); // w.getCensus();
 
@@ -92,9 +92,9 @@ public class GeneratePopulationSummaryCSV extends Script
         csvStringBuilder.append(maxPopulation);
         csvStringBuilder.append(',');
         // mean population
-        totalPopulationTicks += (w.getTickCounter() - lastTickRecord) * lastPopulationRecord;
-        meanPopulation = totalPopulationTicks / (double) w.getTickCounter();
-        csvStringBuilder.append(meanPopulation);
+        // totalPopulationTicks += (w.getTickCounter() - lastTickRecord) * lastPopulationRecord;
+        // meanPopulation = totalPopulationTicks / (double) w.getTickCounter();
+        // csvStringBuilder.append(meanPopulation);
         csvStringBuilder.append(',');
         // calculate population standard deviation
         it = census.getRecords().iterator();
@@ -112,9 +112,9 @@ public class GeneratePopulationSummaryCSV extends Script
             lastPopulationRecord = record.b;
             lastTickRecord = record.a;
         }
-        sumOfSquaredErrors += (w.getTickCounter() - lastTickRecord)
-                * Math.pow(lastPopulationRecord - meanPopulation, 2);
-        standardDeviation = Math.sqrt(sumOfSquaredErrors / w.getTickCounter());
+        // sumOfSquaredErrors += (w.getTickCounter() - lastTickRecord)
+        // * Math.pow(lastPopulationRecord - meanPopulation, 2);
+        // standardDeviation = Math.sqrt(sumOfSquaredErrors / w.getTickCounter());
         csvStringBuilder.append(standardDeviation);
         // end the line
         csvStringBuilder.append('\n');

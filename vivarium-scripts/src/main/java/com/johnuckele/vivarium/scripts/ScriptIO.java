@@ -1,66 +1,27 @@
 package com.johnuckele.vivarium.scripts;
 
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
+import java.util.Scanner;
 
 import org.json.JSONException;
-import org.json.JSONObject;
 
-import com.johnuckele.vivarium.core.Creature;
-import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.scripts.json.JSONConverter;
+import com.johnuckele.vivarium.serialization.MapSerializer;
 
 public class ScriptIO
 {
-    public static void saveUckeleloid(Creature u, String fileName, Format f)
+    public static void saveSerializer(MapSerializer serializer, String fileName, Format f)
     {
-        if (f == Format.JAVA_SERIALIZABLE)
+        if (f == Format.JSON)
         {
-            saveObjectWithDefaultSerialization(u, fileName);
+            saveObjectWithJSON(serializer, fileName);
         }
         else
         {
             throw new Error("Loading format " + f + " is not supported");
-        }
-    }
-
-    public static void saveWorld(World w, String fileName, Format f)
-    {
-        if (f == Format.JAVA_SERIALIZABLE)
-        {
-            saveObjectWithDefaultSerialization(w, fileName);
-        }
-        else if (f == Format.JSON)
-        {
-            saveWorldWithJSON(w, fileName);
-        }
-        else
-        {
-            throw new Error("Loading format " + f + " is not supported");
-        }
-    }
-
-    private static void saveObjectWithDefaultSerialization(Object o, String fileName)
-    {
-        File file = new File(fileName);
-        try
-        {
-            FileOutputStream fos = new FileOutputStream(file);
-            ObjectOutputStream oos = new ObjectOutputStream(fos);
-            oos.writeObject(o);
-            oos.flush();
-            oos.close();
-            fos.flush();
-            fos.close();
-        }
-        catch (IOException e)
-        {
-            System.out.print("Unable to write the file " + fileName + "\n");
-            e.printStackTrace();
-            System.exit(1);
         }
     }
 
@@ -83,13 +44,31 @@ public class ScriptIO
         }
     }
 
-    private static void saveWorldWithJSON(World w, String fileName)
+    public static String loadFileToString(String fileName)
     {
         try
         {
-            JSONObject jsonObject = JSONEncoder.convertWorldToJSON(w);
-            System.out.println(jsonObject.toString());
-            saveStringToFile(jsonObject.toString(), fileName);
+            File file = new File(fileName);
+            Scanner scanner = new Scanner(file);
+            String dataString = scanner.useDelimiter("\\Z").next();
+            scanner.close();
+            return dataString;
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.print("Unable to read the file " + fileName + "\n");
+            e.printStackTrace();
+            System.exit(1);
+            return null; // Unreachable, but Java doesn't know this.
+        }
+    }
+
+    private static void saveObjectWithJSON(MapSerializer serializer, String fileName)
+    {
+        try
+        {
+            String jsonString = JSONConverter.serializerToJSONString(serializer);
+            saveStringToFile(jsonString, fileName);
         }
         catch (JSONException e)
         {
@@ -99,47 +78,21 @@ public class ScriptIO
         }
     }
 
-    public static World loadWorld(String fileName, Format f)
+    public static Object loadObject(String fileName, Format f)
     {
-        World w = (World) loadObject(fileName, f);
-        return w;
-
-    }
-
-    public static Creature loadCreature(String fileName, Format f)
-    {
-        Creature u = (Creature) loadObject(fileName, f);
-        return u;
-    }
-
-    private static Object loadObject(String fileName, Format f)
-    {
-        if (f != Format.JAVA_SERIALIZABLE)
+        if (f == Format.JSON)
+        {
+            return loadObjectWithJSON(fileName);
+        }
+        else
         {
             throw new Error("Loading format " + f + " is not supported");
         }
-        Object o = null;
-        File inputFile = new File(fileName);
-        try
-        {
-            FileInputStream fis = new FileInputStream(inputFile);
-            ObjectInputStream ois = new ObjectInputStream(fis);
-            o = ois.readObject();
-            ois.close();
-            fis.close();
-        }
-        catch (ClassNotFoundException e)
-        {
-            System.out.print("Unrecognized class on load attempt\n");
-            e.printStackTrace();
-            System.exit(1);
-        }
-        catch (IOException e)
-        {
-            System.out.print("Unable to read the file " + fileName + "\n");
-            e.printStackTrace();
-            System.exit(1);
-        }
-        return (o);
+    }
+
+    private static Object loadObjectWithJSON(String fileName)
+    {
+        String jsonString = loadFileToString(fileName);
+        return JSONConverter.jsonStringtoSerializer(jsonString);
     }
 }

@@ -33,10 +33,10 @@ public class ConvertToJSON extends Script
     protected void run(String[] args)
     {
         // Load
-        World w = ScriptIO.loadWorld(args[0], Format.JAVA_SERIALIZABLE);
+        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
 
         // Save
-        ScriptIO.saveWorld(w, args[1], Format.JSON);
+        ScriptIO.saveSerializer(w, args[1], Format.JSON);
     }
 
     public static void main(String[] args)

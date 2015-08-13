@@ -6,22 +6,22 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldObject;
-import com.johnuckele.vivarium.core.WorldVariables;
+import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
 
 public class WorldViewer extends JFrame
 {
-    public static final int            OVERVIEW_ONLY    = 1;
-    public static final int            RAT_LIST_ONLY    = 2;
-    private static final long          serialVersionUID = 8857256647972270073L;
+    public static final int   OVERVIEW_ONLY    = 1;
+    public static final int   RAT_LIST_ONLY    = 2;
+    private static final long serialVersionUID = 8857256647972270073L;
 
-    private World                      _w;
-    private ArrayList<String>          _overviewRenders = new ArrayList<String>(50000);
-    private ArrayList<String>          _ratListRenders  = new ArrayList<String>(50000);
-    private int                        _renderIndex     = 0;
+    private World             _w;
+    private ArrayList<String> _overviewRenders = new ArrayList<String>(50000);
+    private ArrayList<String> _ratListRenders  = new ArrayList<String>(50000);
+    private int               _renderIndex     = 0;
 
     private JTextArea                  _overviewRender;
     private JTextArea                  _ratListRender;
@@ -67,7 +67,7 @@ public class WorldViewer extends JFrame
             {
                 _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.BRAIN_WEIGHTS));
                 _ratListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
-                System.out.println("Population " + _w.getCount(WorldObject.CREATURE));
+                System.out.println("Population " + _w.getCount(EntityType.CREATURE));
             }
         }
     }
@@ -100,20 +100,20 @@ public class WorldViewer extends JFrame
         LinkedList<Species> species = new LinkedList<Species>();
 
         // Build 1 species
-        Species species1 = new Species(0);
+        Species species1 = Species.makeDefault();
         species1.setMutationRateExponent(-9);
         species1.setCreatureMemoryUnitCount(1);
         species1.setCreatureSoundChannelCount(1);
         species.add(species1);
 
         // Build another
-        Species species2 = new Species(1);
+        Species species2 = Species.makeDefault();
         species2.setBrainType(BrainType.RANDOM);
         species.add(species2);
 
         // Construct the world proper
-        WorldVariables wv = new WorldVariables(species);
-        World w = new World(worldDimensions, wv);
+        WorldBlueprint blueprint = WorldBlueprint.makeWithSizeAndSpecies(worldDimensions, species);
+        World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
         // Run simulation

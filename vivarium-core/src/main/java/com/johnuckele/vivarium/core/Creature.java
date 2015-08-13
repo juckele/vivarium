@@ -1,80 +1,97 @@
 package com.johnuckele.vivarium.core;
 
-import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.List;
 
 import com.johnuckele.vivarium.core.brain.Brain;
+import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationCategory;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class Creature implements Cloneable, Comparable<Creature>, Serializable
+public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
 {
-    /**
-     * serialVersion
-     */
-    private static final long serialVersionUID   = 4L;
-
-    private static final int  BREEDING_FOOD_RATE = -10;
-    private static final int  EATING_FOOD_RATE   = 500;
-    private static final int  MOVING_FOOD_RATE   = -1;
-    private static final int  BASE_FOOD_RATE     = -1;
-    private static final int  PREGNANT_FOOD_RATE = -2;
-
     // Meta information
-    private int               _id;
-    private Species           _species;
-    private WorldVariables    _variables;
-    private double            _generation;
+    private int     _id;
+    private Species _species;
+    private double  _generation;
 
     // Brain
-    private Brain             _brain;
-    private double[]          _inputs;
-    private double[]          _memoryUnits;
-    private double[]          _soundInputs;
-    private double[]          _soundOutputs;
+    private Brain    _brain;
+    private double[] _inputs;
+    private double[] _memoryUnits;
+    private double[] _soundInputs;
+    private double[] _soundOutputs;
 
     // State
-    private boolean           _hasActed          = true; // Defaults to true to prevent a newborn from acting before it
-                                                         // plans
-    private Gender            _gender;
-    private double            _randomSeed;
-    private int               _age;
-    private int               _gestation;
-    private int               _food;
-    private Direction         _facing;
-    private Action            _action;
+    private boolean   _hasActed      = true;        // Defaults to true to prevent a newborn from acting before it
+                                                    // plans
+    private boolean   _wasSuccessful = true;
+    private Gender    _gender;
+    private double    _randomSeed;
+    private int       _age;
+    private int       _gestation;
+    private int       _food;
+    private Direction _facing;
+    private Action    _action        = Action.SPAWN;
 
     // Fetus
-    private Creature          _fetus;
+    private Creature _fetus;
 
-    // Action history
-    // TODO FIX ACTION PROIFLES
-    // private ActionProfile _actionProfile;
-    // private ActionProfile _generationGenderActionProfile;
+    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
 
-    public Creature(Species species, WorldVariables variables)
+    static
     {
-        this(species, variables, null, null);
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("id", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("species", Species.class, SerializationCategory.SPECIES));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("generation", Double.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("brain", Brain.class, SerializationCategory.BRAIN));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("inputs", double[].class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("memoryUnits", double[].class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("soundInputs", double[].class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("soundOutputs", double[].class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("hasActed", Boolean.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("wasSuccessful", Boolean.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("gender", Gender.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("randomSeed", Double.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("age", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("gestation", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("food", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("facing", Direction.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("action", Action.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("fetus", Creature.class, SerializationCategory.CREATURE));
     }
 
-    public Creature(Species species, WorldVariables variables, Creature prototype)
+    private Creature()
     {
-        this(species, variables, prototype, null);
+
+    }
+
+    public Creature(Species species)
+    {
+        this(species, null, null);
+    }
+
+    public Creature(Species species, Creature prototype)
+    {
+        this(species, prototype, null);
     }
 
     public Creature(Creature prototype)
     {
-        this(prototype._species, prototype._variables, prototype, null);
+        this(prototype._species, prototype, null);
     }
 
     public Creature(Creature parent1, Creature parent2)
     {
-        this(parent1._species, parent1._variables, parent1, parent2);
+        this(parent1._species, parent1, parent2);
     }
 
-    public Creature(Species species, WorldVariables variables, Creature parent1, Creature parent2)
+    public Creature(Species species, Creature parent1, Creature parent2)
     {
-        this._variables = variables;
         this._species = species;
 
         if (parent1 != null)
@@ -99,18 +116,18 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
             if (parent2 != null)
             {
                 // Brain combined from genetic legacy
-                this._brain = _species.getBrainType().ConstructBrain(_species, parent1._brain, parent2._brain);
+                this._brain = _species.getBrainType().makeWithParents(_species, parent1._brain, parent2._brain);
             }
             else
             {
-                // Brain cloned from the panret (might still mutate)
-                this._brain = _species.getBrainType().ConstructBrain(_species, parent1._brain, parent1._brain);
+                // Brain from single parent (might still mutate)
+                this._brain = _species.getBrainType().makeWithParents(_species, parent1._brain, parent1._brain);
             }
         }
         else if (parent1 == null && parent1 == null)
         {
             // Create a new default brain
-            this._brain = _species.getBrainType().ConstructBrain(_species);
+            this._brain = _species.getBrainType().makeWithSpecies(_species);
         }
         else
         {
@@ -119,8 +136,8 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
         }
         _inputs = new double[_species.getTotalBrainInputCount()];
         _memoryUnits = new double[_species.getMemoryUnitCount()];
-        _soundInputs = new double[_variables.getMaximumSoundChannelCount()];
-        _soundOutputs = new double[_variables.getMaximumSoundChannelCount()];
+        _soundInputs = new double[_species.getSoundChannelCount()];
+        _soundOutputs = new double[_species.getSoundChannelCount()];
 
         // Set gender
         double randomNumber = Rand.getRandomPositiveDouble();
@@ -164,13 +181,9 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
         if (this._gestation > 0)
         {
             this._gestation++;
-            this._food += Creature.PREGNANT_FOOD_RATE;
+            this._food += _species.getPregnantFoodRate();
         }
-        else
-        {
-            this._food += Creature.BASE_FOOD_RATE;
-        }
-
+        this._food += _species.getBaseFoodRate();
     }
 
     public Action getAction()
@@ -204,11 +217,11 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
             // Hard coded inputs
             int facingR = r + Direction.getVerticalComponent(this._facing);
             int facingC = c + Direction.getHorizontalComponent(this._facing);
-            WorldObject facingObject = w.getWorldObject(facingR, facingC);
+            EntityType facingObject = w.getEntityType(facingR, facingC);
             _inputs[0] = this._gender == Gender.FEMALE ? 1 : 0;
-            _inputs[1] = facingObject == WorldObject.FOOD ? 1 : 0;
-            _inputs[2] = facingObject == WorldObject.CREATURE ? 1 : 0;
-            _inputs[3] = facingObject == WorldObject.WALL ? 1 : 0;
+            _inputs[1] = facingObject == EntityType.FOOD ? 1 : 0;
+            _inputs[2] = facingObject == EntityType.CREATURE ? 1 : 0;
+            _inputs[3] = facingObject == EntityType.WALL ? 1 : 0;
             _inputs[4] = ((double) this._food) / _species.getMaximumFood();
             // Read memory units
             for (int i = 0; i < this._memoryUnits.length; i++)
@@ -315,10 +328,10 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
                     this._gestation = 1;
                     this._fetus = createOffspringWith(breedingTarget);
                 }
-                this._food += Creature.BREEDING_FOOD_RATE;
+                this._food += _species.getBreedingFoodRate();
                 break;
             case MOVE:
-                this._food += Creature.MOVING_FOOD_RATE;
+                this._food += _species.getMovingFoodRate();
                 break;
             case REST:
             case DIE:
@@ -331,7 +344,7 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
                 this._facing = Direction.stepClockwise(this._facing);
                 break;
             case EAT:
-                this._food += Creature.EATING_FOOD_RATE;
+                this._food += _species.getEatingFoodRate();
                 if (this._food > _species.getMaximumFood())
                 {
                     this._food = _species.getMaximumFood();
@@ -342,13 +355,6 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
                 new Error().printStackTrace();
                 break;
         }
-        // TODO FIX ACTION PROFILES
-        /*
-         * if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
-         * this._actionProfile.recordAction(action, true); this._generationGenderActionProfile.recordAction(action,
-         * true); }
-         */
-
     }
 
     public void failAction(Action action)
@@ -383,12 +389,6 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
                 new Error().printStackTrace();
                 break;
         }
-        // TODO FIX ACTION PROFILES
-        /*
-         * if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
-         * this._actionProfile.recordAction(action, false); this._generationGenderActionProfile.recordAction(action,
-         * false); }
-         */
     }
 
     private Creature createOffspringWith(Creature breedingTarget)
@@ -556,22 +556,148 @@ public class Creature implements Cloneable, Comparable<Creature>, Serializable
         return this.toString().compareTo(c.toString());
     }
 
-    // TODO FIX ACTION PROFILES
-    /*
-     * public ActionProfile getActionHistory() { if (this._world.getWorldVariables().getKeepGenerationActionProfile()) {
-     * return _actionProfile; } else { throw new Error("Action Profiles are not supported in this world"); } }
-     */
+    @Override
+    public List<MapSerializer> getReferences()
+    {
+        LinkedList<MapSerializer> list = new LinkedList<MapSerializer>();
+        list.add(_species);
+        list.add(_brain);
+        if (_fetus != null)
+        {
+            list.add(_fetus);
+        }
+        return list;
+    }
 
-    /*
-     * public void setActionHistory(ActionProfile _actionHistory) { this._actionProfile = _actionHistory; }
-     */
+    @Override
+    public List<SerializedParameter> getMappedParameters()
+    {
+        return Creature.SERIALIZED_PARAMETERS;
+    }
 
-    // TODO FIX ACTION PROFILES
-    /*
-     * public void disconnectFromWorld() { this._world = null; this._generationGenderActionProfile = null; } public void
-     * connectToWorld(World w) { this._world = w; if (this._world.getWorldVariables().getKeepGenerationActionProfile())
-     * { if (this._actionProfile == null) { this._actionProfile = new ActionProfile(); }
-     * this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int) this._generation,
-     * this._gender); } }
-     */
+    @Override
+    public Object getValue(String key)
+    {
+        switch (key)
+        {
+            case "id":
+                return _id;
+            case "species":
+                return _species;
+            case "generation":
+                return _generation;
+            case "brain":
+                return _brain;
+            case "inputs":
+                return _inputs;
+            case "memoryUnits":
+                return _memoryUnits;
+            case "soundInputs":
+                return _soundInputs;
+            case "soundOutputs":
+                return _soundOutputs;
+            case "hasActed":
+                return _hasActed;
+            case "wasSuccessful":
+                return _wasSuccessful;
+            case "gender":
+                return _gender;
+            case "randomSeed":
+                return _randomSeed;
+            case "age":
+                return _age;
+            case "gestation":
+                return _gestation;
+            case "food":
+                return _food;
+            case "facing":
+                return _facing;
+            case "action":
+                return _action;
+            case "fetus":
+                return _fetus;
+            default:
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    @Override
+    public void setValue(String key, Object value)
+    {
+        switch (key)
+        {
+            case "id":
+                _id = (Integer) value;
+                break;
+            case "species":
+                _species = (Species) value;
+                break;
+            case "generation":
+                _generation = (Double) value;
+                break;
+            case "brain":
+                _brain = (Brain) value;
+                break;
+            case "inputs":
+                _inputs = (double[]) value;
+                break;
+            case "memoryUnits":
+                _memoryUnits = (double[]) value;
+                break;
+            case "soundInputs":
+                _soundInputs = (double[]) value;
+                break;
+            case "soundOutputs":
+                _soundOutputs = (double[]) value;
+                break;
+            case "hasActed":
+                _hasActed = (Boolean) value;
+                break;
+            case "wasSuccessful":
+                _wasSuccessful = (Boolean) value;
+                break;
+            case "gender":
+                _gender = (Gender) value;
+                break;
+            case "randomSeed":
+                _randomSeed = (Double) value;
+                break;
+            case "age":
+                _age = (Integer) value;
+                break;
+            case "gestation":
+                _gestation = (Integer) value;
+                break;
+            case "food":
+                _food = (Integer) value;
+                break;
+            case "facing":
+                _facing = (Direction) value;
+                break;
+            case "action":
+                _action = (Action) value;
+                break;
+            case "fetus":
+                _fetus = (Creature) value;
+                break;
+            default:
+                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
+        }
+    }
+
+    @Override
+    public SerializationCategory getSerializationCategory()
+    {
+        return SerializationCategory.CREATURE;
+    }
+
+    public static Creature makeUninitialized()
+    {
+        return new Creature();
+    }
+
+    public static Creature makeCopy(Creature original)
+    {
+        return (Creature) new SerializationEngine().makeCopy(original);
+    }
 }

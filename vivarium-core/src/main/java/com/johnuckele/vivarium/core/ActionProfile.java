@@ -1,16 +1,12 @@
 package com.johnuckele.vivarium.core;
 
-import java.io.Serializable;
-
-public class ActionProfile implements Serializable
+public class ActionProfile
 {
-    private static final long serialVersionUID = 1L;
-
-    int[][]                   _actionCount;
+    int[][] _actionCount;
 
     public ActionProfile()
     {
-        _actionCount = new int[2][Action.getDistinctActionCount()];
+        _actionCount = new int[2][Action.values().length];
     }
 
     public void recordAction(Action action, boolean didSucceed)
@@ -29,7 +25,7 @@ public class ActionProfile implements Serializable
     {
         for (int i = 0; i < 2; i++)
         {
-            for (int j = 0; j < Action.getDistinctActionCount(); j++)
+            for (int j = 0; j < Action.values().length; j++)
             {
                 this._actionCount[i][j] += history._actionCount[i][j];
             }

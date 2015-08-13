@@ -4,6 +4,7 @@
         <inherits name="com.google.gwt.user.User" />
 	<source path="core"/>
 	<source path="ga"/>
+	<source path="serialization"/>
 	<source path="util"/>
 	<source path="visualization"/>
 </module>

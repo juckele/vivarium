@@ -8,7 +8,7 @@ import com.johnuckele.vivarium.core.Species;
 
 public enum BrainType
 {
-    NEURALNETWORK
+    NEURAL_NETWORK
     {
         @Override
         public String render(Collection<Brain> untypedBrains)
@@ -27,8 +27,8 @@ public enum BrainType
             brainOutput.append(standardDeviationBrain.toString());
             /*
              * Brain minBrain = Brain.minBrain(brains); brainOutput.append("Min creature NN:\n");
-             * brainOutput.append(minBrain.toString()); Brain maxBrain = Brain.maxBrain(brains);
-             * brainOutput.append("Max creature NN:\n"); brainOutput.append(maxBrain.toString());
+             * brainOutput.append(minBrain.toString()); Brain maxBrain = Brain.maxBrain(brains); brainOutput.append(
+             * "Max creature NN:\n"); brainOutput.append(maxBrain.toString());
              */
             /*
              * brainOutput.append("Oldest creature NN:\n"); brainOutput.append(brains.get(0).toString());
@@ -39,21 +39,34 @@ public enum BrainType
         }
 
         @Override
-        public Brain ConstructBrain(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2)
+        public Brain makeUninitialized()
         {
-            NeuralNetworkBrain parentBrain1 = (NeuralNetworkBrain) untypedParentBrain1;
-            NeuralNetworkBrain parentBrain2 = (NeuralNetworkBrain) untypedParentBrain2;
-            Brain brain = new NeuralNetworkBrain(species, parentBrain1, parentBrain2);
-            return brain;
+            return NeuralNetworkBrain.makeUninitialized();
         }
 
         @Override
-        public Brain ConstructBrain(Species species)
+        public Brain makeCopy(Brain untypedBrain)
         {
-            NeuralNetworkBrain brain = new NeuralNetworkBrain(species.getTotalBrainInputCount(),
-                    species.getTotalBrainOutputCount(), species.getHiddenLayerCount(),
-                    species.getRandomInitialization());
-            return brain;
+            return NeuralNetworkBrain.makeCopy((NeuralNetworkBrain) untypedBrain);
+        }
+
+        @Override
+        public Brain makeWithSpecies(Species species)
+        {
+            return NeuralNetworkBrain.makeWithSpecies(species);
+        }
+
+        @Override
+        public Brain makeWithParents(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2)
+        {
+            return NeuralNetworkBrain.makeWithParents(species, (NeuralNetworkBrain) untypedParentBrain1,
+                    (NeuralNetworkBrain) untypedParentBrain2);
+        }
+
+        @Override
+        public Class<?> getBrainClass()
+        {
+            return NeuralNetworkBrain.class;
         }
     },
     RANDOM
@@ -62,30 +75,51 @@ public enum BrainType
         public String render(Collection<Brain> brains)
         {
             StringBuilder brainOutput = new StringBuilder();
-            brainOutput.append("Hand coded brain: no render available");
+            brainOutput.append("Random action brain: no model render available");
             return brainOutput.toString();
         }
 
         @Override
-        public Brain ConstructBrain(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2)
+        public Brain makeUninitialized()
         {
-            Random parentBrain1 = (Random) untypedParentBrain1;
-            Random parentBrain2 = (Random) untypedParentBrain2;
-            Brain brain = new Random(species, parentBrain1, parentBrain2);
-            return brain;
+            return RandomBrain.makeUninitialized();
         }
 
         @Override
-        public Brain ConstructBrain(Species species)
+        public Brain makeCopy(Brain untypedBrain)
         {
-            Random brain = new Random(species.getTotalBrainOutputCount());
-            return brain;
+            return RandomBrain.makeCopy((RandomBrain) untypedBrain);
+        }
+
+        @Override
+        public Brain makeWithSpecies(Species species)
+        {
+            return RandomBrain.makeWithSpecies(species);
+        }
+
+        @Override
+        public Brain makeWithParents(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2)
+        {
+            return RandomBrain.makeWithParents(species, (RandomBrain) untypedParentBrain1,
+                    (RandomBrain) untypedParentBrain2);
+        }
+
+        @Override
+        public Class<?> getBrainClass()
+        {
+            return RandomBrain.class;
         }
     };
 
     public abstract String render(Collection<Brain> brains);
 
-    public abstract Brain ConstructBrain(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2);
+    public abstract Brain makeUninitialized();
 
-    public abstract Brain ConstructBrain(Species species);
+    public abstract Brain makeCopy(Brain untypedBrain);
+
+    public abstract Brain makeWithSpecies(Species species);
+
+    public abstract Brain makeWithParents(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2);
+
+    public abstract Class<?> getBrainClass();
 }
