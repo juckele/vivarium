@@ -3,6 +3,7 @@ buildscript {
         jcenter()
     }
     dependencies {
+        classpath 'com.github.rholder:gradle-one-jar:1.0.4'
         classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
     }
 }
@@ -53,6 +54,18 @@ project(':vivarium-core') {
 }
 
 project(':vivarium-scripts') {
+    apply plugin: 'gradle-one-jar'
+
+    task jarCreateWorld( type: OneJar ) {
+        archiveName = 'create-world'+'-'+version+'.jar'
+        mainClass = 'com.johnuckele.vivarium.scripts.CreateWorld'
+    }
+    task jarRunSimulation( type: OneJar ) {
+        archiveName = 'run-simulation'+'-'+version+'.jar'
+        mainClass = 'com.johnuckele.vivarium.scripts.RunSimulation'
+
+    }
+
     dependencies {
         compile project(':vivarium-core')
         compile 'org.json:json:20140107'
