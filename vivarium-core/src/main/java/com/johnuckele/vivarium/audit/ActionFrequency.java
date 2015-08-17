@@ -1,9 +1,7 @@
 package com.johnuckele.vivarium.audit;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
@@ -11,33 +9,30 @@ import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
-public class Census extends AuditRecord
+public class ActionFrequency extends AuditRecord
 {
-    protected Species          _trackedSpecies;
-    private ArrayList<Integer> _creaturePopulation;
+    protected Species _trackedSpecies;
 
     private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
 
     static
     {
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", Map.class));
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("trackedSpecies", Species.class, SerializationCategory.SPECIES));
     }
 
-    private Census()
+    private ActionFrequency()
     {
     }
 
-    public Census(Species species)
+    protected ActionFrequency(Species species)
     {
-        _creaturePopulation = new ArrayList<Integer>();
     }
 
     @Override
     public void record(World world, int tick)
     {
-        _creaturePopulation.add(world.getCount(_trackedSpecies));
+        // TODO FILL
     }
 
     @Override
@@ -59,8 +54,6 @@ public class Census extends AuditRecord
     {
         switch (key)
         {
-            case "creaturePopulation":
-                return _creaturePopulation;
             case "trackedSpecies":
                 return _trackedSpecies;
             default:
@@ -74,9 +67,6 @@ public class Census extends AuditRecord
     {
         switch (key)
         {
-            case "creaturePopulation":
-                _creaturePopulation = (ArrayList<Integer>) value;
-                break;
             case "trackedSpecies":
                 _trackedSpecies = (Species) value;
                 break;
@@ -85,13 +75,13 @@ public class Census extends AuditRecord
         }
     }
 
-    public static Census makeUninitialized()
+    public static ActionFrequency makeUninitialized()
     {
-        return new Census();
+        return new ActionFrequency();
     }
 
-    public static Census makeWithSpecies(Species species)
+    public static ActionFrequency makeWithSpecies(Species species)
     {
-        return new Census(species);
+        return new ActionFrequency(species);
     }
 }

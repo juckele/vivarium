@@ -7,6 +7,11 @@ import com.johnuckele.vivarium.serialization.SerializationEngine;
 
 public abstract class AuditRecord implements MapSerializer
 {
+    protected AuditRecord()
+    {
+
+    }
+
     /**
      * Inspect a world, recording any information required by the audit record
      *

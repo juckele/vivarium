@@ -8,6 +8,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+import com.johnuckele.vivarium.audit.AuditRecordType;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.WorldBlueprint;
@@ -37,6 +38,16 @@ public class SerializationCompletenessTest
         {
             String[] ignoredFields = {};
             completenessTestHelper(brainType.getBrainClass(), ignoredFields);
+        }
+    }
+
+    @Test
+    public void testAuditCompleteness() throws Exception
+    {
+        for (AuditRecordType auditRecordType : AuditRecordType.values())
+        {
+            String[] ignoredFields = {};
+            completenessTestHelper(auditRecordType.getAuditRecordClass(), ignoredFields);
         }
     }
 
