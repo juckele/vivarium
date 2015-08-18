@@ -1,5 +1,7 @@
 package com.johnuckele.vivarium.audit;
 
+import com.johnuckele.vivarium.core.Species;
+
 public enum AuditRecordType
 {
     ACTION_FREQUENCY
@@ -9,6 +11,12 @@ public enum AuditRecordType
         {
             return ActionFrequency.class;
         }
+
+        @Override
+        public ActionFrequency makeWithSpecies(Species species)
+        {
+            return ActionFrequency.makeWithSpecies(species);
+        }
     },
     CENSUS
     {
@@ -16,6 +24,12 @@ public enum AuditRecordType
         public Class<?> getAuditRecordClass()
         {
             return Census.class;
+        }
+
+        @Override
+        public Census makeWithSpecies(Species species)
+        {
+            return Census.makeWithSpecies(species);
         }
     },
     MEMORIAL
@@ -25,7 +39,15 @@ public enum AuditRecordType
         {
             return CreatureMemorial.class;
         }
+
+        @Override
+        public AuditRecord makeWithSpecies(Species species)
+        {
+            return CreatureMemorial.makeWithSpecies(species);
+        }
     };
 
     public abstract Class<?> getAuditRecordClass();
+
+    public abstract AuditRecord makeWithSpecies(Species species);
 }

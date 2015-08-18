@@ -31,7 +31,13 @@ public class Census extends AuditRecord
 
     public Census(Species species)
     {
+        _trackedSpecies = species;
         _creaturePopulation = new ArrayList<Integer>();
+    }
+
+    public ArrayList<Integer> getPopulationRecords()
+    {
+        return _creaturePopulation;
     }
 
     @Override

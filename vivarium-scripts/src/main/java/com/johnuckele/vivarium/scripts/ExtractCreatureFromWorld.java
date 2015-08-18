@@ -37,7 +37,7 @@ public class ExtractCreatureFromWorld extends Script
 
         // Find the specific Creature requested if one was requested
         Creature u = null;
-        LinkedList<Creature> creatures = w.getAllCreatures();
+        LinkedList<Creature> creatures = w.getCreatures();
         if (args.length == 3)
         {
             int creatureID = Integer.parseInt(args[2]);

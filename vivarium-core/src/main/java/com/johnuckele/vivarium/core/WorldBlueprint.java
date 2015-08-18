@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.johnuckele.vivarium.audit.AuditRecordType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
@@ -21,7 +22,8 @@ public class WorldBlueprint implements MapSerializer
     private double _initialWallGenerationProbability;
 
     // Simulation Details
-    private boolean _soundEnabled;
+    private boolean                    _soundEnabled;
+    private ArrayList<AuditRecordType> _auditRecordTypes;
 
     // Species
     private ArrayList<Species> _species;
@@ -35,6 +37,7 @@ public class WorldBlueprint implements MapSerializer
         SERIALIZED_PARAMETERS.add(new SerializedParameter("initialFoodGenerationProbability", Double.class, 0.2));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("initialWallGenerationProbability", Double.class, 0.1));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("soundEnabled", Boolean.class, false));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("auditRecordTypes", ArrayList.class, "[]"));
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("species", ArrayList.class, SerializationCategory.SPECIES, "[]"));
     }
@@ -42,6 +45,11 @@ public class WorldBlueprint implements MapSerializer
     // Private constructor for deserialization
     private WorldBlueprint()
     {
+    }
+
+    public void addAuditRecord(AuditRecordType auditRecord)
+    {
+        this._auditRecordTypes.add(auditRecord);
     }
 
     public double getFoodGenerationProbability()
@@ -67,6 +75,11 @@ public class WorldBlueprint implements MapSerializer
     public boolean getSoundEnabled()
     {
         return this._soundEnabled;
+    }
+
+    public ArrayList<AuditRecordType> getAuditRecordTypes()
+    {
+        return this._auditRecordTypes;
     }
 
     public ArrayList<Species> getSpecies()
@@ -127,6 +140,7 @@ public class WorldBlueprint implements MapSerializer
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
+        wb._auditRecordTypes = new ArrayList<AuditRecordType>();
         return wb;
     }
 
@@ -136,6 +150,7 @@ public class WorldBlueprint implements MapSerializer
         new SerializationEngine().deserialize(wb, blueprintValues);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
+        wb._auditRecordTypes = new ArrayList<AuditRecordType>();
         return wb;
     }
 
@@ -146,6 +161,7 @@ public class WorldBlueprint implements MapSerializer
         wb.setSize(size);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
+        wb._auditRecordTypes = new ArrayList<AuditRecordType>();
         return wb;
     }
 
@@ -156,6 +172,7 @@ public class WorldBlueprint implements MapSerializer
         wb.setSize(size);
         wb._species = new ArrayList<Species>();
         wb._species.add(s);
+        wb._auditRecordTypes = new ArrayList<AuditRecordType>();
         return wb;
     }
 
@@ -165,6 +182,7 @@ public class WorldBlueprint implements MapSerializer
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>(s);
+        wb._auditRecordTypes = new ArrayList<AuditRecordType>();
         return wb;
     }
 
@@ -216,6 +234,8 @@ public class WorldBlueprint implements MapSerializer
                 return "" + this._initialWallGenerationProbability;
             case "soundEnabled":
                 return "" + this._soundEnabled;
+            case "auditRecordTypes":
+                return this._auditRecordTypes;
             case "species":
                 return this._species;
             default:
@@ -244,6 +264,9 @@ public class WorldBlueprint implements MapSerializer
             case "soundEnabled":
                 this._soundEnabled = (Boolean) value;
                 break;
+            case "auditRecordTypes":
+                this._auditRecordTypes = (ArrayList<AuditRecordType>) value;
+                break;
             case "species":
                 this._species = (ArrayList<Species>) value;
                 break;
@@ -251,5 +274,4 @@ public class WorldBlueprint implements MapSerializer
                 throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
         }
     }
-
 }

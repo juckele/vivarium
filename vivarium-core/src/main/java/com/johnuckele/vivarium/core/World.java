@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.johnuckele.vivarium.audit.AuditRecord;
+import com.johnuckele.vivarium.audit.AuditRecordType;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
@@ -16,12 +18,13 @@ import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class World implements MapSerializer
 {
-    //
     private int   _maximumCreatureID;
+    private int   _tick;
     protected int _worldDimensions;
 
     protected EntityType[][] _entityGrid;
     protected Creature[][]   _creatureGrid;
+    protected AuditRecord[]  _auditRecords;
 
     private WorldBlueprint _blueprint;
 
@@ -30,6 +33,7 @@ public class World implements MapSerializer
     static
     {
         SERIALIZED_PARAMETERS.add(new SerializedParameter("maximumCreatureID", Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("tick", Integer.class));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("worldDimensions", Integer.class));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("entityGrid", EntityType[][].class));
         SERIALIZED_PARAMETERS
@@ -53,13 +57,32 @@ public class World implements MapSerializer
         // Size the world
         this.setWorldDimensions(blueprint.getSize());
 
-        // Final step
+        // Fill the world with creatures and food
         this.populatateWorld();
+
+        // Build audit records
+        this.constructAuditRecords();
+        this.performAudits();
     }
 
     public int getWorldDimensions()
     {
         return this._worldDimensions;
+    }
+
+    private void constructAuditRecords()
+    {
+        int auditRecordCount = _blueprint.getSpecies().size() * _blueprint.getAuditRecordTypes().size();
+        _auditRecords = new AuditRecord[auditRecordCount];
+        int i = 0;
+        for (Species species : _blueprint.getSpecies())
+        {
+            for (AuditRecordType auditRecordType : _blueprint.getAuditRecordTypes())
+            {
+                _auditRecords[i] = auditRecordType.makeWithSpecies(species);
+                i++;
+            }
+        }
     }
 
     private void populatateWorld()
@@ -110,6 +133,9 @@ public class World implements MapSerializer
      */
     public void tick()
     {
+        // Increment tick counter
+        _tick++;
+
         // Each creature calculates time based
         // changes in condition such as age,
         // gestation, and energy levels.
@@ -128,6 +154,9 @@ public class World implements MapSerializer
 
         // New food resources will be spawned in the world
         spawnFood();
+
+        // Record with audit records
+        performAudits();
     }
 
     private void tickCreatures()
@@ -299,6 +328,14 @@ public class World implements MapSerializer
         }
     }
 
+    private void performAudits()
+    {
+        for (int i = 0; i < _auditRecords.length; i++)
+        {
+            _auditRecords[i].record(this, _tick);
+        }
+    }
+
     private void moveObject(int r, int c, Direction direction)
     {
         int r1 = r;
@@ -370,7 +407,17 @@ public class World implements MapSerializer
         _creatureGrid[r][c] = null;
     }
 
-    public LinkedList<Creature> getAllCreatures()
+    public LinkedList<AuditRecord> getAuditRecords()
+    {
+        LinkedList<AuditRecord> auditRecords = new LinkedList<AuditRecord>();
+        for (int i = 0; i < this._auditRecords.length; i++)
+        {
+            auditRecords.add(_auditRecords[i]);
+        }
+        return auditRecords;
+    }
+
+    public LinkedList<Creature> getCreatures()
     {
         LinkedList<Creature> allCreatures = new LinkedList<Creature>();
         for (int r = 0; r < this._worldDimensions; r++)
@@ -629,7 +676,7 @@ public class World implements MapSerializer
     {
         LinkedList<MapSerializer> list = new LinkedList<MapSerializer>();
         list.add(_blueprint);
-        list.addAll(getAllCreatures());
+        list.addAll(getCreatures());
         return list;
     }
 
@@ -646,6 +693,8 @@ public class World implements MapSerializer
         {
             case "maximumCreatureID":
                 return _maximumCreatureID;
+            case "tick":
+                return _tick;
             case "worldDimensions":
                 return _worldDimensions;
             case "entityGrid":
@@ -666,6 +715,9 @@ public class World implements MapSerializer
         {
             case "maximumCreatureID":
                 _maximumCreatureID = (Integer) value;
+                break;
+            case "tick":
+                _tick = (Integer) value;
                 break;
             case "worldDimensions":
                 _worldDimensions = (Integer) value;

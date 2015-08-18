@@ -62,7 +62,6 @@ public class CreatureMemorial extends AuditRecord
         }
     }
 
-    @SuppressWarnings("unchecked")
     @Override
     public void setValue(String key, Object value)
     {
