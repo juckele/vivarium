@@ -15,28 +15,27 @@ import com.johnuckele.vivarium.visualization.RenderCode;
 public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
 {
     // Meta information
-    private int     _id;
+    private int _id;
     private Species _species;
-    private double  _generation;
+    private double _generation;
 
     // Brain
-    private Brain    _brain;
+    private Brain _brain;
     private double[] _inputs;
     private double[] _memoryUnits;
     private double[] _soundInputs;
     private double[] _soundOutputs;
 
     // State
-    private boolean   _hasActed      = true;        // Defaults to true to prevent a newborn from acting before it
-                                                    // plans
-    private boolean   _wasSuccessful = true;
-    private Gender    _gender;
-    private double    _randomSeed;
-    private int       _age;
-    private int       _gestation;
-    private int       _food;
+    private boolean _hasActed = true; // Defaults to true to prevent a newborn from acting before it plans
+    private boolean _wasSuccessful = true;
+    private Gender _gender;
+    private double _randomSeed;
+    private int _age;
+    private int _gestation;
+    private int _food;
     private Direction _facing;
-    private Action    _action        = Action.SPAWN;
+    private Action _action = Action.SPAWN;
 
     // Fetus
     private Creature _fetus;
@@ -479,7 +478,7 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
 
     public double getGeneration()
     {
-        return (this._generation);
+        return this._generation;
     }
 
     public int getAge()
@@ -554,6 +553,12 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
     public int compareTo(Creature c)
     {
         return this.toString().compareTo(c.toString());
+    }
+
+    @Override
+    public boolean equals(Object c)
+    {
+        return this.toString().equals(c.toString());
     }
 
     @Override

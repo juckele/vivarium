@@ -17,11 +17,11 @@ import com.johnuckele.vivarium.visualization.RenderCode;
 public class World implements MapSerializer
 {
     //
-    private int   _maximumCreatureID;
+    private int _maximumCreatureID;
     protected int _worldDimensions;
 
     protected EntityType[][] _entityGrid;
-    protected Creature[][]   _creatureGrid;
+    protected Creature[][] _creatureGrid;
 
     private WorldBlueprint _blueprint;
 
@@ -32,10 +32,10 @@ public class World implements MapSerializer
         SERIALIZED_PARAMETERS.add(new SerializedParameter("maximumCreatureID", Integer.class));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("worldDimensions", Integer.class));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("entityGrid", EntityType[][].class));
-        SERIALIZED_PARAMETERS
-                .add(new SerializedParameter("creatureGrid", Creature[][].class, SerializationCategory.CREATURE));
-        SERIALIZED_PARAMETERS
-                .add(new SerializedParameter("blueprint", WorldBlueprint.class, SerializationCategory.BLUEPRINT));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("creatureGrid", Creature[][].class,
+                SerializationCategory.CREATURE));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("blueprint", WorldBlueprint.class,
+                SerializationCategory.BLUEPRINT));
     }
 
     private World()
@@ -254,7 +254,7 @@ public class World implements MapSerializer
         }
         // Attempt to breed
         else if (action == Action.BREED
-                // Make sure we're facing another creature
+        // Make sure we're facing another creature
                 && _entityGrid[facingR][facingC] == EntityType.CREATURE
                 // And that creature is the same species as us
                 && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
@@ -388,28 +388,14 @@ public class World implements MapSerializer
             @Override
             public int compare(Creature c1, Creature c2)
             {
-                if (c1.getGeneration() > c2.getGeneration())
+                int generationComparison = Double.compare(c1.getGeneration(), c2.getGeneration());
+                if (generationComparison != 0)
                 {
-                    return 1;
-                }
-                else if (c1.getGeneration() < c2.getGeneration())
-                {
-                    return -1;
+                    return generationComparison;
                 }
                 else
                 {
-                    if (c1.getID() > c2.getID())
-                    {
-                        return 1;
-                    }
-                    else if (c1.getID() < c2.getID())
-                    {
-                        return -1;
-                    }
-                    else
-                    {
-                        return 0;
-                    }
+                    return Integer.compare(c1.getID(), c2.getID());
                 }
             }
         });

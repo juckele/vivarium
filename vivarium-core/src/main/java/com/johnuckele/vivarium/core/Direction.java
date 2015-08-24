@@ -81,29 +81,4 @@ public enum Direction
         }
         return null;
     }
-
-    public static Direction parseString(String string)
-    {
-        String processedString = string.toUpperCase().trim();
-        if (processedString == "NORTH")
-        {
-            return NORTH;
-        }
-        else if (processedString == "EAST")
-        {
-            return EAST;
-        }
-        else if (processedString == "SOUTH")
-        {
-            return SOUTH;
-        }
-        else if (processedString == "WEST")
-        {
-            return WEST;
-        }
-        else
-        {
-            throw new Error("Invalid parse value " + string);
-        }
-    }
 }
