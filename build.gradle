@@ -42,6 +42,10 @@ subprojects {
         }
     }
 
+    tasks.withType(FindBugs) {
+        excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")
+    }
+
     dependencies {
     }
 }
