@@ -12,11 +12,11 @@ import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
 
+@SuppressWarnings("serial")
 public class WorldViewer extends JFrame
 {
-    public static final int   OVERVIEW_ONLY    = 1;
-    public static final int   RAT_LIST_ONLY    = 2;
-    private static final long serialVersionUID = 8857256647972270073L;
+    public static final int OVERVIEW_ONLY = 1;
+    public static final int RAT_LIST_ONLY = 2;
 
     private World             _w;
     private ArrayList<String> _overviewRenders = new ArrayList<String>(50000);

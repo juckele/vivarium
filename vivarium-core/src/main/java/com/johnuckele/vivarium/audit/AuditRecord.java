@@ -23,7 +23,7 @@ public abstract class AuditRecord implements MapSerializer
     @Override
     public SerializationCategory getSerializationCategory()
     {
-        return SerializationCategory.AUDIT;
+        return SerializationCategory.AUDIT_RECORD;
     }
 
     public static AuditRecord makeCopy(AuditRecord original)

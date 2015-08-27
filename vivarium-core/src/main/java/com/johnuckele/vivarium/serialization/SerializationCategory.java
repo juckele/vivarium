@@ -2,23 +2,13 @@ package com.johnuckele.vivarium.serialization;
 
 public enum SerializationCategory
 {
-    WORLD(6), AUDIT(5), CREATURE(4), BRAIN(3), BLUEPRINT(2), SPECIES(1);
-
-    private int _rank;
-
-    SerializationCategory(int rank)
-    {
-        _rank = rank;
-    }
-
-    public int getRank()
-    {
-        return _rank;
-    }
+    AUDIT_FUNCTION, AUDIT_RECORD, BRAIN, BLUEPRINT, CREATURE, SPECIES, WORLD;
 
     public static SerializationCategory[] rankedValues()
     {
-        SerializationCategory[] result = { SPECIES, BLUEPRINT, BRAIN, CREATURE, AUDIT, WORLD };
         return result;
     }
+
+    private static SerializationCategory[] result = { SPECIES, AUDIT_FUNCTION, BLUEPRINT, BRAIN, CREATURE, AUDIT_RECORD,
+            WORLD };
 }

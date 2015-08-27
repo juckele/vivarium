@@ -14,6 +14,7 @@ import com.johnuckele.vivarium.serialization.SerializedParameter;
 public class Census extends AuditRecord
 {
     protected Species          _trackedSpecies;
+    private AuditFunction      _auditFunction;
     private ArrayList<Integer> _creaturePopulation;
 
     private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
@@ -21,6 +22,8 @@ public class Census extends AuditRecord
     static
     {
         SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", Map.class));
+        SERIALIZED_PARAMETERS
+                .add(new SerializedParameter("auditFunction", Map.class, SerializationCategory.AUDIT_FUNCTION));
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("trackedSpecies", Species.class, SerializationCategory.SPECIES));
     }
