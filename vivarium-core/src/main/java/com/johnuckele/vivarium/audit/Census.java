@@ -13,19 +13,20 @@ import com.johnuckele.vivarium.serialization.SerializedParameter;
 
 public class Census extends AuditRecord
 {
-    protected Species          _trackedSpecies;
-    private AuditFunction      _auditFunction;
+    protected Species     _trackedSpecies;
+    private AuditFunction _auditFunction;
+
     private ArrayList<Integer> _creaturePopulation;
 
     private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
 
     static
     {
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", Map.class));
-        SERIALIZED_PARAMETERS
-                .add(new SerializedParameter("auditFunction", Map.class, SerializationCategory.AUDIT_FUNCTION));
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("trackedSpecies", Species.class, SerializationCategory.SPECIES));
+        SERIALIZED_PARAMETERS
+                .add(new SerializedParameter("auditFunction", Map.class, SerializationCategory.AUDIT_FUNCTION));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", Map.class));
     }
 
     private Census()
@@ -70,6 +71,8 @@ public class Census extends AuditRecord
         {
             case "creaturePopulation":
                 return _creaturePopulation;
+            case "auditFunction":
+                return _auditFunction;
             case "trackedSpecies":
                 return _trackedSpecies;
             default:
@@ -85,6 +88,9 @@ public class Census extends AuditRecord
         {
             case "creaturePopulation":
                 _creaturePopulation = (ArrayList<Integer>) value;
+                break;
+            case "auditFunction":
+                _auditFunction = (AuditFunction) value;
                 break;
             case "trackedSpecies":
                 _trackedSpecies = (Species) value;

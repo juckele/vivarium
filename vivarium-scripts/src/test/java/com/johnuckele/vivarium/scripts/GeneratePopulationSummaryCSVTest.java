@@ -15,8 +15,7 @@ public class GeneratePopulationSummaryCSVTest
             String[] commandArgs = { "test.viv", "25", "keepCensusData", "true" };
             CreateWorld.main(commandArgs);
         }
-        // Get the population summary before doing any simulations in the new
-        // world
+        // Get the population summary before doing any simulations in the new world
         {
             String[] commandArgs = { "test.viv", "test.csv" };
             GeneratePopulationSummaryCSV.main(commandArgs);
@@ -28,8 +27,7 @@ public class GeneratePopulationSummaryCSVTest
             String[] commandArgs = { "test.viv", "4000", "test.viv" };
             RunSimulation.main(commandArgs);
         }
-        // Get the population summary after running the world for a few thousand
-        // ticks
+        // Get the population summary after running the world for a few thousand ticks
         {
             String[] commandArgs = { "test.viv", "test.csv" };
             GeneratePopulationSummaryCSV.main(commandArgs);

@@ -37,6 +37,8 @@ public class World implements MapSerializer
         SERIALIZED_PARAMETERS.add(new SerializedParameter("worldDimensions", Integer.class));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("entityGrid", EntityType[][].class));
         SERIALIZED_PARAMETERS
+                .add(new SerializedParameter("auditRecords", AuditRecord[].class, SerializationCategory.AUDIT_RECORD));
+        SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("creatureGrid", Creature[][].class, SerializationCategory.CREATURE));
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("blueprint", Blueprint.class, SerializationCategory.BLUEPRINT));
@@ -699,6 +701,8 @@ public class World implements MapSerializer
                 return _worldDimensions;
             case "entityGrid":
                 return _entityGrid;
+            case "auditRecords":
+                return _auditRecords;
             case "creatureGrid":
                 return _creatureGrid;
             case "blueprint":
@@ -721,6 +725,9 @@ public class World implements MapSerializer
                 break;
             case "worldDimensions":
                 _worldDimensions = (Integer) value;
+                break;
+            case "auditRecords":
+                _auditRecords = (AuditRecord[]) value;
                 break;
             case "entityGrid":
                 _entityGrid = (EntityType[][]) value;

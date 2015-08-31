@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.johnuckele.vivarium.audit.AuditRecord;
 import com.johnuckele.vivarium.core.Action;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
@@ -236,6 +237,23 @@ public class SerializationEngine
                     }
                     valueObject = outerValueList;
                 }
+                else if (parameterClazz == AuditRecord[].class)
+                {
+                    AuditRecord[] valueArray = (AuditRecord[]) valueObject;
+                    List<Object> valueList = new LinkedList<Object>();
+                    for (AuditRecord i : valueArray)
+                    {
+                        if (i != null)
+                        {
+                            valueList.add("" + getReferenceID(i));
+                        }
+                        else
+                        {
+                            valueList.add("");
+                        }
+                    }
+                    valueObject = valueList;
+                }
                 else if (parameterClazz == EntityType[][].class)
                 {
                     EntityType[][] valueArray = (EntityType[][]) valueObject;
@@ -285,11 +303,15 @@ public class SerializationEngine
                 }
             }
         }
-        catch (IllegalArgumentException e)
+        catch (
+
+        IllegalArgumentException e)
+
         {
             e.printStackTrace();
         }
         return map;
+
     }
 
     public static String getKeyFromFieldName(String fieldName)
@@ -439,6 +461,28 @@ public class SerializationEngine
                     }
                     valueObject = valueArray;
                 }
+                else if (parameterClazz == AuditRecord[].class)
+                {
+                    List<Object> valueList = (List<Object>) valueObject;
+                    AuditRecord[] valueArray = new AuditRecord[valueList.size()];
+                    int i = 0;
+                    for (Object objectI : valueList)
+                    {
+                        String stringI = "" + objectI;
+
+                        if (!stringI.equals(""))
+                        {
+                            valueArray[i] = (AuditRecord) getReferenceObject(parameter.getReferenceCategory(),
+                                    Integer.parseInt(stringI));
+                        }
+                        else
+                        {
+                            valueArray[i] = null;
+                        }
+                        i++;
+                    }
+                    valueObject = valueArray;
+                }
                 else if (parameterClazz == EntityType[][].class)
                 {
                     List<Object> valueList = (List<Object>) valueObject;
@@ -503,10 +547,14 @@ public class SerializationEngine
                 }
             }
         }
-        catch (IllegalArgumentException e)
+        catch (
+
+        IllegalArgumentException e)
+
         {
             e.printStackTrace();
         }
+
     }
 
     public MapSerializer makeCopy(MapSerializer original)
