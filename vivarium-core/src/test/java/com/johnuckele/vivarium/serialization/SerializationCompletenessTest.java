@@ -8,7 +8,7 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
-import com.johnuckele.vivarium.audit.AuditRecordType;
+import com.johnuckele.vivarium.audit.AuditType;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
@@ -44,7 +44,7 @@ public class SerializationCompletenessTest
     @Test
     public void testAuditCompleteness() throws Exception
     {
-        for (AuditRecordType auditRecordType : AuditRecordType.values())
+        for (AuditType auditRecordType : AuditType.values())
         {
             String[] ignoredFields = {};
             completenessTestHelper(auditRecordType.getAuditRecordClass(), ignoredFields);

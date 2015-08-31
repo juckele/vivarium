@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.audit.AuditRecord;
-import com.johnuckele.vivarium.audit.AuditRecordType;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
@@ -72,14 +72,14 @@ public class World implements MapSerializer
 
     private void constructAuditRecords()
     {
-        int auditRecordCount = _blueprint.getSpecies().size() * _blueprint.getAuditRecordTypes().size();
+        int auditRecordCount = _blueprint.getSpecies().size() * _blueprint.getAuditFunctions().size();
         _auditRecords = new AuditRecord[auditRecordCount];
         int i = 0;
         for (Species species : _blueprint.getSpecies())
         {
-            for (AuditRecordType auditRecordType : _blueprint.getAuditRecordTypes())
+            for (AuditFunction auditFunction : _blueprint.getAuditFunctions())
             {
-                _auditRecords[i] = auditRecordType.makeWithSpecies(species);
+                _auditRecords[i] = auditFunction.getAuditType().makeWithSpecies(species);
                 i++;
             }
         }

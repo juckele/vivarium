@@ -2,7 +2,7 @@ package com.johnuckele.vivarium.audit;
 
 import com.johnuckele.vivarium.core.Species;
 
-public enum AuditRecordType
+public enum AuditType
 {
     ACTION_FREQUENCY
     {

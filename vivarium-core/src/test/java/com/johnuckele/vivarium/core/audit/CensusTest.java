@@ -4,7 +4,8 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import com.johnuckele.vivarium.audit.AuditRecordType;
+import com.johnuckele.vivarium.audit.AuditFunction;
+import com.johnuckele.vivarium.audit.AuditType;
 import com.johnuckele.vivarium.audit.Census;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.EntityType;
@@ -17,7 +18,10 @@ public class CensusTest
     public void testCensus()
     {
         Blueprint blueprint = Blueprint.makeDefault();
-        blueprint.addAuditRecord(AuditRecordType.CENSUS);
+        AuditFunction censusFunction = new AuditFunction(AuditType.CENSUS);
+        ArrayList<AuditFunction> auditFunctions = new ArrayList<AuditFunction>();
+        auditFunctions.add(censusFunction);
+        blueprint.setAuditFunctions(auditFunctions);
         World world = new World(blueprint);
         world.tick();
         Census record = (Census) world.getAuditRecords().remove();
