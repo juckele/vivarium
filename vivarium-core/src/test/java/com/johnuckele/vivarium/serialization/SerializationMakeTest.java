@@ -2,10 +2,10 @@ package com.johnuckele.vivarium.serialization;
 
 import org.junit.Test;
 
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vtest.Tester;
@@ -15,15 +15,15 @@ public class SerializationMakeTest
     @Test
     public void testWorldBlueprintMakeDefault() throws Exception
     {
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
+        Blueprint blueprint = Blueprint.makeDefault();
         Tester.isNotNull("Blueprint should exist", blueprint);
     }
 
     @Test
     public void testWorldBlueprintMakeCopy() throws Exception
     {
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        WorldBlueprint copy = WorldBlueprint.makeCopy(blueprint);
+        Blueprint blueprint = Blueprint.makeDefault();
+        Blueprint copy = Blueprint.makeCopy(blueprint);
         Tester.isNotNull("Blueprint copy should exist", copy);
     }
 
@@ -79,7 +79,7 @@ public class SerializationMakeTest
     @Test
     public void testWorldMakeCopy() throws Exception
     {
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
+        Blueprint blueprint = Blueprint.makeDefault();
         World world = new World(blueprint);
         World copy = World.makeCopy(world);
         Tester.isNotNull("World copy should exist", copy);

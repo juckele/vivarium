@@ -5,9 +5,9 @@ import java.util.Collections;
 
 import org.javatuples.Pair;
 
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
@@ -114,12 +114,12 @@ public class GeneticAlgorithmRunner
         species.setMaximumFood(200);
         System.out.println("Species " + species);
 
-        WorldBlueprint blueprint = WorldBlueprint.makeWithSizeAndSpecies(30, species);
+        Blueprint blueprint = Blueprint.makeWithSizeAndSpecies(30, species);
         blueprint.setInitialFoodGenerationProbability(0);
 
         int tenLifespans = species.getMaximumAge() * 10;
-        GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(species, new TimeToExtinctionFF(blueprint, 100,
-                tenLifespans));
+        GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(species,
+                new TimeToExtinctionFF(blueprint, 100, tenLifespans));
         runner.run();
     }
 }

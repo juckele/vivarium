@@ -26,7 +26,7 @@ public class World implements MapSerializer
     protected Creature[][]   _creatureGrid;
     protected AuditRecord[]  _auditRecords;
 
-    private WorldBlueprint _blueprint;
+    private Blueprint _blueprint;
 
     private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
 
@@ -39,14 +39,14 @@ public class World implements MapSerializer
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("creatureGrid", Creature[][].class, SerializationCategory.CREATURE));
         SERIALIZED_PARAMETERS
-                .add(new SerializedParameter("blueprint", WorldBlueprint.class, SerializationCategory.BLUEPRINT));
+                .add(new SerializedParameter("blueprint", Blueprint.class, SerializationCategory.BLUEPRINT));
     }
 
     private World()
     {
     }
 
-    public World(WorldBlueprint blueprint)
+    public World(Blueprint blueprint)
     {
         // Store the blueprint
         this._blueprint = blueprint;
@@ -729,7 +729,7 @@ public class World implements MapSerializer
                 _creatureGrid = (Creature[][]) value;
                 break;
             case "blueprint":
-                _blueprint = (WorldBlueprint) value;
+                _blueprint = (Blueprint) value;
                 break;
             default:
                 throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");

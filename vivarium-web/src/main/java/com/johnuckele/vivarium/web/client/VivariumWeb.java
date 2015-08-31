@@ -10,24 +10,24 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
-import com.johnuckele.vivarium.core.WorldBlueprint;
+import com.johnuckele.vivarium.core.Blueprint;
 
 public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 {
-    public static final int PIXEL_BLOCK_SIZE  = 32;
+    public static final int PIXEL_BLOCK_SIZE = 32;
 
     // private final VivariumWebServiceAsync _webService =
     // GWT.create(VivariumWebService.class);
     // private static final String JSON_URL = "snap1f.json";
 
-    Canvas                  canvas;
-    Context2d               context;
-    Image                   spriteImage;
-    ImageElement            spriteImageElement;
-    WebWorld                world;
-    SpriteRenderer          renderer;
-    double                  lastTickTimestamp = 0;
-    int                     tick              = 0;
+    Canvas         canvas;
+    Context2d      context;
+    Image          spriteImage;
+    ImageElement   spriteImageElement;
+    WebWorld       world;
+    SpriteRenderer renderer;
+    double         lastTickTimestamp = 0;
+    int            tick              = 0;
 
     @Override
     public void onModuleLoad()
@@ -39,7 +39,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
          * Window.alert("Couldn't retrieve JSON cow"); } public void onResponseReceived(Request request, Response
          * response) { world = JSONDecoder.convertJSONToWorld(response.getText()); displayWorld(); } }); }
          */
-        WorldBlueprint blueprint = WorldBlueprint.makeWithSize(40);
+        Blueprint blueprint = Blueprint.makeWithSize(40);
         world = new WebWorld(blueprint);
         displayWorld();
         /*

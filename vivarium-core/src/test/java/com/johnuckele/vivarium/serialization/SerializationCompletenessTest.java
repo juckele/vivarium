@@ -9,9 +9,9 @@ import java.util.HashSet;
 import org.junit.Test;
 
 import com.johnuckele.vivarium.audit.AuditRecordType;
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vtest.Tester;
 
@@ -21,7 +21,7 @@ public class SerializationCompletenessTest
     public void testWorldBlueprintCompleteness() throws Exception
     {
         String[] ignoredFields = {};
-        completenessTestHelper(WorldBlueprint.class, ignoredFields);
+        completenessTestHelper(Blueprint.class, ignoredFields);
     }
 
     @Test

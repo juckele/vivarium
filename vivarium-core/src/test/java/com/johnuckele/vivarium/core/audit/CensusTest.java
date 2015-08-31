@@ -6,9 +6,9 @@ import org.junit.Test;
 
 import com.johnuckele.vivarium.audit.AuditRecordType;
 import com.johnuckele.vivarium.audit.Census;
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vtest.Tester;
 
 public class CensusTest
@@ -16,7 +16,7 @@ public class CensusTest
     @Test
     public void testCensus()
     {
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
+        Blueprint blueprint = Blueprint.makeDefault();
         blueprint.addAuditRecord(AuditRecordType.CENSUS);
         World world = new World(blueprint);
         world.tick();

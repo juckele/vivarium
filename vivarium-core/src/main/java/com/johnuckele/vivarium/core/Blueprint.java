@@ -13,7 +13,7 @@ import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedCollection;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
-public class WorldBlueprint implements MapSerializer
+public class Blueprint implements MapSerializer
 {
     // World Generation
     private int    _size;
@@ -43,7 +43,7 @@ public class WorldBlueprint implements MapSerializer
     }
 
     // Private constructor for deserialization
-    private WorldBlueprint()
+    private Blueprint()
     {
     }
 
@@ -123,20 +123,20 @@ public class WorldBlueprint implements MapSerializer
         this._species = _species;
     }
 
-    public static WorldBlueprint makeUninitialized()
+    public static Blueprint makeUninitialized()
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         return wb;
     }
 
-    public static WorldBlueprint makeCopy(WorldBlueprint original)
+    public static Blueprint makeCopy(Blueprint original)
     {
-        return (WorldBlueprint) new SerializationEngine().makeCopy(original);
+        return (Blueprint) new SerializationEngine().makeCopy(original);
     }
 
-    public static WorldBlueprint makeDefault()
+    public static Blueprint makeDefault()
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
@@ -144,9 +144,9 @@ public class WorldBlueprint implements MapSerializer
         return wb;
     }
 
-    public static WorldBlueprint makeFromMap(HashMap<String, Object> blueprintValues)
+    public static Blueprint makeFromMap(HashMap<String, Object> blueprintValues)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, blueprintValues);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
@@ -154,9 +154,9 @@ public class WorldBlueprint implements MapSerializer
         return wb;
     }
 
-    public static WorldBlueprint makeWithSize(int size)
+    public static Blueprint makeWithSize(int size)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>();
@@ -165,9 +165,9 @@ public class WorldBlueprint implements MapSerializer
         return wb;
     }
 
-    public static WorldBlueprint makeWithSizeAndSpecies(int size, Species s)
+    public static Blueprint makeWithSizeAndSpecies(int size, Species s)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>();
@@ -176,9 +176,9 @@ public class WorldBlueprint implements MapSerializer
         return wb;
     }
 
-    public static WorldBlueprint makeWithSizeAndSpecies(int size, Collection<Species> s)
+    public static Blueprint makeWithSizeAndSpecies(int size, Collection<Species> s)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>(s);
@@ -207,7 +207,7 @@ public class WorldBlueprint implements MapSerializer
         Species s2 = Species.makeDefault();
         s2.setMutationRateExponent(-10);
         species.add(s2);
-        WorldBlueprint wb = WorldBlueprint.makeWithSizeAndSpecies(25, species);
+        Blueprint wb = Blueprint.makeWithSizeAndSpecies(25, species);
         SerializationEngine se = new SerializationEngine();
         SerializedCollection collection = se.serialize(wb);
         System.out.println(collection);
@@ -216,7 +216,7 @@ public class WorldBlueprint implements MapSerializer
     @Override
     public List<SerializedParameter> getMappedParameters()
     {
-        return WorldBlueprint.SERIALIZED_PARAMETERS;
+        return Blueprint.SERIALIZED_PARAMETERS;
     }
 
     @Override

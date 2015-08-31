@@ -2,9 +2,9 @@ package com.johnuckele.vivarium.scripts;
 
 import java.util.HashMap;
 
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 
 public class CreateWorld extends Script
 {
@@ -46,7 +46,7 @@ public class CreateWorld extends Script
         {
             blueprintValues.put(args[i], args[i + 1]);
         }
-        WorldBlueprint blueprint = WorldBlueprint.makeFromMap(blueprintValues);
+        Blueprint blueprint = Blueprint.makeFromMap(blueprintValues);
 
         World w = new World(blueprint);
 

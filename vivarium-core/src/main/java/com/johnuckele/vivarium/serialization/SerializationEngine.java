@@ -7,13 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.johnuckele.vivarium.core.Action;
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Direction;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Gender;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
@@ -46,9 +46,9 @@ public class SerializationEngine
         {
             object = Species.makeUninitialized();
         }
-        else if (clazzName.equals(WorldBlueprint.class.getSimpleName()))
+        else if (clazzName.equals(Blueprint.class.getSimpleName()))
         {
-            object = WorldBlueprint.makeUninitialized();
+            object = Blueprint.makeUninitialized();
         }
         else if (clazzName.equals(RandomBrain.class.getSimpleName()))
         {
@@ -163,7 +163,7 @@ public class SerializationEngine
                 {
                     valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
-                else if (parameterClazz == WorldBlueprint.class)
+                else if (parameterClazz == Blueprint.class)
                 {
                     valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
@@ -353,7 +353,7 @@ public class SerializationEngine
                 {
                     valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
                 }
-                else if (parameterClazz == WorldBlueprint.class)
+                else if (parameterClazz == Blueprint.class)
                 {
                     valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
                 }

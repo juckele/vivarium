@@ -6,10 +6,10 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
 
 @SuppressWarnings("serial")
@@ -112,7 +112,7 @@ public class WorldViewer extends JFrame
         species.add(species2);
 
         // Construct the world proper
-        WorldBlueprint blueprint = WorldBlueprint.makeWithSizeAndSpecies(worldDimensions, species);
+        Blueprint blueprint = Blueprint.makeWithSizeAndSpecies(worldDimensions, species);
         World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
