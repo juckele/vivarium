@@ -564,19 +564,62 @@ public class SerializationEngine
         return copy;
     }
 
-    public MapSerializer deserialize(SerializedCollection collection)
+    /**
+     * Returns a single MapSerializer object from a serialized collection. In a serialized collection with more than one
+     * serialized object serialized, the object returned will be the object with the highest relative serialization
+     * category ranking. If the collection is empty or if there are multiple objects with the same highest serialized
+     * category ranking, this method throws an IllegalStateException.
+     *
+     * @param collection
+     * @return A single MapSerializer object represented in the collection
+     * @throws IllegalStateException
+     *             If there is not a single object in the collection which holds the highest relative serialization
+     *             category ranking.
+     */
+    public MapSerializer deserialize(SerializedCollection collection) throws IllegalStateException
+    {
+        List<MapSerializer> objects = deserializeList(collection);
+        if (objects.size() == 1)
+        {
+            return objects.get(0);
+        }
+        else if (objects.size() == 0)
+        {
+            throw new IllegalStateException("SerializedCollection has no serialized objects.");
+        }
+        else
+        {
+            throw new IllegalStateException(
+                    "SerializedCollection has a tie for highest ranked serialized objects, please use deserializeList instead.");
+        }
+    }
+
+    /**
+     * Returns a List of MapSerializer objects from a serialized collection. The objects returned will be the objects
+     * with the highest relative serialization category ranking.
+     *
+     * @param collection
+     * @return
+     */
+    public List<MapSerializer> deserializeList(SerializedCollection collection)
     {
         MapSerializer object = null;
+        List<MapSerializer> objects = new LinkedList<MapSerializer>();
         for (SerializationCategory category : SerializationCategory.rankedValues())
         {
+            if (collection.hasNext(category))
+            {
+                objects = new LinkedList<MapSerializer>();
+            }
             while (collection.hasNext(category))
             {
                 HashMap<String, Object> map = collection.popNext(category);
                 object = deserializeMap(map);
+                objects.add(object);
                 int referenceID = Integer.parseInt((String) map.get(ID_KEY));
                 storeIDToReference(referenceID, object);
             }
         }
-        return object;
+        return objects;
     }
 }
