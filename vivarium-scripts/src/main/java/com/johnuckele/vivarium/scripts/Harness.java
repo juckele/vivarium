@@ -5,7 +5,15 @@ public class Harness
     public static void main(String[] args)
     {
         System.out.println("Harness Testing");
+        {
+            String[] commandArgs = { "-o", "/tmp/medium.viv", "maximumAge", "1000" };
+            CreateBlueprint.main(commandArgs);
+        }
 
+    }
+
+    public static void inactive()
+    {
         {
             String[] commandArgs = { "data/world_saves/medium.viv", "25", "creatureMemoryUnitCount", "1" };
             CreateWorld.main(commandArgs);
@@ -21,11 +29,6 @@ public class Harness
             String[] commandArgs = { "data/world_saves/medium2.viv", "data/csv/medium2_pop_summary.csv" };
             GeneratePopulationSummaryCSV.main(commandArgs);
         }
-
-    }
-
-    public static void inactive()
-    {
 
         {
             String[] commandArgs = { "data/world_saves/medium2.viv", "data/world_saves/medium.json" };

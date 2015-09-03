@@ -2,9 +2,9 @@ package com.johnuckele.vivarium.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.serialization.MapSerializer;
@@ -146,7 +146,7 @@ public class Blueprint implements MapSerializer
         return wb;
     }
 
-    public static Blueprint makeFromMap(HashMap<String, Object> blueprintValues)
+    public static Blueprint makeFromMap(Map<String, Object> blueprintValues)
     {
         Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, blueprintValues);

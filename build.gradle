@@ -56,6 +56,10 @@ project(':vivarium-core') {
 project(':vivarium-scripts') {
     apply plugin: 'gradle-one-jar'
 
+    task jarCreateBlueprint( type: OneJar ) {
+        archiveName = 'create-blueprint'+'-'+version+'.jar'
+        mainClass = 'com.johnuckele.vivarium.scripts.CreateBlueprint'
+    }
     task jarCreateWorld( type: OneJar ) {
         archiveName = 'create-world'+'-'+version+'.jar'
         mainClass = 'com.johnuckele.vivarium.scripts.CreateWorld'
@@ -68,7 +72,7 @@ project(':vivarium-scripts') {
 
     dependencies {
         compile project(':vivarium-core')
-        compile 'commons-cli:commons-cli:1.2'
+        compile 'commons-cli:commons-cli:1.3.1'
         compile 'org.json:json:20140107'
         testCompile group: 'com.johnuckele', name: 'vtest', version: '0.9.1'
         testCompile group: 'junit', name: 'junit', version: '4.+'

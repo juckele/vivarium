@@ -39,6 +39,7 @@ public class SerializationEngine
         _dereferenceMap = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
     }
 
+    @SuppressWarnings("unchecked")
     public MapSerializer deserializeMap(HashMap<String, Object> map)
     {
         String clazzName = (String) map.get(CLASS_KEY);
@@ -71,7 +72,7 @@ public class SerializationEngine
         {
             throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
         }
-        deserialize(object, map);
+        deserialize(object, (Map<String, Object>) map.clone());
         return object;
     }
 
@@ -333,11 +334,11 @@ public class SerializationEngine
                 {
                     if (map.get(parameter.getName()) instanceof String)
                     {
-                        valueString = (String) map.get(parameter.getName());
+                        valueString = (String) map.remove(parameter.getName());
                     }
                     else
                     {
-                        valueObject = map.get(parameter.getName());
+                        valueObject = map.remove(parameter.getName());
                     }
                 }
                 else
@@ -546,11 +547,16 @@ public class SerializationEngine
                     object.setValue(parameter.getName(), valueString);
                 }
             }
+            System.out.println(
+                    "Creating " + object.getClass().getSimpleName() + " and have " + map.size() + " items left over.");
+            if (!map.isEmpty())
+            {
+                throw new IllegalArgumentException("Map has unused keys and values of " + map + " when constructing "
+                        + object.getClass().getSimpleName());
+            }
+
         }
-        catch (
-
-        IllegalArgumentException e)
-
+        catch (IllegalArgumentException e)
         {
             e.printStackTrace();
         }
