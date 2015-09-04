@@ -67,8 +67,14 @@ project(':vivarium-scripts') {
     task jarRunSimulation( type: OneJar ) {
         archiveName = 'run-simulation'+'-'+version+'.jar'
         mainClass = 'com.johnuckele.vivarium.scripts.RunSimulation'
-
     }
+
+    task jarCollection {
+        description = "Creates a complete set of stand-alone jars for scripts in this project."
+    }
+    jarCollection.dependsOn jarCreateBlueprint
+    jarCollection.dependsOn jarCreateWorld
+    jarCollection.dependsOn jarRunSimulation
 
     dependencies {
         compile project(':vivarium-core')
