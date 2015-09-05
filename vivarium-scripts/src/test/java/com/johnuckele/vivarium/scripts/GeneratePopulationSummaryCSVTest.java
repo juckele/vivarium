@@ -12,7 +12,7 @@ public class GeneratePopulationSummaryCSVTest
     {
         // Create a world
         {
-            String[] commandArgs = { "test.viv", "25", "keepCensusData", "true" };
+            String[] commandArgs = { "-o", "test.viv", "-s", "25" };
             CreateWorld.main(commandArgs);
         }
         // Get the population summary before doing any simulations in the new world
@@ -41,7 +41,7 @@ public class GeneratePopulationSummaryCSVTest
     {
         // Create a world without keeping census data
         {
-            String[] commandArgs = { "test.viv", "25" };
+            String[] commandArgs = { "-o", "test.viv", "-s", "25" };
             CreateWorld.main(commandArgs);
         }
         // Get the population summary, this should error out

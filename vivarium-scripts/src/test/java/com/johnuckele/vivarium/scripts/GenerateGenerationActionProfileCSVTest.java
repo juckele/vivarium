@@ -12,7 +12,7 @@ public class GenerateGenerationActionProfileCSVTest
     {
         // Create a world
         {
-            String[] commandArgs = { "test.viv", "25", "keepGenerationActionProfile", "true" };
+            String[] commandArgs = { "-o", "test.viv", "-s", "25", "keepGenerationActionProfile", "true" };
             CreateWorld.main(commandArgs);
         }
         // Get the action profiles before doing any simulations in the new world
@@ -42,7 +42,7 @@ public class GenerateGenerationActionProfileCSVTest
     {
         // Create a world without keeping action profiles
         {
-            String[] commandArgs = { "test.viv", "25" };
+            String[] commandArgs = { "-o", "test.viv", "-s", "25" };
             CreateWorld.main(commandArgs);
         }
         // Get the action profiles, this should error out

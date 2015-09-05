@@ -12,7 +12,7 @@ public class GenerateCensusCSVTest
     {
         // Create a world
         {
-            String[] commandArgs = { "test.viv", "25", "keepCensusData", "true" };
+            String[] commandArgs = { "-o", "test.viv", "-s", "25", "keepCensusData", "true" };
             CreateWorld.main(commandArgs);
         }
         // Get the census before doing any simulations in the new world
@@ -41,7 +41,7 @@ public class GenerateCensusCSVTest
     {
         // Create a world without a census
         {
-            String[] commandArgs = { "test.viv", "25" };
+            String[] commandArgs = { "-o", "test.viv", "-s", "25" };
             CreateWorld.main(commandArgs);
         }
         // Get the census, this should error out

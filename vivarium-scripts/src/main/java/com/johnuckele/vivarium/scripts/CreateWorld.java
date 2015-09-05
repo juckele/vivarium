@@ -1,63 +1,90 @@
 package com.johnuckele.vivarium.scripts;
 
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 
 import com.johnuckele.vivarium.core.Blueprint;
-import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
 
-public class CreateWorld extends Script
+public class CreateWorld extends CommonsScript
 {
+    private static final String OUTPUT_FILE          = "output";
+    private static final String BLUEPRINT_INPUT_FILE = "blueprint";
+    private static final String SIZE_OPTION          = "size";
+
     public CreateWorld(String[] args)
     {
         super(args);
     }
 
     @Override
-    protected boolean argumentCountIsValid(int argCount)
+    protected List<Option> getScriptSpecificOptions()
     {
-        // Two arguments are okay
-        if (argCount == 2)
-        {
-            return true;
-        }
-        // More than two args are okay as long as the extras come in pairs
-        else if (argCount > 2 && argCount % 2 == 0)
-        {
-            return true;
-        }
-        return false;
+        LinkedList<Option> options = new LinkedList<Option>();
+        options.add(Option.builder("o").required(true).argName("output").longOpt(OUTPUT_FILE).hasArg(true)
+                .argName("FILE").desc("file to save to world to").build());
+        options.add(Option.builder("b").required(false).longOpt(BLUEPRINT_INPUT_FILE).hasArg(true).argName("FILE")
+                .desc("file to load blueprint from. If this option is not given, a default blueprint will be created")
+                .build());
+        options.add(Option.builder("s").required(false).longOpt(SIZE_OPTION).hasArg(true).argName("n")
+                .desc("override the blueprint for world size").build());
+        return options;
     }
 
     @Override
-    protected String getUsage()
+    protected void run(CommandLine commandLine)
     {
-        return "Usage: java scriptPath filePath dimensions [worldVariableKey worldVariableValue]*";
-    }
-
-    @Override
-    protected void run(String[] args)
-    {
-        HashMap<String, Object> blueprintValues = new HashMap<String, Object>();
-        blueprintValues.put("size", args[1]);
-        // For each pair of extra arguments after the first two, set a
-        // blueprint value
-        for (int i = 2; i + 1 < args.length; i += 2)
+        Blueprint blueprint;
+        if (commandLine.hasOption(BLUEPRINT_INPUT_FILE))
         {
-            blueprintValues.put(args[i], args[i + 1]);
+            String blueprintFile = null;
+            try
+            {
+                blueprintFile = commandLine.getOptionValue(BLUEPRINT_INPUT_FILE);
+                blueprint = (Blueprint) ScriptIO.loadObject(blueprintFile, Format.JSON);
+            }
+            catch (ClassCastException e)
+            {
+                String extendedMessage = "blueprint file " + blueprintFile
+                        + " does not contain a blueprint as a top level object";
+                throw new IllegalStateException(extendedMessage, e);
+            }
         }
-        Blueprint blueprint = Blueprint.makeFromMap(blueprintValues);
+        else
+        {
+            blueprint = Blueprint.makeDefault();
+        }
+        if (commandLine.hasOption(SIZE_OPTION))
+        {
+            int size = Integer.parseInt(commandLine.getOptionValue(SIZE_OPTION));
+            blueprint.setSize(size);
+        }
 
-        World w = new World(blueprint);
+        // Build the world
+        World world = new World(blueprint);
 
-        int creatureCount = w.getCount(EntityType.CREATURE);
-        System.out.println("Creature count in new world: " + creatureCount);
-
-        ScriptIO.saveSerializer(w, args[0], Format.JSON);
+        // Save the world
+        String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
+        ScriptIO.saveSerializer(world, outputFile, Format.JSON);
     }
 
     public static void main(String[] args)
     {
         new CreateWorld(args);
+    }
+
+    @Override
+    protected String getUsageHeader()
+    {
+        return "A tool for creating world files.";
+    }
+
+    @Override
+    protected String getExtraArgString()
+    {
+        return "";
     }
 }
