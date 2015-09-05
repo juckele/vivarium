@@ -24,7 +24,14 @@ public abstract class CommonsScript
         try
         {
             _commandLine = parser.parse(this.getOptions(), args);
-            run(_commandLine);
+            if (_commandLine.hasOption("help"))
+            {
+                printUsageAndExit();
+            }
+            else
+            {
+                run(_commandLine);
+            }
         }
         catch (ParseException e)
         {
