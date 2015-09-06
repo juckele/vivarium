@@ -111,7 +111,6 @@ public class SerializationEngine
             }
             // Serialize the current object
             int objectID = collection.categoryCount(object.getSerializationCategory());
-            System.out.println("ID " + objectID);
             storeReferenceToID(object, objectID);
             HashMap<String, Object> map = serializeObject(object, objectID);
             collection.addObject(map);
