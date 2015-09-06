@@ -51,6 +51,11 @@ public class SerializedParameter
         return _clazz;
     }
 
+    public boolean hasReferenceCategory()
+    {
+        return _referenceCategory != null;
+    }
+
     public SerializationCategory getReferenceCategory()
     {
         if (_referenceCategory == null)

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.audit.AuditRecord;
 import com.johnuckele.vivarium.audit.AuditType;
 import com.johnuckele.vivarium.audit.CensusFunction;
@@ -165,11 +166,26 @@ public class SerializationEngine
                 {
                     ArrayList<?> valueArray = (ArrayList<?>) valueObject;
                     ArrayList<String> referenceArray = new ArrayList<String>();
-                    for (Object reference : valueArray)
+                    if (parameter.hasReferenceCategory())
                     {
-                        referenceArray.add("" + getReferenceID((MapSerializer) reference));
+                        for (Object reference : valueArray)
+                        {
+                            referenceArray.add("" + getReferenceID((MapSerializer) reference));
+                        }
+
+                    }
+                    else
+                    {
+                        for (Object reference : valueArray)
+                        {
+                            referenceArray.add("" + reference);
+                        }
                     }
                     valueObject = referenceArray;
+                }
+                else if (parameterClazz == AuditFunction.class)
+                {
+                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
                 else if (parameterClazz == Species.class)
                 {
@@ -378,13 +394,27 @@ public class SerializationEngine
                         referenceList = (List<Object>) valueObject;
                     }
                     ArrayList<Object> valueList = new ArrayList<Object>();
-                    for (Object reference : referenceList)
+                    if (parameter.hasReferenceCategory())
                     {
-                        int referenceID;
-                        referenceID = Integer.parseInt((String) reference);
-                        valueList.add(getReferenceObject(parameter.getReferenceCategory(), referenceID));
+                        for (Object reference : referenceList)
+                        {
+                            int referenceID;
+                            referenceID = Integer.parseInt((String) reference);
+                            valueList.add(getReferenceObject(parameter.getReferenceCategory(), referenceID));
+                        }
+                    }
+                    else
+                    {
+                        for (Object reference : referenceList)
+                        {
+                            valueList.add("" + reference);
+                        }
                     }
                     valueObject = valueList;
+                }
+                else if (parameterClazz == AuditFunction.class)
+                {
+                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
                 }
                 else if (parameterClazz == Species.class)
                 {
@@ -569,8 +599,6 @@ public class SerializationEngine
                     object.setValue(parameter.getName(), valueString);
                 }
             }
-            System.out.println(
-                    "Creating " + object.getClass().getSimpleName() + " and have " + map.size() + " items left over.");
             if (!map.isEmpty())
             {
                 throw new IllegalArgumentException("Map has unused keys and values of " + map + " when constructing "

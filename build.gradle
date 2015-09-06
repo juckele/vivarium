@@ -56,9 +56,17 @@ project(':vivarium-core') {
 project(':vivarium-scripts') {
     apply plugin: 'gradle-one-jar'
 
+    task jarCreateAuditFunction( type: OneJar ) {
+        archiveName = 'create-audit-function'+'-'+version+'.jar'
+        mainClass = 'com.johnuckele.vivarium.scripts.CreateAuditFunction'
+    }
     task jarCreateBlueprint( type: OneJar ) {
         archiveName = 'create-blueprint'+'-'+version+'.jar'
         mainClass = 'com.johnuckele.vivarium.scripts.CreateBlueprint'
+    }
+    task jarCreateSpecies( type: OneJar ) {
+        archiveName = 'create-species'+'-'+version+'.jar'
+        mainClass = 'com.johnuckele.vivarium.scripts.CreateSpecies'
     }
     task jarCreateWorld( type: OneJar ) {
         archiveName = 'create-world'+'-'+version+'.jar'
@@ -72,7 +80,9 @@ project(':vivarium-scripts') {
     task jarCollection {
         description = "Creates a complete set of stand-alone jars for scripts in this project."
     }
+    jarCollection.dependsOn jarCreateAuditFunction
     jarCollection.dependsOn jarCreateBlueprint
+    jarCollection.dependsOn jarCreateSpecies
     jarCollection.dependsOn jarCreateWorld
     jarCollection.dependsOn jarRunSimulation
 

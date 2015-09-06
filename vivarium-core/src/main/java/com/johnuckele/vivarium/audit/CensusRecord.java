@@ -3,7 +3,6 @@ package com.johnuckele.vivarium.audit;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
@@ -23,9 +22,9 @@ public class CensusRecord extends AuditRecord
     {
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("trackedSpecies", Species.class, SerializationCategory.SPECIES));
-        SERIALIZED_PARAMETERS
-                .add(new SerializedParameter("auditFunction", Map.class, SerializationCategory.AUDIT_FUNCTION));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", Map.class));
+        SERIALIZED_PARAMETERS.add(
+                new SerializedParameter("auditFunction", AuditFunction.class, SerializationCategory.AUDIT_FUNCTION));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", ArrayList.class));
     }
 
     private CensusRecord()

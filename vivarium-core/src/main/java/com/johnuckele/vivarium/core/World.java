@@ -678,7 +678,8 @@ public class World implements MapSerializer
     {
         LinkedList<MapSerializer> list = new LinkedList<MapSerializer>();
         list.add(_blueprint);
-        list.addAll(getCreatures());
+        list.addAll(this.getAuditRecords());
+        list.addAll(this.getCreatures());
         return list;
     }
 

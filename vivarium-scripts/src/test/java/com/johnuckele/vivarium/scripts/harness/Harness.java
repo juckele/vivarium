@@ -1,21 +1,57 @@
-package com.johnuckele.vivarium.scripts;
+package com.johnuckele.vivarium.scripts.harness;
+
+import org.junit.Test;
+
+import com.johnuckele.vivarium.scripts.ConvertToJSON;
+import com.johnuckele.vivarium.scripts.CreateAuditFunction;
+import com.johnuckele.vivarium.scripts.CreateBlueprint;
+import com.johnuckele.vivarium.scripts.CreateSpecies;
+import com.johnuckele.vivarium.scripts.CreateWorld;
+import com.johnuckele.vivarium.scripts.RenderWorld;
+import com.johnuckele.vivarium.scripts.RunSimulation;
 
 public class Harness
 {
-    public static void main(String[] args)
+    @Test
+    public void testWorldBuildWorkflow()
     {
-        System.out.println("Harness Testing");
         {
             String[] commandArgs = { "-o", "/tmp/af.viv", "auditType", "CENSUS" };
             CreateAuditFunction.main(commandArgs);
         }
 
-        System.out.println("Harness Testing");
+        {
+            String[] commandArgs = { "-o", "/tmp/s.viv", "maximumFood", "3000" };
+            CreateSpecies.main(commandArgs);
+        }
+
         {
             String[] commandArgs = { "-o", "/tmp/bp.viv", "-a", "/tmp/af.viv" };
             CreateBlueprint.main(commandArgs);
         }
 
+        {
+            String[] commandArgs = { "-o", "/tmp/bp.viv", "-a", "/tmp/af.viv", "-s", "/tmp/s.viv" };
+            CreateBlueprint.main(commandArgs);
+        }
+
+        {
+            String[] commandArgs = { "-o", "/tmp/w.viv", "-b", "/tmp/bp.viv" };
+            CreateWorld.main(commandArgs);
+        }
+
+        {
+            String[] commandArgs = { "/tmp/w.viv", "10", "/tmp/w2.viv" };
+            RunSimulation.main(commandArgs);
+        }
+        {
+            String[] commandArgs = { "/tmp/w2.viv", "10", "/tmp/w3.viv" };
+            RunSimulation.main(commandArgs);
+        }
+        {
+            String[] commandArgs = { "/tmp/w3.viv", "10", "/tmp/w4.viv" };
+            RunSimulation.main(commandArgs);
+        }
     }
 
     public static void inactive()

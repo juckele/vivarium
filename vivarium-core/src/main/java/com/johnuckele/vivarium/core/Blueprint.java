@@ -39,7 +39,8 @@ public class Blueprint implements MapSerializer
         SERIALIZED_PARAMETERS.add(new SerializedParameter("initialFoodGenerationProbability", Double.class, 0.2));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("initialWallGenerationProbability", Double.class, 0.1));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("soundEnabled", Boolean.class, false));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("auditFunctions", ArrayList.class, "[]"));
+        SERIALIZED_PARAMETERS.add(
+                new SerializedParameter("auditFunctions", ArrayList.class, SerializationCategory.AUDIT_FUNCTION, "[]"));
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("species", ArrayList.class, SerializationCategory.SPECIES, "[]"));
     }
