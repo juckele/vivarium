@@ -26,11 +26,6 @@ public class Harness
         }
 
         {
-            String[] commandArgs = { "data/world_saves/medium2.viv", "data/csv/medium2_pop_summary.csv" };
-            GeneratePopulationSummaryCSV.main(commandArgs);
-        }
-
-        {
             String[] commandArgs = { "data/world_saves/medium2.viv", "data/world_saves/medium.json" };
             ConvertToJSON.main(commandArgs);
         }
@@ -38,16 +33,6 @@ public class Harness
         {
             String[] commandArgs = { "data/world_saves/medium.viv", "20000000", "data/world_saves/medium2.viv" };
             RunSimulation.main(commandArgs);
-        }
-
-        {
-            String[] commandArgs = { "data/world_saves/medium2.viv", "data/csv/mem6_run4_census.csv" };
-            GenerateCensusCSV.main(commandArgs);
-        }
-
-        {
-            String[] commandArgs = { "data/world_saves/medium2.viv", "data/csv/mem6_run4_action.csv" };
-            GenerateGenerationActionProfileCSV.main(commandArgs);
         }
 
         for (int i = 3; i < 10; i++)

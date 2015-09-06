@@ -5,8 +5,8 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import com.johnuckele.vivarium.audit.AuditFunction;
-import com.johnuckele.vivarium.audit.AuditType;
-import com.johnuckele.vivarium.audit.Census;
+import com.johnuckele.vivarium.audit.CensusFunction;
+import com.johnuckele.vivarium.audit.CensusRecord;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
@@ -18,13 +18,13 @@ public class CensusTest
     public void testCensus()
     {
         Blueprint blueprint = Blueprint.makeDefault();
-        AuditFunction censusFunction = new AuditFunction(AuditType.CENSUS);
+        AuditFunction censusFunction = CensusFunction.makeDefault();
         ArrayList<AuditFunction> auditFunctions = new ArrayList<AuditFunction>();
         auditFunctions.add(censusFunction);
         blueprint.setAuditFunctions(auditFunctions);
         World world = new World(blueprint);
         world.tick();
-        Census record = (Census) world.getAuditRecords().remove();
+        CensusRecord record = (CensusRecord) world.getAuditRecords().remove();
         ArrayList<Integer> populationRecords = record.getPopulationRecords();
         Tester.equal("Population records should have two entries", populationRecords.size(), 2);
         Tester.equal("Population records be equal", populationRecords.get(0), populationRecords.get(1));
