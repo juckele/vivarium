@@ -11,9 +11,8 @@ import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
-public class Census extends AuditRecord
+public class CensusRecord extends AuditRecord
 {
-    protected Species     _trackedSpecies;
     private AuditFunction _auditFunction;
 
     private ArrayList<Integer> _creaturePopulation;
@@ -29,12 +28,13 @@ public class Census extends AuditRecord
         SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", Map.class));
     }
 
-    private Census()
+    private CensusRecord()
     {
     }
 
-    public Census(Species species)
+    public CensusRecord(CensusFunction function, Species species)
     {
+        _auditFunction = function;
         _trackedSpecies = species;
         _creaturePopulation = new ArrayList<Integer>();
     }
@@ -100,13 +100,13 @@ public class Census extends AuditRecord
         }
     }
 
-    public static Census makeUninitialized()
+    public static CensusRecord makeUninitialized()
     {
-        return new Census();
+        return new CensusRecord();
     }
 
-    public static Census makeWithSpecies(Species species)
+    public static CensusRecord makeWithSpecies(CensusFunction function, Species species)
     {
-        return new Census(species);
+        return new CensusRecord(function, species);
     }
 }

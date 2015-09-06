@@ -56,7 +56,7 @@ public class CreateBlueprint extends CommonsScript
                 {
                     auditFunctions.add((AuditFunction) mapSerializer);
                 }
-                if (species.isEmpty())
+                if (auditFunctions.isEmpty())
                 {
                     throw new IllegalStateException("No audit functions found in audit input file " + auditFile);
                 }

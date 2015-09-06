@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.johnuckele.vivarium.audit.AuditRecord;
+import com.johnuckele.vivarium.audit.AuditType;
+import com.johnuckele.vivarium.audit.CensusFunction;
+import com.johnuckele.vivarium.audit.CensusRecord;
 import com.johnuckele.vivarium.core.Action;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
@@ -42,7 +45,10 @@ public class SerializationEngine
     @SuppressWarnings("unchecked")
     public MapSerializer deserializeMap(HashMap<String, Object> map)
     {
-        String clazzName = (String) map.get(CLASS_KEY);
+        map = (HashMap<String, Object>) map.clone();
+        String clazzName = (String) map.remove(CLASS_KEY);
+        map.remove(CATEGORY_KEY);
+        int referenceID = Integer.parseInt((String) map.remove(ID_KEY));
         MapSerializer object;
         if (clazzName.equals(Species.class.getSimpleName()))
         {
@@ -68,11 +74,20 @@ public class SerializationEngine
         {
             object = World.makeUninitialized();
         }
+        else if (clazzName.equals(CensusFunction.class.getSimpleName()))
+        {
+            object = CensusFunction.makeUninitialized();
+        }
+        else if (clazzName.equals(CensusRecord.class.getSimpleName()))
+        {
+            object = CensusRecord.makeUninitialized();
+        }
         else
         {
             throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
         }
-        deserialize(object, (Map<String, Object>) map.clone());
+        deserialize(object, map);
+        storeIDToReference(referenceID, object);
         return object;
     }
 
@@ -183,6 +198,10 @@ public class SerializationEngine
                 else if (parameterClazz == Boolean.class)
                 {
                     valueObject = "" + valueObject;
+                }
+                else if (parameterClazz == AuditType.class)
+                {
+                    valueObject = ((AuditType) valueObject).name();
                 }
                 else if (parameterClazz == BrainType.class)
                 {
@@ -396,6 +415,10 @@ public class SerializationEngine
                 else if (parameterClazz == Boolean.class)
                 {
                     valueObject = Boolean.parseBoolean(valueString);
+                }
+                else if (parameterClazz == AuditType.class)
+                {
+                    valueObject = AuditType.valueOf(valueString);
                 }
                 else if (parameterClazz == BrainType.class)
                 {
@@ -622,8 +645,6 @@ public class SerializationEngine
                 HashMap<String, Object> map = collection.popNext(category);
                 object = deserializeMap(map);
                 objects.add(object);
-                int referenceID = Integer.parseInt((String) map.get(ID_KEY));
-                storeIDToReference(referenceID, object);
             }
         }
         return objects;

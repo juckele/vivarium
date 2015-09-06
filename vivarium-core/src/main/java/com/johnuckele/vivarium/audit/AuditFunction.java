@@ -2,28 +2,17 @@ package com.johnuckele.vivarium.audit;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
-import com.johnuckele.vivarium.serialization.SerializedParameter;
 
-public class AuditFunction implements MapSerializer
+public abstract class AuditFunction implements MapSerializer
 {
-    private AuditType _auditType;
+    protected AuditType _auditType;
 
-    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
-
-    static
-    {
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("auditType", AuditType.class));
-    }
-
-    private AuditFunction()
-    {
-    }
-
-    public AuditFunction(AuditType auditType)
+    protected AuditFunction(AuditType auditType)
     {
         this._auditType = auditType;
     }
@@ -37,13 +26,6 @@ public class AuditFunction implements MapSerializer
     public List<MapSerializer> getReferences()
     {
         return new LinkedList<MapSerializer>();
-    }
-
-    @Override
-    public List<SerializedParameter> getMappedParameters()
-    {
-        // TODO Auto-generated method stub
-        return null;
     }
 
     @Override
@@ -78,9 +60,14 @@ public class AuditFunction implements MapSerializer
         return SerializationCategory.AUDIT_FUNCTION;
     }
 
-    public static AuditFunction makeUninitialized()
+    public static AuditFunction makeFromMap(Map<String, Object> auditFunctionValues)
     {
-        return new AuditFunction();
+        if (!auditFunctionValues.containsKey("auditType"))
+        {
+            throw new IllegalStateException("Unable to determine audit function type from map options.");
+        }
+        AuditType auditType = AuditType.valueOf((String) auditFunctionValues.get("auditType"));
+        return auditType.makeFunctionFromMap(auditFunctionValues);
     }
 
     public static AuditFunction makeCopy(AuditRecord original)

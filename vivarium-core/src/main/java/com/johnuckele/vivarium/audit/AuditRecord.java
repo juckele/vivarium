@@ -1,5 +1,6 @@
 package com.johnuckele.vivarium.audit;
 
+import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
@@ -7,6 +8,8 @@ import com.johnuckele.vivarium.serialization.SerializationEngine;
 
 public abstract class AuditRecord implements MapSerializer
 {
+    protected Species _trackedSpecies;
+
     protected AuditRecord()
     {
 

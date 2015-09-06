@@ -79,7 +79,7 @@ public class ActionFrequency extends AuditRecord
         return new ActionFrequency();
     }
 
-    public static ActionFrequency makeWithSpecies(Species species)
+    public static ActionFrequency makeWithSpecies(AuditFunction function, Species species)
     {
         return new ActionFrequency(species);
     }

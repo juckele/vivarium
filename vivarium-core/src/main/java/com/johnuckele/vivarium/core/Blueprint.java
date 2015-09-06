@@ -191,7 +191,10 @@ public class Blueprint implements MapSerializer
     @Override
     public List<MapSerializer> getReferences()
     {
-        return new LinkedList<MapSerializer>(_species);
+        LinkedList<MapSerializer> references = new LinkedList<MapSerializer>();
+        references.addAll(_auditFunctions);
+        references.addAll(_species);
+        return (references);
     }
 
     @Override

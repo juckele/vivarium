@@ -81,7 +81,7 @@ public class World implements MapSerializer
         {
             for (AuditFunction auditFunction : _blueprint.getAuditFunctions())
             {
-                _auditRecords[i] = auditFunction.getAuditType().makeWithSpecies(species);
+                _auditRecords[i] = auditFunction.getAuditType().makeRecordWithSpecies(auditFunction, species);
                 i++;
             }
         }

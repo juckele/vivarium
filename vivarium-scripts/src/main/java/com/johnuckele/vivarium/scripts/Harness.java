@@ -6,7 +6,13 @@ public class Harness
     {
         System.out.println("Harness Testing");
         {
-            String[] commandArgs = { "-o", "/tmp/medium.viv", "maximumAge", "1000" };
+            String[] commandArgs = { "-o", "/tmp/af.viv", "auditType", "CENSUS" };
+            CreateAuditFunction.main(commandArgs);
+        }
+
+        System.out.println("Harness Testing");
+        {
+            String[] commandArgs = { "-o", "/tmp/bp.viv", "-a", "/tmp/af.viv" };
             CreateBlueprint.main(commandArgs);
         }
 
@@ -15,7 +21,7 @@ public class Harness
     public static void inactive()
     {
         {
-            String[] commandArgs = { "data/world_saves/medium.viv", "25", "creatureMemoryUnitCount", "1" };
+            String[] commandArgs = { "data/world_saves/medium.viv", "-s ", "25", "creatureMemoryUnitCount", "1" };
             CreateWorld.main(commandArgs);
 
         }

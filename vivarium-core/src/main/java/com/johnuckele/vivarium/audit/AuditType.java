@@ -1,5 +1,7 @@
 package com.johnuckele.vivarium.audit;
 
+import java.util.Map;
+
 import com.johnuckele.vivarium.core.Species;
 
 public enum AuditType
@@ -13,9 +15,16 @@ public enum AuditType
         }
 
         @Override
-        public ActionFrequency makeWithSpecies(Species species)
+        public ActionFrequency makeRecordWithSpecies(AuditFunction function, Species species)
         {
-            return ActionFrequency.makeWithSpecies(species);
+            return ActionFrequency.makeWithSpecies(function, species);
+        }
+
+        @Override
+        public AuditFunction makeFunctionFromMap(Map<String, Object> functionOptions)
+        {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("X");
         }
     },
     CENSUS
@@ -23,13 +32,21 @@ public enum AuditType
         @Override
         public Class<?> getAuditRecordClass()
         {
-            return Census.class;
+            return CensusRecord.class;
         }
 
         @Override
-        public Census makeWithSpecies(Species species)
+        public CensusRecord makeRecordWithSpecies(AuditFunction untypedFunction, Species species)
         {
-            return Census.makeWithSpecies(species);
+            CensusFunction censusFunction = (CensusFunction) untypedFunction;
+            return CensusRecord.makeWithSpecies(censusFunction, species);
+        }
+
+        @Override
+        public CensusFunction makeFunctionFromMap(Map<String, Object> functionOptions)
+        {
+            CensusFunction censusFunction = CensusFunction.makeFromMap(functionOptions);
+            return censusFunction;
         }
     },
     MEMORIAL
@@ -41,13 +58,22 @@ public enum AuditType
         }
 
         @Override
-        public AuditRecord makeWithSpecies(Species species)
+        public AuditRecord makeRecordWithSpecies(AuditFunction function, Species species)
         {
-            return CreatureMemorial.makeWithSpecies(species);
+            return CreatureMemorial.makeWithSpecies(function, species);
+        }
+
+        @Override
+        public AuditFunction makeFunctionFromMap(Map<String, Object> functionOptions)
+        {
+            // TODO Auto-generated method stub
+            throw new UnsupportedOperationException("X");
         }
     };
 
     public abstract Class<?> getAuditRecordClass();
 
-    public abstract AuditRecord makeWithSpecies(Species species);
+    public abstract AuditRecord makeRecordWithSpecies(AuditFunction function, Species species);
+
+    public abstract AuditFunction makeFunctionFromMap(Map<String, Object> functionOptions);
 }
