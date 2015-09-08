@@ -12,6 +12,7 @@ import com.johnuckele.vivarium.serialization.SerializedParameter;
 
 public class CensusRecord extends AuditRecord
 {
+    private Species       _trackedSpecies;
     private AuditFunction _auditFunction;
 
     private ArrayList<Integer> _recordTicks;

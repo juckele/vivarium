@@ -26,8 +26,7 @@ public class CensusTest
         world.tick();
         CensusRecord record = (CensusRecord) world.getAuditRecords().remove();
         ArrayList<Integer> populationRecords = record.getPopulationRecords();
-        Tester.equal("Population records should have two entries", populationRecords.size(), 2);
-        Tester.equal("Population records be equal", populationRecords.get(0), populationRecords.get(1));
+        Tester.equal("Population records should have one entry", populationRecords.size(), 1);
         Tester.equal("Initial population should match world", (int) populationRecords.get(0),
                 world.getCount(EntityType.CREATURE));
         Tester.greaterThan("Initial population should be non-zero", (int) populationRecords.get(0), 0);

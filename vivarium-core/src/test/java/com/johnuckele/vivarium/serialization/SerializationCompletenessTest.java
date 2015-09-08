@@ -80,7 +80,7 @@ public class SerializationCompletenessTest
         // Strip out explicitly ignored fields
         for (String ignoredField : ignoredFields)
         {
-            Tester.contains("All ignored fields must have a matching field", fields, ignoredField);
+            Tester.contains("" + clazz + ": All ignored fields must have a matching field", fields, ignoredField);
             fields.remove(ignoredField);
         }
 
@@ -88,9 +88,10 @@ public class SerializationCompletenessTest
         for (SerializedParameter parameter : serializedParameters)
         {
             String parameterFieldName = parameter.getFieldName();
-            Tester.contains("All mapped parameters must have a matching field", fields, parameterFieldName);
+            Tester.contains("" + clazz + ": All mapped parameters must have a matching field", fields,
+                    parameterFieldName);
             fields.remove(parameterFieldName);
         }
-        Tester.equal("No unmatched fields should remain:", fields.size(), 0);
+        Tester.equal("" + clazz + ": No unmatched fields should remain:", fields.size(), 0);
     }
 }
