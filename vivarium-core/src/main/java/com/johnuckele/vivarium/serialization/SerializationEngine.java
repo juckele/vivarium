@@ -174,12 +174,16 @@ public class SerializationEngine
                         }
 
                     }
-                    else
+                    else if (parameter.hasGenericClass())
                     {
                         for (Object reference : valueArray)
                         {
                             referenceArray.add("" + reference);
                         }
+                    }
+                    else
+                    {
+                        throw new IllegalStateException("Unable to resolve type of contents of ArrayList");
                     }
                     valueObject = referenceArray;
                 }
@@ -210,10 +214,6 @@ public class SerializationEngine
                         valueObject = "";
                     }
                 }
-                else if (parameterClazz == Boolean.class)
-                {
-                    valueObject = "" + valueObject;
-                }
                 else if (parameterClazz == AuditType.class)
                 {
                     valueObject = ((AuditType) valueObject).name();
@@ -233,6 +233,10 @@ public class SerializationEngine
                 else if (parameterClazz == Action.class)
                 {
                     valueObject = ((Action) valueObject).name();
+                }
+                else if (parameterClazz == Boolean.class)
+                {
+                    valueObject = "" + valueObject;
                 }
                 else if (parameterClazz == Double.class)
                 {
@@ -403,11 +407,11 @@ public class SerializationEngine
                             valueList.add(getReferenceObject(parameter.getReferenceCategory(), referenceID));
                         }
                     }
-                    else
+                    else if (parameter.hasGenericClass())
                     {
                         for (Object reference : referenceList)
                         {
-                            valueList.add("" + reference);
+                            valueList.add(Integer.parseInt((String) reference));
                         }
                     }
                     valueObject = valueList;
@@ -441,10 +445,6 @@ public class SerializationEngine
                         valueObject = null;
                     }
                 }
-                else if (parameterClazz == Boolean.class)
-                {
-                    valueObject = Boolean.parseBoolean(valueString);
-                }
                 else if (parameterClazz == AuditType.class)
                 {
                     valueObject = AuditType.valueOf(valueString);
@@ -464,6 +464,10 @@ public class SerializationEngine
                 else if (parameterClazz == Action.class)
                 {
                     valueObject = Action.valueOf(valueString);
+                }
+                else if (parameterClazz == Boolean.class)
+                {
+                    valueObject = Boolean.parseBoolean(valueString);
                 }
                 else if (parameterClazz == Double.class)
                 {

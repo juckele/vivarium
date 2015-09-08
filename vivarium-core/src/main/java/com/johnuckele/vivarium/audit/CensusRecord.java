@@ -14,6 +14,7 @@ public class CensusRecord extends AuditRecord
 {
     private AuditFunction _auditFunction;
 
+    private ArrayList<Integer> _recordTicks;
     private ArrayList<Integer> _creaturePopulation;
 
     private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
@@ -24,7 +25,8 @@ public class CensusRecord extends AuditRecord
                 .add(new SerializedParameter("trackedSpecies", Species.class, SerializationCategory.SPECIES));
         SERIALIZED_PARAMETERS.add(
                 new SerializedParameter("auditFunction", AuditFunction.class, SerializationCategory.AUDIT_FUNCTION));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", ArrayList.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("creaturePopulation", ArrayList.class, Integer.class));
+        SERIALIZED_PARAMETERS.add(new SerializedParameter("recordTicks", ArrayList.class, Integer.class));
     }
 
     private CensusRecord()
@@ -36,6 +38,7 @@ public class CensusRecord extends AuditRecord
         _auditFunction = function;
         _trackedSpecies = species;
         _creaturePopulation = new ArrayList<Integer>();
+        _recordTicks = new ArrayList<Integer>();
     }
 
     public ArrayList<Integer> getPopulationRecords()
@@ -46,7 +49,22 @@ public class CensusRecord extends AuditRecord
     @Override
     public void record(World world, int tick)
     {
-        _creaturePopulation.add(world.getCount(_trackedSpecies));
+        // always record the starting population
+        if (_creaturePopulation.size() < 1)
+        {
+            _recordTicks.add(tick);
+            _creaturePopulation.add(world.getCount(_trackedSpecies));
+        }
+        else
+        {
+            // Now get the current population and only record the new value if it has changed from the last record
+            int currentCount = world.getCount(_trackedSpecies);
+            if (_creaturePopulation.get(_creaturePopulation.size() - 1) != currentCount)
+            {
+                _recordTicks.add(tick);
+                _creaturePopulation.add(world.getCount(_trackedSpecies));
+            }
+        }
     }
 
     @Override
@@ -70,6 +88,8 @@ public class CensusRecord extends AuditRecord
         {
             case "creaturePopulation":
                 return _creaturePopulation;
+            case "recordTicks":
+                return _recordTicks;
             case "auditFunction":
                 return _auditFunction;
             case "trackedSpecies":
@@ -87,6 +107,9 @@ public class CensusRecord extends AuditRecord
         {
             case "creaturePopulation":
                 _creaturePopulation = (ArrayList<Integer>) value;
+                break;
+            case "recordTicks":
+                _recordTicks = (ArrayList<Integer>) value;
                 break;
             case "auditFunction":
                 _auditFunction = (AuditFunction) value;
