@@ -2,17 +2,18 @@ package com.johnuckele.vivarium.core;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
+import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedCollection;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
-public class WorldBlueprint implements MapSerializer
+public class Blueprint implements MapSerializer
 {
     // World Generation
     private int    _size;
@@ -26,6 +27,9 @@ public class WorldBlueprint implements MapSerializer
     // Species
     private ArrayList<Species> _species;
 
+    // Audit Functions
+    private ArrayList<AuditFunction> _auditFunctions;
+
     private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
 
     static
@@ -35,12 +39,14 @@ public class WorldBlueprint implements MapSerializer
         SERIALIZED_PARAMETERS.add(new SerializedParameter("initialFoodGenerationProbability", Double.class, 0.2));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("initialWallGenerationProbability", Double.class, 0.1));
         SERIALIZED_PARAMETERS.add(new SerializedParameter("soundEnabled", Boolean.class, false));
+        SERIALIZED_PARAMETERS.add(
+                new SerializedParameter("auditFunctions", ArrayList.class, SerializationCategory.AUDIT_FUNCTION, "[]"));
         SERIALIZED_PARAMETERS
                 .add(new SerializedParameter("species", ArrayList.class, SerializationCategory.SPECIES, "[]"));
     }
 
     // Private constructor for deserialization
-    private WorldBlueprint()
+    private Blueprint()
     {
     }
 
@@ -67,6 +73,11 @@ public class WorldBlueprint implements MapSerializer
     public boolean getSoundEnabled()
     {
         return this._soundEnabled;
+    }
+
+    public ArrayList<AuditFunction> getAuditFunctions()
+    {
+        return this._auditFunctions;
     }
 
     public ArrayList<Species> getSpecies()
@@ -105,73 +116,86 @@ public class WorldBlueprint implements MapSerializer
         this._soundEnabled = soundEnabled;
     }
 
-    public void setSpecies(ArrayList<Species> _species)
+    public void setSpecies(ArrayList<Species> species)
     {
-        this._species = _species;
+        this._species = species;
     }
 
-    public static WorldBlueprint makeUninitialized()
+    public void setAuditFunctions(ArrayList<AuditFunction> auditFunctions)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        this._auditFunctions = auditFunctions;
+    }
+
+    public static Blueprint makeUninitialized()
+    {
+        Blueprint wb = new Blueprint();
         return wb;
     }
 
-    public static WorldBlueprint makeCopy(WorldBlueprint original)
+    public static Blueprint makeCopy(Blueprint original)
     {
-        return (WorldBlueprint) new SerializationEngine().makeCopy(original);
+        return (Blueprint) new SerializationEngine().makeCopy(original);
     }
 
-    public static WorldBlueprint makeDefault()
+    public static Blueprint makeDefault()
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
+        wb._auditFunctions = new ArrayList<AuditFunction>();
         return wb;
     }
 
-    public static WorldBlueprint makeFromMap(HashMap<String, Object> blueprintValues)
+    public static Blueprint makeFromMap(Map<String, Object> blueprintValues)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, blueprintValues);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
+        wb._auditFunctions = new ArrayList<AuditFunction>();
         return wb;
     }
 
-    public static WorldBlueprint makeWithSize(int size)
+    public static Blueprint makeWithSize(int size)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
+        wb._auditFunctions = new ArrayList<AuditFunction>();
         return wb;
     }
 
-    public static WorldBlueprint makeWithSizeAndSpecies(int size, Species s)
+    public static Blueprint makeWithSizeAndSpecies(int size, Species s)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>();
         wb._species.add(s);
+        wb._auditFunctions = new ArrayList<AuditFunction>();
         return wb;
     }
 
-    public static WorldBlueprint makeWithSizeAndSpecies(int size, Collection<Species> s)
+    public static Blueprint makeWithSizeAndSpecies(int size, Collection<Species> s)
     {
-        WorldBlueprint wb = new WorldBlueprint();
+        Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
         wb.setSize(size);
         wb._species = new ArrayList<Species>(s);
+        wb._auditFunctions = new ArrayList<AuditFunction>();
         return wb;
     }
 
     @Override
     public List<MapSerializer> getReferences()
     {
-        return new LinkedList<MapSerializer>(_species);
+        LinkedList<MapSerializer> references = new LinkedList<MapSerializer>();
+        references.addAll(_auditFunctions);
+        references.addAll(_species);
+        return (references);
     }
 
     @Override
@@ -189,7 +213,7 @@ public class WorldBlueprint implements MapSerializer
         Species s2 = Species.makeDefault();
         s2.setMutationRateExponent(-10);
         species.add(s2);
-        WorldBlueprint wb = WorldBlueprint.makeWithSizeAndSpecies(25, species);
+        Blueprint wb = Blueprint.makeWithSizeAndSpecies(25, species);
         SerializationEngine se = new SerializationEngine();
         SerializedCollection collection = se.serialize(wb);
         System.out.println(collection);
@@ -198,7 +222,7 @@ public class WorldBlueprint implements MapSerializer
     @Override
     public List<SerializedParameter> getMappedParameters()
     {
-        return WorldBlueprint.SERIALIZED_PARAMETERS;
+        return Blueprint.SERIALIZED_PARAMETERS;
     }
 
     @Override
@@ -216,6 +240,8 @@ public class WorldBlueprint implements MapSerializer
                 return "" + this._initialWallGenerationProbability;
             case "soundEnabled":
                 return "" + this._soundEnabled;
+            case "auditFunctions":
+                return this._auditFunctions;
             case "species":
                 return this._species;
             default:
@@ -244,6 +270,9 @@ public class WorldBlueprint implements MapSerializer
             case "soundEnabled":
                 this._soundEnabled = (Boolean) value;
                 break;
+            case "auditFunctions":
+                this._auditFunctions = (ArrayList<AuditFunction>) value;
+                break;
             case "species":
                 this._species = (ArrayList<Species>) value;
                 break;
@@ -251,5 +280,4 @@ public class WorldBlueprint implements MapSerializer
                 throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
         }
     }
-
 }

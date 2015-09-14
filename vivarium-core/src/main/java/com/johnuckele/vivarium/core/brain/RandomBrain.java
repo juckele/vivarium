@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
@@ -99,11 +98,6 @@ public class RandomBrain extends Brain
     public static Brain makeUninitialized()
     {
         return new RandomBrain();
-    }
-
-    public static RandomBrain makeCopy(RandomBrain original)
-    {
-        return (RandomBrain) new SerializationEngine().makeCopy(original);
     }
 
     public static RandomBrain makeWithSpecies(Species species)

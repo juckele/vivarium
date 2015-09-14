@@ -4,6 +4,7 @@ public class SerializedParameter
 {
     private String                _parameterName;
     private Class<?>              _clazz;
+    private Class<?>              _genericClazz;
     private SerializationCategory _referenceCategory;
     private boolean               _hasDefaultValue;
     private String                _defaultValue;
@@ -41,6 +42,14 @@ public class SerializedParameter
         _hasDefaultValue = false;
     }
 
+    public SerializedParameter(String parameterName, Class<?> clazz, Class<?> genericClazz)
+    {
+        _parameterName = parameterName;
+        _clazz = clazz;
+        _genericClazz = clazz;
+        _hasDefaultValue = false;
+    }
+
     public String getName()
     {
         return _parameterName;
@@ -49,6 +58,25 @@ public class SerializedParameter
     public Class<?> getValueClass()
     {
         return _clazz;
+    }
+
+    public boolean hasGenericClass()
+    {
+        return _genericClazz != null;
+    }
+
+    public Class<?> getGenericClass()
+    {
+        if (_genericClazz == null)
+        {
+            throw new IllegalStateException("Parameter " + this._parameterName + " has no _genericClazz");
+        }
+        return _genericClazz;
+    }
+
+    public boolean hasReferenceCategory()
+    {
+        return _referenceCategory != null;
     }
 
     public SerializationCategory getReferenceCategory()

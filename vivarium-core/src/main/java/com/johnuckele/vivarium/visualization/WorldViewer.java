@@ -6,17 +6,17 @@ import java.util.LinkedList;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
 
+@SuppressWarnings("serial")
 public class WorldViewer extends JFrame
 {
-    public static final int   OVERVIEW_ONLY    = 1;
-    public static final int   RAT_LIST_ONLY    = 2;
-    private static final long serialVersionUID = 8857256647972270073L;
+    public static final int OVERVIEW_ONLY = 1;
+    public static final int RAT_LIST_ONLY = 2;
 
     private World             _w;
     private ArrayList<String> _overviewRenders = new ArrayList<String>(50000);
@@ -112,7 +112,7 @@ public class WorldViewer extends JFrame
         species.add(species2);
 
         // Construct the world proper
-        WorldBlueprint blueprint = WorldBlueprint.makeWithSizeAndSpecies(worldDimensions, species);
+        Blueprint blueprint = Blueprint.makeWithSizeAndSpecies(worldDimensions, species);
         World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 

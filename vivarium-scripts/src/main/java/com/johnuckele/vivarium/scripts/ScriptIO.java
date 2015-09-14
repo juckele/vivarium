@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Scanner;
 
 import org.json.JSONException;
@@ -78,7 +79,7 @@ public class ScriptIO
         }
     }
 
-    public static Object loadObject(String fileName, Format f)
+    public static MapSerializer loadObject(String fileName, Format f)
     {
         if (f == Format.JSON)
         {
@@ -90,9 +91,27 @@ public class ScriptIO
         }
     }
 
-    private static Object loadObjectWithJSON(String fileName)
+    public static Collection<MapSerializer> loadObjects(String fileName, Format f)
+    {
+        if (f == Format.JSON)
+        {
+            return loadObjectsWithJSON(fileName);
+        }
+        else
+        {
+            throw new Error("Loading format " + f + " is not supported");
+        }
+    }
+
+    private static MapSerializer loadObjectWithJSON(String fileName)
     {
         String jsonString = loadFileToString(fileName);
-        return JSONConverter.jsonStringtoSerializer(jsonString);
+        return JSONConverter.jsonStringToSerializer(jsonString);
+    }
+
+    private static Collection<MapSerializer> loadObjectsWithJSON(String fileName)
+    {
+        String jsonString = loadFileToString(fileName);
+        return JSONConverter.jsonStringToSerializerList(jsonString);
     }
 }

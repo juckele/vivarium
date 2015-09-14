@@ -8,9 +8,10 @@ import java.util.HashSet;
 
 import org.junit.Test;
 
+import com.johnuckele.vivarium.audit.AuditType;
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vtest.Tester;
 
@@ -20,7 +21,7 @@ public class SerializationCompletenessTest
     public void testWorldBlueprintCompleteness() throws Exception
     {
         String[] ignoredFields = {};
-        completenessTestHelper(WorldBlueprint.class, ignoredFields);
+        completenessTestHelper(Blueprint.class, ignoredFields);
     }
 
     @Test
@@ -37,6 +38,16 @@ public class SerializationCompletenessTest
         {
             String[] ignoredFields = {};
             completenessTestHelper(brainType.getBrainClass(), ignoredFields);
+        }
+    }
+
+    @Test
+    public void testAuditCompleteness() throws Exception
+    {
+        for (AuditType auditRecordType : AuditType.values())
+        {
+            String[] ignoredFields = {};
+            completenessTestHelper(auditRecordType.getAuditRecordClass(), ignoredFields);
         }
     }
 
@@ -69,7 +80,7 @@ public class SerializationCompletenessTest
         // Strip out explicitly ignored fields
         for (String ignoredField : ignoredFields)
         {
-            Tester.contains("All ignored fields must have a matching field", fields, ignoredField);
+            Tester.contains("" + clazz + ": All ignored fields must have a matching field", fields, ignoredField);
             fields.remove(ignoredField);
         }
 
@@ -77,9 +88,10 @@ public class SerializationCompletenessTest
         for (SerializedParameter parameter : serializedParameters)
         {
             String parameterFieldName = parameter.getFieldName();
-            Tester.contains("All mapped parameters must have a matching field", fields, parameterFieldName);
+            Tester.contains("" + clazz + ": All mapped parameters must have a matching field", fields,
+                    parameterFieldName);
             fields.remove(parameterFieldName);
         }
-        Tester.equal("No unmatched fields should remain:", fields.size(), 0);
+        Tester.equal("" + clazz + ": No unmatched fields should remain:", fields.size(), 0);
     }
 }

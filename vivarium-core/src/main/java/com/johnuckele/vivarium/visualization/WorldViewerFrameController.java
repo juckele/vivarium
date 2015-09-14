@@ -7,15 +7,14 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+@SuppressWarnings("serial")
 public class WorldViewerFrameController extends JPanel implements ActionListener
 {
-    private static final long serialVersionUID = -6685650874089944273L;
+    private WorldViewer _targetWorldViewer;
+    private int         _frame;
 
-    private WorldViewer       _targetWorldViewer;
-    private int               _frame;
-
-    private JButton[]         _skips           = new JButton[10];
-    private JLabel            _frameCounter;
+    private JButton[] _skips = new JButton[10];
+    private JLabel    _frameCounter;
 
     public WorldViewerFrameController(WorldViewer worldViewer, int initialFrame)
     {

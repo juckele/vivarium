@@ -1,13 +1,13 @@
 package com.johnuckele.vivarium.web.client;
 
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 
 public class WebWorld extends World
 {
-    public WebWorld(WorldBlueprint blueprint)
+    public WebWorld(Blueprint blueprint)
     {
         super(blueprint);
     }

@@ -22,12 +22,20 @@ public class JSONConverter
         return jsonObject.toString();
     }
 
-    public static MapSerializer jsonStringtoSerializer(String jsonString)
+    public static MapSerializer jsonStringToSerializer(String jsonString)
     {
         JSONObject jsonObject = new JSONObject(jsonString);
         SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
         SerializationEngine engine = new SerializationEngine();
         return engine.deserialize(collection);
+    }
+
+    public static List<MapSerializer> jsonStringToSerializerList(String jsonString)
+    {
+        JSONObject jsonObject = new JSONObject(jsonString);
+        SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
+        SerializationEngine engine = new SerializationEngine();
+        return engine.deserializeList(collection);
     }
 
     private static JSONObject convertFromSerializedCollection(SerializedCollection collection)

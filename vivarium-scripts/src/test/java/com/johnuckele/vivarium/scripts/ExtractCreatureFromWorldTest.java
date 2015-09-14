@@ -14,7 +14,7 @@ public class ExtractCreatureFromWorldTest
         int worldSize = 10;
         // Create a world
         {
-            String[] commandArgs = { "test.viv", "" + worldSize };
+            String[] commandArgs = { "-o", "test.viv", "-s", "" + worldSize };
             CreateWorld.main(commandArgs);
         }
         // Extract the creature

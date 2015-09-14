@@ -3,6 +3,7 @@ package com.johnuckele.vivarium.core;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
@@ -301,6 +302,13 @@ public class Species implements MapSerializer
     {
         Species s = new Species();
         new SerializationEngine().deserialize(s, SerializationEngine.EMPTY_OBJECT_MAP);
+        return s;
+    }
+
+    public static Species makeFromMap(Map<String, Object> speciesValues)
+    {
+        Species s = new Species();
+        new SerializationEngine().deserialize(s, speciesValues);
         return s;
     }
 

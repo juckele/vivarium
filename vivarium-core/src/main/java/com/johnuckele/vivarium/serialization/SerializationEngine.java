@@ -6,14 +6,19 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import com.johnuckele.vivarium.audit.AuditFunction;
+import com.johnuckele.vivarium.audit.AuditRecord;
+import com.johnuckele.vivarium.audit.AuditType;
+import com.johnuckele.vivarium.audit.CensusFunction;
+import com.johnuckele.vivarium.audit.CensusRecord;
 import com.johnuckele.vivarium.core.Action;
+import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Direction;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Gender;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.WorldBlueprint;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
@@ -38,17 +43,21 @@ public class SerializationEngine
         _dereferenceMap = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
     }
 
+    @SuppressWarnings("unchecked")
     public MapSerializer deserializeMap(HashMap<String, Object> map)
     {
-        String clazzName = (String) map.get(CLASS_KEY);
+        map = (HashMap<String, Object>) map.clone();
+        String clazzName = (String) map.remove(CLASS_KEY);
+        map.remove(CATEGORY_KEY);
+        int referenceID = Integer.parseInt((String) map.remove(ID_KEY));
         MapSerializer object;
         if (clazzName.equals(Species.class.getSimpleName()))
         {
             object = Species.makeUninitialized();
         }
-        else if (clazzName.equals(WorldBlueprint.class.getSimpleName()))
+        else if (clazzName.equals(Blueprint.class.getSimpleName()))
         {
-            object = WorldBlueprint.makeUninitialized();
+            object = Blueprint.makeUninitialized();
         }
         else if (clazzName.equals(RandomBrain.class.getSimpleName()))
         {
@@ -66,11 +75,20 @@ public class SerializationEngine
         {
             object = World.makeUninitialized();
         }
+        else if (clazzName.equals(CensusFunction.class.getSimpleName()))
+        {
+            object = CensusFunction.makeUninitialized();
+        }
+        else if (clazzName.equals(CensusRecord.class.getSimpleName()))
+        {
+            object = CensusRecord.makeUninitialized();
+        }
         else
         {
             throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
         }
         deserialize(object, map);
+        storeIDToReference(referenceID, object);
         return object;
     }
 
@@ -94,7 +112,6 @@ public class SerializationEngine
             }
             // Serialize the current object
             int objectID = collection.categoryCount(object.getSerializationCategory());
-            System.out.println("ID " + objectID);
             storeReferenceToID(object, objectID);
             HashMap<String, Object> map = serializeObject(object, objectID);
             collection.addObject(map);
@@ -149,11 +166,30 @@ public class SerializationEngine
                 {
                     ArrayList<?> valueArray = (ArrayList<?>) valueObject;
                     ArrayList<String> referenceArray = new ArrayList<String>();
-                    for (Object reference : valueArray)
+                    if (parameter.hasReferenceCategory())
                     {
-                        referenceArray.add("" + getReferenceID((MapSerializer) reference));
+                        for (Object reference : valueArray)
+                        {
+                            referenceArray.add("" + getReferenceID((MapSerializer) reference));
+                        }
+
+                    }
+                    else if (parameter.hasGenericClass())
+                    {
+                        for (Object reference : valueArray)
+                        {
+                            referenceArray.add("" + reference);
+                        }
+                    }
+                    else
+                    {
+                        throw new IllegalStateException("Unable to resolve type of contents of ArrayList");
                     }
                     valueObject = referenceArray;
+                }
+                else if (parameterClazz == AuditFunction.class)
+                {
+                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
                 else if (parameterClazz == Species.class)
                 {
@@ -163,7 +199,7 @@ public class SerializationEngine
                 {
                     valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
-                else if (parameterClazz == WorldBlueprint.class)
+                else if (parameterClazz == Blueprint.class)
                 {
                     valueObject = "" + getReferenceID((MapSerializer) valueObject);
                 }
@@ -178,9 +214,9 @@ public class SerializationEngine
                         valueObject = "";
                     }
                 }
-                else if (parameterClazz == Boolean.class)
+                else if (parameterClazz == AuditType.class)
                 {
-                    valueObject = "" + valueObject;
+                    valueObject = ((AuditType) valueObject).name();
                 }
                 else if (parameterClazz == BrainType.class)
                 {
@@ -197,6 +233,10 @@ public class SerializationEngine
                 else if (parameterClazz == Action.class)
                 {
                     valueObject = ((Action) valueObject).name();
+                }
+                else if (parameterClazz == Boolean.class)
+                {
+                    valueObject = "" + valueObject;
                 }
                 else if (parameterClazz == Double.class)
                 {
@@ -235,6 +275,23 @@ public class SerializationEngine
                         }
                     }
                     valueObject = outerValueList;
+                }
+                else if (parameterClazz == AuditRecord[].class)
+                {
+                    AuditRecord[] valueArray = (AuditRecord[]) valueObject;
+                    List<Object> valueList = new LinkedList<Object>();
+                    for (AuditRecord i : valueArray)
+                    {
+                        if (i != null)
+                        {
+                            valueList.add("" + getReferenceID(i));
+                        }
+                        else
+                        {
+                            valueList.add("");
+                        }
+                    }
+                    valueObject = valueList;
                 }
                 else if (parameterClazz == EntityType[][].class)
                 {
@@ -285,11 +342,15 @@ public class SerializationEngine
                 }
             }
         }
-        catch (IllegalArgumentException e)
+        catch (
+
+        IllegalArgumentException e)
+
         {
             e.printStackTrace();
         }
         return map;
+
     }
 
     public static String getKeyFromFieldName(String fieldName)
@@ -311,11 +372,11 @@ public class SerializationEngine
                 {
                     if (map.get(parameter.getName()) instanceof String)
                     {
-                        valueString = (String) map.get(parameter.getName());
+                        valueString = (String) map.remove(parameter.getName());
                     }
                     else
                     {
-                        valueObject = map.get(parameter.getName());
+                        valueObject = map.remove(parameter.getName());
                     }
                 }
                 else
@@ -337,13 +398,27 @@ public class SerializationEngine
                         referenceList = (List<Object>) valueObject;
                     }
                     ArrayList<Object> valueList = new ArrayList<Object>();
-                    for (Object reference : referenceList)
+                    if (parameter.hasReferenceCategory())
                     {
-                        int referenceID;
-                        referenceID = Integer.parseInt((String) reference);
-                        valueList.add(getReferenceObject(parameter.getReferenceCategory(), referenceID));
+                        for (Object reference : referenceList)
+                        {
+                            int referenceID;
+                            referenceID = Integer.parseInt((String) reference);
+                            valueList.add(getReferenceObject(parameter.getReferenceCategory(), referenceID));
+                        }
+                    }
+                    else if (parameter.hasGenericClass())
+                    {
+                        for (Object reference : referenceList)
+                        {
+                            valueList.add(Integer.parseInt((String) reference));
+                        }
                     }
                     valueObject = valueList;
+                }
+                else if (parameterClazz == AuditFunction.class)
+                {
+                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
                 }
                 else if (parameterClazz == Species.class)
                 {
@@ -353,7 +428,7 @@ public class SerializationEngine
                 {
                     valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
                 }
-                else if (parameterClazz == WorldBlueprint.class)
+                else if (parameterClazz == Blueprint.class)
                 {
                     valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
                 }
@@ -370,9 +445,9 @@ public class SerializationEngine
                         valueObject = null;
                     }
                 }
-                else if (parameterClazz == Boolean.class)
+                else if (parameterClazz == AuditType.class)
                 {
-                    valueObject = Boolean.parseBoolean(valueString);
+                    valueObject = AuditType.valueOf(valueString);
                 }
                 else if (parameterClazz == BrainType.class)
                 {
@@ -389,6 +464,10 @@ public class SerializationEngine
                 else if (parameterClazz == Action.class)
                 {
                     valueObject = Action.valueOf(valueString);
+                }
+                else if (parameterClazz == Boolean.class)
+                {
+                    valueObject = Boolean.parseBoolean(valueString);
                 }
                 else if (parameterClazz == Double.class)
                 {
@@ -434,6 +513,28 @@ public class SerializationEngine
                                 k++;
                             }
                             j++;
+                        }
+                        i++;
+                    }
+                    valueObject = valueArray;
+                }
+                else if (parameterClazz == AuditRecord[].class)
+                {
+                    List<Object> valueList = (List<Object>) valueObject;
+                    AuditRecord[] valueArray = new AuditRecord[valueList.size()];
+                    int i = 0;
+                    for (Object objectI : valueList)
+                    {
+                        String stringI = "" + objectI;
+
+                        if (!stringI.equals(""))
+                        {
+                            valueArray[i] = (AuditRecord) getReferenceObject(parameter.getReferenceCategory(),
+                                    Integer.parseInt(stringI));
+                        }
+                        else
+                        {
+                            valueArray[i] = null;
                         }
                         i++;
                     }
@@ -502,11 +603,18 @@ public class SerializationEngine
                     object.setValue(parameter.getName(), valueString);
                 }
             }
+            if (!map.isEmpty())
+            {
+                throw new IllegalArgumentException("Map has unused keys and values of " + map + " when constructing "
+                        + object.getClass().getSimpleName());
+            }
+
         }
         catch (IllegalArgumentException e)
         {
             e.printStackTrace();
         }
+
     }
 
     public MapSerializer makeCopy(MapSerializer original)
@@ -516,19 +624,60 @@ public class SerializationEngine
         return copy;
     }
 
-    public MapSerializer deserialize(SerializedCollection collection)
+    /**
+     * Returns a single MapSerializer object from a serialized collection. In a serialized collection with more than one
+     * serialized object serialized, the object returned will be the object with the highest relative serialization
+     * category ranking. If the collection is empty or if there are multiple objects with the same highest serialized
+     * category ranking, this method throws an IllegalStateException.
+     *
+     * @param collection
+     * @return A single MapSerializer object represented in the collection
+     * @throws IllegalStateException
+     *             If there is not a single object in the collection which holds the highest relative serialization
+     *             category ranking.
+     */
+    public MapSerializer deserialize(SerializedCollection collection) throws IllegalStateException
+    {
+        List<MapSerializer> objects = deserializeList(collection);
+        if (objects.size() == 1)
+        {
+            return objects.get(0);
+        }
+        else if (objects.size() == 0)
+        {
+            throw new IllegalStateException("SerializedCollection has no serialized objects.");
+        }
+        else
+        {
+            throw new IllegalStateException(
+                    "SerializedCollection has a tie for highest ranked serialized objects, please use deserializeList instead.");
+        }
+    }
+
+    /**
+     * Returns a List of MapSerializer objects from a serialized collection. The objects returned will be the objects
+     * with the highest relative serialization category ranking.
+     *
+     * @param collection
+     * @return
+     */
+    public List<MapSerializer> deserializeList(SerializedCollection collection)
     {
         MapSerializer object = null;
+        List<MapSerializer> objects = new LinkedList<MapSerializer>();
         for (SerializationCategory category : SerializationCategory.rankedValues())
         {
+            if (collection.hasNext(category))
+            {
+                objects = new LinkedList<MapSerializer>();
+            }
             while (collection.hasNext(category))
             {
                 HashMap<String, Object> map = collection.popNext(category);
                 object = deserializeMap(map);
-                int referenceID = Integer.parseInt((String) map.get(ID_KEY));
-                storeIDToReference(referenceID, object);
+                objects.add(object);
             }
         }
-        return object;
+        return objects;
     }
 }
