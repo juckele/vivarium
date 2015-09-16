@@ -1,4 +1,4 @@
-package com.johnuckele.vivarium.visualization;
+package com.johnuckele.vivarium.visualization.text;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -11,6 +11,7 @@ import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.core.brain.BrainType;
+import com.johnuckele.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial")
 public class WorldViewer extends JFrame

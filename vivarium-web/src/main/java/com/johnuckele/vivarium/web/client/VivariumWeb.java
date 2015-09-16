@@ -20,14 +20,14 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     // GWT.create(VivariumWebService.class);
     // private static final String JSON_URL = "snap1f.json";
 
-    Canvas         canvas;
-    Context2d      context;
-    Image          spriteImage;
-    ImageElement   spriteImageElement;
-    WebWorld       world;
+    Canvas canvas;
+    Context2d context;
+    Image spriteImage;
+    ImageElement spriteImageElement;
+    WebWorld world;
     SpriteRenderer renderer;
-    double         lastTickTimestamp = 0;
-    int            tick              = 0;
+    double lastTickTimestamp = 0;
+    int tick = 0;
 
     @Override
     public void onModuleLoad()
@@ -113,7 +113,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
             {
                 lastTickTimestamp = timestamp;
                 world.tick();
-                world.terrainRender(renderer);
             }
         }
         else
@@ -126,10 +125,10 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
             {
                 lastTickTimestamp = timestamp;
                 world.tick();
-                world.terrainRender(renderer);
             }
         }
 
+        world.terrainRender(renderer);
         int milliseconds = (int) (timestamp % 1000);
         world.actorRender(renderer, milliseconds);
 

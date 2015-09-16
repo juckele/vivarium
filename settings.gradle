@@ -1,1 +1,1 @@
-include 'vivarium-core', 'vivarium-scripts', 'vivarium-web'
+include 'vivarium-core', 'vivarium-scripts', 'vivarium-web', 'vivarium-swing'

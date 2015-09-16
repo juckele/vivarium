@@ -100,6 +100,13 @@ project(':vivarium-scripts') {
     }
 }
 
+project(':vivarium-swing') {
+    dependencies {
+        compile project(':vivarium-core')
+        compile project(':vivarium-scripts')
+    }
+}
+
 project(':vivarium-web') {
     apply plugin: 'war'
     apply plugin: 'gwt'

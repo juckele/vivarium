@@ -81,4 +81,20 @@ public enum Direction
         }
         return null;
     }
+
+    public static double getRadiansFromNorth(Direction direction)
+    {
+        switch (direction)
+        {
+            case NORTH:
+                return (0);
+            case WEST:
+                return (Math.PI / 2);
+            case SOUTH:
+                return (Math.PI);
+            case EAST:
+                return (Math.PI * 3 / 2);
+        }
+        return Double.NaN;
+    }
 }
