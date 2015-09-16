@@ -2,6 +2,7 @@ package com.johnuckele.vivarium.visualization.animation;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GraphicsEnvironment;
 import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.util.LinkedList;
@@ -73,7 +74,7 @@ public class AnimatedWorldViewer extends JPanel {
 
     public static void main(String[] args) {
 	// Set up
-	int worldDimensions = 25;
+	int worldDimensions = 40;
 	System.out.println("Creating world... " + worldDimensions + " x "
 		+ worldDimensions);
 	LinkedList<Species> species = new LinkedList<Species>();
@@ -101,9 +102,23 @@ public class AnimatedWorldViewer extends JPanel {
 	AnimatedWorldViewer wh = new AnimatedWorldViewer(w);
 	JFrame window = new JFrame();
 	window.add(wh);
-	window.setSize(800, 600);
+	// window.setSize(800, 600);
+	// window.setExtendedState(JFrame.MAXIMIZED_BOTH);
+	// window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+	// window.setVisible(true);
+	// GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
+	// .getDefaultScreenDevice();
+	// gd.setFullScreenWindow(window);
+
 	window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-	window.setVisible(true);
+	window.setUndecorated(true);
+	window.setResizable(true);
+	// window.add(new JLabel("Press ALT+F4 to exit fullscreen.",
+	// SwingConstants.CENTER), BorderLayout.CENTER);
+	window.validate();
+
+	GraphicsEnvironment.getLocalGraphicsEnvironment()
+		.getDefaultScreenDevice().setFullScreenWindow(window);
     }
 
     // Swing Listeners
