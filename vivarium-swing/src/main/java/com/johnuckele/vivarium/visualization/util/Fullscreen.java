@@ -1,6 +1,14 @@
 package com.johnuckele.vivarium.visualization.util;
 
+import java.awt.Cursor;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.Window;
+import java.awt.image.BufferedImage;
+
+import javax.swing.JFrame;
 
 import com.sun.jna.Native;
 import com.sun.jna.NativeLong;
@@ -14,7 +22,25 @@ public class Fullscreen
     private static final int _NET_WM_STATE_REMOVE = 0;
     private static final int _NET_WM_STATE_ADD = 1;
 
-    public static void setFullScreenWindow(Window window, boolean fullScreen)
+    public static void setCursorVisible(JFrame window, boolean visible)
+    {
+        if (visible)
+        {
+            // Set it to the default
+            window.setCursor(Cursor.getDefaultCursor());
+        }
+        else
+        {
+            // Create blank cursor.
+            BufferedImage cursorImg = new BufferedImage(16, 16, BufferedImage.TYPE_INT_ARGB);
+            Cursor blankCursor = Toolkit.getDefaultToolkit().createCustomCursor(cursorImg, new Point(0, 0),
+                    "blank cursor");
+
+            // Set blank cursor
+            window.setCursor(blankCursor);
+        }
+    }
+
     public static void setFullScreenWindow(JFrame window, boolean fullScreen)
     {
         String osName = System.getProperty("os.name");
