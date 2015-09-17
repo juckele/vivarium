@@ -15,6 +15,7 @@ public class Fullscreen
     private static final int _NET_WM_STATE_ADD = 1;
 
     public static void setFullScreenWindow(Window window, boolean fullScreen)
+    public static void setFullScreenWindow(JFrame window, boolean fullScreen)
     {
         String osName = System.getProperty("os.name");
         if (osName.equals("Linux"))
@@ -27,9 +28,11 @@ public class Fullscreen
         }
     }
 
-    private static boolean setFullScreenWindowLightweight(Window window, boolean fullScreen)
+    private static void setFullScreenWindowLightweight(JFrame window, boolean fullScreen)
     {
-        throw new UnsupportedOperationException("I should get a windows / OS X machine to test this.");
+        window.setUndecorated(true);
+        GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+        gd.setFullScreenWindow(window);
     }
 
     private static void setFullScreenWindowLinux(Window window, boolean fullScreen)
