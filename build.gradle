@@ -104,10 +104,7 @@ project(':vivarium-swing') {
     dependencies {
         compile project(':vivarium-core')
         compile project(':vivarium-scripts')
-	compile 'com.sun.jna:jna:3.0.9'
-	compile 'net.java.dev.jna:jna:4.0.0'
 	compile 'net.java.dev.jna:jna-platform:4.0.0'
-
     }
 }
 
