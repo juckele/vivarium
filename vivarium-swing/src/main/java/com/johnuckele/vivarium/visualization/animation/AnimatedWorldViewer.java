@@ -16,6 +16,8 @@ import com.johnuckele.vivarium.visualization.util.Fullscreen;
 
 public class AnimatedWorldViewer extends JPanel
 {
+    private static JFrame _window;
+
     private static final long serialVersionUID = -3105685457075818705L;
     private World _world;
 
@@ -108,29 +110,17 @@ public class AnimatedWorldViewer extends JPanel
         World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
-        // Run simulation
+        // Create and show the window
         AnimatedWorldViewer wh = new AnimatedWorldViewer(w);
-        JFrame window = new JFrame();
-        window.add(wh);
-        window.setSize(800, 600);
-        // window.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        // window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        window.setVisible(true);
-        // GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment()
-        // .getDefaultScreenDevice();
-        // gd.setFullScreenWindow(window);
+        _window = new JFrame();
+        _window.add(wh);
+        _window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        _window.validate();
 
-        // window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        // window.setUndecorated(true);
-        // window.setResizable(true);
-        // window.add(new JLabel("Press ALT+F4 to exit fullscreen.",
-        // SwingConstants.CENTER), BorderLayout.CENTER);
-        // window.validate();
-        Fullscreen.setFullScreenWindow(window, true);
+        // Set everything to be visible
+        _window.setVisible(true);
+        Fullscreen.setFullScreenWindow(_window, true);
+        // Fullscreen.hideCursor(window);
 
-        // GraphicsEnvironment.getLocalGraphicsEnvironment()
-        // .getDefaultScreenDevice().setFullScreenWindow(window);
     }
-
-    // Swing Listeners
 }
