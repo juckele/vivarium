@@ -14,25 +14,26 @@ public class SpriteRenderer
     private static ImageIcon IMAGE_ICON = new ImageIcon("src/main/resources/sprites.png");
     private static Image IMAGE = IMAGE_ICON.getImage();
 
-    public static int PIXEL_BLOCK_SIZE = 32;
-    private static int FLOOR_X = 0 * PIXEL_BLOCK_SIZE;
-    private static int FLOOR_Y = 0 * PIXEL_BLOCK_SIZE;
-    private static int WALL_X = 1 * PIXEL_BLOCK_SIZE;
-    private static int WALL_Y = 0 * PIXEL_BLOCK_SIZE;
-    private static int FOOD_X = 1 * PIXEL_BLOCK_SIZE;
-    private static int FOOD_Y = 1 * PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_1_X = 0 * PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_1_Y = 2 * PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_2_X = 1 * PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_2_Y = 2 * PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_3_X = 2 * PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_3_Y = 2 * PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_1_X = 0 * PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_1_Y = 3 * PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_2_X = 1 * PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_2_Y = 3 * PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_3_X = 2 * PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_3_Y = 3 * PIXEL_BLOCK_SIZE;
+    public static int RENDER_PIXEL_BLOCK_SIZE = 32;
+    public static int SOURCE_PIXEL_BLOCK_SIZE = 32;
+    private static int FLOOR_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int FLOOR_Y = 0 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int WALL_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int WALL_Y = 0 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int FOOD_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int FOOD_Y = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int RED_CREATURE_1_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int RED_CREATURE_1_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int RED_CREATURE_2_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int RED_CREATURE_2_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int RED_CREATURE_3_X = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int RED_CREATURE_3_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int BLUE_CREATURE_1_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int BLUE_CREATURE_1_Y = 3 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int BLUE_CREATURE_2_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int BLUE_CREATURE_2_Y = 3 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int BLUE_CREATURE_3_X = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int BLUE_CREATURE_3_Y = 3 * SOURCE_PIXEL_BLOCK_SIZE;
 
     @SuppressWarnings("serial")
     private static HashMap<Sprite, Integer> SPRITE_TO_X_OFFSET = new HashMap<Sprite, Integer>()
@@ -68,22 +69,26 @@ public class SpriteRenderer
 
     public static void drawSprite(Graphics2D g2, Sprite sprite, int x, int y, ImageObserver observer)
     {
-        g2.drawImage(IMAGE, PIXEL_BLOCK_SIZE * x, PIXEL_BLOCK_SIZE * y, PIXEL_BLOCK_SIZE * x + PIXEL_BLOCK_SIZE,
-                PIXEL_BLOCK_SIZE * y + PIXEL_BLOCK_SIZE, SPRITE_TO_X_OFFSET.get(sprite), SPRITE_TO_Y_OFFSET.get(sprite),
-                SPRITE_TO_X_OFFSET.get(sprite) + PIXEL_BLOCK_SIZE, SPRITE_TO_Y_OFFSET.get(sprite) + PIXEL_BLOCK_SIZE,
-                observer);
+        g2.drawImage(IMAGE, RENDER_PIXEL_BLOCK_SIZE * x, RENDER_PIXEL_BLOCK_SIZE * y,
+                RENDER_PIXEL_BLOCK_SIZE * x + RENDER_PIXEL_BLOCK_SIZE,
+                RENDER_PIXEL_BLOCK_SIZE * y + RENDER_PIXEL_BLOCK_SIZE, SPRITE_TO_X_OFFSET.get(sprite),
+                SPRITE_TO_Y_OFFSET.get(sprite), SPRITE_TO_X_OFFSET.get(sprite) + SOURCE_PIXEL_BLOCK_SIZE,
+                SPRITE_TO_Y_OFFSET.get(sprite) + SOURCE_PIXEL_BLOCK_SIZE, observer);
 
     }
 
     public static void drawSprite(Graphics2D g2, Sprite sprite, int x, int y, Direction rotation,
             ImageObserver observer)
     {
-        g2.rotate(-Direction.getRadiansFromNorth(rotation), (x + 0.5) * PIXEL_BLOCK_SIZE, (y + 0.5) * PIXEL_BLOCK_SIZE);
-        g2.drawImage(IMAGE, PIXEL_BLOCK_SIZE * x, PIXEL_BLOCK_SIZE * y, PIXEL_BLOCK_SIZE * x + PIXEL_BLOCK_SIZE,
-                PIXEL_BLOCK_SIZE * y + PIXEL_BLOCK_SIZE, SPRITE_TO_X_OFFSET.get(sprite), SPRITE_TO_Y_OFFSET.get(sprite),
-                SPRITE_TO_X_OFFSET.get(sprite) + PIXEL_BLOCK_SIZE, SPRITE_TO_Y_OFFSET.get(sprite) + PIXEL_BLOCK_SIZE,
-                observer);
-        g2.rotate(Direction.getRadiansFromNorth(rotation), (x + 0.5) * PIXEL_BLOCK_SIZE, (y + 0.5) * PIXEL_BLOCK_SIZE);
+        g2.rotate(-Direction.getRadiansFromNorth(rotation), (x + 0.5) * RENDER_PIXEL_BLOCK_SIZE,
+                (y + 0.5) * RENDER_PIXEL_BLOCK_SIZE);
+        g2.drawImage(IMAGE, RENDER_PIXEL_BLOCK_SIZE * x, RENDER_PIXEL_BLOCK_SIZE * y,
+                RENDER_PIXEL_BLOCK_SIZE * x + RENDER_PIXEL_BLOCK_SIZE,
+                RENDER_PIXEL_BLOCK_SIZE * y + RENDER_PIXEL_BLOCK_SIZE, SPRITE_TO_X_OFFSET.get(sprite),
+                SPRITE_TO_Y_OFFSET.get(sprite), SPRITE_TO_X_OFFSET.get(sprite) + SOURCE_PIXEL_BLOCK_SIZE,
+                SPRITE_TO_Y_OFFSET.get(sprite) + SOURCE_PIXEL_BLOCK_SIZE, observer);
+        g2.rotate(Direction.getRadiansFromNorth(rotation), (x + 0.5) * RENDER_PIXEL_BLOCK_SIZE,
+                (y + 0.5) * RENDER_PIXEL_BLOCK_SIZE);
 
     }
 }
