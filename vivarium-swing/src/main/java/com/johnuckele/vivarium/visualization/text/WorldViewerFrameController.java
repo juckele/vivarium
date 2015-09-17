@@ -11,10 +11,10 @@ import javax.swing.JPanel;
 public class WorldViewerFrameController extends JPanel implements ActionListener
 {
     private WorldViewer _targetWorldViewer;
-    private int         _frame;
+    private int _frame;
 
     private JButton[] _skips = new JButton[10];
-    private JLabel    _frameCounter;
+    private JLabel _frameCounter;
 
     public WorldViewerFrameController(WorldViewer worldViewer, int initialFrame)
     {

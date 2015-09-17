@@ -19,13 +19,13 @@ public class WorldViewer extends JFrame
     public static final int OVERVIEW_ONLY = 1;
     public static final int RAT_LIST_ONLY = 2;
 
-    private World             _w;
+    private World _w;
     private ArrayList<String> _overviewRenders = new ArrayList<String>(50000);
-    private ArrayList<String> _ratListRenders  = new ArrayList<String>(50000);
-    private int               _renderIndex     = 0;
+    private ArrayList<String> _ratListRenders = new ArrayList<String>(50000);
+    private int _renderIndex = 0;
 
-    private JTextArea                  _overviewRender;
-    private JTextArea                  _ratListRender;
+    private JTextArea _overviewRender;
+    private JTextArea _ratListRender;
     private WorldViewerFrameController _frameController;
 
     public WorldViewer(World w)

@@ -11,7 +11,6 @@ import com.sun.jna.platform.unix.X11.XEvent;
 
 public class Fullscreen
 {
-
     private static final int _NET_WM_STATE_REMOVE = 0;
     private static final int _NET_WM_STATE_ADD = 1;
 
