@@ -3,6 +3,7 @@ package com.johnuckele.vivarium.visualization.animation;
 import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
 
+import com.johnuckele.vivarium.core.Action;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
@@ -55,6 +56,26 @@ public class WorldRenderer
                     Creature creature = w.getCreature(i, j);
                     int offsetMilliseconds = (int) (milliseconds + creature.getRandomSeed() * 1000) % 1000;
                     Sprite creatureSprites;
+                    if (creature.getAction() == Action.REST)
+                    {
+                        if (offsetMilliseconds < 250)
+                        {
+                            creatureSprites = Sprite.HALO_CREATURE_1;
+                        }
+                        else if (offsetMilliseconds < 500)
+                        {
+                            creatureSprites = Sprite.HALO_CREATURE_2;
+                        }
+                        else if (offsetMilliseconds < 750)
+                        {
+                            creatureSprites = Sprite.HALO_CREATURE_3;
+                        }
+                        else
+                        {
+                            creatureSprites = Sprite.HALO_CREATURE_2;
+                        }
+                        SpriteRenderer.drawSprite(g2, creatureSprites, j, i, creature.getFacing(), observer);
+                    }
                     if (creature.getIsFemale())
                     {
                         if (offsetMilliseconds < 250)

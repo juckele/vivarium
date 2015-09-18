@@ -20,8 +20,14 @@ public class SpriteRenderer
     private static int FLOOR_Y = 0 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int WALL_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int WALL_Y = 0 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int FOOD_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int FOOD_Y = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int FOOD_X = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int FOOD_Y = 0 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int HALO_CREATURE_1_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int HALO_CREATURE_1_Y = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int HALO_CREATURE_2_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int HALO_CREATURE_2_Y = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int HALO_CREATURE_3_X = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int HALO_CREATURE_3_Y = 1 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int RED_CREATURE_1_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int RED_CREATURE_1_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int RED_CREATURE_2_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
@@ -42,6 +48,9 @@ public class SpriteRenderer
             put(Sprite.FLOOR, FLOOR_X);
             put(Sprite.WALL, WALL_X);
             put(Sprite.FOOD, FOOD_X);
+            put(Sprite.HALO_CREATURE_1, HALO_CREATURE_1_X);
+            put(Sprite.HALO_CREATURE_2, HALO_CREATURE_2_X);
+            put(Sprite.HALO_CREATURE_3, HALO_CREATURE_3_X);
             put(Sprite.RED_CREATURE_1, RED_CREATURE_1_X);
             put(Sprite.RED_CREATURE_2, RED_CREATURE_2_X);
             put(Sprite.RED_CREATURE_3, RED_CREATURE_3_X);
@@ -58,6 +67,9 @@ public class SpriteRenderer
             put(Sprite.FLOOR, FLOOR_Y);
             put(Sprite.WALL, WALL_Y);
             put(Sprite.FOOD, FOOD_Y);
+            put(Sprite.HALO_CREATURE_1, HALO_CREATURE_1_Y);
+            put(Sprite.HALO_CREATURE_2, HALO_CREATURE_2_Y);
+            put(Sprite.HALO_CREATURE_3, HALO_CREATURE_3_Y);
             put(Sprite.RED_CREATURE_1, RED_CREATURE_1_Y);
             put(Sprite.RED_CREATURE_2, RED_CREATURE_2_Y);
             put(Sprite.RED_CREATURE_3, RED_CREATURE_3_Y);
