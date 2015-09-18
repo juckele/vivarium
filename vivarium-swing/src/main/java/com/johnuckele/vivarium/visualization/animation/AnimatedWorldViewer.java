@@ -1,8 +1,8 @@
 package com.johnuckele.vivarium.visualization.animation;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -115,13 +115,18 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
     public void paintComponent(Graphics g)
     {
         super.paintComponent(g);
+
+        // Get the graphics component and set do any required set up
         Graphics2D g2 = (Graphics2D) g;
-        // g2.rotate(Math.toRadians(0));
+        // g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        // Background
+        g2.setColor(Color.BLACK);
+        g2.fillRect(0, 0, _window.getWidth(), _window.getHeight());
+
+        // Render vivarium simulation
         WorldRenderer.terrainRender(g2, _world, this);
         WorldRenderer.actorRender(g2, _world, this, (int) (System.currentTimeMillis() % 1000));
-        // renderCreatures(g);
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g.drawLine(0, 0, 800, (int) ((System.currentTimeMillis() / 40) % 400));
 
         Toolkit.getDefaultToolkit().sync();
     }
