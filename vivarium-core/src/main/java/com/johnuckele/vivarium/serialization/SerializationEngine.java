@@ -1,44 +1,44 @@
 package com.johnuckele.vivarium.serialization;
 
-import java.util.ArrayList;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Array;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import com.johnuckele.vivarium.audit.AuditFunction;
-import com.johnuckele.vivarium.audit.AuditRecord;
-import com.johnuckele.vivarium.audit.AuditType;
 import com.johnuckele.vivarium.audit.CensusFunction;
 import com.johnuckele.vivarium.audit.CensusRecord;
-import com.johnuckele.vivarium.core.Action;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Creature;
-import com.johnuckele.vivarium.core.Direction;
-import com.johnuckele.vivarium.core.EntityType;
-import com.johnuckele.vivarium.core.Gender;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.brain.Brain;
-import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.core.brain.NeuralNetworkBrain;
 import com.johnuckele.vivarium.core.brain.RandomBrain;
-import com.johnuckele.vivarium.util.HierarchicalListParser;
 
 public class SerializationEngine
 {
-    public static final String                                                          ID_KEY                = "+id";
-    public static final String                                                          CATEGORY_KEY          = "+category";
-    public static final String                                                          CLASS_KEY             = "+class";
-    public static final HashMap<String, Object>                                         EMPTY_OBJECT_MAP      = new HashMap<String, Object>();
-    public static final HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> EMPTY_REFERENCE_MAP   = new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>();
+    public static final String ID_KEY = "+id";
+    public static final String CATEGORY_KEY = "+category";
+    public static final String CLASS_KEY = "+class";
+    public static final HashMap<String, Object> EMPTY_OBJECT_MAP = new HashMap<String, Object>();
+    public static final HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> EMPTY_REFERENCE_MAP = new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>();
     public static final HashMap<SerializationCategory, HashMap<Integer, MapSerializer>> EMPTY_DEREFERENCE_MAP = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
 
+    private SerializedCollection _collection;
     private HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> _referenceMap;
     private HashMap<SerializationCategory, HashMap<Integer, MapSerializer>> _dereferenceMap;
 
     public SerializationEngine()
     {
+        _collection = new SerializedCollection();
         _referenceMap = new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>();
         _dereferenceMap = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
     }
@@ -49,96 +49,125 @@ public class SerializationEngine
         map = (HashMap<String, Object>) map.clone();
         String clazzName = (String) map.remove(CLASS_KEY);
         map.remove(CATEGORY_KEY);
-        int referenceID = Integer.parseInt((String) map.remove(ID_KEY));
-        MapSerializer object;
+        int referenceID = (int) map.remove(ID_KEY);
+        MapSerializer object = makeUninitializedMapSerializer(clazzName);
+        deserialize(object, map);
+        object.finalizeSerialization();
+        storeIDToReference(referenceID, object);
+        return object;
+    }
+
+    private MapSerializer makeUninitializedMapSerializer(String clazzName)
+    {
         if (clazzName.equals(Species.class.getSimpleName()))
         {
-            object = Species.makeUninitialized();
+            return Species.makeUninitialized();
         }
         else if (clazzName.equals(Blueprint.class.getSimpleName()))
         {
-            object = Blueprint.makeUninitialized();
+            return Blueprint.makeUninitialized();
         }
         else if (clazzName.equals(RandomBrain.class.getSimpleName()))
         {
-            object = RandomBrain.makeUninitialized();
+            return RandomBrain.makeUninitialized();
         }
         else if (clazzName.equals(NeuralNetworkBrain.class.getSimpleName()))
         {
-            object = NeuralNetworkBrain.makeUninitialized();
+            return NeuralNetworkBrain.makeUninitialized();
         }
         else if (clazzName.equals(Creature.class.getSimpleName()))
         {
-            object = Creature.makeUninitialized();
+            return Creature.makeUninitialized();
         }
         else if (clazzName.equals(World.class.getSimpleName()))
         {
-            object = World.makeUninitialized();
+            return World.makeUninitialized();
         }
         else if (clazzName.equals(CensusFunction.class.getSimpleName()))
         {
-            object = CensusFunction.makeUninitialized();
+            return CensusFunction.makeUninitialized();
         }
         else if (clazzName.equals(CensusRecord.class.getSimpleName()))
         {
-            object = CensusRecord.makeUninitialized();
+            return CensusRecord.makeUninitialized();
         }
         else
         {
             throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
         }
-        deserialize(object, map);
-        storeIDToReference(referenceID, object);
-        return object;
     }
 
+    /**
+     * Creates a SerializedCollection object from a MapSerializer.
+     *
+     * @param object
+     * @return
+     */
     public SerializedCollection serialize(MapSerializer object)
     {
-        SerializedCollection collection = new SerializedCollection();
+        _collection = new SerializedCollection();
         // Start by recursively serializing the top level object
-        serializeObjectIntoCollection(object, collection);
-        return collection;
+        serializeObjectIntoCollection(object);
+        return _collection;
     }
 
-    private void serializeObjectIntoCollection(MapSerializer object, SerializedCollection collection)
+    private void serializeObjectIntoCollection(MapSerializer object)
     {
-        if (!_referenceMap.containsKey(object.getSerializationCategory())
-                || !_referenceMap.get(object.getSerializationCategory()).containsKey(object))
+        try
         {
-            // Serialize all references first
-            for (MapSerializer reference : object.getReferences())
+            SerializationCategory category = SerializationCategory.getCategoryForClass(object.getClass());
+            if (!_referenceMap.containsKey(category) || !_referenceMap.get(category).containsKey(object))
             {
-                serializeObjectIntoCollection(reference, collection);
+                // Serialize the current object
+                int objectID = _collection.categoryCount(category);
+                storeReferenceToID(object, objectID);
+                HashMap<String, Object> map;
+                map = serializeMapSerializer(object, objectID);
+                _collection.addObject(map);
             }
-            // Serialize the current object
-            int objectID = collection.categoryCount(object.getSerializationCategory());
-            storeReferenceToID(object, objectID);
-            HashMap<String, Object> map = serializeObject(object, objectID);
-            collection.addObject(map);
+        }
+        catch (IllegalAccessException e)
+        {
+            throw new RuntimeException(e);
         }
     }
 
     private void storeReferenceToID(MapSerializer object, int objectID)
     {
-        if (!_referenceMap.containsKey(object.getSerializationCategory()))
+        SerializationCategory category = SerializationCategory.getCategoryForClass(object.getClass());
+        if (!_referenceMap.containsKey(category))
         {
-            _referenceMap.put(object.getSerializationCategory(), new HashMap<MapSerializer, Integer>());
+            _referenceMap.put(category, new HashMap<MapSerializer, Integer>());
         }
-        _referenceMap.get(object.getSerializationCategory()).put(object, objectID);
+        _referenceMap.get(category).put(object, objectID);
     }
 
     private void storeIDToReference(int objectID, MapSerializer object)
     {
-        if (!_dereferenceMap.containsKey(object.getSerializationCategory()))
+        SerializationCategory category = SerializationCategory.getCategoryForClass(object.getClass());
+        if (!_dereferenceMap.containsKey(category))
         {
-            _dereferenceMap.put(object.getSerializationCategory(), new HashMap<Integer, MapSerializer>());
+            _dereferenceMap.put(category, new HashMap<Integer, MapSerializer>());
         }
-        _dereferenceMap.get(object.getSerializationCategory()).put(objectID, object);
+        _dereferenceMap.get(category).put(objectID, object);
     }
 
     private Integer getReferenceID(MapSerializer object)
     {
-        return _referenceMap.get(object.getSerializationCategory()).get(object);
+        SerializationCategory serializationCategory = SerializationCategory.getCategoryForClass(object.getClass());
+        HashMap<MapSerializer, Integer> category = _referenceMap.get(serializationCategory);
+        if (category == null)
+        {
+            serializeObjectIntoCollection(object);
+            category = _referenceMap.get(serializationCategory);
+        }
+        Integer id = category.get(object);
+        if (id == null)
+        {
+            serializeObjectIntoCollection(object);
+            id = category.get(object);
+        }
+        return id;
     }
 
     private MapSerializer getReferenceObject(SerializationCategory category, int objectID)
@@ -147,198 +176,80 @@ public class SerializationEngine
         return categoryMap.get(objectID);
     }
 
-    private HashMap<String, Object> serializeObject(MapSerializer object, int id)
+    @SuppressWarnings("unchecked")
+    private Object serializeObject(Object object)
+    {
+        if (object == null)
+        {
+            return null;
+        }
+
+        Class<?> clazz = object.getClass();
+
+        // Serialize value
+        if (clazz.isArray())
+        {
+            // Do array crap here
+            LinkedList<Object> list = new LinkedList<Object>();
+            for (int i = 0; i < Array.getLength(object); i++)
+            {
+                Object arrayElement = Array.get(object, i);
+                Object serializedElement = serializeObject(arrayElement);
+                list.add(serializedElement);
+            }
+            return list;
+        }
+        else if (List.class.isAssignableFrom(clazz))
+        {
+            // Do list crap here
+            LinkedList<Object> list = new LinkedList<Object>();
+            for (Object element : (List<Object>) object)
+            {
+                list.add(serializeObject(element));
+            }
+            return list;
+        }
+        else if (MapSerializer.class.isAssignableFrom(clazz))
+        {
+            // Reference crap hereB
+            return getReferenceID((MapSerializer) object);
+        }
+        else if (Enum.class.isAssignableFrom(clazz))
+        {
+            // Enum crap
+            return "" + object;
+        }
+        else if (isPrimitive(clazz))
+        {
+            // Do nothing because this can be saved as is
+            return object;
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Cannot handle parameter type " + clazz);
+        }
+    }
+
+    private HashMap<String, Object> serializeMapSerializer(MapSerializer object, int id) throws IllegalAccessException
     {
         HashMap<String, Object> map = new HashMap<String, Object>();
-        map.put(ID_KEY, "" + id);
-        map.put(CATEGORY_KEY, "" + object.getSerializationCategory());
+        map.put(ID_KEY, id);
+        SerializationCategory serializationCategory = SerializationCategory.getCategoryForClass(object.getClass());
+        map.put(CATEGORY_KEY, "" + serializationCategory);
         map.put(CLASS_KEY, "" + object.getClass().getSimpleName());
         try
         {
-            for (SerializedParameter parameter : object.getMappedParameters())
+            for (Field f : getSerializedParameters(object))
             {
-                // Get the value
-                Object valueObject = object.getValue(parameter.getName());
+                Object valueObject = f.get(object);
 
                 // Serialize value
-                Class<?> parameterClazz = parameter.getValueClass();
-                if (parameterClazz == ArrayList.class)
-                {
-                    ArrayList<?> valueArray = (ArrayList<?>) valueObject;
-                    ArrayList<String> referenceArray = new ArrayList<String>();
-                    if (parameter.hasReferenceCategory())
-                    {
-                        for (Object reference : valueArray)
-                        {
-                            referenceArray.add("" + getReferenceID((MapSerializer) reference));
-                        }
-
-                    }
-                    else if (parameter.hasGenericClass())
-                    {
-                        for (Object reference : valueArray)
-                        {
-                            referenceArray.add("" + reference);
-                        }
-                    }
-                    else
-                    {
-                        throw new IllegalStateException("Unable to resolve type of contents of ArrayList");
-                    }
-                    valueObject = referenceArray;
-                }
-                else if (parameterClazz == AuditFunction.class)
-                {
-                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
-                }
-                else if (parameterClazz == Species.class)
-                {
-                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
-                }
-                else if (parameterClazz == Brain.class)
-                {
-                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
-                }
-                else if (parameterClazz == Blueprint.class)
-                {
-                    valueObject = "" + getReferenceID((MapSerializer) valueObject);
-                }
-                else if (parameterClazz == Creature.class)
-                {
-                    if (valueObject != null)
-                    {
-                        valueObject = "" + getReferenceID((MapSerializer) valueObject);
-                    }
-                    else
-                    {
-                        valueObject = "";
-                    }
-                }
-                else if (parameterClazz == AuditType.class)
-                {
-                    valueObject = ((AuditType) valueObject).name();
-                }
-                else if (parameterClazz == BrainType.class)
-                {
-                    valueObject = ((BrainType) valueObject).name();
-                }
-                else if (parameterClazz == Gender.class)
-                {
-                    valueObject = ((Gender) valueObject).name();
-                }
-                else if (parameterClazz == Direction.class)
-                {
-                    valueObject = ((Direction) valueObject).name();
-                }
-                else if (parameterClazz == Action.class)
-                {
-                    valueObject = ((Action) valueObject).name();
-                }
-                else if (parameterClazz == Boolean.class)
-                {
-                    valueObject = "" + valueObject;
-                }
-                else if (parameterClazz == Double.class)
-                {
-                    valueObject = "" + valueObject;
-                }
-                else if (parameterClazz == Integer.class)
-                {
-                    valueObject = "" + valueObject;
-                }
-                else if (parameterClazz == double[].class)
-                {
-                    double[] valueArray = (double[]) valueObject;
-                    List<Object> valueList = new LinkedList<Object>();
-                    for (double i : valueArray)
-                    {
-                        valueList.add("" + i);
-                    }
-                    valueObject = valueList;
-                }
-                else if (parameterClazz == double[][][].class)
-                {
-                    double[][][] valueArray = (double[][][]) valueObject;
-                    List<Object> outerValueList = new LinkedList<Object>();
-                    for (double[][] i : valueArray)
-                    {
-                        List<Object> valueList = new LinkedList<Object>();
-                        outerValueList.add(valueList);
-                        for (double[] j : i)
-                        {
-                            List<Object> innerValueList = new LinkedList<Object>();
-                            valueList.add(innerValueList);
-                            for (double k : j)
-                            {
-                                innerValueList.add("" + k);
-                            }
-                        }
-                    }
-                    valueObject = outerValueList;
-                }
-                else if (parameterClazz == AuditRecord[].class)
-                {
-                    AuditRecord[] valueArray = (AuditRecord[]) valueObject;
-                    List<Object> valueList = new LinkedList<Object>();
-                    for (AuditRecord i : valueArray)
-                    {
-                        if (i != null)
-                        {
-                            valueList.add("" + getReferenceID(i));
-                        }
-                        else
-                        {
-                            valueList.add("");
-                        }
-                    }
-                    valueObject = valueList;
-                }
-                else if (parameterClazz == EntityType[][].class)
-                {
-                    EntityType[][] valueArray = (EntityType[][]) valueObject;
-                    List<Object> outerValueList = new LinkedList<Object>();
-                    for (EntityType[] i : valueArray)
-                    {
-                        List<Object> valueList = new LinkedList<Object>();
-                        outerValueList.add(valueList);
-                        for (EntityType j : i)
-                        {
-                            valueList.add(valueObject = (j).name());
-                        }
-                    }
-                    valueObject = outerValueList;
-                }
-                else if (parameterClazz == Creature[][].class)
-                {
-                    Creature[][] valueArray = (Creature[][]) valueObject;
-                    List<Object> outerValueList = new LinkedList<Object>();
-                    for (Creature[] i : valueArray)
-                    {
-                        List<Object> valueList = new LinkedList<Object>();
-                        outerValueList.add(valueList);
-                        for (Creature j : i)
-                        {
-                            if (j != null)
-                            {
-                                valueList.add("" + getReferenceID(j));
-                            }
-                            else
-                            {
-                                valueList.add("");
-                            }
-                        }
-                    }
-                    valueObject = outerValueList;
-                }
-                else
-                {
-                    throw new UnsupportedOperationException("Cannot handle parameter type " + parameterClazz);
-                }
+                Object serializedValue = serializeObject(valueObject);
 
                 // Add value to the map
                 if (valueObject != null)
                 {
-                    map.put(parameter.getName(), valueObject);
+                    map.put(f.getName().replaceAll("_", ""), serializedValue);
                 }
             }
         }
@@ -353,255 +264,61 @@ public class SerializationEngine
 
     }
 
+    private boolean isPrimitive(Class<?> clazz)
+    {
+        return clazz.isPrimitive() || clazz == Boolean.class || clazz == Integer.class || clazz == Double.class;
+    }
+
+    private Set<Field> getSerializedParameters(MapSerializer object)
+    {
+        HashSet<Field> annotatedFields = new HashSet<Field>();
+        Class<?> clazz = object.getClass();
+        while (clazz != null)
+        {
+            Field[] fields = clazz.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++)
+            {
+                Annotation[] annotations = fields[i].getAnnotations();
+                for (int j = 0; j < annotations.length; j++)
+                {
+                    if (annotations[j].annotationType() == SerializedParameter.class)
+                    {
+                        fields[i].setAccessible(true);
+                        annotatedFields.add(fields[i]);
+                    }
+                }
+            }
+            clazz = clazz.getSuperclass();
+        }
+        return annotatedFields;
+    }
+
     public static String getKeyFromFieldName(String fieldName)
     {
         return fieldName.substring(fieldName.lastIndexOf('_') + 1);
     }
 
-    @SuppressWarnings("unchecked")
     public void deserialize(MapSerializer object, Map<String, Object> map)
     {
         try
         {
-            for (SerializedParameter parameter : object.getMappedParameters())
+            for (Field f : getSerializedParameters(object))
             {
-                // Determine string to deserialize (default vs in map value)
-                String valueString = null;
-                Object valueObject = null;
-                if (map.containsKey(parameter.getName()))
+                String attributeName = f.getName().replaceAll("_", "");
+                if (map.containsKey(attributeName))
                 {
-                    if (map.get(parameter.getName()) instanceof String)
+                    Object valueObject = map.remove(attributeName);
+                    Type fieldType = f.getGenericType();
+
+                    valueObject = deserializeObject(valueObject, fieldType);
+
+                    // Set value on the object
+                    if (valueObject != null)
                     {
-                        valueString = (String) map.remove(parameter.getName());
+                        f.set(object, valueObject);
                     }
-                    else
-                    {
-                        valueObject = map.remove(parameter.getName());
-                    }
-                }
-                else
-                {
-                    valueString = parameter.getDefaultValue();
                 }
 
-                // Deserialize value
-                Class<?> parameterClazz = parameter.getValueClass();
-                if (parameterClazz == ArrayList.class)
-                {
-                    List<Object> referenceList;
-                    if (valueString != null)
-                    {
-                        referenceList = HierarchicalListParser.parseList(valueString);
-                    }
-                    else
-                    {
-                        referenceList = (List<Object>) valueObject;
-                    }
-                    ArrayList<Object> valueList = new ArrayList<Object>();
-                    if (parameter.hasReferenceCategory())
-                    {
-                        for (Object reference : referenceList)
-                        {
-                            int referenceID;
-                            referenceID = Integer.parseInt((String) reference);
-                            valueList.add(getReferenceObject(parameter.getReferenceCategory(), referenceID));
-                        }
-                    }
-                    else if (parameter.hasGenericClass())
-                    {
-                        for (Object reference : referenceList)
-                        {
-                            valueList.add(Integer.parseInt((String) reference));
-                        }
-                    }
-                    valueObject = valueList;
-                }
-                else if (parameterClazz == AuditFunction.class)
-                {
-                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
-                }
-                else if (parameterClazz == Species.class)
-                {
-                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
-                }
-                else if (parameterClazz == Brain.class)
-                {
-                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
-                }
-                else if (parameterClazz == Blueprint.class)
-                {
-                    valueObject = getReferenceObject(parameter.getReferenceCategory(), Integer.parseInt(valueString));
-                }
-                else if (parameterClazz == Creature.class)
-                {
-                    if (!valueString.equals(""))
-                    {
-                        valueObject = getReferenceObject(parameter.getReferenceCategory(),
-                                Integer.parseInt(valueString));
-                    }
-                    else
-                    {
-                        valueString = null;
-                        valueObject = null;
-                    }
-                }
-                else if (parameterClazz == AuditType.class)
-                {
-                    valueObject = AuditType.valueOf(valueString);
-                }
-                else if (parameterClazz == BrainType.class)
-                {
-                    valueObject = BrainType.valueOf(valueString);
-                }
-                else if (parameterClazz == Gender.class)
-                {
-                    valueObject = Gender.valueOf(valueString);
-                }
-                else if (parameterClazz == Direction.class)
-                {
-                    valueObject = Direction.valueOf(valueString);
-                }
-                else if (parameterClazz == Action.class)
-                {
-                    valueObject = Action.valueOf(valueString);
-                }
-                else if (parameterClazz == Boolean.class)
-                {
-                    valueObject = Boolean.parseBoolean(valueString);
-                }
-                else if (parameterClazz == Double.class)
-                {
-                    if (valueString != null)
-                    {
-                        valueObject = Double.parseDouble(valueString);
-                    }
-                }
-                else if (parameterClazz == Integer.class)
-                {
-                    valueObject = Integer.parseInt(valueString);
-                }
-                else if (parameterClazz == double[].class)
-                {
-                    List<Object> valueList = (List<Object>) valueObject;
-                    double[] valueArray = new double[valueList.size()];
-                    int i = 0;
-                    for (Object objectI : valueList)
-                    {
-                        valueArray[i] = Double.parseDouble((String) objectI);
-                        i++;
-                    }
-                    valueObject = valueArray;
-                }
-                else if (parameterClazz == double[][][].class)
-                {
-                    List<Object> valueList = (List<Object>) valueObject;
-                    double[][][] valueArray = new double[valueList.size()][][];
-                    int i = 0;
-                    for (Object objectI : valueList)
-                    {
-                        List<Object> listI = (List<Object>) objectI;
-                        valueArray[i] = new double[listI.size()][];
-                        int j = 0;
-                        for (Object objectJ : listI)
-                        {
-                            List<Object> listJ = (List<Object>) objectJ;
-                            valueArray[i][j] = new double[listJ.size()];
-                            int k = 0;
-                            for (Object objectK : listJ)
-                            {
-                                valueArray[i][j][k] = Double.parseDouble((String) objectK);
-                                k++;
-                            }
-                            j++;
-                        }
-                        i++;
-                    }
-                    valueObject = valueArray;
-                }
-                else if (parameterClazz == AuditRecord[].class)
-                {
-                    List<Object> valueList = (List<Object>) valueObject;
-                    AuditRecord[] valueArray = new AuditRecord[valueList.size()];
-                    int i = 0;
-                    for (Object objectI : valueList)
-                    {
-                        String stringI = "" + objectI;
-
-                        if (!stringI.equals(""))
-                        {
-                            valueArray[i] = (AuditRecord) getReferenceObject(parameter.getReferenceCategory(),
-                                    Integer.parseInt(stringI));
-                        }
-                        else
-                        {
-                            valueArray[i] = null;
-                        }
-                        i++;
-                    }
-                    valueObject = valueArray;
-                }
-                else if (parameterClazz == EntityType[][].class)
-                {
-                    List<Object> valueList = (List<Object>) valueObject;
-                    EntityType[][] valueArray = new EntityType[valueList.size()][];
-                    int i = 0;
-                    for (Object objectI : valueList)
-                    {
-                        List<Object> listI = (List<Object>) objectI;
-                        valueArray[i] = new EntityType[listI.size()];
-                        int j = 0;
-                        for (Object objectJ : listI)
-                        {
-                            valueArray[i][j] = EntityType.valueOf((String) objectJ);
-                            j++;
-                        }
-                        i++;
-                    }
-                    valueObject = valueArray;
-                }
-                else if (parameterClazz == Creature[][].class)
-                {
-                    List<Object> valueList = (List<Object>) valueObject;
-                    Creature[][] valueArray = new Creature[valueList.size()][];
-                    int i = 0;
-                    for (Object objectI : valueList)
-                    {
-                        List<Object> listI = (List<Object>) objectI;
-                        valueArray[i] = new Creature[listI.size()];
-                        int j = 0;
-                        for (Object objectJ : listI)
-                        {
-                            String stringJ = "" + objectJ;
-
-                            if (!stringJ.equals(""))
-                            {
-                                valueArray[i][j] = (Creature) getReferenceObject(parameter.getReferenceCategory(),
-                                        Integer.parseInt(stringJ));
-                            }
-                            else
-                            {
-                                valueArray[i][j] = null;
-                            }
-                            j++;
-                        }
-                        i++;
-                    }
-                    valueObject = valueArray;
-                }
-                else
-                {
-                    throw new UnsupportedOperationException("Cannot handle parameter type " + parameterClazz);
-                }
-
-                // Set value on the object
-                if (valueObject != null)
-                {
-                    object.setValue(parameter.getName(), valueObject);
-                }
-                else if (valueString != null)
-                {
-                    object.setValue(parameter.getName(), valueString);
-                }
             }
             if (!map.isEmpty())
             {
@@ -610,13 +327,122 @@ public class SerializationEngine
             }
 
         }
-        catch (IllegalArgumentException e)
+        catch (IllegalAccessException | NoSuchMethodException | SecurityException | InstantiationException
+                | IllegalArgumentException | InvocationTargetException e)
         {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
 
     }
 
+    @SuppressWarnings("unchecked")
+    private Object deserializeObject(Object object, Type type) throws NoSuchMethodException, SecurityException,
+            InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
+    {
+        Class<?> clazz;
+        if (type instanceof Class)
+        {
+            clazz = (Class<?>) type;
+        }
+        else if (type instanceof ParameterizedType)
+        {
+            clazz = (Class<?>) ((ParameterizedType) type).getRawType();
+        }
+        else
+        {
+            throw new IllegalStateException("Unable to derive Class information from " + type);
+        }
+        // object.equals(null) is used for object based representations of null which could be passed to the
+        // serialization engine.
+        if (object == null || object.equals(null))
+        {
+            return null;
+        }
+
+        // Deserialize value
+        if (clazz.isArray())
+        {
+            // Do array crap here
+            int size = ((List<Object>) object).size();
+            Object array = Array.newInstance(clazz.getComponentType(), size);
+            int i = 0;
+            for (Object element : (List<Object>) object)
+            {
+                Object deserializedElement = deserializeObject(element, clazz.getComponentType());
+                Array.set(array, i, deserializedElement);
+                i++;
+            }
+            return array;
+        }
+        else if (List.class.isAssignableFrom(clazz))
+        {
+            // Do list crap here
+            Constructor<?> listConstructor = clazz.getConstructor();
+            List<Object> list = (List<Object>) listConstructor.newInstance();
+            Type elementType = ((ParameterizedType) type).getActualTypeArguments()[0];
+            for (Object element : (List<Object>) object)
+            {
+                Object deserializedElement = deserializeObject(element, elementType);
+                list.add(deserializedElement);
+            }
+            return list;
+        }
+        else if (MapSerializer.class.isAssignableFrom(clazz))
+        {
+            // Reference crap here
+            return getReferenceObject(SerializationCategory.getCategoryForClass(clazz), (Integer) object);
+        }
+        else if (Enum.class.isAssignableFrom(clazz))
+        {
+            // Enum crap
+            @SuppressWarnings("rawtypes")
+            Enum valueEnum = Enum.valueOf((Class<Enum>) clazz, "" + object);
+            return valueEnum;
+        }
+        else if (isPrimitive(clazz))
+        {
+            // If this was saved or passed in as a primitive, but if it's in string form, we need to parse it
+            if (object.getClass() == String.class)
+            {
+                return parsePrimitive(clazz, (String) object);
+            }
+            else
+            {
+                return object;
+            }
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Cannot handle parameter type " + clazz);
+        }
+    }
+
+    private Object parsePrimitive(Class<?> clazz, String s)
+    {
+        if (clazz == Boolean.class || clazz == boolean.class)
+        {
+            return Boolean.parseBoolean(s);
+        }
+        else if (clazz == Integer.class || clazz == int.class)
+        {
+            return Integer.parseInt(s);
+        }
+        else if (clazz == Double.class || clazz == double.class)
+        {
+            return Double.parseDouble(s);
+        }
+        else
+        {
+            throw new UnsupportedOperationException("Unable to parse primitive " + clazz);
+        }
+    }
+
+    /**
+     * Creates a copy of a deserialized
+     *
+     * @param original
+     * @return
+     */
     public MapSerializer makeCopy(MapSerializer original)
     {
         SerializedCollection collection = serialize(original);
@@ -663,10 +489,13 @@ public class SerializationEngine
      */
     public List<MapSerializer> deserializeList(SerializedCollection collection)
     {
+        _collection = collection;
         MapSerializer object = null;
         List<MapSerializer> objects = new LinkedList<MapSerializer>();
         for (SerializationCategory category : SerializationCategory.rankedValues())
         {
+            // If a higher ranked category has objects in it, discard the contents of the
+            // objects list by making a new list.
             if (collection.hasNext(category))
             {
                 objects = new LinkedList<MapSerializer>();

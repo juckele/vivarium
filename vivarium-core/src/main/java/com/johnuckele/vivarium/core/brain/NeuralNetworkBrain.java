@@ -1,11 +1,9 @@
 package com.johnuckele.vivarium.core.brain;
 
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.johnuckele.vivarium.core.Species;
-import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
@@ -20,17 +18,12 @@ public class NeuralNetworkBrain extends Brain
     // Each node has a two special previous values, a constant
     // bias unit with a value of 1 and a stochastic bias unit
     // with a normally distributed value between -1 and 1.
+    @SerializedParameter
     private double[][][] _weights;
-    private double[]     _outputs;
+    @SerializedParameter
+    private double[] _outputs;
 
-    private static int                             BIAS_UNIT_COUNT       = 2;
-    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
-
-    static
-    {
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("weights", double[][][].class, "[[[]]]"));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("outputs", double[].class, "[]"));
-    }
+    private static int BIAS_UNIT_COUNT = 2;
 
     private NeuralNetworkBrain()
     {
@@ -423,48 +416,6 @@ public class NeuralNetworkBrain extends Brain
     public BrainType getBrainType()
     {
         return BrainType.NEURAL_NETWORK;
-    }
-
-    @Override
-    public List<MapSerializer> getReferences()
-    {
-        return new LinkedList<MapSerializer>();
-    }
-
-    @Override
-    public List<SerializedParameter> getMappedParameters()
-    {
-        return NeuralNetworkBrain.SERIALIZED_PARAMETERS;
-    }
-
-    @Override
-    public Object getValue(String key)
-    {
-        switch (key)
-        {
-            case "outputs":
-                return this._outputs;
-            case "weights":
-                return this._weights;
-            default:
-                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
-        }
-    }
-
-    @Override
-    public void setValue(String key, Object value)
-    {
-        switch (key)
-        {
-            case "outputs":
-                this._outputs = (double[]) value;
-                break;
-            case "weights":
-                this._weights = (double[][][]) value;
-                break;
-            default:
-                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
-        }
     }
 
     public static NeuralNetworkBrain makeUninitialized()

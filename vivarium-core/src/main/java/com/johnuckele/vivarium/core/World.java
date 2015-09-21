@@ -4,13 +4,11 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.audit.AuditRecord;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Rand;
@@ -18,31 +16,22 @@ import com.johnuckele.vivarium.visualization.RenderCode;
 
 public class World implements MapSerializer
 {
+    @SerializedParameter
     private int _maximumCreatureID;
-    private int   _tick;
+    @SerializedParameter
+    private int _tick;
+    @SerializedParameter
     protected int _worldDimensions;
 
+    @SerializedParameter
     protected EntityType[][] _entityGrid;
-    protected Creature[][]   _creatureGrid;
-    protected AuditRecord[]  _auditRecords;
-    
+    @SerializedParameter
+    protected Creature[][] _creatureGrid;
+    @SerializedParameter
+    protected AuditRecord[] _auditRecords;
+
+    @SerializedParameter
     private Blueprint _blueprint;
-
-    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
-
-    static
-    {
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("maximumCreatureID", Integer.class));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("tick", Integer.class));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("worldDimensions", Integer.class));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("entityGrid", EntityType[][].class));
-        SERIALIZED_PARAMETERS
-                .add(new SerializedParameter("creatureGrid", Creature[][].class, SerializationCategory.CREATURE));
-        SERIALIZED_PARAMETERS
-                .add(new SerializedParameter("auditRecords", AuditRecord[].class, SerializationCategory.AUDIT_RECORD));
-        SERIALIZED_PARAMETERS
-                .add(new SerializedParameter("blueprint", Blueprint.class, SerializationCategory.BLUEPRINT));
-    }
 
     private World()
     {
@@ -285,7 +274,7 @@ public class World implements MapSerializer
         }
         // Attempt to breed
         else if (action == Action.BREED
-        // Make sure we're facing another creature
+                // Make sure we're facing another creature
                 && _entityGrid[facingR][facingC] == EntityType.CREATURE
                 // And that creature is the same species as us
                 && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
@@ -659,83 +648,6 @@ public class World implements MapSerializer
         return "";
     }
 
-    @Override
-    public List<MapSerializer> getReferences()
-    {
-        LinkedList<MapSerializer> list = new LinkedList<MapSerializer>();
-        list.add(_blueprint);
-        list.addAll(this.getAuditRecords());
-        list.addAll(this.getCreatures());
-        return list;
-    }
-
-    @Override
-    public List<SerializedParameter> getMappedParameters()
-    {
-        return World.SERIALIZED_PARAMETERS;
-    }
-
-    @Override
-    public Object getValue(String key)
-    {
-        switch (key)
-        {
-            case "maximumCreatureID":
-                return _maximumCreatureID;
-            case "tick":
-                return _tick;
-            case "worldDimensions":
-                return _worldDimensions;
-            case "entityGrid":
-                return _entityGrid;
-            case "auditRecords":
-                return _auditRecords;
-            case "creatureGrid":
-                return _creatureGrid;
-            case "blueprint":
-                return _blueprint;
-            default:
-                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
-        }
-    }
-
-    @Override
-    public void setValue(String key, Object value)
-    {
-        switch (key)
-        {
-            case "maximumCreatureID":
-                _maximumCreatureID = (Integer) value;
-                break;
-            case "tick":
-                _tick = (Integer) value;
-                break;
-            case "worldDimensions":
-                _worldDimensions = (Integer) value;
-                break;
-            case "auditRecords":
-                _auditRecords = (AuditRecord[]) value;
-                break;
-            case "entityGrid":
-                _entityGrid = (EntityType[][]) value;
-                break;
-            case "creatureGrid":
-                _creatureGrid = (Creature[][]) value;
-                break;
-            case "blueprint":
-                _blueprint = (Blueprint) value;
-                break;
-            default:
-                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
-        }
-    }
-
-    @Override
-    public SerializationCategory getSerializationCategory()
-    {
-        return SerializationCategory.WORLD;
-    }
-
     public static World makeUninitialized()
     {
         return new World();
@@ -744,5 +656,12 @@ public class World implements MapSerializer
     public static World makeCopy(World original)
     {
         return (World) new SerializationEngine().makeCopy(original);
+    }
+
+    @Override
+    public void finalizeSerialization()
+    {
+        // TODO Auto-generated method stub
+
     }
 }

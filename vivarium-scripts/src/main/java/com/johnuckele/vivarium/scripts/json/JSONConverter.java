@@ -104,14 +104,10 @@ public class JSONConverter
         {
             return innerConvertFromJSONObject((JSONObject) value);
         }
-        else if (value instanceof String)
-        {
-            return value.toString();
-        }
         else
         {
-            throw new IllegalStateException("All JSON values must be arrays, maps, or strings. Value type "
-                    + value.getClass() + " is not supported.");
+            System.out.println("Value " + value + " has type " + (value != null ? value.getClass() : null));
+            return value;
         }
     }
 }

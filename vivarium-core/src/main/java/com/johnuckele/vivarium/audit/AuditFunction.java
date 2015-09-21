@@ -1,15 +1,14 @@
 package com.johnuckele.vivarium.audit;
 
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
+import com.johnuckele.vivarium.serialization.SerializedParameter;
 
 public abstract class AuditFunction implements MapSerializer
 {
+    @SerializedParameter
     protected AuditType _auditType;
 
     protected AuditFunction(AuditType auditType)
@@ -20,44 +19,6 @@ public abstract class AuditFunction implements MapSerializer
     public AuditType getAuditType()
     {
         return _auditType;
-    }
-
-    @Override
-    public List<MapSerializer> getReferences()
-    {
-        return new LinkedList<MapSerializer>();
-    }
-
-    @Override
-    public Object getValue(String key)
-    {
-        switch (key)
-        {
-            case "auditType":
-                return _auditType;
-            default:
-                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
-
-        }
-    }
-
-    @Override
-    public void setValue(String key, Object value)
-    {
-        switch (key)
-        {
-            case "auditType":
-                _auditType = (AuditType) value;
-                break;
-            default:
-                throw new UnsupportedOperationException("Key " + key + " not in mapped parameters");
-        }
-    }
-
-    @Override
-    public SerializationCategory getSerializationCategory()
-    {
-        return SerializationCategory.AUDIT_FUNCTION;
     }
 
     public static AuditFunction makeFromMap(Map<String, Object> auditFunctionValues)
@@ -74,4 +35,12 @@ public abstract class AuditFunction implements MapSerializer
     {
         return (AuditFunction) new SerializationEngine().makeCopy(original);
     }
+
+    @Override
+    public void finalizeSerialization()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
 }

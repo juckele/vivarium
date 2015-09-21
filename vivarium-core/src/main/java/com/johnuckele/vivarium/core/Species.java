@@ -1,13 +1,9 @@
 package com.johnuckele.vivarium.core;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationCategory;
 import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedCollection;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
@@ -15,70 +11,59 @@ import com.johnuckele.vivarium.serialization.SerializedParameter;
 public class Species implements MapSerializer
 {
     // Physical traits
-    private double _femaleProportion;
-    private int    _maximumAge;
-    private int    _maximumGestation;
-    private int    _maximumFood;
+    @SerializedParameter
+    private double _femaleProportion = 0.6;
+    @SerializedParameter
+    private int _maximumAge = 20000;
+    @SerializedParameter
+    private int _maximumGestation = 2000;
+    @SerializedParameter
+    private int _maximumFood = 2000;
 
     // Energy Uses
-    private int _breedingFoodRate;
-    private int _eatingFoodRate;
-    private int _movingFoodRate;
-    private int _turningFoodRate;
-    private int _baseFoodRate;
-    private int _pregnantFoodRate;
+    @SerializedParameter
+    private int _breedingFoodRate = -10;
+    @SerializedParameter
+    private int _eatingFoodRate = 500;
+    @SerializedParameter
+    private int _movingFoodRate = -1;
+    @SerializedParameter
+    private int _turningFoodRate = 0;
+    @SerializedParameter
+    private int _baseFoodRate = -1;
+    @SerializedParameter
+    private int _pregnantFoodRate = -1;
 
     // World Generation
-    private double _initialGenerationProbability;
+    @SerializedParameter
+    private double _initialGenerationProbability = 0.2;
 
     // Neurology
-    private BrainType _brainType;
-    private int       _hardBrainInputs;
-    private int       _hardBrainOutputs;
-    private int       _memoryUnitCount;
-    private int       _soundChannelCount;
-    private boolean   _randomInitialization;
+    @SerializedParameter
+    private BrainType _brainType = BrainType.NEURAL_NETWORK;
+    @SerializedParameter
+    private int _hardBrainInputs = 5;
+    @SerializedParameter
+    private int _hardBrainOutputs = 6;
+    @SerializedParameter
+    private int _memoryUnitCount = 0;
+    @SerializedParameter
+    private int _soundChannelCount = 0;
+    @SerializedParameter
+    private boolean _randomInitialization = false;
 
     // Mutation
-    private double _inheritanceGaussianMixRate;
-    private double _mutationRateExponent;
+    @SerializedParameter
+    private double _inheritanceGaussianMixRate = 0.8;
+    @SerializedParameter
+    private double _mutationRateExponent = -7;
     private double _mutationRate;
-    private double _mutationTypeSmallScaleRate;
-    private double _mutationTypeRandomRate;
-    private double _mutationTypeFlipRate;
-
-    private static final List<SerializedParameter> SERIALIZED_PARAMETERS = new LinkedList<SerializedParameter>();
-
-    static
-    {
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("femaleProportion", Double.class, 0.6));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("maximumAge", Integer.class, 20000));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("maximumGestation", Integer.class, 2000));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("maximumFood", Integer.class, 2000));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("breedingFoodRate", Integer.class, -10));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("eatingFoodRate", Integer.class, 500));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("movingFoodRate", Integer.class, -2));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("turningFoodRate", Integer.class, 0));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("baseFoodRate", Integer.class, -1));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("pregnantFoodRate", Integer.class, -1));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("initialGenerationProbability", Double.class, 0.2));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("brainType", BrainType.class, BrainType.NEURAL_NETWORK));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("hardBrainInputs", Integer.class, 5));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("hardBrainOutputs", Integer.class, 6));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("memoryUnitCount", Integer.class, 0));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("soundChannelCount", Integer.class, 0));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("randomInitialization", Boolean.class, false));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("inheritanceGaussianMixRate", Double.class, 0.8));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("mutationRateExponent", Double.class, -7.0));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("mutationTypeSmallScaleRate", Double.class, 0.5));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("mutationTypeRandomRate", Double.class, 0.25));
-        SERIALIZED_PARAMETERS.add(new SerializedParameter("mutationTypeFlipRate", Double.class, 0.25));
-    }
-
-    private void updateMutationRate()
-    {
-        _mutationRate = Math.pow(2, _mutationRateExponent);
-    }
+    @SerializedParameter
+    private double _mutationTypeSmallScaleRate = 0.5;
+    @SerializedParameter
+    private double _mutationTypeRandomRate = 0.25;
+    @SerializedParameter
+    private double _mutationTypeFlipRate = 0.25;
 
     private Species()
     {
@@ -272,29 +257,16 @@ public class Species implements MapSerializer
 
     public static void main(String[] args)
     {
+        Species s = new Species();
         SerializationEngine engine = new SerializationEngine();
-        HashMap<String, Object> speciesMap = new HashMap<String, Object>();
-        speciesMap.put("+type", "Species");
-        speciesMap.put("+id", "0");
-        speciesMap.put("initialGenerationProbability", "0.5");
-        Species s = (Species) engine.deserializeMap(speciesMap);
-        // Species s = new Species();
-        System.out.println(s._femaleProportion);
         SerializedCollection collection = engine.serialize(s);
         System.out.println(collection);
         System.out.println(s.getMutationRate());
     }
 
-    @Override
-    public LinkedList<MapSerializer> getReferences()
-    {
-        return new LinkedList<MapSerializer>();
-    }
-
     public static Species makeUninitialized()
     {
         Species s = new Species();
-        s.updateMutationRate();
         return s;
     }
 
@@ -314,149 +286,14 @@ public class Species implements MapSerializer
 
     public static Species makeCopy(Species original)
     {
-        return (Species) new SerializationEngine().makeCopy(original);
+        Species s = (Species) new SerializationEngine().makeCopy(original);
+        return s;
     }
 
     @Override
-    public SerializationCategory getSerializationCategory()
+    public void finalizeSerialization()
     {
-        return SerializationCategory.SPECIES;
-    }
-
-    @Override
-    public List<SerializedParameter> getMappedParameters()
-    {
-        return Species.SERIALIZED_PARAMETERS;
-    }
-
-    @Override
-    public Object getValue(String key)
-    {
-        switch (key)
-        {
-            case "femaleProportion":
-                return this._femaleProportion;
-            case "maximumAge":
-                return this._maximumAge;
-            case "maximumGestation":
-                return this._maximumGestation;
-            case "maximumFood":
-                return this._maximumFood;
-            case "breedingFoodRate":
-                return this._breedingFoodRate;
-            case "eatingFoodRate":
-                return this._eatingFoodRate;
-            case "movingFoodRate":
-                return this._movingFoodRate;
-            case "turningFoodRate":
-                return this._turningFoodRate;
-            case "baseFoodRate":
-                return this._baseFoodRate;
-            case "pregnantFoodRate":
-                return this._pregnantFoodRate;
-            case "initialGenerationProbability":
-                return this._initialGenerationProbability;
-            case "brainType":
-                return this._brainType;
-            case "hardBrainInputs":
-                return this._hardBrainInputs;
-            case "hardBrainOutputs":
-                return this._hardBrainOutputs;
-            case "memoryUnitCount":
-                return this._memoryUnitCount;
-            case "soundChannelCount":
-                return this._soundChannelCount;
-            case "randomInitialization":
-                return this._randomInitialization;
-            case "inheritanceGaussianMixRate":
-                return this._inheritanceGaussianMixRate;
-            case "mutationRateExponent":
-                return this._mutationRateExponent;
-            case "mutationTypeSmallScaleRate":
-                return this._mutationTypeSmallScaleRate;
-            case "mutationTypeRandomRate":
-                return this._mutationTypeRandomRate;
-            case "mutationTypeFlipRate":
-                return this._mutationTypeFlipRate;
-            default:
-                throw new IllegalArgumentException("Key " + key + " not in mapped parameters");
-        }
-    }
-
-    @Override
-    public void setValue(String key, Object value)
-    {
-        switch (key)
-        {
-            case "femaleProportion":
-                this._femaleProportion = (Double) value;
-                break;
-            case "maximumAge":
-                this._maximumAge = (Integer) value;
-                break;
-            case "maximumGestation":
-                this._maximumGestation = (Integer) value;
-                break;
-            case "maximumFood":
-                this._maximumFood = (Integer) value;
-                break;
-            case "breedingFoodRate":
-                this._breedingFoodRate = (Integer) value;
-                break;
-            case "eatingFoodRate":
-                this._eatingFoodRate = (Integer) value;
-                break;
-            case "movingFoodRate":
-                this._movingFoodRate = (Integer) value;
-                break;
-            case "turningFoodRate":
-                this._turningFoodRate = (Integer) value;
-                break;
-            case "baseFoodRate":
-                this._baseFoodRate = (Integer) value;
-                break;
-            case "pregnantFoodRate":
-                this._pregnantFoodRate = (Integer) value;
-                break;
-            case "initialGenerationProbability":
-                this._initialGenerationProbability = (Double) value;
-                break;
-            case "brainType":
-                this._brainType = (BrainType) value;
-                break;
-            case "hardBrainInputs":
-                this._hardBrainInputs = (Integer) value;
-                break;
-            case "hardBrainOutputs":
-                this._hardBrainOutputs = (Integer) value;
-                break;
-            case "memoryUnitCount":
-                this._memoryUnitCount = (Integer) value;
-                break;
-            case "soundChannelCount":
-                this._soundChannelCount = (Integer) value;
-                break;
-            case "randomInitialization":
-                this._randomInitialization = (Boolean) value;
-                break;
-            case "inheritanceGaussianMixRate":
-                this._inheritanceGaussianMixRate = (Double) value;
-                break;
-            case "mutationRateExponent":
-                this._mutationRateExponent = (Double) value;
-                updateMutationRate();
-                break;
-            case "mutationTypeSmallScaleRate":
-                this._mutationTypeSmallScaleRate = (Double) value;
-                break;
-            case "mutationTypeRandomRate":
-                this._mutationTypeRandomRate = (Double) value;
-                break;
-            case "mutationTypeFlipRate":
-                this._mutationTypeFlipRate = (Double) value;
-                break;
-            default:
-                throw new IllegalArgumentException("Key " + key + " not in mapped parameters");
-        }
+        // update mutation rate
+        _mutationRate = Math.pow(2, _mutationRateExponent);
     }
 }
