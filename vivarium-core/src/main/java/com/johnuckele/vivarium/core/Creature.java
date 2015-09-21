@@ -8,7 +8,7 @@ import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
-public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
+public class Creature implements MapSerializer
 {
     // Meta information
     @SerializedParameter
@@ -537,18 +537,6 @@ public class Creature implements Cloneable, Comparable<Creature>, MapSerializer
     public void setID(int id)
     {
         this._id = id;
-    }
-
-    @Override
-    public int compareTo(Creature c)
-    {
-        return this.toString().compareTo(c.toString());
-    }
-
-    @Override
-    public boolean equals(Object c)
-    {
-        return this.toString().equals(c.toString());
     }
 
     public static Creature makeUninitialized()
