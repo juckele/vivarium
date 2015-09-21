@@ -18,7 +18,7 @@ subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'findbugs'
 
-    version = '0.2'
+    version = '0.3'
 
     eclipseSetup.dependsOn cleanEclipseProject
     eclipseSetup.dependsOn eclipseProject
