@@ -9,8 +9,6 @@ import com.johnuckele.vivarium.serialization.SerializedParameter;
 public class CensusRecord extends AuditRecord
 {
     @SerializedParameter
-    private Species _trackedSpecies;
-    @SerializedParameter
     private AuditFunction _auditFunction;
 
     @SerializedParameter
