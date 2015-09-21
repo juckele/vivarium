@@ -113,15 +113,18 @@ public class Creature implements MapSerializer
                 this._brain = _species.getBrainType().makeWithParents(_species, parent1._brain, parent1._brain);
             }
         }
-        else if (parent1 == null && parent1 == null)
-        {
-            // Create a new default brain
-            this._brain = _species.getBrainType().makeWithSpecies(_species);
-        }
         else
         {
-            // Only an error if parent2 is non-null, otherwise assumed to be a cloneS
-            throw new Error("Creature with single parent");
+            if (parent2 != null)
+            {
+                // Single parent is only an error if parent2 is non-null, otherwise assumed to be a clone
+                throw new Error("Creature with single parent");
+            }
+            else
+            {
+                // Create a new default brain
+                this._brain = _species.getBrainType().makeWithSpecies(_species);
+            }
         }
         _inputs = new double[_species.getTotalBrainInputCount()];
         _memoryUnits = new double[_species.getMemoryUnitCount()];
