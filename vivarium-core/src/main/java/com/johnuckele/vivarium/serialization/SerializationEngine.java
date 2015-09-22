@@ -15,6 +15,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.johnuckele.vivarium.audit.ActionFrequencyFunction;
+import com.johnuckele.vivarium.audit.ActionFrequencyRecord;
 import com.johnuckele.vivarium.audit.CensusFunction;
 import com.johnuckele.vivarium.audit.CensusRecord;
 import com.johnuckele.vivarium.core.Blueprint;
@@ -94,6 +96,14 @@ public class SerializationEngine
         else if (clazzName.equals(CensusRecord.class.getSimpleName()))
         {
             return CensusRecord.makeUninitialized();
+        }
+        else if (clazzName.equals(ActionFrequencyFunction.class.getSimpleName()))
+        {
+            return ActionFrequencyFunction.makeUninitialized();
+        }
+        else if (clazzName.equals(ActionFrequencyRecord.class.getSimpleName()))
+        {
+            return ActionFrequencyRecord.makeUninitialized();
         }
         else
         {

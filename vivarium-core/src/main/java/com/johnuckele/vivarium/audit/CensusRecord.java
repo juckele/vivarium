@@ -22,8 +22,8 @@ public class CensusRecord extends AuditRecord
 
     public CensusRecord(CensusFunction function, Species species)
     {
+        super(species);
         _auditFunction = function;
-        _trackedSpecies = species;
         _creaturePopulation = new ArrayList<Integer>();
         _recordTicks = new ArrayList<Integer>();
     }

@@ -23,8 +23,7 @@ public enum AuditType
         @Override
         public AuditFunction makeFunctionFromMap(Map<String, Object> functionOptions)
         {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("X");
+            return ActionFrequencyFunction.makeFromMap(functionOptions);
         }
     },
     CENSUS

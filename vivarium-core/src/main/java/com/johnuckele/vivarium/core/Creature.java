@@ -537,6 +537,11 @@ public class Creature implements MapSerializer
         return this._hasActed;
     }
 
+    public boolean wasSuccessful()
+    {
+        return this._wasSuccessful;
+    }
+
     public void setID(int id)
     {
         this._id = id;

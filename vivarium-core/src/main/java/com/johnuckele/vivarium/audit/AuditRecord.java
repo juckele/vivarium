@@ -13,7 +13,11 @@ public abstract class AuditRecord implements MapSerializer
 
     protected AuditRecord()
     {
+    }
 
+    protected AuditRecord(Species species)
+    {
+        _trackedSpecies = species;
     }
 
     /**
