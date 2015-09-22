@@ -67,6 +67,10 @@ project(':vivarium-scripts') {
         archiveName = 'create-world'+'-'+version+'.jar'
         mainClass = 'com.johnuckele.vivarium.scripts.CreateWorld'
     }
+    task jarExtractCreatureFromWorld( type: OneJar ) {
+        archiveName = 'extract-creature-from-world'+'-'+version+'.jar'
+        mainClass = 'com.johnuckele.vivarium.scripts.ExtractCreatureFromWorld'
+    }
     task jarRunSimulation( type: OneJar ) {
         archiveName = 'run-simulation'+'-'+version+'.jar'
         mainClass = 'com.johnuckele.vivarium.scripts.RunSimulation'
@@ -79,7 +83,9 @@ project(':vivarium-scripts') {
     jarCollection.dependsOn jarCreateBlueprint
     jarCollection.dependsOn jarCreateSpecies
     jarCollection.dependsOn jarCreateWorld
+    jarCollection.dependsOn jarExtractCreatureFromWorld
     jarCollection.dependsOn jarRunSimulation
+    build.dependsOn jarCollection
 
     dependencies {
         compile project(':vivarium-core')
