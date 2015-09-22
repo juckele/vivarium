@@ -5,4 +5,8 @@
   <Match>
     <Bug pattern="EI_EXPOSE_REP2"/>
   </Match>
+  <Match>
+    <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
+    <Class name="com.johnuckele.vivarium.scripts.ScriptIO"/>
+  </Match>
 </FindBugsFilter>

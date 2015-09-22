@@ -28,20 +28,34 @@ public class ScriptIO
 
     public static void saveStringToFile(String dataString, String fileName)
     {
+        FileOutputStream fos = null;
         try
         {
             File file = new File(fileName);
-            FileOutputStream fos = new FileOutputStream(file);
+            fos = new FileOutputStream(file);
             byte[] jsonByteData = dataString.getBytes("UTF-8");
             fos.write(jsonByteData);
             fos.flush();
-            fos.close();
         }
         catch (IOException e)
         {
             System.out.print("Unable to write the file " + fileName + "\n");
             e.printStackTrace();
             System.exit(1);
+        }
+        finally
+        {
+            try
+            {
+                if (fos != null)
+                {
+                    fos.close();
+                }
+            }
+            catch (IOException e)
+            {
+                e.printStackTrace();
+            }
         }
     }
 
