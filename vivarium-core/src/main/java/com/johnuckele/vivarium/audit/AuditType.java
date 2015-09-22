@@ -11,13 +11,13 @@ public enum AuditType
         @Override
         public Class<?> getAuditRecordClass()
         {
-            return ActionFrequency.class;
+            return ActionFrequencyRecord.class;
         }
 
         @Override
-        public ActionFrequency makeRecordWithSpecies(AuditFunction function, Species species)
+        public ActionFrequencyRecord makeRecordWithSpecies(AuditFunction function, Species species)
         {
-            return ActionFrequency.makeWithSpecies(function, species);
+            return ActionFrequencyRecord.makeWithSpecies(function, species);
         }
 
         @Override
