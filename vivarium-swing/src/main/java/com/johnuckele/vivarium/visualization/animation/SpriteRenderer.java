@@ -14,8 +14,8 @@ public class SpriteRenderer
     private static ImageIcon IMAGE_ICON = new ImageIcon("src/main/resources/sprites.png");
     private static Image IMAGE = IMAGE_ICON.getImage();
 
-    public static int RENDER_PIXEL_BLOCK_SIZE = 32;
-    public static int SOURCE_PIXEL_BLOCK_SIZE = 32;
+    public static final int RENDER_PIXEL_BLOCK_SIZE = 32;
+    public static final int SOURCE_PIXEL_BLOCK_SIZE = 32;
     private static int FLOOR_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int FLOOR_Y = 0 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int WALL_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
