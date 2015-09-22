@@ -104,6 +104,10 @@ public class JSONConverter
         {
             return innerConvertFromJSONObject((JSONObject) value);
         }
+        else if (value.equals(JSONObject.NULL))
+        {
+            return null;
+        }
         else
         {
             System.out.println("Value " + value + " has type " + (value != null ? value.getClass() : null));

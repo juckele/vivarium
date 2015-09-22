@@ -354,7 +354,7 @@ public class SerializationEngine
         }
         // object.equals(null) is used for object based representations of null which could be passed to the
         // serialization engine.
-        if (object == null || object.equals(null))
+        if (object == null)
         {
             return null;
         }
