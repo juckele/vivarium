@@ -1,5 +1,9 @@
 package com.johnuckele.vivarium.serialization;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+
 import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.audit.AuditRecord;
 import com.johnuckele.vivarium.core.Blueprint;
@@ -12,9 +16,9 @@ public enum SerializationCategory
 {
     AUDIT_FUNCTION, AUDIT_RECORD, BRAIN, BLUEPRINT, CREATURE, SPECIES, WORLD;
 
-    public static SerializationCategory[] rankedValues()
+    public static List<SerializationCategory> rankedValues()
     {
-        return result;
+        return Collections.unmodifiableList(Arrays.asList(RANKED_VALUES));
     }
 
     public static SerializationCategory getCategoryForClass(Class<?> clazz)
@@ -53,6 +57,6 @@ public enum SerializationCategory
         }
     }
 
-    private static SerializationCategory[] result = { SPECIES, AUDIT_FUNCTION, BLUEPRINT, BRAIN, CREATURE, AUDIT_RECORD,
-            WORLD };
+    private static final SerializationCategory[] RANKED_VALUES = { SPECIES, AUDIT_FUNCTION, BLUEPRINT, BRAIN, CREATURE,
+            AUDIT_RECORD, WORLD };
 }
