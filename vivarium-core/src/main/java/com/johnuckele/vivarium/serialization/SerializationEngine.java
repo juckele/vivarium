@@ -7,6 +7,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -28,9 +29,12 @@ public class SerializationEngine
     public static final String ID_KEY = "+id";
     public static final String CATEGORY_KEY = "+category";
     public static final String CLASS_KEY = "+class";
-    public static final HashMap<String, Object> EMPTY_OBJECT_MAP = new HashMap<String, Object>();
-    public static final HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> EMPTY_REFERENCE_MAP = new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>();
-    public static final HashMap<SerializationCategory, HashMap<Integer, MapSerializer>> EMPTY_DEREFERENCE_MAP = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
+    public static final Map<String, Object> EMPTY_OBJECT_MAP = Collections
+            .unmodifiableMap(new HashMap<String, Object>());
+    public static final Map<SerializationCategory, HashMap<MapSerializer, Integer>> EMPTY_REFERENCE_MAP = Collections
+            .unmodifiableMap(new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>());
+    public static final Map<SerializationCategory, HashMap<Integer, MapSerializer>> EMPTY_DEREFERENCE_MAP = Collections
+            .unmodifiableMap(new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>());
 
     private SerializedCollection _collection;
     private HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> _referenceMap;
