@@ -5,8 +5,8 @@ import java.util.Random;
 public class Rand
 {
     // Random number state
-    private static Random _random     = new Random();
-    private static long   _randomLong = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
+    private static Random _random = new Random();
+    private static long _randomLong = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
 
     /**
      * Sets the pseudorandom seed to generate predictable behavior. javaRandomDouble uses LCG and this class has a
@@ -68,7 +68,7 @@ public class Rand
      */
     public static int getRandomInt(int range)
     {
-        return (int) (_random.nextDouble() * range);
+        return _random.nextInt(range);
     }
 
     /**
