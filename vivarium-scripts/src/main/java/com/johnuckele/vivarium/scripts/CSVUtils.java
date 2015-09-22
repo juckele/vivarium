@@ -12,7 +12,7 @@ public class CSVUtils
         Scanner scanner = null;
         try
         {
-            scanner = new Scanner(new File(fileName));
+            scanner = new Scanner(new File(fileName), "UTF-8");
         }
         catch (FileNotFoundException e)
         {
@@ -47,7 +47,7 @@ public class CSVUtils
         Scanner scanner = null;
         try
         {
-            scanner = new Scanner(new File(fileName));
+            scanner = new Scanner(new File(fileName), "UTF-8");
         }
         catch (FileNotFoundException e)
         {

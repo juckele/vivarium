@@ -32,7 +32,7 @@ public class ScriptIO
         {
             File file = new File(fileName);
             FileOutputStream fos = new FileOutputStream(file);
-            byte[] jsonByteData = dataString.getBytes();
+            byte[] jsonByteData = dataString.getBytes("UTF-8");
             fos.write(jsonByteData);
             fos.flush();
             fos.close();
@@ -50,7 +50,7 @@ public class ScriptIO
         try
         {
             File file = new File(fileName);
-            Scanner scanner = new Scanner(file);
+            Scanner scanner = new Scanner(file, "UTF-8");
             String dataString = scanner.useDelimiter("\\Z").next();
             scanner.close();
             return dataString;
