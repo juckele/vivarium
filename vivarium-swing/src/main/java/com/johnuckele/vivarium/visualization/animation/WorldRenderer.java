@@ -3,7 +3,6 @@ package com.johnuckele.vivarium.visualization.animation;
 import java.awt.Graphics2D;
 import java.awt.image.ImageObserver;
 
-import com.johnuckele.vivarium.core.Action;
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
@@ -56,7 +55,7 @@ public class WorldRenderer
                     Creature creature = w.getCreature(i, j);
                     int offsetMilliseconds = (int) (milliseconds + creature.getRandomSeed() * 1000) % 1000;
                     Sprite creatureSprites;
-                    if (creature.getAction() == Action.REST)
+                    if (creature.getID() == 42)
                     {
                         if (offsetMilliseconds < 250)
                         {
