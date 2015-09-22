@@ -1,71 +1,94 @@
 package com.johnuckele.vivarium.scripts;
 
 import java.util.LinkedList;
-import java.util.Random;
+import java.util.List;
+
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.Option;
 
 import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.util.Rand;
 
-public class ExtractCreatureFromWorld extends Script
+public class ExtractCreatureFromWorld extends CommonsScript
 {
+    private static final String OUTPUT_FILE = "output";
+    private static final String WORLD_INPUT_FILE = "world";
+    private static final String CREATURE_ID = "id";
+
     public ExtractCreatureFromWorld(String[] args)
     {
         super(args);
     }
 
     @Override
-    protected boolean argumentCountIsValid(int argCount)
+    protected List<Option> getScriptSpecificOptions()
     {
-        if (argCount == 2 || argCount == 3)
+        LinkedList<Option> options = new LinkedList<Option>();
+        options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
+                .desc("file to save to creature to").build());
+        options.add(Option.builder("w").required(true).longOpt(WORLD_INPUT_FILE).hasArg(true).argName("FILE")
+                .desc("file to load world from.").build());
+        options.add(Option.builder("i").required(false).argName("n").longOpt(CREATURE_ID).hasArg(true)
+                .desc("ID of the creature to extract from the world, if this is not set, a random creature is chosen.")
+                .build());
+        return options;
+    }
+
+    @Override
+    protected void run(CommandLine commandLine)
+    {
+        World world = null;
+        String worldFile = commandLine.getOptionValue(WORLD_INPUT_FILE);
+        try
         {
-            return true;
+            world = (World) ScriptIO.loadObject(worldFile, Format.JSON);
         }
-        return false;
-    }
-
-    @Override
-    protected String getUsage()
-    {
-        return "Usage: java scriptPath worldInputFilePath creatureOutputFilePath [creatureID]";
-    }
-
-    @Override
-    protected void run(String[] args)
-    {
-        // Load the world file
-        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
-
-        // Find the specific Creature requested if one was requested
-        Creature u = null;
-        LinkedList<Creature> creatures = w.getCreatures();
-        if (args.length == 3)
+        catch (ClassCastException e)
         {
-            int creatureID = Integer.parseInt(args[2]);
-            for (Creature tempU : creatures)
+            String extendedMessage = "blueprint file " + worldFile + " does not contain a world as a top level object";
+            throw new IllegalStateException(extendedMessage, e);
+        }
+
+        Creature creature = null;
+        if (commandLine.hasOption(CREATURE_ID))
+        {
+            int creatureID = Integer.parseInt(commandLine.getOptionValue(CREATURE_ID));
+            for (Creature c : world.getCreatures())
             {
-                if (tempU.getID() == creatureID)
+                if (c.getID() == creatureID)
                 {
-                    u = tempU;
+                    creature = c;
                 }
             }
-            if (u == null)
+            if (creature == null)
             {
-                System.err.println("Uckeleloid with ID " + creatureID + " not found");
-                System.exit(-1);
+                throw new IllegalStateException("No creature with ID " + creatureID + " present in world file.");
             }
         }
-        // Otherwise find a random member
         else
         {
-            Random random = new Random();
-            u = creatures.get(random.nextInt(creatures.size()));
+            LinkedList<Creature> list = world.getCreatures();
+            int creatureIndex = Rand.getRandomInt(list.size());
+            creature = list.get(creatureIndex);
         }
 
-        // Disconnect the Creature and save it
-        throw new Error("Action Profiles need to be reimplemented");
-        // TODO: FIX ACTION PROFILES
-        // u.disconnectFromWorld();
-        // ScriptIO.saveUckeleloid(u, args[1], Format.JAVA_SERIALIZABLE);
+        // Save the creature
+        String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
+        ScriptIO.saveSerializer(creature, outputFile, Format.JSON);
+
+    }
+
+    @Override
+    protected String getExtraArgString()
+    {
+        return "";
+    }
+
+    @Override
+    protected String getUsageHeader()
+    {
+        return "A tool for selecting or sampling creatures in world files.";
     }
 
     public static void main(String[] args)

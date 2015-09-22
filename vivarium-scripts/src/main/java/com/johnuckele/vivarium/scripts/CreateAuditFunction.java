@@ -22,8 +22,8 @@ public class CreateAuditFunction extends CommonsScript
     protected List<Option> getScriptSpecificOptions()
     {
         LinkedList<Option> options = new LinkedList<Option>();
-        options.add(Option.builder("o").required(true).argName("output").longOpt(OUTPUT_FILE).hasArg(true)
-                .argName("FILE").desc("file to save to audit function to").build());
+        options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
+                .desc("file to save to audit function to").build());
         return options;
     }
 
@@ -40,11 +40,6 @@ public class CreateAuditFunction extends CommonsScript
         ScriptIO.saveSerializer(auditFunction, outputFile, Format.JSON);
     }
 
-    public static void main(String[] args)
-    {
-        new CreateAuditFunction(args);
-    }
-
     @Override
     protected String getUsageHeader()
     {
@@ -55,5 +50,10 @@ public class CreateAuditFunction extends CommonsScript
     protected String getExtraArgString()
     {
         return " [key value [key value ...]]";
+    }
+
+    public static void main(String[] args)
+    {
+        new CreateAuditFunction(args);
     }
 }

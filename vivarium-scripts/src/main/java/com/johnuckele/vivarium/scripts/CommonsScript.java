@@ -112,7 +112,7 @@ public abstract class CommonsScript
         StringWriter requiredOptionsSyntax = new StringWriter();
         PrintWriter requiredOptionPrinter = new PrintWriter(requiredOptionsSyntax);
         HelpFormatter syntaxFormatter = new HelpFormatter();
-        syntaxFormatter.printUsage(requiredOptionPrinter, 120, "tickle", requiredOptions);
+        syntaxFormatter.printUsage(requiredOptionPrinter, 120, "", requiredOptions);
         String requiredOptionsString = requiredOptionsSyntax.toString().trim();
 
         // Do the rest of the stuff

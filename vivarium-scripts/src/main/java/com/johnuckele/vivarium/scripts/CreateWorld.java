@@ -11,9 +11,9 @@ import com.johnuckele.vivarium.core.World;
 
 public class CreateWorld extends CommonsScript
 {
-    private static final String OUTPUT_FILE          = "output";
+    private static final String OUTPUT_FILE = "output";
     private static final String BLUEPRINT_INPUT_FILE = "blueprint";
-    private static final String SIZE_OPTION          = "size";
+    private static final String SIZE_OPTION = "size";
 
     public CreateWorld(String[] args)
     {
@@ -24,8 +24,8 @@ public class CreateWorld extends CommonsScript
     protected List<Option> getScriptSpecificOptions()
     {
         LinkedList<Option> options = new LinkedList<Option>();
-        options.add(Option.builder("o").required(true).argName("output").longOpt(OUTPUT_FILE).hasArg(true)
-                .argName("FILE").desc("file to save to world to").build());
+        options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
+                .desc("file to save to world to").build());
         options.add(Option.builder("b").required(false).longOpt(BLUEPRINT_INPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to load blueprint from. If this option is not given, a default blueprint will be created")
                 .build());
@@ -71,11 +71,6 @@ public class CreateWorld extends CommonsScript
         ScriptIO.saveSerializer(world, outputFile, Format.JSON);
     }
 
-    public static void main(String[] args)
-    {
-        new CreateWorld(args);
-    }
-
     @Override
     protected String getUsageHeader()
     {
@@ -86,5 +81,10 @@ public class CreateWorld extends CommonsScript
     protected String getExtraArgString()
     {
         return "";
+    }
+
+    public static void main(String[] args)
+    {
+        new CreateWorld(args);
     }
 }
