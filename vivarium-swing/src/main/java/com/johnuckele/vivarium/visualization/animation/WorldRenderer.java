@@ -13,17 +13,20 @@ public class WorldRenderer
     public static void terrainRender(Graphics2D g2, World w, ImageObserver observer)
     {
         // Draw the exterior walls
-        for (int i = 0; i < w.getWorldDimensions(); i++)
+        for (int i = 0; i < w.getWorldWidth(); i++)
         {
             SpriteRenderer.drawSprite(g2, Sprite.WALL, i, 0, observer);
-            SpriteRenderer.drawSprite(g2, Sprite.WALL, i, w.getWorldDimensions() - 1, observer);
+            SpriteRenderer.drawSprite(g2, Sprite.WALL, i, w.getWorldHeight() - 1, observer);
+        }
+        for (int i = 0; i < w.getWorldHeight(); i++)
+        {
             SpriteRenderer.drawSprite(g2, Sprite.WALL, 0, i, observer);
-            SpriteRenderer.drawSprite(g2, Sprite.WALL, w.getWorldDimensions() - 1, i, observer);
+            SpriteRenderer.drawSprite(g2, Sprite.WALL, w.getWorldWidth() - 1, i, observer);
         }
         // Draw the floor and interior walls
-        for (int i = 1; i < w.getWorldDimensions() - 1; i++)
+        for (int i = 1; i < w.getWorldHeight() - 1; i++)
         {
-            for (int j = 1; j < w.getWorldDimensions() - 1; j++)
+            for (int j = 1; j < w.getWorldWidth() - 1; j++)
             {
 
                 if (w.getEntityType(i, j) == EntityType.WALL)
@@ -42,9 +45,9 @@ public class WorldRenderer
     public static void actorRender(Graphics2D g2, World w, ImageObserver observer, int milliseconds)
     {
         // Draw creatures and food
-        for (int i = 1; i < w.getWorldDimensions() - 1; i++)
+        for (int i = 1; i < w.getWorldHeight() - 1; i++)
         {
-            for (int j = 1; j < w.getWorldDimensions() - 1; j++)
+            for (int j = 1; j < w.getWorldWidth() - 1; j++)
             {
                 if (w.getEntityType(i, j) == EntityType.FOOD)
                 {

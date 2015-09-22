@@ -15,7 +15,8 @@ public class Blueprint implements MapSerializer
 {
     // World Generation
     @SerializedParameter
-    private int _size = 25;
+    private int _width = 25;
+    private int _height = 25;
     @SerializedParameter
     private double _foodGenerationProbability = 0.01;
     @SerializedParameter
@@ -40,6 +41,27 @@ public class Blueprint implements MapSerializer
     {
     }
 
+    public void setSize(int size)
+    {
+        this._width = size;
+        this._height = size;
+    }
+
+    public void setWidth(int width)
+    {
+        this._width = width;
+    }
+
+    public int getHeight()
+    {
+        return this._height;
+    }
+
+    public int getWidth()
+    {
+        return this._width;
+    }
+
     public double getFoodGenerationProbability()
     {
         return _foodGenerationProbability;
@@ -53,11 +75,6 @@ public class Blueprint implements MapSerializer
     public double getInitialWallGenerationProbability()
     {
         return _initialWallGenerationProbability;
-    }
-
-    public int getSize()
-    {
-        return _size;
     }
 
     public boolean getSoundEnabled()
@@ -94,11 +111,6 @@ public class Blueprint implements MapSerializer
     public void setInitialWallGenerationProbability(double p)
     {
         this._initialWallGenerationProbability = p;
-    }
-
-    public void setSize(int _size)
-    {
-        this._size = _size;
     }
 
     public void setSoundEnabled(boolean soundEnabled)
@@ -151,7 +163,8 @@ public class Blueprint implements MapSerializer
     {
         Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
-        wb.setSize(size);
+        wb._width = size;
+        wb._height = size;
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
         wb._auditFunctions = new ArrayList<AuditFunction>();
@@ -162,7 +175,8 @@ public class Blueprint implements MapSerializer
     {
         Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
-        wb.setSize(size);
+        wb._width = size;
+        wb._height = size;
         wb._species = new ArrayList<Species>();
         wb._species.add(s);
         wb._auditFunctions = new ArrayList<AuditFunction>();
@@ -173,7 +187,8 @@ public class Blueprint implements MapSerializer
     {
         Blueprint wb = new Blueprint();
         new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
-        wb.setSize(size);
+        wb._width = size;
+        wb._height = size;
         wb._species = new ArrayList<Species>(s);
         wb._auditFunctions = new ArrayList<AuditFunction>();
         return wb;

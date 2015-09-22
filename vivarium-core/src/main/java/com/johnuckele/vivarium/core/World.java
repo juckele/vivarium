@@ -21,7 +21,9 @@ public class World implements MapSerializer
     @SerializedParameter
     private int _tick;
     @SerializedParameter
-    protected int _worldDimensions;
+    private int _width;
+    @SerializedParameter
+    private int _height;
 
     @SerializedParameter
     protected EntityType[][] _entityGrid;
@@ -46,7 +48,7 @@ public class World implements MapSerializer
         this._maximumCreatureID = 0;
 
         // Size the world
-        this.setWorldDimensions(blueprint.getSize());
+        this.setWorldDimensions(blueprint.getWidth(), blueprint.getHeight());
 
         // Fill the world with creatures and food
         this.populatateWorld();
@@ -54,11 +56,6 @@ public class World implements MapSerializer
         // Build audit records
         this.constructAuditRecords();
         this.performAudits();
-    }
-
-    public int getWorldDimensions()
-    {
-        return this._worldDimensions;
     }
 
     private void constructAuditRecords()
@@ -82,13 +79,13 @@ public class World implements MapSerializer
         populator.setSpecies(_blueprint.getSpecies());
         populator.setWallProbability(_blueprint.getInitialWallGenerationProbability());
         populator.setFoodProbability(_blueprint.getInitialFoodGenerationProbability());
-        for (int r = 0; r < _worldDimensions; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 0; c < _worldDimensions; c++)
+            for (int c = 0; c < _width; c++)
             {
                 setObject(EntityType.EMPTY, r, c);
                 _creatureGrid[r][c] = null;
-                if (r < 1 || c < 1 || r > _worldDimensions - 2 || c > _worldDimensions - 2)
+                if (r < 1 || c < 1 || r > _height - 2 || c > _width - 2)
                 {
                     setObject(EntityType.WALL, r, c);
                 }
@@ -152,9 +149,9 @@ public class World implements MapSerializer
 
     private void tickCreatures()
     {
-        for (int r = 0; r < _worldDimensions; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 0; c < _worldDimensions; c++)
+            for (int c = 0; c < _width; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
@@ -168,9 +165,9 @@ public class World implements MapSerializer
     {
         if (this._blueprint.getSoundEnabled())
         {
-            for (int r = 0; r < this._worldDimensions; r++)
+            for (int r = 0; r < this._height; r++)
             {
-                for (int c = 0; c < this._worldDimensions; c++)
+                for (int c = 0; c < this._width; c++)
                 {
                     if (_entityGrid[r][c] == EntityType.CREATURE)
                     {
@@ -183,7 +180,7 @@ public class World implements MapSerializer
 
     private void transmitSoundsFrom(int r1, int c1)
     {
-        for (int c2 = c1 + 1; c2 < this._worldDimensions; c2++)
+        for (int c2 = c1 + 1; c2 < this._width; c2++)
         {
             int r2 = r1;
             if (_entityGrid[r2][c2] == EntityType.CREATURE)
@@ -191,9 +188,9 @@ public class World implements MapSerializer
                 transmitSoundsFromTo(r1, c1, r2, c2);
             }
         }
-        for (int r2 = r1 + 1; r2 < this._worldDimensions; r2++)
+        for (int r2 = r1 + 1; r2 < this._height; r2++)
         {
-            for (int c2 = c1; c2 < this._worldDimensions; c2++)
+            for (int c2 = c1; c2 < this._width; c2++)
             {
                 if (_entityGrid[r2][c2] == EntityType.CREATURE)
                 {
@@ -212,9 +209,9 @@ public class World implements MapSerializer
 
     private void letCreaturesPlan()
     {
-        for (int r = 0; r < _worldDimensions; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 0; c < _worldDimensions; c++)
+            for (int c = 0; c < _width; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
@@ -227,9 +224,9 @@ public class World implements MapSerializer
     private void executeCreaturePlans()
     {
         // Creatures act
-        for (int r = 0; r < _worldDimensions; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 0; c < _worldDimensions; c++)
+            for (int c = 0; c < _width; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
@@ -302,9 +299,9 @@ public class World implements MapSerializer
     private void spawnFood()
     {
         // Generate food at a given rate
-        for (int r = 0; r < _worldDimensions; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 0; c < _worldDimensions; c++)
+            for (int c = 0; c < _width; c++)
             {
                 if (_entityGrid[r][c] == EntityType.EMPTY)
                 {
@@ -411,9 +408,9 @@ public class World implements MapSerializer
     public LinkedList<Creature> getCreatures()
     {
         LinkedList<Creature> allCreatures = new LinkedList<Creature>();
-        for (int r = 0; r < this._worldDimensions; r++)
+        for (int r = 0; r < this._height; r++)
         {
-            for (int c = 0; c < this._worldDimensions; c++)
+            for (int c = 0; c < this._width; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
@@ -443,9 +440,9 @@ public class World implements MapSerializer
     public int getCount(EntityType obj)
     {
         int count = 0;
-        for (int r = 0; r < _worldDimensions; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 0; c < _worldDimensions; c++)
+            for (int c = 0; c < _width; c++)
             {
                 if (this._entityGrid[r][c] == obj)
                 {
@@ -459,9 +456,9 @@ public class World implements MapSerializer
     public int getCount(Species s)
     {
         int count = 0;
-        for (int r = 0; r < _worldDimensions; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 0; c < _worldDimensions; c++)
+            for (int c = 0; c < _width; c++)
             {
                 if (this._creatureGrid[r][c] != null && this._creatureGrid[r][c].getSpecies().equals(s))
                 {
@@ -503,8 +500,8 @@ public class World implements MapSerializer
         boolean immigrantPlaced = false;
         while (!immigrantPlaced)
         {
-            int r = Rand.getRandomInt(this._worldDimensions);
-            int c = Rand.getRandomInt(this._worldDimensions);
+            int r = Rand.getRandomInt(this._height);
+            int c = Rand.getRandomInt(this._width);
             if (_entityGrid[r][c] == EntityType.EMPTY)
             {
                 addCreature(creature, r, c);
@@ -513,12 +510,23 @@ public class World implements MapSerializer
         }
     }
 
-    public void setWorldDimensions(int worldDimensions)
+    public int getWorldWidth()
     {
-        this._worldDimensions = worldDimensions;
+        return this._width;
+    }
 
-        this._entityGrid = new EntityType[_worldDimensions][_worldDimensions];
-        this._creatureGrid = new Creature[_worldDimensions][_worldDimensions];
+    public int getWorldHeight()
+    {
+        return this._height;
+    }
+
+    public void setWorldDimensions(int width, int height)
+    {
+        this._width = width;
+        this._height = height;
+
+        this._entityGrid = new EntityType[height][width];
+        this._creatureGrid = new Creature[height][width];
     }
 
     public EntityType getEntityType(int r, int c)
@@ -554,9 +562,9 @@ public class World implements MapSerializer
         else if (code == RenderCode.LIVE_CREATURE_LIST)
         {
             StringBuilder creatureOutput = new StringBuilder();
-            for (int r = 0; r < this._worldDimensions; r++)
+            for (int r = 0; r < this._height; r++)
             {
-                for (int c = 0; c < this._worldDimensions; c++)
+                for (int c = 0; c < this._width; c++)
                 {
                     if (_entityGrid[r][c] == EntityType.CREATURE)
                     {
@@ -590,9 +598,9 @@ public class World implements MapSerializer
         worldOutput.append(", Food: ");
         worldOutput.append(this.getCount(EntityType.FOOD));
         worldOutput.append('\n');
-        for (int r = 0; r < _worldDimensions; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 0; c < _worldDimensions; c++)
+            for (int c = 0; c < _width; c++)
             {
                 if (_entityGrid[r][c] == EntityType.EMPTY)
                 {
@@ -631,9 +639,9 @@ public class World implements MapSerializer
         // Draw average brain
         // Draw creature readouts
         LinkedList<Brain> brains = new LinkedList<Brain>();
-        for (int r = 0; r < this._worldDimensions; r++)
+        for (int r = 0; r < this._height; r++)
         {
-            for (int c = 0; c < this._worldDimensions; c++)
+            for (int c = 0; c < this._width; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE && _creatureGrid[r][c].getSpecies().equals(s))
                 {

@@ -144,7 +144,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
     public static void main(String[] args)
     {
         // Set up
-        int worldDimensions = 32;
+        int worldDimensions = 34;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
         LinkedList<Species> species = new LinkedList<Species>();
 
@@ -162,6 +162,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
 
         // Construct the world proper
         Blueprint blueprint = Blueprint.makeWithSizeAndSpecies(worldDimensions, species);
+        blueprint.setWidth(60);
         World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
