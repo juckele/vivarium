@@ -9,7 +9,6 @@ import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.audit.AuditRecord;
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
@@ -35,7 +34,7 @@ public class World implements MapSerializer
     @SerializedParameter
     private Blueprint _blueprint;
 
-    private World()
+    protected World()
     {
     }
 
@@ -271,7 +270,7 @@ public class World implements MapSerializer
         }
         // Attempt to breed
         else if (action == Action.BREED
-                // Make sure we're facing another creature
+        // Make sure we're facing another creature
                 && _entityGrid[facingR][facingC] == EntityType.CREATURE
                 // And that creature is the same species as us
                 && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
@@ -656,20 +655,9 @@ public class World implements MapSerializer
         return "";
     }
 
-    public static World makeUninitialized()
-    {
-        return new World();
-    }
-
-    public static World makeCopy(World original)
-    {
-        return (World) new SerializationEngine().makeCopy(original);
-    }
-
     @Override
     public void finalizeSerialization()
     {
-        // TODO Auto-generated method stub
-
+        // Do nothing
     }
 }

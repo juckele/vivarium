@@ -2,7 +2,6 @@ package com.johnuckele.vivarium.core;
 
 import com.johnuckele.vivarium.core.brain.Brain;
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationEngine;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
@@ -54,7 +53,7 @@ public class Creature implements MapSerializer
     @SerializedParameter
     private Creature _fetus;
 
-    private Creature()
+    protected Creature()
     {
 
     }
@@ -547,20 +546,9 @@ public class Creature implements MapSerializer
         this._id = id;
     }
 
-    public static Creature makeUninitialized()
-    {
-        return new Creature();
-    }
-
-    public static Creature makeCopy(Creature original)
-    {
-        return (Creature) new SerializationEngine().makeCopy(original);
-    }
-
     @Override
     public void finalizeSerialization()
     {
-        // TODO Auto-generated method stub
-
+        // Do nothing
     }
 }

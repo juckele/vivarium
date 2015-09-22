@@ -65,50 +65,60 @@ public class SerializationEngine
 
     private MapSerializer makeUninitializedMapSerializer(String clazzName)
     {
-        if (clazzName.equals(Species.class.getSimpleName()))
+        try {
+        Constructor<?> constructor;
+		if (clazzName.equals(Species.class.getSimpleName()))
         {
-            return Species.makeUninitialized();
+        	constructor = Species.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(Blueprint.class.getSimpleName()))
         {
-            return Blueprint.makeUninitialized();
+        	constructor = Blueprint.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(RandomBrain.class.getSimpleName()))
         {
-            return RandomBrain.makeUninitialized();
+        	constructor = RandomBrain.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(NeuralNetworkBrain.class.getSimpleName()))
         {
-            return NeuralNetworkBrain.makeUninitialized();
+        	constructor = NeuralNetworkBrain.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(Creature.class.getSimpleName()))
         {
-            return Creature.makeUninitialized();
+        	constructor = Creature.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(World.class.getSimpleName()))
         {
-            return World.makeUninitialized();
+        	constructor = World.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(CensusFunction.class.getSimpleName()))
         {
-            return CensusFunction.makeUninitialized();
+        	constructor = CensusFunction.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(CensusRecord.class.getSimpleName()))
         {
-            return CensusRecord.makeUninitialized();
+        	constructor = CensusRecord.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(ActionFrequencyFunction.class.getSimpleName()))
         {
-            return ActionFrequencyFunction.makeUninitialized();
+        	constructor = ActionFrequencyFunction.class.getDeclaredConstructor();
         }
         else if (clazzName.equals(ActionFrequencyRecord.class.getSimpleName()))
         {
-            return ActionFrequencyRecord.makeUninitialized();
+        	constructor = ActionFrequencyRecord.class.getDeclaredConstructor();
         }
         else
         {
             throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
         }
+		constructor.setAccessible(true);
+		return (MapSerializer) constructor.newInstance();
+		} catch (InstantiationException | IllegalAccessException
+				| IllegalArgumentException | InvocationTargetException
+				| NoSuchMethodException | SecurityException e) {
+			e.printStackTrace();
+			throw new RuntimeException("Reflection during serialization failed. Unable to create new instance of "+clazzName+". ", e);
+		}
     }
 
     /**

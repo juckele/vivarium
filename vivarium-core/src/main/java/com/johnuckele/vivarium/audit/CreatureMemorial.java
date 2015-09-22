@@ -12,6 +12,7 @@ public class CreatureMemorial extends AuditRecord
 
     public CreatureMemorial(Species species)
     {
+        super(species);
     }
 
     @Override

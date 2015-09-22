@@ -114,7 +114,10 @@ public class GeneticAlgorithmRunner
         species.setMaximumFood(200);
         System.out.println("Species " + species);
 
-        Blueprint blueprint = Blueprint.makeWithSizeAndSpecies(30, species);
+        Blueprint blueprint = Blueprint.makeDefault();
+        blueprint.setSize(30);
+        ArrayList<Species> speciesList = new ArrayList<Species>();
+        blueprint.setSpecies(speciesList);
         blueprint.setInitialFoodGenerationProbability(0);
 
         int tenLifespans = species.getMaximumAge() * 10;

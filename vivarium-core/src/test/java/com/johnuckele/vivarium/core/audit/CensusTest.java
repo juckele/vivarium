@@ -18,7 +18,7 @@ public class CensusTest
     public void testCensus()
     {
         Blueprint blueprint = Blueprint.makeDefault();
-        AuditFunction censusFunction = CensusFunction.makeDefault();
+        AuditFunction censusFunction = new CensusFunction();
         ArrayList<AuditFunction> auditFunctions = new ArrayList<AuditFunction>();
         auditFunctions.add(censusFunction);
         blueprint.setAuditFunctions(auditFunctions);

@@ -12,6 +12,7 @@ import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.serialization.MapSerializer;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
 
 public class CreateBlueprint extends CommonsScript
 {
@@ -30,10 +31,20 @@ public class CreateBlueprint extends CommonsScript
         LinkedList<Option> options = new LinkedList<Option>();
         options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to save to blueprint to").build());
-        options.add(Option.builder("a").required(false).longOpt(AUDIT_INPUT_FILE).hasArg(true).argName("FILE")
+        options.add(Option
+                .builder("a")
+                .required(false)
+                .longOpt(AUDIT_INPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
                 .desc("file to load audit functions from. If this option is not given, no audit functions will be added to the blueprint.")
                 .build());
-        options.add(Option.builder("s").required(false).longOpt(SPECIES_INPUT_FILE).hasArg(true).argName("FILE")
+        options.add(Option
+                .builder("s")
+                .required(false)
+                .longOpt(SPECIES_INPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
                 .desc("file to load species from. If this option is not given, a single default species will be added to the blueprint.")
                 .build());
         return options;
@@ -91,7 +102,8 @@ public class CreateBlueprint extends CommonsScript
         Map<String, Object> extraOptions = this.extraArgsAsMap();
 
         // Build the blueprint
-        Blueprint blueprint = Blueprint.makeFromMap(extraOptions);
+        Blueprint blueprint = Blueprint.makeDefault();
+        new SerializationEngine().deserialize(blueprint, extraOptions);
         if (!species.isEmpty())
         {
             blueprint.setSpecies(new ArrayList<Species>(species));

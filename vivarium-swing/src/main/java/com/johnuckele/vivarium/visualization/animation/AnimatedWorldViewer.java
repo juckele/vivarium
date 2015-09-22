@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -146,7 +146,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         // Set up
         int worldDimensions = 34;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        LinkedList<Species> species = new LinkedList<Species>();
+        ArrayList<Species> species = new ArrayList<Species>();
 
         // Build 1 species
         Species species1 = Species.makeDefault();
@@ -161,8 +161,10 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         // species.add(species2);
 
         // Construct the world proper
-        Blueprint blueprint = Blueprint.makeWithSizeAndSpecies(worldDimensions, species);
+        Blueprint blueprint = Blueprint.makeDefault();
+        blueprint.setSpecies(species);
         blueprint.setWidth(60);
+        blueprint.setHeight(34);
         World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 

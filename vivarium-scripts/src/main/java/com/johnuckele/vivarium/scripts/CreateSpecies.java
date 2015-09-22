@@ -8,6 +8,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
 
 public class CreateSpecies extends CommonsScript
 {
@@ -33,7 +34,8 @@ public class CreateSpecies extends CommonsScript
         Map<String, Object> extraOptions = this.extraArgsAsMap();
 
         // Build the species
-        Species species = Species.makeFromMap(extraOptions);
+        Species species = Species.makeDefault();
+        new SerializationEngine().deserialize(species, extraOptions);
 
         // Save the blueprint
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);

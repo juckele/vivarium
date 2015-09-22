@@ -1,7 +1,5 @@
 package com.johnuckele.vivarium.audit;
 
-import java.util.Map;
-
 import com.johnuckele.vivarium.core.Species;
 
 public enum AuditType
@@ -15,15 +13,15 @@ public enum AuditType
         }
 
         @Override
-        public ActionFrequencyRecord makeRecordWithSpecies(AuditFunction function, Species species)
+        public ActionFrequencyFunction makeFunction()
         {
-            return ActionFrequencyRecord.makeWithSpecies(function, species);
+            return new ActionFrequencyFunction();
         }
 
         @Override
-        public AuditFunction makeFunctionFromMap(Map<String, Object> functionOptions)
+        public ActionFrequencyRecord makeRecordWithSpecies(AuditFunction function, Species species)
         {
-            return ActionFrequencyFunction.makeFromMap(functionOptions);
+            return new ActionFrequencyRecord(species);
         }
     },
     CENSUS
@@ -35,17 +33,16 @@ public enum AuditType
         }
 
         @Override
-        public CensusRecord makeRecordWithSpecies(AuditFunction untypedFunction, Species species)
+        public CensusFunction makeFunction()
         {
-            CensusFunction censusFunction = (CensusFunction) untypedFunction;
-            return CensusRecord.makeWithSpecies(censusFunction, species);
+            return new CensusFunction();
         }
 
         @Override
-        public CensusFunction makeFunctionFromMap(Map<String, Object> functionOptions)
+        public CensusRecord makeRecordWithSpecies(AuditFunction untypedFunction, Species species)
         {
-            CensusFunction censusFunction = CensusFunction.makeFromMap(functionOptions);
-            return censusFunction;
+            CensusFunction censusFunction = (CensusFunction) untypedFunction;
+            return new CensusRecord(censusFunction, species);
         }
     },
     MEMORIAL
@@ -57,22 +54,21 @@ public enum AuditType
         }
 
         @Override
-        public AuditRecord makeRecordWithSpecies(AuditFunction function, Species species)
+        public AuditFunction makeFunction()
         {
-            return CreatureMemorial.makeWithSpecies(function, species);
+            throw new UnsupportedOperationException("CreatureMemorialFunction does not exist");
         }
 
         @Override
-        public AuditFunction makeFunctionFromMap(Map<String, Object> functionOptions)
+        public AuditRecord makeRecordWithSpecies(AuditFunction function, Species species)
         {
-            // TODO Auto-generated method stub
-            throw new UnsupportedOperationException("X");
+            return new CreatureMemorial(species);
         }
     };
 
     public abstract Class<?> getAuditRecordClass();
 
-    public abstract AuditRecord makeRecordWithSpecies(AuditFunction function, Species species);
+    public abstract AuditFunction makeFunction();
 
-    public abstract AuditFunction makeFunctionFromMap(Map<String, Object> functionOptions);
+    public abstract AuditRecord makeRecordWithSpecies(AuditFunction function, Species species);
 }

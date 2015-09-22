@@ -1,7 +1,6 @@
 package com.johnuckele.vivarium.visualization.text;
 
 import java.util.ArrayList;
-import java.util.LinkedList;
 
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
@@ -98,7 +97,7 @@ public class WorldViewer extends JFrame
         // Set up
         int worldDimensions = 25;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        LinkedList<Species> species = new LinkedList<Species>();
+        ArrayList<Species> species = new ArrayList<Species>();
 
         // Build 1 species
         Species species1 = Species.makeDefault();
@@ -113,7 +112,10 @@ public class WorldViewer extends JFrame
         species.add(species2);
 
         // Construct the world proper
-        Blueprint blueprint = Blueprint.makeWithSizeAndSpecies(worldDimensions, species);
+        Blueprint blueprint = Blueprint.makeDefault();
+        blueprint.setSpecies(species);
+        blueprint.setSize(worldDimensions);
+
         World w = new World(blueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 

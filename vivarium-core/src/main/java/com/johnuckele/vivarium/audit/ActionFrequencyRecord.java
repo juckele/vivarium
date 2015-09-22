@@ -17,7 +17,7 @@ public class ActionFrequencyRecord extends AuditRecord
     @SerializedParameter
     int[][][][][] _tally = new int[16][2][2][Action.values().length][2];
 
-    private ActionFrequencyRecord()
+    protected ActionFrequencyRecord()
     {
     }
 
@@ -49,8 +49,8 @@ public class ActionFrequencyRecord extends AuditRecord
         {
             resizeTally();
         }
-        _tally[generation - 1][isFemale ? 1 : 0][isPregnant ? 1 : 0][Action
-                .convertActionToInteger(action)][wasSuccessful ? 1 : 0]++;
+        _tally[generation - 1][isFemale ? 1 : 0][isPregnant ? 1 : 0][Action.convertActionToInteger(action)][wasSuccessful ? 1
+                : 0]++;
     }
 
     private void resizeTally()
@@ -73,15 +73,5 @@ public class ActionFrequencyRecord extends AuditRecord
             }
         }
         _tally = newTally;
-    }
-
-    public static ActionFrequencyRecord makeUninitialized()
-    {
-        return new ActionFrequencyRecord();
-    }
-
-    public static ActionFrequencyRecord makeWithSpecies(AuditFunction function, Species species)
-    {
-        return new ActionFrequencyRecord(species);
     }
 }

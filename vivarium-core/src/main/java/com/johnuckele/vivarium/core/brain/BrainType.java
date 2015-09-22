@@ -103,11 +103,6 @@ public enum BrainType
 
     public abstract Brain makeUninitialized();
 
-    public Brain makeCopy(Brain untypedBrain)
-    {
-        return Brain.makeCopy(untypedBrain);
-    }
-
     public abstract Brain makeWithSpecies(Species species);
 
     public abstract Brain makeWithParents(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2);

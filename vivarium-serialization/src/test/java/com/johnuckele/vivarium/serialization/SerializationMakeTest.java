@@ -23,7 +23,7 @@ public class SerializationMakeTest
     public void testWorldBlueprintMakeCopy() throws Exception
     {
         Blueprint blueprint = Blueprint.makeDefault();
-        Blueprint copy = Blueprint.makeCopy(blueprint);
+        Blueprint copy = (Blueprint) new SerializationEngine().makeCopy(blueprint);
         Tester.isNotNull("Blueprint copy should exist", copy);
     }
 
@@ -38,7 +38,7 @@ public class SerializationMakeTest
     public void testSpeciesMakeCopy() throws Exception
     {
         Species species = Species.makeDefault();
-        Species copy = Species.makeCopy(species);
+        Species copy = (Species) new SerializationEngine().makeCopy(species);
         Tester.isNotNull("Species copy should exist", copy);
     }
 
@@ -62,7 +62,7 @@ public class SerializationMakeTest
             Species species = Species.makeDefault();
             species.setBrainType(brainType);
             Brain brain = brainType.makeWithSpecies(species);
-            Brain copy = brainType.makeCopy(brain);
+            Brain copy = (Brain) new SerializationEngine().makeCopy(brain);
             Tester.isNotNull("Brain copy of type " + brainType + "should exist", copy);
         }
     }
@@ -72,7 +72,7 @@ public class SerializationMakeTest
     {
         Species species = Species.makeDefault();
         Creature creature = new Creature(species);
-        Creature copy = Creature.makeCopy(creature);
+        Creature copy = (Creature) new SerializationEngine().makeCopy(creature);
         Tester.isNotNull("Creature copy should exist", copy);
     }
 
@@ -81,7 +81,7 @@ public class SerializationMakeTest
     {
         Blueprint blueprint = Blueprint.makeDefault();
         World world = new World(blueprint);
-        World copy = World.makeCopy(world);
+        World copy = (World) new SerializationEngine().makeCopy(world);
         Tester.isNotNull("World copy should exist", copy);
     }
 }

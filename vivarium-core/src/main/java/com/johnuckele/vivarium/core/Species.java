@@ -1,11 +1,7 @@
 package com.johnuckele.vivarium.core;
 
-import java.util.Map;
-
 import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationEngine;
-import com.johnuckele.vivarium.serialization.SerializedCollection;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
 public class Species implements MapSerializer
@@ -255,38 +251,10 @@ public class Species implements MapSerializer
         _pregnantFoodRate = pregnantFoodRate;
     }
 
-    public static void main(String[] args)
-    {
-        Species s = new Species();
-        SerializationEngine engine = new SerializationEngine();
-        SerializedCollection collection = engine.serialize(s);
-        System.out.println(collection);
-        System.out.println(s.getMutationRate());
-    }
-
-    public static Species makeUninitialized()
-    {
-        Species s = new Species();
-        return s;
-    }
-
     public static Species makeDefault()
     {
         Species s = new Species();
-        new SerializationEngine().deserialize(s, SerializationEngine.EMPTY_OBJECT_MAP);
-        return s;
-    }
-
-    public static Species makeFromMap(Map<String, Object> speciesValues)
-    {
-        Species s = new Species();
-        new SerializationEngine().deserialize(s, speciesValues);
-        return s;
-    }
-
-    public static Species makeCopy(Species original)
-    {
-        Species s = (Species) new SerializationEngine().makeCopy(original);
+        s.finalizeSerialization();
         return s;
     }
 

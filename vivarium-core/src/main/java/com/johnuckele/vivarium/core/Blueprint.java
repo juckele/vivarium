@@ -1,14 +1,9 @@
 package com.johnuckele.vivarium.core;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.Map;
 
 import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.serialization.MapSerializer;
-import com.johnuckele.vivarium.serialization.SerializationEngine;
-import com.johnuckele.vivarium.serialization.SerializedCollection;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
 public class Blueprint implements MapSerializer
@@ -45,6 +40,11 @@ public class Blueprint implements MapSerializer
     {
         this._width = size;
         this._height = size;
+    }
+
+    public void setHeight(int height)
+    {
+        this._height = height;
     }
 
     public void setWidth(int width)
@@ -128,91 +128,19 @@ public class Blueprint implements MapSerializer
         this._auditFunctions = auditFunctions;
     }
 
-    public static Blueprint makeUninitialized()
-    {
-        Blueprint wb = new Blueprint();
-        return wb;
-    }
-
-    public static Blueprint makeCopy(Blueprint original)
-    {
-        return (Blueprint) new SerializationEngine().makeCopy(original);
-    }
-
     public static Blueprint makeDefault()
     {
         Blueprint wb = new Blueprint();
-        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
+        wb.finalizeSerialization();
         wb._species = new ArrayList<Species>();
         wb._species.add(Species.makeDefault());
         wb._auditFunctions = new ArrayList<AuditFunction>();
         return wb;
-    }
-
-    public static Blueprint makeFromMap(Map<String, Object> blueprintValues)
-    {
-        Blueprint wb = new Blueprint();
-        new SerializationEngine().deserialize(wb, blueprintValues);
-        wb._species = new ArrayList<Species>();
-        wb._species.add(Species.makeDefault());
-        wb._auditFunctions = new ArrayList<AuditFunction>();
-        return wb;
-    }
-
-    public static Blueprint makeWithSize(int size)
-    {
-        Blueprint wb = new Blueprint();
-        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
-        wb._width = size;
-        wb._height = size;
-        wb._species = new ArrayList<Species>();
-        wb._species.add(Species.makeDefault());
-        wb._auditFunctions = new ArrayList<AuditFunction>();
-        return wb;
-    }
-
-    public static Blueprint makeWithSizeAndSpecies(int size, Species s)
-    {
-        Blueprint wb = new Blueprint();
-        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
-        wb._width = size;
-        wb._height = size;
-        wb._species = new ArrayList<Species>();
-        wb._species.add(s);
-        wb._auditFunctions = new ArrayList<AuditFunction>();
-        return wb;
-    }
-
-    public static Blueprint makeWithSizeAndSpecies(int size, Collection<Species> s)
-    {
-        Blueprint wb = new Blueprint();
-        new SerializationEngine().deserialize(wb, SerializationEngine.EMPTY_OBJECT_MAP);
-        wb._width = size;
-        wb._height = size;
-        wb._species = new ArrayList<Species>(s);
-        wb._auditFunctions = new ArrayList<AuditFunction>();
-        return wb;
-    }
-
-    public static void main(String[] args)
-    {
-        LinkedList<Species> species = new LinkedList<Species>();
-        Species s1 = Species.makeDefault();
-        s1.setBaseFoodRate(0);
-        species.add(s1);
-        Species s2 = Species.makeDefault();
-        s2.setMutationRateExponent(-10);
-        species.add(s2);
-        Blueprint wb = Blueprint.makeWithSizeAndSpecies(25, species);
-        SerializationEngine se = new SerializationEngine();
-        SerializedCollection collection = se.serialize(wb);
-        System.out.println(collection);
     }
 
     @Override
     public void finalizeSerialization()
     {
-        // TODO Auto-generated method stub
-
+        // Do nothing
     }
 }

@@ -5,6 +5,7 @@ import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.serialization.SerializationEngine;
 
 public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
 {
@@ -23,7 +24,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     public double evaluate(Creature c)
     {
         // Build world
-        Blueprint instanceBlueprint = Blueprint.makeCopy(_blueprint);
+        Blueprint instanceBlueprint = (Blueprint) new SerializationEngine().makeCopy(_blueprint);
         assert(instanceBlueprint.getSpecies().size() == 1);
         Species instanceSpecies = instanceBlueprint.getSpecies().get(0);
         instanceSpecies.setMutationRateExponent(Double.NEGATIVE_INFINITY);
