@@ -4,6 +4,7 @@ buildscript {
     }
     dependencies {
         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
+        classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
     }
 }
 
@@ -24,6 +25,15 @@ subprojects {
     eclipseSetup.dependsOn eclipseProject
     eclipseSetup.dependsOn cleanEclipseClasspath
     eclipseSetup.dependsOn eclipseClasspath
+
+    buildscript {
+        repositories {
+            jcenter()
+        }
+        dependencies {
+            classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+        }
+    }
 
     repositories {
         jcenter()
@@ -119,5 +129,22 @@ project(':vivarium-swing') {
         compile project(':vivarium-core')
         compile project(':vivarium-scripts')
 	compile 'net.java.dev.jna:jna-platform:4.0.0'
+    }
+}
+
+project(':vivarium-web') {
+    apply plugin: 'war'
+    apply plugin: 'gwt'
+
+    gwt {
+        gwtVersion='2.7.0'
+
+    	modules 'com.johnuckele.vivarium.web.VivariumWeb'
+
+	src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
+    }
+
+    dependencies {
+        compile project(':vivarium-core')
     }
 }
