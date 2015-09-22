@@ -27,11 +27,14 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
     private static final long serialVersionUID = -3105685457075818705L;
 
     // Simulation variables
+    private SimulationThread _simulationThread;
     private World _world;
 
     // Animation variables
+    private AnimationThread _animationThread;
 
     // UI variables
+    private UIThread _uiThread;
     private long _lastMouseEvent = System.currentTimeMillis();
     private boolean _cursorHidden = false;
 
@@ -106,9 +109,16 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         _world = w;
         this.setVisible(true);
         this.setSize(800, 600);
-        new AnimationThread().start();
-        new SimulationThread().start();
-        new UIThread().start();
+        _animationThread = new AnimationThread();
+        _simulationThread = new SimulationThread();
+        _uiThread = new UIThread();
+    }
+
+    public void startHelperThreads()
+    {
+        _animationThread.start();
+        _simulationThread.start();
+        _uiThread.start();
     }
 
     @Override
@@ -166,6 +176,9 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         _window.addKeyListener(wh);
         _window.addMouseListener(wh);
         _window.addMouseMotionListener(wh);
+
+        // Start everything
+        wh.startHelperThreads();
 
         // Set everything to be visible
         _window.setVisible(true);
