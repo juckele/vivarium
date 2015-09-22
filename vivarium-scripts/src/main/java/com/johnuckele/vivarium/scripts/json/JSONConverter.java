@@ -110,7 +110,6 @@ public class JSONConverter
         }
         else
         {
-            System.out.println("Value " + value + " has type " + (value != null ? value.getClass() : null));
             return value;
         }
     }
