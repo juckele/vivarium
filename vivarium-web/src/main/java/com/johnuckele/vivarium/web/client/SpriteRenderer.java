@@ -11,8 +11,8 @@ public class SpriteRenderer
 	private static int		FLOOR_Y				= 0 * PIXEL_BLOCK_SIZE;
 	private static int		WALL_X				= 1 * PIXEL_BLOCK_SIZE;
 	private static int		WALL_Y				= 0 * PIXEL_BLOCK_SIZE;
-	private static int		FOOD_X				= 1 * PIXEL_BLOCK_SIZE;
-	private static int		FOOD_Y				= 1 * PIXEL_BLOCK_SIZE;
+	private static int		FOOD_X				= 2 * PIXEL_BLOCK_SIZE;
+	private static int		FOOD_Y				= 0 * PIXEL_BLOCK_SIZE;
 	private static int		RED_CREATURE_1_X	= 0 * PIXEL_BLOCK_SIZE;
 	private static int		RED_CREATURE_1_Y	= 2 * PIXEL_BLOCK_SIZE;
 	private static int		RED_CREATURE_2_X	= 1 * PIXEL_BLOCK_SIZE;

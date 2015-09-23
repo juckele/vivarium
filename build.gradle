@@ -133,8 +133,8 @@ project(':vivarium-swing') {
 }
 
 project(':vivarium-web') {
-    apply plugin: 'war'
     apply plugin: 'gwt'
+    apply plugin: 'war'
 
     gwt {
         gwtVersion='2.7.0'
