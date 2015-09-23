@@ -3,6 +3,7 @@ package com.johnuckele.vivarium.audit;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
+@SuppressWarnings("serial")
 public abstract class AuditFunction implements MapSerializer
 {
     @SerializedParameter

@@ -6,6 +6,7 @@ import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
+@SuppressWarnings("serial")
 public class Blueprint implements MapSerializer
 {
     // World Generation

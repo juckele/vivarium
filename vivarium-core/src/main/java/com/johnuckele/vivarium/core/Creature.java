@@ -8,6 +8,7 @@ import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
+@SuppressWarnings("serial")
 public class Creature implements MapSerializer
 {
     // Meta information

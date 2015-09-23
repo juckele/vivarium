@@ -6,6 +6,7 @@ import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
+@SuppressWarnings("serial")
 public class CensusRecord extends AuditRecord
 {
     @SerializedParameter

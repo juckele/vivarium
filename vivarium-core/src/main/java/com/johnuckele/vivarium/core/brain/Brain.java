@@ -3,6 +3,7 @@ package com.johnuckele.vivarium.core.brain;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
+@SuppressWarnings("serial")
 public abstract class Brain implements MapSerializer
 {
     public abstract BrainType getBrainType();

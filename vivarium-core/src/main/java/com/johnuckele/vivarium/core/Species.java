@@ -4,6 +4,7 @@ import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 
+@SuppressWarnings("serial")
 public class Species implements MapSerializer
 {
     // Physical traits

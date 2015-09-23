@@ -5,6 +5,7 @@ import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
+@SuppressWarnings("serial")
 public class RandomBrain extends Brain
 {
     @SerializedParameter

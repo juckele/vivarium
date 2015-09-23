@@ -5,6 +5,7 @@ import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.World;
 
+@SuppressWarnings("serial")
 public class WebWorld extends World
 {
     protected WebWorld()

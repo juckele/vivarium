@@ -3,6 +3,7 @@ package com.johnuckele.vivarium.audit;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
 
+@SuppressWarnings("serial")
 public class CreatureMemorial extends AuditRecord
 {
     private CreatureMemorial()

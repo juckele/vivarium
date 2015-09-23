@@ -9,6 +9,7 @@ import com.johnuckele.vivarium.util.Functions;
 import com.johnuckele.vivarium.util.Rand;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
+@SuppressWarnings("serial")
 public class NeuralNetworkBrain extends Brain
 {
     // Weights represents all the weights in the neural network
