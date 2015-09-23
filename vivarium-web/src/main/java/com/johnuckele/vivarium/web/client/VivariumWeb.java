@@ -19,10 +19,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 {
     public static final int PIXEL_BLOCK_SIZE = 32;
 
-    // private final VivariumWebServiceAsync _webService =
-    // GWT.create(VivariumWebService.class);
-    // private static final String JSON_URL = "snap1f.json";
-
     Canvas canvas;
     Context2d context;
     Image spriteImage;
@@ -35,13 +31,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     @Override
     public void onModuleLoad()
     {
-        /*
-         * String fileName = Window.Location.getParameter("data"); String dataURL = ( fileName == null ? "snap1" :
-         * fileName ) + ".json"; RequestBuilder builder = new RequestBuilder(RequestBuilder.GET, dataURL); try {
-         * builder.sendRequest(null, new RequestCallback() { public void onError(Request request, Throwable exception) {
-         * Window.alert("Couldn't retrieve JSON cow"); } public void onResponseReceived(Request request, Response
-         * response) { world = JSONDecoder.convertJSONToWorld(response.getText()); displayWorld(); } }); }
-         */
         Blueprint blueprint = Blueprint.makeDefault();
         Species s = Species.makeDefault();
         ArrayList<Species> species = new ArrayList<Species>();
@@ -50,23 +39,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         blueprint.setSize(40);
         world = new WebWorld(blueprint);
         displayWorld();
-        /*
-         * catch(RequestException e) { Window.alert("Couldn't retrieve JSON duck"); }
-         */
-        // world = new WebWorld(10);
-
-        /*
-         * _webService.getWorldOfSize(10, new AsyncCallback<WebWorld>() { public void onFailure(Throwable caught) { //
-         * TODO Window.alert("Dang gal, this also dun work at all! "+caught); } public void onSuccess(WebWorld result) {
-         * // Make a new world with a world = result; displayWorld(); } });
-         */
-
-        /*
-         * _webService.getWorldSize(new AsyncCallback<Integer>() { public void onFailure(Throwable caught) { // TODO
-         * Window.alert("Dang son, this dun work at all!"); } public void onSuccess(Integer result) { // Make a new
-         * world with a world = new WebWorld(result); displayWorld(); } });
-         */
-
     }
 
     private void displayWorld()
