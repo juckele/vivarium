@@ -6,7 +6,7 @@ import com.johnuckele.vivarium.core.Direction;
 
 public class SpriteRenderer
 {
-    public static int PIXEL_BLOCK_SIZE = 32;
+    public final static int PIXEL_BLOCK_SIZE = 32;
     private static int FLOOR_X = 0 * PIXEL_BLOCK_SIZE;
     private static int FLOOR_Y = 0 * PIXEL_BLOCK_SIZE;
     private static int WALL_X = 1 * PIXEL_BLOCK_SIZE;
