@@ -1,6 +1,7 @@
 package com.johnuckele.vivarium.core;
 
 import com.johnuckele.vivarium.core.brain.Brain;
+import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Functions;
@@ -104,12 +105,14 @@ public class Creature implements MapSerializer
             if (parent2 != null)
             {
                 // Brain combined from genetic legacy
-                this._brain = _species.getBrainType().makeWithParents(_species, parent1._brain, parent2._brain);
+                this._brain = BrainType.makeWithParents(_species.getBrainType(), _species, parent1._brain,
+                        parent2._brain);
             }
             else
             {
                 // Brain from single parent (might still mutate)
-                this._brain = _species.getBrainType().makeWithParents(_species, parent1._brain, parent1._brain);
+                this._brain = BrainType.makeWithParents(_species.getBrainType(), _species, parent1._brain,
+                        parent1._brain);
             }
         }
         else
@@ -122,7 +125,7 @@ public class Creature implements MapSerializer
             else
             {
                 // Create a new default brain
-                this._brain = _species.getBrainType().makeWithSpecies(_species);
+                this._brain = BrainType.makeWithSpecies(_species.getBrainType(), _species);
             }
         }
         _inputs = new double[_species.getTotalBrainInputCount()];

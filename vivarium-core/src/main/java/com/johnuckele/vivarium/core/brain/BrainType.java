@@ -8,104 +8,98 @@ import com.johnuckele.vivarium.core.Species;
 
 public enum BrainType
 {
-    NEURAL_NETWORK
+    NEURAL_NETWORK, RANDOM;
+
+    public static String render(BrainType type, Collection<Brain> untypedBrains)
     {
-        @Override
-        public String render(Collection<Brain> untypedBrains)
+        StringBuilder brainOutput = new StringBuilder();
+        switch (type)
         {
-            List<NeuralNetworkBrain> brains = new LinkedList<NeuralNetworkBrain>();
-            for (Brain untypedBrain : untypedBrains)
-            {
-                brains.add((NeuralNetworkBrain) untypedBrain);
-            }
-            StringBuilder brainOutput = new StringBuilder();
-            NeuralNetworkBrain medianBrain = NeuralNetworkBrain.medianBrain(brains);
-            NeuralNetworkBrain standardDeviationBrain = NeuralNetworkBrain.standardDeviationBrain(brains, medianBrain);
-            brainOutput.append("Average creature NN:\n");
-            brainOutput.append(medianBrain.toString());
-            brainOutput.append("Std. Deviation on creature NNs:\n");
-            brainOutput.append(standardDeviationBrain.toString());
-            /*
-             * Brain minBrain = Brain.minBrain(brains); brainOutput.append("Min creature NN:\n");
-             * brainOutput.append(minBrain.toString()); Brain maxBrain = Brain.maxBrain(brains); brainOutput.append(
-             * "Max creature NN:\n"); brainOutput.append(maxBrain.toString());
-             */
-            /*
-             * brainOutput.append("Oldest creature NN:\n"); brainOutput.append(brains.get(0).toString());
-             * brainOutput.append("Random creature NN:\n"); brainOutput.append(brains
-             * .get(Rand.getRandomInt(brains.size())).toString());
-             */
-            return brainOutput.toString();
+            case NEURAL_NETWORK:
+                List<NeuralNetworkBrain> brains = new LinkedList<NeuralNetworkBrain>();
+                for (Brain untypedBrain : untypedBrains)
+                {
+                    brains.add((NeuralNetworkBrain) untypedBrain);
+                }
+                NeuralNetworkBrain medianBrain = NeuralNetworkBrain.medianBrain(brains);
+                NeuralNetworkBrain standardDeviationBrain = NeuralNetworkBrain.standardDeviationBrain(brains,
+                        medianBrain);
+                brainOutput.append("Average creature NN:\n");
+                brainOutput.append(medianBrain.toString());
+                brainOutput.append("Std. Deviation on creature NNs:\n");
+                brainOutput.append(standardDeviationBrain.toString());
+                /*
+                 * Brain minBrain = Brain.minBrain(brains); brainOutput.append("Min creature NN:\n");
+                 * brainOutput.append(minBrain.toString()); Brain maxBrain = Brain.maxBrain(brains); brainOutput.append(
+                 * "Max creature NN:\n"); brainOutput.append(maxBrain.toString());
+                 */
+                /*
+                 * brainOutput.append("Oldest creature NN:\n"); brainOutput.append(brains.get(0).toString());
+                 * brainOutput.append("Random creature NN:\n"); brainOutput.append(brains
+                 * .get(Rand.getRandomInt(brains.size())).toString());
+                 */
+                break;
+            case RANDOM:
+                brainOutput.append("Random action brain: no model render available");
+                break;
+            default:
+                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
         }
+        return brainOutput.toString();
+    }
 
-        @Override
-        public Brain makeUninitialized()
-        {
-            return NeuralNetworkBrain.makeUninitialized();
-        }
-
-        @Override
-        public Brain makeWithSpecies(Species species)
-        {
-            return NeuralNetworkBrain.makeWithSpecies(species);
-        }
-
-        @Override
-        public Brain makeWithParents(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2)
-        {
-            return NeuralNetworkBrain.makeWithParents(species, (NeuralNetworkBrain) untypedParentBrain1,
-                    (NeuralNetworkBrain) untypedParentBrain2);
-        }
-
-        @Override
-        public Class<?> getBrainClass()
-        {
-            return NeuralNetworkBrain.class;
-        }
-    },
-    RANDOM
+    public static Brain makeUninitialized(BrainType type)
     {
-        @Override
-        public String render(Collection<Brain> brains)
+        switch (type)
         {
-            StringBuilder brainOutput = new StringBuilder();
-            brainOutput.append("Random action brain: no model render available");
-            return brainOutput.toString();
+            case NEURAL_NETWORK:
+                return NeuralNetworkBrain.makeUninitialized();
+            case RANDOM:
+                return RandomBrain.makeUninitialized();
+            default:
+                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
         }
+    }
 
-        @Override
-        public Brain makeUninitialized()
+    public static Brain makeWithSpecies(BrainType type, Species species)
+    {
+        switch (type)
         {
-            return RandomBrain.makeUninitialized();
+            case NEURAL_NETWORK:
+                return NeuralNetworkBrain.makeWithSpecies(species);
+            case RANDOM:
+                return RandomBrain.makeWithSpecies(species);
+            default:
+                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
         }
+    }
 
-        @Override
-        public Brain makeWithSpecies(Species species)
+    public static Brain makeWithParents(BrainType type, Species species, Brain untypedParentBrain1,
+            Brain untypedParentBrain2)
+    {
+        switch (type)
         {
-            return RandomBrain.makeWithSpecies(species);
+            case NEURAL_NETWORK:
+                return NeuralNetworkBrain.makeWithParents(species, (NeuralNetworkBrain) untypedParentBrain1,
+                        (NeuralNetworkBrain) untypedParentBrain2);
+            case RANDOM:
+                return RandomBrain.makeWithParents(species, (RandomBrain) untypedParentBrain1,
+                        (RandomBrain) untypedParentBrain2);
+            default:
+                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
         }
+    }
 
-        @Override
-        public Brain makeWithParents(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2)
+    public static Class<?> getBrainClass(BrainType type)
+    {
+        switch (type)
         {
-            return RandomBrain.makeWithParents(species, (RandomBrain) untypedParentBrain1,
-                    (RandomBrain) untypedParentBrain2);
+            case NEURAL_NETWORK:
+                return NeuralNetworkBrain.class;
+            case RANDOM:
+                return RandomBrain.class;
+            default:
+                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
         }
-
-        @Override
-        public Class<?> getBrainClass()
-        {
-            return RandomBrain.class;
-        }
-    };
-
-    public abstract String render(Collection<Brain> brains);
-
-    public abstract Brain makeUninitialized();
-
-    public abstract Brain makeWithSpecies(Species species);
-
-    public abstract Brain makeWithParents(Species species, Brain untypedParentBrain1, Brain untypedParentBrain2);
-
-    public abstract Class<?> getBrainClass();
+    }
 }

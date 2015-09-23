@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import com.johnuckele.vivarium.audit.AuditFunction;
 import com.johnuckele.vivarium.audit.AuditRecord;
 import com.johnuckele.vivarium.core.brain.Brain;
+import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 import com.johnuckele.vivarium.serialization.SerializedParameter;
 import com.johnuckele.vivarium.util.Rand;
@@ -270,7 +271,7 @@ public class World implements MapSerializer
         }
         // Attempt to breed
         else if (action == Action.BREED
-        // Make sure we're facing another creature
+                // Make sure we're facing another creature
                 && _entityGrid[facingR][facingC] == EntityType.CREATURE
                 // And that creature is the same species as us
                 && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
@@ -650,7 +651,7 @@ public class World implements MapSerializer
         }
         if (brains.size() > 0)
         {
-            return brains.getFirst().getBrainType().render(brains);
+            return BrainType.render(brains.getFirst().getBrainType(), brains);
         }
         return "";
     }
