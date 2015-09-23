@@ -1,6 +1,8 @@
 package com.johnuckele.vivarium.serialization;
 
-public interface MapSerializer
+import com.googlecode.gwtstreamer.client.Streamable;
+
+public interface MapSerializer extends Streamable
 {
     public void finalizeSerialization();
 }

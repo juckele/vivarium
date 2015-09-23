@@ -17,6 +17,9 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
+  <!-- For GWT side serialization/copying                         -->
+  <inherits name="com.googlecode.gwtstreamer.GWTStreamer"/>
+
   <!-- Other module inherits                                      -->
   <inherits name='com.johnuckele.vivarium.Vivarium' />
 

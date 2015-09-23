@@ -7,6 +7,11 @@ import com.johnuckele.vivarium.core.World;
 
 public class WebWorld extends World
 {
+    protected WebWorld()
+    {
+
+    }
+
     public WebWorld(Blueprint blueprint)
     {
         super(blueprint);

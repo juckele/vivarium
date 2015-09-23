@@ -12,6 +12,7 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.googlecode.gwtstreamer.client.Streamer;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Species;
 
@@ -107,10 +108,11 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 world.tick();
             }
         }
+        WebWorld worldCopy = Streamer.get().deepCopy(world);
 
-        world.terrainRender(renderer);
+        worldCopy.terrainRender(renderer);
         int milliseconds = (int) (timestamp % 1000);
-        world.actorRender(renderer, milliseconds);
+        worldCopy.actorRender(renderer, milliseconds);
 
         // No reason to ever stop animating...
         AnimationScheduler.get().requestAnimationFrame(this);
