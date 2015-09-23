@@ -9,6 +9,7 @@ import java.util.Scanner;
 
 import org.json.JSONException;
 
+import com.googlecode.gwtstreamer.client.Streamer;
 import com.johnuckele.vivarium.scripts.json.JSONConverter;
 import com.johnuckele.vivarium.serialization.MapSerializer;
 
@@ -19,6 +20,10 @@ public class ScriptIO
         if (f == Format.JSON)
         {
             saveObjectWithJSON(serializer, fileName);
+        }
+        else if (f == Format.GWT)
+        {
+            saveObjectWithGwtStreamer(serializer, fileName);
         }
         else
         {
@@ -78,6 +83,21 @@ public class ScriptIO
         }
     }
 
+    private static void saveObjectWithGwtStreamer(MapSerializer serializer, String fileName)
+    {
+        try
+        {
+            String gwtString = Streamer.get().toString(serializer);
+            saveStringToFile(gwtString, fileName);
+        }
+        catch (JSONException e)
+        {
+            System.out.print("Unable to write the create GWT Stream\n");
+            e.printStackTrace();
+            System.exit(2);
+        }
+    }
+
     private static void saveObjectWithJSON(MapSerializer serializer, String fileName)
     {
         try
@@ -98,6 +118,10 @@ public class ScriptIO
         if (f == Format.JSON)
         {
             return loadObjectWithJSON(fileName);
+        }
+        else if (f == Format.GWT)
+        {
+            return loadObjectWithGwtStreamer(fileName);
         }
         else
         {
@@ -127,5 +151,11 @@ public class ScriptIO
     {
         String jsonString = loadFileToString(fileName);
         return JSONConverter.jsonStringToSerializerList(jsonString);
+    }
+
+    private static MapSerializer loadObjectWithGwtStreamer(String fileName)
+    {
+        String gwtString = loadFileToString(fileName);
+        return (MapSerializer) Streamer.get().fromString(gwtString);
     }
 }

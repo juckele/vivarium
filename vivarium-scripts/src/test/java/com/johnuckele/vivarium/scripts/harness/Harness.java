@@ -2,7 +2,6 @@ package com.johnuckele.vivarium.scripts.harness;
 
 import org.junit.Test;
 
-import com.johnuckele.vivarium.scripts.ConvertToJSON;
 import com.johnuckele.vivarium.scripts.CreateAuditFunction;
 import com.johnuckele.vivarium.scripts.CreateBlueprint;
 import com.johnuckele.vivarium.scripts.CreateSpecies;
@@ -68,11 +67,6 @@ public class Harness
         }
 
         {
-            String[] commandArgs = { "data/world_saves/medium2.viv", "data/world_saves/medium.json" };
-            ConvertToJSON.main(commandArgs);
-        }
-
-        {
             String[] commandArgs = { "data/world_saves/medium.viv", "20000000", "data/world_saves/medium2.viv" };
             RunSimulation.main(commandArgs);
         }
@@ -83,10 +77,6 @@ public class Harness
             String[] commandArgs = { "data/world_saves/medium" + i + ".viv", "200000",
                     "data/world_saves/medium" + (i + 1) + ".viv" };
             RunSimulation.main(commandArgs);
-        }
-        {
-            String[] commandArgs = { "data/world_saves/world_viewer/tick0.viv", "data/world_saves/snap1.json" };
-            ConvertToJSON.main(commandArgs);
         }
         {
             String[] commandArgs = { "data/world_saves/world_viewer/tick0.viv" };

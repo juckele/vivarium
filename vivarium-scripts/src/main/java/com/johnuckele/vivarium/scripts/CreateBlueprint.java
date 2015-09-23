@@ -31,20 +31,10 @@ public class CreateBlueprint extends CommonsScript
         LinkedList<Option> options = new LinkedList<Option>();
         options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to save to blueprint to").build());
-        options.add(Option
-                .builder("a")
-                .required(false)
-                .longOpt(AUDIT_INPUT_FILE)
-                .hasArg(true)
-                .argName("FILE")
+        options.add(Option.builder("a").required(false).longOpt(AUDIT_INPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to load audit functions from. If this option is not given, no audit functions will be added to the blueprint.")
                 .build());
-        options.add(Option
-                .builder("s")
-                .required(false)
-                .longOpt(SPECIES_INPUT_FILE)
-                .hasArg(true)
-                .argName("FILE")
+        options.add(Option.builder("s").required(false).longOpt(SPECIES_INPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to load species from. If this option is not given, a single default species will be added to the blueprint.")
                 .build());
         return options;

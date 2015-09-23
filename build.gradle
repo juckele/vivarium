@@ -79,6 +79,10 @@ project(':vivarium-ga') {
 project(':vivarium-scripts') {
     apply plugin: 'gradle-one-jar'
 
+    task jarConvertFileFormat( type: OneJar ) {
+        archiveName = 'convert-file-format'+'-'+version+'.jar'
+        mainClass = 'com.johnuckele.vivarium.scripts.ConvertFileFormat'
+    }
     task jarCreateAuditFunction( type: OneJar ) {
         archiveName = 'create-audit-function'+'-'+version+'.jar'
         mainClass = 'com.johnuckele.vivarium.scripts.CreateAuditFunction'
@@ -107,6 +111,7 @@ project(':vivarium-scripts') {
     task jarCollection {
         description = "Creates a complete set of stand-alone jars for scripts in this project."
     }
+    jarCollection.dependsOn jarConvertFileFormat
     jarCollection.dependsOn jarCreateAuditFunction
     jarCollection.dependsOn jarCreateBlueprint
     jarCollection.dependsOn jarCreateSpecies
