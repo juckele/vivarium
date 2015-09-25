@@ -8,10 +8,12 @@ import org.jfree.chart.JFreeChart;
 
 public class Utils
 {
+    private static final Font DEFAULT_FONT = new JLabel().getFont();
+
     public static void setChartToDefaultFont(JFreeChart chart)
     {
-        Font font = new JLabel().getFont();
-        setChartFont(chart, font);
+        System.out.println(DEFAULT_FONT);
+        setChartFont(chart, DEFAULT_FONT);
     }
 
     public static void setChartFont(JFreeChart chart, Font font)
@@ -21,6 +23,6 @@ public class Utils
         chart.getXYPlot().getDomainAxis().setTickLabelFont(font);
         chart.getXYPlot().getRangeAxis().setLabelFont(font);
         chart.getXYPlot().getRangeAxis().setTickLabelFont(font);
-        chart.getLegend().setItemFont(font);
+        // chart.getLegend().setItemFont(font);
     }
 }

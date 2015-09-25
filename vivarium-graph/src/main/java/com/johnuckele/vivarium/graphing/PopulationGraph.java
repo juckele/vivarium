@@ -4,8 +4,6 @@ import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartPanel;
-import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
@@ -13,10 +11,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import com.johnuckele.vivarium.graphing.util.Utils;
 
-public class PopulationGraph
+public class PopulationGraph extends BaseGraph
 {
-    private JFreeChart _chart;
-
     public PopulationGraph()
     {
         PlotOrientation orientation = PlotOrientation.VERTICAL;
@@ -34,20 +30,15 @@ public class PopulationGraph
         ((XYSeriesCollection) dataset).addSeries(series);
         boolean urls = false;
         boolean tooltips = false;
-        boolean legend = true;
+        boolean legend = false;
         _chart = ChartFactory.createXYLineChart("Line Chart XY Fun", "Time", "Population", dataset, orientation, legend,
                 tooltips, urls);
         Utils.setChartToDefaultFont(_chart);
     }
 
-    private ChartPanel getPanel()
-    {
-        return new ChartPanel(_chart);
-    }
-
     public static void main(String[] args)
     {
-        PopulationGraph graph = new PopulationGraph();
+        BaseGraph graph = new PopulationGraph();
         JFrame frame = new JFrame();
         frame.add(graph.getPanel());
         frame.setSize(600, 600);
