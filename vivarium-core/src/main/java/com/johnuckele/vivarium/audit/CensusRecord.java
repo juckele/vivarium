@@ -29,6 +29,11 @@ public class CensusRecord extends AuditRecord
         _recordTicks = new ArrayList<Integer>();
     }
 
+    public ArrayList<Integer> getRecordTicks()
+    {
+        return _recordTicks;
+    }
+
     public ArrayList<Integer> getPopulationRecords()
     {
         return _creaturePopulation;
