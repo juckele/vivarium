@@ -1,7 +1,11 @@
 package com.johnuckele.vivarium.graphing;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
+import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -40,7 +44,7 @@ public class PopulationGraph extends BaseGraph
         Utils.setChartToDefaultFont(_chart);
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws IOException
     {
         Blueprint b = Blueprint.makeDefault();
 
@@ -51,7 +55,7 @@ public class PopulationGraph extends BaseGraph
 
         World w = new World(b);
 
-        for (int i = 0; i < 40000; i++)
+        for (int i = 0; i < 4000; i++)
         {
             w.tick();
         }
@@ -62,6 +66,10 @@ public class PopulationGraph extends BaseGraph
         frame.setSize(1200, 800);
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
+
+        BufferedImage buff = graph._chart.createBufferedImage(800, 800);
+        File outputfile = new File("/tmp/graph.png");
+        ImageIO.write(buff, "png", outputfile);
     }
 
 }
