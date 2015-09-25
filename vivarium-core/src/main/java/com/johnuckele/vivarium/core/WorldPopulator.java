@@ -6,9 +6,9 @@ import com.johnuckele.vivarium.util.Rand;
 
 public class WorldPopulator
 {
-    private double             _wallProbability;
-    private double             _foodProbability;
-    private double             _creatureProbability;
+    private double _wallProbability;
+    private double _foodProbability;
+    private double _creatureProbability;
     private ArrayList<Species> _species;
 
     public WorldPopulator()
@@ -70,8 +70,9 @@ public class WorldPopulator
             }
             random -= s.getInitialGenerationProbability();
         }
-        throw new IllegalStateException(
-                "Species s.getInitialGenerationProbability() should sum to _creatureProbability");
+        // If we fall through the for loop returns, it's because we've fundamentally screwed up our math.
+        throw new IllegalStateException("Species s.getInitialGenerationProbability() should sum to "
+                + _creatureProbability);
     }
 
 }
