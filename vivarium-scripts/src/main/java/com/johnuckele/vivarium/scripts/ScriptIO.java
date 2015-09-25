@@ -7,8 +7,6 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.Scanner;
 
-import org.json.JSONException;
-
 import com.googlecode.gwtstreamer.client.Streamer;
 import com.johnuckele.vivarium.scripts.json.JSONConverter;
 import com.johnuckele.vivarium.serialization.MapSerializer;
@@ -27,7 +25,7 @@ public class ScriptIO
         }
         else
         {
-            throw new Error("Loading format " + f + " is not supported");
+            throw new UserFacingError("Writing format " + f + " is not supported.");
         }
     }
 
@@ -44,9 +42,7 @@ public class ScriptIO
         }
         catch (IOException e)
         {
-            System.out.print("Unable to write the file " + fileName + "\n");
-            e.printStackTrace();
-            System.exit(1);
+            throw new UserFacingError("Unable to write the file " + fileName);
         }
         finally
         {
@@ -59,7 +55,7 @@ public class ScriptIO
             }
             catch (IOException e)
             {
-                e.printStackTrace();
+                throw new UserFacingError("Unable to close the file stream");
             }
         }
     }
@@ -76,41 +72,20 @@ public class ScriptIO
         }
         catch (FileNotFoundException e)
         {
-            System.out.print("Unable to read the file " + fileName + "\n");
-            e.printStackTrace();
-            System.exit(1);
-            return null; // Unreachable, but Java doesn't know this.
+            throw new UserFacingError("Unable to read the file " + fileName + "\n");
         }
     }
 
     private static void saveObjectWithGwtStreamer(MapSerializer serializer, String fileName)
     {
-        try
-        {
-            String gwtString = Streamer.get().toString(serializer);
-            saveStringToFile(gwtString, fileName);
-        }
-        catch (JSONException e)
-        {
-            System.out.print("Unable to write the create GWT Stream\n");
-            e.printStackTrace();
-            System.exit(2);
-        }
+        String gwtString = Streamer.get().toString(serializer);
+        saveStringToFile(gwtString, fileName);
     }
 
     private static void saveObjectWithJSON(MapSerializer serializer, String fileName)
     {
-        try
-        {
-            String jsonString = JSONConverter.serializerToJSONString(serializer);
-            saveStringToFile(jsonString, fileName);
-        }
-        catch (JSONException e)
-        {
-            System.out.print("Unable to write the create JSON\n");
-            e.printStackTrace();
-            System.exit(2);
-        }
+        String jsonString = JSONConverter.serializerToJSONString(serializer);
+        saveStringToFile(jsonString, fileName);
     }
 
     public static MapSerializer loadObject(String fileName, Format f)
@@ -125,7 +100,7 @@ public class ScriptIO
         }
         else
         {
-            throw new Error("Loading format " + f + " is not supported");
+            throw new UserFacingError("Loading format " + f + " is not supported");
         }
     }
 
@@ -137,7 +112,7 @@ public class ScriptIO
         }
         else
         {
-            throw new Error("Loading format " + f + " is not supported");
+            throw new UserFacingError("Loading format " + f + " is not supported");
         }
     }
 
