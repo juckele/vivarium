@@ -20,8 +20,6 @@ public class ConvertFileFormat extends CommonsScript
         super(args);
     }
 
-    // WebWorld worldCopy = Streamer.get().deepCopy(world);
-
     @Override
     protected List<Option> getScriptSpecificOptions()
     {
