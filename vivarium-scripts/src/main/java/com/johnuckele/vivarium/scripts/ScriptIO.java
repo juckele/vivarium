@@ -72,7 +72,7 @@ public class ScriptIO
         }
         catch (FileNotFoundException e)
         {
-            throw new UserFacingError("Unable to read the file " + fileName + "\n");
+            throw new UserFacingError("Unable to read the file " + fileName);
         }
     }
 

@@ -1,14 +1,30 @@
 package com.johnuckele.vivarium.scripts;
 
+import java.io.File;
+import java.io.IOException;
+
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
 
 public class CreateWorldTest
 {
-    // @Test
+    @Rule
+    public TemporaryFolder folder = new TemporaryFolder();
+    public String path;
+
+    @Before
+    public void setupPath() throws IOException
+    {
+        path = folder.getRoot().getCanonicalPath() + File.separator;
+    }
+
+    @Test
     public void testDefault()
     {
         {
-            String[] commandArgs = { "-o", "/tmp/w.viv" };
+            String[] commandArgs = { "-o", path + "w.viv" };
             CreateWorld.main(commandArgs);
         }
     }
@@ -17,11 +33,11 @@ public class CreateWorldTest
     public void testWithBlueprint()
     {
         {
-            String[] commandArgs = { "-o", "/tmp/b.viv" };
+            String[] commandArgs = { "-o", path + "b.viv" };
             CreateBlueprint.main(commandArgs);
         }
         {
-            String[] commandArgs = { "-o", "/tmp/w.viv", "-b", "/tmp/b.viv" };
+            String[] commandArgs = { "-o", path + "w.viv", "-b", path + "b.viv" };
             CreateWorld.main(commandArgs);
         }
     }

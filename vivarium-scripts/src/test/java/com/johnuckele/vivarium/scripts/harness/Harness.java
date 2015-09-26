@@ -15,7 +15,7 @@ public class Harness
     public void testWorldBuildWorkflow()
     {
         {
-            String[] commandArgs = { "-o", "/tmp/af.viv", "auditType", "CENSUS" };
+            String[] commandArgs = { "-o", "/tmp/af.viv", "-t", "CENSUS" };
             CreateAuditFunction.main(commandArgs);
         }
 
@@ -40,15 +40,15 @@ public class Harness
         }
 
         {
-            String[] commandArgs = { "/tmp/w.viv", "10", "/tmp/w2.viv" };
+            String[] commandArgs = { "-i", "/tmp/w.viv", "-t", "10", "-o", "/tmp/w2.viv" };
             RunSimulation.main(commandArgs);
         }
         {
-            String[] commandArgs = { "/tmp/w2.viv", "10", "/tmp/w3.viv" };
+            String[] commandArgs = { "-i", "/tmp/w2.viv", "-t", "10", "-o", "/tmp/w3.viv" };
             RunSimulation.main(commandArgs);
         }
         {
-            String[] commandArgs = { "/tmp/w3.viv", "10", "/tmp/w4.viv" };
+            String[] commandArgs = { "-i", "/tmp/w3.viv", "-t", "10", "-o", "/tmp/w4.viv" };
             RunSimulation.main(commandArgs);
         }
     }
