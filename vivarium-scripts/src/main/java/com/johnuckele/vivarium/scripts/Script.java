@@ -23,6 +23,5 @@ public abstract class Script
     protected void printUsageAndExit()
     {
         System.out.println(getUsage());
-        System.exit(0);
     }
 }

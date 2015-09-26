@@ -121,6 +121,5 @@ public abstract class CommonsScript
         formatter.printHelp(100,
                 this.getClass().getSimpleName() + requiredOptionsString + " [additional options]" + getExtraArgString(),
                 this.getUsageHeader(), fullOptions, this.getUsageFooter());
-        System.exit(0);
     }
 }
