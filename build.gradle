@@ -155,9 +155,15 @@ project(':vivarium-scripts') {
     }
 }
 
-project(':vivarium-swing') {
+project(':vivarium-visualization') {
     dependencies {
         compile project(':vivarium-core')
+    }
+}
+
+project(':vivarium-swing') {
+    dependencies {
+        compile project(':vivarium-visualization')
         compile project(':vivarium-scripts')
 	compile 'net.java.dev.jna:jna-platform:4.0.0'
     }
@@ -176,7 +182,7 @@ project(':vivarium-web') {
     }
 
     dependencies {
-        compile project(':vivarium-core')
+        compile project(':vivarium-visualization')
 	compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
     }
 }
