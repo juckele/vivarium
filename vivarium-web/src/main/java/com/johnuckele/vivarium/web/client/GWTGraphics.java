@@ -1,9 +1,5 @@
 package com.johnuckele.vivarium.web.client;
 
-import java.awt.Image;
-
-import javax.swing.ImageIcon;
-
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 import com.johnuckele.vivarium.core.Direction;
@@ -28,9 +24,15 @@ public class GWTGraphics extends GraphicalSystem
     @Override
     public void drawImage(int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Direction heading)
     {
+        int blockSize = dx2 - dx1;
+        _context.translate(dx1 + blockSize / 2.0, dy1 + blockSize / 2.0);
         _context.rotate(-Direction.getRadiansFromNorth(heading));
-        _context.drawImage(_imageElement, sx1, sy1, sx2 - sx1, sy2 - sy1, dx1, dy1, dx2 - dx1, dy2 - dy1);
+
+        _context.drawImage(_imageElement, sx1, sy1, sx2 - sx1, sy2 - sy1, -blockSize / 2.0, -blockSize / 2.0, blockSize,
+                blockSize);
+
         _context.rotate(Direction.getRadiansFromNorth(heading));
+        _context.translate(-dx1 - blockSize / 2.0, -dy1 - blockSize / 2.0);
     }
 
 }
