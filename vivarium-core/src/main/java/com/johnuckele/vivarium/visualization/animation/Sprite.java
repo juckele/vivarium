@@ -1,4 +1,4 @@
-package com.johnuckele.vivarium.visualization;
+package com.johnuckele.vivarium.visualization.animation;
 
 public enum Sprite
 {

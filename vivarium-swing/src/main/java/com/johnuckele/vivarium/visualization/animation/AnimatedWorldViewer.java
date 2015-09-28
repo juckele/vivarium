@@ -138,7 +138,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
 
         // Render vivarium simulation
         _swingGraphics.setResources(g2, this);
-        com.johnuckele.vivarium.visualization.WorldRenderer.renderWorld(_swingGraphics, _world, null, 0);
+        WorldRenderer.renderWorld(_swingGraphics, _world, null, 0);
         // WorldRenderer.terrainRender(g2, _world, this);
         // WorldRenderer.actorRender(g2, _world, this, (int) (System.currentTimeMillis() % 1000));
 

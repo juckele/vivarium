@@ -1,4 +1,4 @@
-package com.johnuckele.vivarium.visualization;
+package com.johnuckele.vivarium.visualization.animation;
 
 import com.johnuckele.vivarium.core.Direction;
 
