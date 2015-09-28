@@ -15,6 +15,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwtstreamer.client.Streamer;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.core.World;
+import com.johnuckele.vivarium.visualization.animation.SpriteRenderer;
 import com.johnuckele.vivarium.visualization.animation.WorldRenderer;
 
 public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
@@ -25,7 +27,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     Context2d context;
     Image spriteImage;
     ImageElement spriteImageElement;
-    WebWorld world;
+    World world;
     SpriteRenderer renderer;
     double lastTickTimestamp = 0;
     int tick = 0;
@@ -40,7 +42,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         species.add(s);
         blueprint.setSpecies(species);
         blueprint.setSize(40);
-        world = new WebWorld(blueprint);
+        world = new World(blueprint);
         gwtGraphics = new GWTGraphics();
         displayWorld();
     }
@@ -64,7 +66,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         // The renderer is used as a mid level tool to draw sprites
         // on the canvas
         gwtGraphics.setResources(context, spriteImageElement);
-        renderer = new SpriteRenderer(context, spriteImageElement);
 
         // Once we add this image, the browser will start loading and pick up
         // again in this.onLoad
@@ -75,7 +76,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     {
         // Do a base render, placing all of the fixed walls and filling the
         // florrs
-        world.terrainRender(renderer);
+        WorldRenderer.renderWorld(gwtGraphics, world, null, 0);
         // Once we've done the base render, we'll kick off the ongoing
         // animations
         AnimationScheduler.get().requestAnimationFrame(this);
@@ -112,12 +113,9 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 world.tick();
             }
         }
-        WebWorld worldCopy = Streamer.get().deepCopy(world);
+        World worldCopy = Streamer.get().deepCopy(world);
 
         WorldRenderer.renderWorld(gwtGraphics, worldCopy, null, 0);
-        // worldCopy.terrainRender(renderer);
-        // int milliseconds = (int) (timestamp % 1000);
-        // worldCopy.actorRender(renderer, milliseconds);
 
         // No reason to ever stop animating...
         AnimationScheduler.get().requestAnimationFrame(this);
