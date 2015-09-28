@@ -32,6 +32,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
 
     // Animation variables
     private AnimationThread _animationThread;
+    private SwingGraphics _swingGraphics;
 
     // UI variables
     private UIThread _uiThread;
@@ -107,6 +108,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
     public AnimatedWorldViewer(World w)
     {
         _world = w;
+        _swingGraphics = new SwingGraphics();
         this.setVisible(true);
         this.setSize(800, 600);
         _animationThread = new AnimationThread();
@@ -135,8 +137,10 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         g2.fillRect(0, 0, _window.getWidth(), _window.getHeight());
 
         // Render vivarium simulation
-        WorldRenderer.terrainRender(g2, _world, this);
-        WorldRenderer.actorRender(g2, _world, this, (int) (System.currentTimeMillis() % 1000));
+        _swingGraphics.setResources(g2, this);
+        com.johnuckele.vivarium.visualization.WorldRenderer.renderWorld(_swingGraphics, _world, null, 0);
+        // WorldRenderer.terrainRender(g2, _world, this);
+        // WorldRenderer.actorRender(g2, _world, this, (int) (System.currentTimeMillis() % 1000));
 
         Toolkit.getDefaultToolkit().sync();
     }
