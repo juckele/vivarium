@@ -7,7 +7,6 @@ import java.awt.image.ImageObserver;
 import javax.swing.ImageIcon;
 
 import com.johnuckele.vivarium.core.Direction;
-import com.johnuckele.vivarium.visualization.GraphicalSystem;
 
 public class SwingGraphics extends GraphicalSystem
 {
@@ -31,9 +30,9 @@ public class SwingGraphics extends GraphicalSystem
     @Override
     public void drawImage(int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Direction heading)
     {
-        _graphics.rotate(-Direction.getRadiansFromNorth(heading), (dx1 + dx2) / 2, (dy1 + dy2) / 2);
+        _graphics.rotate(-Direction.getRadiansFromNorth(heading), (dx1 + dx2) / 2.0, (dy1 + dy2) / 2.0);
         _graphics.drawImage(IMAGE, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, _observer);
-        _graphics.rotate(Direction.getRadiansFromNorth(heading), (dx1 + dx2) / 2, (dy1 + dy2) / 2);
+        _graphics.rotate(Direction.getRadiansFromNorth(heading), (dx1 + dx2) / 2.0, (dy1 + dy2) / 2.0);
 
     }
 
