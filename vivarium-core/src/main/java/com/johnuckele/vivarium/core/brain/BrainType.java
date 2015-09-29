@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.johnuckele.vivarium.core.Species;
+import com.johnuckele.vivarium.visualization.RenderCode;
 
 public enum BrainType
 {
@@ -25,9 +26,9 @@ public enum BrainType
                 NeuralNetworkBrain standardDeviationBrain = NeuralNetworkBrain.standardDeviationBrain(brains,
                         medianBrain);
                 brainOutput.append("Average creature NN:\n");
-                brainOutput.append(medianBrain.toString());
+                brainOutput.append(medianBrain.render(RenderCode.BRAIN_WEIGHTS));
                 brainOutput.append("Std. Deviation on creature NNs:\n");
-                brainOutput.append(standardDeviationBrain.toString());
+                brainOutput.append(standardDeviationBrain.render(RenderCode.BRAIN_WEIGHTS));
                 /*
                  * Brain minBrain = Brain.minBrain(brains); brainOutput.append("Min creature NN:\n");
                  * brainOutput.append(minBrain.toString()); Brain maxBrain = Brain.maxBrain(brains); brainOutput.append(

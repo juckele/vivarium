@@ -48,6 +48,8 @@ public class Species implements MapSerializer
     private int _soundChannelCount = 0;
     @SerializedParameter
     private boolean _randomInitialization = false;
+    @SerializedParameter
+    private boolean _normalizeAfterMutation = false;
 
     // Mutation
     @SerializedParameter
@@ -94,6 +96,16 @@ public class Species implements MapSerializer
     public int getMaximumGestation()
     {
         return _maximumGestation;
+    }
+
+    public boolean getNormalizeAfterMutation()
+    {
+        return this._normalizeAfterMutation;
+    }
+
+    public void setNormalizeAfterMutation(boolean normalizeAfterMutation)
+    {
+        _normalizeAfterMutation = normalizeAfterMutation;
     }
 
     public double getMutationSmallScaleRate()

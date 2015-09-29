@@ -30,15 +30,16 @@ public class NeuralNetworkBrain extends Brain
     {
     }
 
-    public NeuralNetworkBrain(int inputCount, int outputCount, boolean randomInitialization)
+    public NeuralNetworkBrain(int inputCount, int outputCount, boolean randomInitialization, boolean normalize)
     {
         super();
         assert(inputCount > 0);
         assert(outputCount > 0);
-        constructWithDimensions(inputCount, outputCount, randomInitialization);
+        constructWithDimensions(inputCount, outputCount, randomInitialization, normalize);
     }
 
-    private void constructWithDimensions(int inputCount, int outputCount, boolean randomInitialization)
+    private void constructWithDimensions(int inputCount, int outputCount, boolean randomInitialization,
+            boolean normalize)
     {
         this._outputs = new double[outputCount];
         this._weights = new double[1][][]; // Store all NNs as multi-layer with no hidden layer for now
@@ -50,13 +51,17 @@ public class NeuralNetworkBrain extends Brain
                 _weights[0][j][k] = randomInitialization ? Rand.getRandomDouble() : 1;
             }
         }
+        if (normalize)
+        {
+            normalizeWeights();
+        }
     }
 
     public NeuralNetworkBrain(Species species, NeuralNetworkBrain brain1, NeuralNetworkBrain brain2)
     {
         // Construct the weight layer and store variables with the int based
         // constructor
-        this(brain1.getInputCount(), brain1.getOutputCount(), false);
+        this(brain1.getInputCount(), brain1.getOutputCount(), false, species.getNormalizeAfterMutation());
 
         // Set all the weights with
         for (int i = 0; i < _weights.length; i++)
@@ -131,6 +136,36 @@ public class NeuralNetworkBrain extends Brain
                             }
                         }
                     }
+                }
+            }
+        }
+        if (species.getNormalizeAfterMutation())
+        {
+            normalizeWeights();
+        }
+    }
+
+    private void normalizeWeights()
+    {
+        double sumOfSquares = 0;
+        for (int i = 0; i < _weights.length; i++)
+        {
+            for (int j = 0; j < _weights[i].length; j++)
+            {
+                for (int k = 0; k < _weights[i][j].length; k++)
+                {
+                    sumOfSquares += Math.pow(_weights[i][j][k], 2);
+                }
+            }
+        }
+        double vectorLength = Math.sqrt(sumOfSquares);
+        for (int i = 0; i < _weights.length; i++)
+        {
+            for (int j = 0; j < _weights[i].length; j++)
+            {
+                for (int k = 0; k < _weights[i][j].length; k++)
+                {
+                    _weights[i][j][k] /= vectorLength;
                 }
             }
         }
@@ -248,7 +283,7 @@ public class NeuralNetworkBrain extends Brain
             {
                 for (int k = 0; k < _weights[i][j].length; k++)
                 {
-                    double weight = _weights[i][j][k];
+                    double weight = (int) (1000 * _weights[i][j][k]) / 1000.0;
                     output.append(weight);
                     output.append('\t');
                 }
@@ -265,7 +300,7 @@ public class NeuralNetworkBrain extends Brain
 
     public static void main(String[] args)
     {
-        NeuralNetworkBrain brain = new NeuralNetworkBrain(3, 10, false);
+        NeuralNetworkBrain brain = new NeuralNetworkBrain(3, 10, false, false);
         System.out.println("Creating Brain...");
         System.out.println(brain);
         System.out.println("Brain Outputs for inputs");
@@ -287,7 +322,7 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain minBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain minBrain = new NeuralNetworkBrain(brains.get(0).getInputCount(),
-                brains.get(0).getOutputCount(), false);
+                brains.get(0).getOutputCount(), false, false);
         // Set all the weights with
         for (NeuralNetworkBrain brain : brains)
         {
@@ -309,7 +344,7 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain maxBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain maxBrain = new NeuralNetworkBrain(brains.get(0).getInputCount(),
-                brains.get(0).getOutputCount(), false);
+                brains.get(0).getOutputCount(), false, false);
         // Set all the weights with
         for (NeuralNetworkBrain brain : brains)
         {
@@ -330,7 +365,7 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain medianBrain(List<NeuralNetworkBrain> brains)
     {
         NeuralNetworkBrain medianBrain = new NeuralNetworkBrain(brains.get(0).getInputCount(),
-                brains.get(0).getOutputCount(), false);
+                brains.get(0).getOutputCount(), false, false);
         // Set all the weights with
         for (int i = 0; i < medianBrain._weights.length; i++)
         {
@@ -373,7 +408,7 @@ public class NeuralNetworkBrain extends Brain
             NeuralNetworkBrain medianBrain)
     {
         NeuralNetworkBrain standardDeviationBrain = new NeuralNetworkBrain(medianBrain.getInputCount(),
-                medianBrain.getOutputCount(), false);
+                medianBrain.getOutputCount(), false, false);
         for (int i = 0; i < standardDeviationBrain._weights.length; i++)
         {
             for (int j = 0; j < standardDeviationBrain._weights[i].length; j++)
@@ -427,17 +462,12 @@ public class NeuralNetworkBrain extends Brain
     public static NeuralNetworkBrain makeWithSpecies(Species species)
     {
         return new NeuralNetworkBrain(species.getTotalBrainInputCount(), species.getTotalBrainOutputCount(),
-                species.getRandomInitialization());
+                species.getRandomInitialization(), species.getNormalizeAfterMutation());
     }
 
     public static NeuralNetworkBrain makeWithParents(Species species, NeuralNetworkBrain parentBrain1,
             NeuralNetworkBrain parentBrain2)
     {
         return new NeuralNetworkBrain(species, parentBrain1, parentBrain2);
-    }
-
-    public static NeuralNetworkBrain makeWithDimensions(int inputCount, int outputCount, boolean b)
-    {
-        return new NeuralNetworkBrain(inputCount, outputCount, b);
     }
 }

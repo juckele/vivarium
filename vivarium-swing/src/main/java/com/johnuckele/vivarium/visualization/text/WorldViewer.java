@@ -9,7 +9,6 @@ import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.EntityType;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.core.brain.BrainType;
 import com.johnuckele.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial")
@@ -104,12 +103,13 @@ public class WorldViewer extends JFrame
         species1.setMutationRateExponent(-9);
         species1.setCreatureMemoryUnitCount(1);
         species1.setCreatureSoundChannelCount(1);
+        species1.setNormalizeAfterMutation(true);
         species.add(species1);
 
         // Build another
-        Species species2 = Species.makeDefault();
-        species2.setBrainType(BrainType.RANDOM);
-        species.add(species2);
+        // Species species2 = Species.makeDefault();
+        // species2.setBrainType(BrainType.RANDOM);
+        // species.add(species2);
 
         // Construct the world proper
         Blueprint blueprint = Blueprint.makeDefault();
@@ -121,7 +121,7 @@ public class WorldViewer extends JFrame
 
         // Run simulation
         WorldViewer wh = new WorldViewer(w);
-        wh.runAndRenderTicks(200000, 2000);
+        wh.runAndRenderTicks(20000000, 2000);
         // wh.runAndRenderTicks(20000, 1);
 
         System.out.println("Finished simulations");
