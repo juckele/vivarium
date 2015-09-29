@@ -17,6 +17,8 @@ public class GWTScheduler extends SchedulingDelegate
     @Override
     public void startFirstTime()
     {
+        // In GWT, on the first frame we want to request an Animation Frame as that's where we trigger our actual visual
+        // renders from and also where we call the scheduler again.
         AnimationScheduler.get().requestAnimationFrame(_webApp);
     }
 

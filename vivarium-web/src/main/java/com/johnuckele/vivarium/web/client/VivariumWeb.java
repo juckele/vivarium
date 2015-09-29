@@ -14,24 +14,17 @@ import com.google.gwt.user.client.ui.RootPanel;
 import com.johnuckele.vivarium.core.Blueprint;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
-import com.johnuckele.vivarium.visualization.animation.SpriteRenderer;
 import com.johnuckele.vivarium.visualization.animation.Visualizer;
 
 public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 {
     public static final int PIXEL_BLOCK_SIZE = 32;
 
-    Canvas canvas;
-    Context2d context;
-    Image spriteImage;
-    ImageElement spriteImageElement;
-    World world;
-    SpriteRenderer renderer;
-    double lastTickTimestamp = 0;
-    int tick = 0;
-    GWTGraphics gwtGraphics;
-    GWTScheduler gwtScheduler;
-    Visualizer visualizer;
+    private Canvas _canvas;
+    private World world;
+    private GWTGraphics gwtGraphics;
+    private GWTScheduler gwtScheduler;
+    private Visualizer visualizer;
 
     @Override
     public void onModuleLoad()
@@ -53,25 +46,24 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private void displayWorld()
     {
         // The canvas is our graphical space for all of the world display
-        canvas = Canvas.createIfSupported();
-        canvas.setCoordinateSpaceWidth(world.getWorldWidth() * VivariumWeb.PIXEL_BLOCK_SIZE);
-        canvas.setCoordinateSpaceHeight(world.getWorldHeight() * VivariumWeb.PIXEL_BLOCK_SIZE);
-        RootPanel.get().add(canvas);
-        context = canvas.getContext2d();
+        _canvas = Canvas.createIfSupported();
+        _canvas.setCoordinateSpaceWidth(world.getWorldWidth() * VivariumWeb.PIXEL_BLOCK_SIZE);
+        _canvas.setCoordinateSpaceHeight(world.getWorldHeight() * VivariumWeb.PIXEL_BLOCK_SIZE);
+        RootPanel.get().add(_canvas);
+        Context2d context = _canvas.getContext2d();
 
         // All of the sprites are loaded from a single sprites image
-        spriteImage = new Image();
+        Image spriteImage = new Image();
         spriteImage.setUrl("sprites.png");
-        spriteImageElement = ImageElement.as(spriteImage.getElement());
+        ImageElement spriteImageElement = ImageElement.as(spriteImage.getElement());
         spriteImage.addLoadHandler(this);
         spriteImage.setVisible(false);
 
-        // The renderer is used as a mid level tool to draw sprites
-        // on the canvas
+        // Give the canvases Context2d and the sprit ImageElement to the graphical delegate for future use.
         gwtGraphics.setResources(context, spriteImageElement);
 
-        // Once we add this image, the browser will start loading and pick up
-        // again in this.onLoad
+        // Once we add this image, the browser will start loading.
+        // When we get an event that load is completed, we can start doing work again.
         RootPanel.get().add(spriteImage);
     }
 
