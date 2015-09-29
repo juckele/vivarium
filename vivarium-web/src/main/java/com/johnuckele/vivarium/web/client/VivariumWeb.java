@@ -2,7 +2,6 @@ package com.johnuckele.vivarium.web.client;
 
 import java.util.ArrayList;
 
-import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -42,7 +41,8 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         ArrayList<Species> species = new ArrayList<Species>();
         species.add(s);
         blueprint.setSpecies(species);
-        blueprint.setSize(40);
+        blueprint.setSize(30);
+        blueprint.setWidth(45);
         world = new World(blueprint);
         gwtGraphics = new GWTGraphics(this);
         gwtScheduler = new GWTScheduler(this);
@@ -54,7 +54,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     {
         // The canvas is our graphical space for all of the world display
         canvas = Canvas.createIfSupported();
-        canvas.setCoordinateSpaceWidth(world.getWorldHeight() * VivariumWeb.PIXEL_BLOCK_SIZE);
+        canvas.setCoordinateSpaceWidth(world.getWorldWidth() * VivariumWeb.PIXEL_BLOCK_SIZE);
         canvas.setCoordinateSpaceHeight(world.getWorldHeight() * VivariumWeb.PIXEL_BLOCK_SIZE);
         RootPanel.get().add(canvas);
         context = canvas.getContext2d();
@@ -77,9 +77,8 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 
     private void allImagesLoaded()
     {
+        // Start the visualizer as soon as everything is loaded.
         visualizer.start();
-        AnimationScheduler.get().requestAnimationFrame(this);
-
     }
 
     @Override
