@@ -43,7 +43,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         blueprint.setSpecies(species);
         blueprint.setSize(40);
         world = new World(blueprint);
-        gwtGraphics = new GWTGraphics();
+        gwtGraphics = new GWTGraphics(this);
         displayWorld();
     }
 
@@ -75,7 +75,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private void allImagesLoaded()
     {
         // Do a base render, placing all of the fixed walls and filling the
-        // florrs
+        // floors
         WorldRenderer.renderWorld(gwtGraphics, world, null, 0);
         // Once we've done the base render, we'll kick off the ongoing
         // animations

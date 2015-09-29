@@ -2,9 +2,9 @@ package com.johnuckele.vivarium.visualization.animation;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
-import java.awt.image.ImageObserver;
 
 import javax.swing.ImageIcon;
+import javax.swing.JPanel;
 
 import com.johnuckele.vivarium.core.Direction;
 
@@ -14,17 +14,16 @@ public class SwingGraphics extends GraphicalSystem
     private static Image IMAGE = IMAGE_ICON.getImage();
 
     private Graphics2D _graphics;
-    private ImageObserver _observer;
+    private JPanel _observer;
 
-    public SwingGraphics()
+    public SwingGraphics(JPanel observer)
     {
-
+        _observer = observer;
     }
 
-    public void setResources(Graphics2D graphics, ImageObserver observer)
+    public void setResources(Graphics2D graphics)
     {
         _graphics = graphics;
-        _observer = observer;
     }
 
     @Override
@@ -34,6 +33,12 @@ public class SwingGraphics extends GraphicalSystem
         _graphics.drawImage(IMAGE, dx1, dy1, dx2, dy2, sx1, sy1, sx2, sy2, _observer);
         _graphics.rotate(Direction.getRadiansFromNorth(heading), (dx1 + dx2) / 2.0, (dy1 + dy2) / 2.0);
 
+    }
+
+    @Override
+    public void requestRender()
+    {
+        _observer.repaint();
     }
 
 }

@@ -1,5 +1,6 @@
 package com.johnuckele.vivarium.web.client;
 
+import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 import com.johnuckele.vivarium.core.Direction;
@@ -9,10 +10,11 @@ public class GWTGraphics extends GraphicalSystem
 {
     private Context2d _context;
     private ImageElement _imageElement;
+    private VivariumWeb _webApp;
 
-    public GWTGraphics()
+    public GWTGraphics(VivariumWeb webApp)
     {
-
+        _webApp = webApp;
     }
 
     public void setResources(Context2d context, ImageElement imageElement)
@@ -35,4 +37,9 @@ public class GWTGraphics extends GraphicalSystem
         _context.translate(-dx1 - blockSize / 2.0, -dy1 - blockSize / 2.0);
     }
 
+    @Override
+    public void requestRender()
+    {
+        AnimationScheduler.get().requestAnimationFrame(_webApp);
+    }
 }

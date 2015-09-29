@@ -63,7 +63,7 @@ public class Visualizer
                     {
                         Thread.sleep(PAUSE_SLEEP);
                     }
-                    WorldRenderer.renderWorld(_graphicalSystem, _world, _world, 0);
+                    _graphicalSystem.requestRender();
                     Thread.sleep(ANIMATION_SLEEP);
                 }
                 catch (InterruptedException e)
