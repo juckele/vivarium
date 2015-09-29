@@ -2,7 +2,6 @@ package com.johnuckele.vivarium.visualization.animation;
 
 public class ThreadScheduler extends SchedulingDelegate
 {
-    private Visualizer _visualizer;
     private SimulationThread _simulationThread;
 
     private AnimationThread _animationThread;
@@ -11,12 +10,6 @@ public class ThreadScheduler extends SchedulingDelegate
     {
         _simulationThread = new SimulationThread();
         _animationThread = new AnimationThread();
-    }
-
-    @Override
-    protected void registerVisualizer(Visualizer visualizer)
-    {
-        _visualizer = visualizer;
     }
 
     @Override

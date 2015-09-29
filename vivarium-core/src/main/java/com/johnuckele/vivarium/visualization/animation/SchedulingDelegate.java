@@ -6,6 +6,8 @@ public abstract class SchedulingDelegate
     protected static final long ANIMATION_SLEEP = 25;
     protected static final long SIMULATION_SLEEP = 1000;
 
+    protected Visualizer _visualizer;
+
     protected boolean _paused;
     protected boolean _started;
 
@@ -23,7 +25,10 @@ public abstract class SchedulingDelegate
         }
     }
 
-    protected abstract void registerVisualizer(Visualizer visualizer);
+    private void registerVisualizer(Visualizer visualizer)
+    {
+        _visualizer = visualizer;
+    }
 
     public abstract void startFirstTime();
 
