@@ -1,14 +1,16 @@
 package com.johnuckele.vivarium.visualization.animation;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Image;
+import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 import com.johnuckele.vivarium.core.Direction;
 
-public class SwingGraphics extends GraphicalSystem
+public class SwingGraphics extends GraphicalDelegate
 {
     private static ImageIcon IMAGE_ICON = new ImageIcon("src/main/resources/sprites.png");
     private static Image IMAGE = IMAGE_ICON.getImage();
@@ -27,6 +29,19 @@ public class SwingGraphics extends GraphicalSystem
     }
 
     @Override
+    protected void startFrameRender()
+    {
+        _graphics.setColor(Color.BLACK);
+        _graphics.fillRect(0, 0, _observer.getWidth(), _observer.getHeight());
+    }
+
+    @Override
+    protected void endFrameRender()
+    {
+        Toolkit.getDefaultToolkit().sync();
+    }
+
+    @Override
     public void drawImage(int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2, Direction heading)
     {
         _graphics.rotate(-Direction.getRadiansFromNorth(heading), (dx1 + dx2) / 2.0, (dy1 + dy2) / 2.0);
@@ -40,5 +55,4 @@ public class SwingGraphics extends GraphicalSystem
     {
         _observer.repaint();
     }
-
 }

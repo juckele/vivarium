@@ -4,9 +4,9 @@ import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 import com.johnuckele.vivarium.core.Direction;
-import com.johnuckele.vivarium.visualization.animation.GraphicalSystem;
+import com.johnuckele.vivarium.visualization.animation.GraphicalDelegate;
 
-public class GWTGraphics extends GraphicalSystem
+public class GWTGraphics extends GraphicalDelegate
 {
     private Context2d _context;
     private ImageElement _imageElement;
@@ -41,5 +41,17 @@ public class GWTGraphics extends GraphicalSystem
     public void requestRender()
     {
         AnimationScheduler.get().requestAnimationFrame(_webApp);
+    }
+
+    @Override
+    protected void startFrameRender()
+    {
+        // Do nothing
+    }
+
+    @Override
+    protected void endFrameRender()
+    {
+        // Do nothing
     }
 }

@@ -71,12 +71,12 @@ public class SpriteRenderer
         }
     };
 
-    public static void drawSprite(GraphicalSystem graphicalSystem, Sprite sprite, int x, int y)
+    public static void drawSprite(GraphicalDelegate graphicalSystem, Sprite sprite, int x, int y)
     {
         drawSprite(graphicalSystem, sprite, x, y, Direction.NORTH);
     }
 
-    public static void drawSprite(GraphicalSystem graphicalSystem, Sprite sprite, int x, int y, Direction heading)
+    public static void drawSprite(GraphicalDelegate graphicalSystem, Sprite sprite, int x, int y, Direction heading)
     {
         graphicalSystem.drawImage(RENDER_PIXEL_BLOCK_SIZE * x, RENDER_PIXEL_BLOCK_SIZE * y,
                 RENDER_PIXEL_BLOCK_SIZE * x + RENDER_PIXEL_BLOCK_SIZE,

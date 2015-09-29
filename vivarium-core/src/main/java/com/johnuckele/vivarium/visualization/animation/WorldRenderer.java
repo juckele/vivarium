@@ -6,13 +6,13 @@ import com.johnuckele.vivarium.core.World;
 
 public abstract class WorldRenderer
 {
-    public static void renderWorld(GraphicalSystem graphicalSystem, World w1, World w2, double interpolation)
+    public static void renderWorld(GraphicalDelegate graphicalSystem, World w1, World w2, double interpolation)
     {
         terrainRender(graphicalSystem, w1);
         actorRender(graphicalSystem, w1, (int) (System.currentTimeMillis() % 1000));
     }
 
-    private static void terrainRender(GraphicalSystem graphicalSystem, World w)
+    private static void terrainRender(GraphicalDelegate graphicalSystem, World w)
     {
         // Draw the exterior walls
         for (int i = 0; i < w.getWorldWidth(); i++)
@@ -44,7 +44,7 @@ public abstract class WorldRenderer
         }
     }
 
-    private static void actorRender(GraphicalSystem graphicalSystem, World w, int milliseconds)
+    private static void actorRender(GraphicalDelegate graphicalSystem, World w, int milliseconds)
     {
         // Draw creatures and food
         for (int i = 1; i < w.getWorldHeight() - 1; i++)

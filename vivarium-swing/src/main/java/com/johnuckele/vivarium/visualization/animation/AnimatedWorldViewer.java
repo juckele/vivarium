@@ -1,9 +1,7 @@
 package com.johnuckele.vivarium.visualization.animation;
 
-import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
@@ -27,12 +25,11 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
     private static final long serialVersionUID = -3105685457075818705L;
 
     // Simulation variables
-    private SimulationThread _simulationThread;
-    private World _world;
+    private Visualizer _visualizer;
 
     // Animation variables
-    private AnimationThread _animationThread;
     private SwingGraphics _swingGraphics;
+    private ThreadScheduler _threadScheduler;
 
     // UI variables
     private UIThread _uiThread;
@@ -64,62 +61,17 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         }
     }
 
-    private class AnimationThread extends Thread
-    {
-        @Override
-        public void run()
-        {
-            while (true)
-            {
-                try
-                {
-                    repaint();
-                    Thread.sleep(25);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private class SimulationThread extends Thread
-    {
-        @Override
-        public void run()
-        {
-            while (true)
-            {
-                try
-                {
-                    System.out.println("Ticking the world!");
-                    _world.tick();
-                    Thread.sleep(1000);
-                }
-                catch (InterruptedException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
     public AnimatedWorldViewer(World w)
     {
-        _world = w;
         _swingGraphics = new SwingGraphics(this);
-        this.setVisible(true);
-        this.setSize(800, 600);
-        _animationThread = new AnimationThread();
-        _simulationThread = new SimulationThread();
+        _threadScheduler = new ThreadScheduler();
+        _visualizer = new Visualizer(w, _swingGraphics, _threadScheduler);
         _uiThread = new UIThread();
     }
 
     public void startHelperThreads()
     {
-        _animationThread.start();
-        _simulationThread.start();
+        _visualizer.start();
         _uiThread.start();
     }
 
@@ -128,21 +80,12 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
     {
         super.paintComponent(g);
 
-        // Get the graphics component and set do any required set up
+        // Get the graphics for the graphical delegate
         Graphics2D g2 = (Graphics2D) g;
-        // g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-        // Background
-        g2.setColor(Color.BLACK);
-        g2.fillRect(0, 0, _window.getWidth(), _window.getHeight());
-
-        // Render vivarium simulation
         _swingGraphics.setResources(g2);
-        WorldRenderer.renderWorld(_swingGraphics, _world, null, 0);
-        // WorldRenderer.terrainRender(g2, _world, this);
-        // WorldRenderer.actorRender(g2, _world, this, (int) (System.currentTimeMillis() % 1000));
 
-        Toolkit.getDefaultToolkit().sync();
+        // Hand off to the graphical delegate to perform the render
+        _swingGraphics.renderFrame();
     }
 
     public static void main(String[] args)
