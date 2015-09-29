@@ -12,12 +12,12 @@
        in a finally block. -->
   <Match>
     <Bug pattern="OBL_UNSATISFIED_OBLIGATION_EXCEPTION_EDGE"/>
-    <Class name="com.johnuckele.vivarium.scripts.ScriptIO"/>
+    <Class name="io.vivarium.scripts.ScriptIO"/>
     <Method name="saveStringToFile"/>
   </Match>
   <!-- AnimatedWorldViewer is a top level UI (Application) and is allowed to close the VM -->
   <Match>
     <Bug pattern="DM_EXIT"/>
-    <Class name="com.johnuckele.vivarium.visualization.animation.AnimatedWorldViewer"/>
+    <Class name="io.vivarium.visualization.animation.AnimatedWorldViewer"/>
   </Match>
 </FindBugsFilter>

@@ -107,31 +107,31 @@ project(':vivarium-scripts') {
 
     task jarConvertFileFormat( type: OneJar ) {
         archiveName = 'convert-file-format'+'-'+version+'.jar'
-        mainClass = 'com.johnuckele.vivarium.scripts.ConvertFileFormat'
+        mainClass = 'io.vivarium.scripts.ConvertFileFormat'
     }
     task jarCreateAuditFunction( type: OneJar ) {
         archiveName = 'create-audit-function'+'-'+version+'.jar'
-        mainClass = 'com.johnuckele.vivarium.scripts.CreateAuditFunction'
+        mainClass = 'io.vivarium.scripts.CreateAuditFunction'
     }
     task jarCreateBlueprint( type: OneJar ) {
         archiveName = 'create-blueprint'+'-'+version+'.jar'
-        mainClass = 'com.johnuckele.vivarium.scripts.CreateBlueprint'
+        mainClass = 'io.vivarium.scripts.CreateBlueprint'
     }
     task jarCreateSpecies( type: OneJar ) {
         archiveName = 'create-species'+'-'+version+'.jar'
-        mainClass = 'com.johnuckele.vivarium.scripts.CreateSpecies'
+        mainClass = 'io.vivarium.scripts.CreateSpecies'
     }
     task jarCreateWorld( type: OneJar ) {
         archiveName = 'create-world'+'-'+version+'.jar'
-        mainClass = 'com.johnuckele.vivarium.scripts.CreateWorld'
+        mainClass = 'io.vivarium.scripts.CreateWorld'
     }
     task jarExtractCreatureFromWorld( type: OneJar ) {
         archiveName = 'extract-creature-from-world'+'-'+version+'.jar'
-        mainClass = 'com.johnuckele.vivarium.scripts.ExtractCreatureFromWorld'
+        mainClass = 'io.vivarium.scripts.ExtractCreatureFromWorld'
     }
     task jarRunSimulation( type: OneJar ) {
         archiveName = 'run-simulation'+'-'+version+'.jar'
-        mainClass = 'com.johnuckele.vivarium.scripts.RunSimulation'
+        mainClass = 'io.vivarium.scripts.RunSimulation'
     }
 
     task jarCollection {
@@ -170,7 +170,7 @@ project(':vivarium-web') {
     gwt {
         gwtVersion='2.7.0'
 
-    	modules 'com.johnuckele.vivarium.web.VivariumWeb'
+    	modules 'io.vivarium.web.VivariumWeb'
 
 	src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
     }
