@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import com.johnuckele.vivarium.core.Blueprint;
+import com.johnuckele.vivarium.core.Creature;
 import com.johnuckele.vivarium.core.Species;
 import com.johnuckele.vivarium.core.World;
 import com.johnuckele.vivarium.visualization.util.Fullscreen;
@@ -185,6 +186,11 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
     public void mousePressed(MouseEvent arg0)
     {
         updateMouseCursor();
+        int blockX = arg0.getX() / SpriteRenderer.RENDER_PIXEL_BLOCK_SIZE;
+        int blockY = arg0.getY() / SpriteRenderer.RENDER_PIXEL_BLOCK_SIZE;
+        Creature c = _visualizer.getWorld().getCreature(blockY, blockX);
+        int selectedCreatureID = c != null ? c.getID() : -1;
+        _visualizer.setSelectedCreatureID(selectedCreatureID);
     }
 
     @Override

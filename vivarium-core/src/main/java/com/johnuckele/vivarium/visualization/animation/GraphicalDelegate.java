@@ -6,6 +6,7 @@ import com.johnuckele.vivarium.core.World;
 public abstract class GraphicalDelegate
 {
     protected World _renderWorld;
+    int _selectedCreatureID;
 
     public abstract void drawImage(int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2,
             Direction heading);
@@ -17,7 +18,7 @@ public abstract class GraphicalDelegate
         startFrameRender();
         if (_renderWorld != null)
         {
-            WorldRenderer.renderWorld(this, _renderWorld, null, 0);
+            WorldRenderer.renderWorld(this, _renderWorld, null, 0, _selectedCreatureID);
         }
         endFrameRender();
     }
@@ -26,9 +27,10 @@ public abstract class GraphicalDelegate
 
     protected abstract void endFrameRender();
 
-    public final void render(World world)
+    public final void render(World world, int selectedCreatureID)
     {
         _renderWorld = world;
+        _selectedCreatureID = selectedCreatureID;
         requestRender();
     }
 }

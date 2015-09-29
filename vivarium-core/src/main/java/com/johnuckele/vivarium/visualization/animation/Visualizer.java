@@ -11,6 +11,8 @@ public class Visualizer
     private GraphicalDelegate _graphicalSystem;
     private SchedulingDelegate _schedulingSystem;
 
+    private int _selectedCreatureID = 42;
+
     public Visualizer(World world, GraphicalDelegate graphicalSystem, SchedulingDelegate schedulingSystem)
     {
         _world = world;
@@ -20,7 +22,7 @@ public class Visualizer
 
     public void renderWorld()
     {
-        _graphicalSystem.render(_world);
+        _graphicalSystem.render(_world, _selectedCreatureID);
     }
 
     public void tickWorld()
@@ -31,5 +33,15 @@ public class Visualizer
     public void start()
     {
         _schedulingSystem.start(this);
+    }
+
+    public World getWorld()
+    {
+        return _world;
+    }
+
+    public void setSelectedCreatureID(int selectedCreatureID)
+    {
+        _selectedCreatureID = selectedCreatureID;
     }
 }
