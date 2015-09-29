@@ -79,13 +79,9 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 
     private void allImagesLoaded()
     {
-        visualizer.start();
-        // Do a base render, placing all of the fixed walls and filling the
-        // floorsmsg
-        // WorldRenderer.renderWorld(gwtGraphics, world, null, 0);
-        // Once we've done the base render, we'll kick off the ongoing
-        // animations
-        // AnimationScheduler.get().requestAnimationFrame(this);
+        // visualizer.start();
+        AnimationScheduler.get().requestAnimationFrame(this);
+
     }
 
     @Override
