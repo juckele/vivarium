@@ -1,1 +1,1 @@
-include 'vivarium-core', 'vivarium-serialization', 'vivarium-ga', 'vivarium-graph', 'vivarium-scripts', 'vivarium-swing', 'vivarium-web'
+include 'vivarium-core', 'vivarium-serialization', 'vivarium-server', 'vivarium-ga', 'vivarium-graph', 'vivarium-scripts', 'vivarium-swing', 'vivarium-web'

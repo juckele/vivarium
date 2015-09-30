@@ -89,6 +89,13 @@ project(':vivarium-serialization') {
     }
 }
 
+project(':vivarium-server') {
+    dependencies {
+        compile project(':vivarium-core')
+        compile project(':vivarium-serialization')
+    }
+}
+
 project(':vivarium-ga') {
     dependencies {
         compile project(':vivarium-core')
