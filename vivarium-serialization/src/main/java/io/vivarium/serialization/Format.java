@@ -1,4 +1,4 @@
-package io.vivarium.scripts;
+package io.vivarium.serialization;
 
 import java.util.Arrays;
 

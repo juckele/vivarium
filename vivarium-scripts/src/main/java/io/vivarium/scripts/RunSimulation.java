@@ -7,6 +7,8 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import io.vivarium.core.World;
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 
 public class RunSimulation extends CommonsScript
 {
@@ -39,7 +41,7 @@ public class RunSimulation extends CommonsScript
     {
         // Load the file
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
-        World world = (World) ScriptIO.loadObject(inputFile, Format.JSON);
+        World world = (World) FileIO.loadObject(inputFile, Format.JSON);
 
         int tickCount = Integer.parseInt(commandLine.getOptionValue(TICKS));
         for (int i = 0; i < tickCount; i++)
@@ -49,7 +51,7 @@ public class RunSimulation extends CommonsScript
 
         // Save the blueprint
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        ScriptIO.saveSerializer(world, outputFile, Format.JSON);
+        FileIO.saveSerializer(world, outputFile, Format.JSON);
     }
 
     @Override

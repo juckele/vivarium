@@ -1,4 +1,4 @@
-package io.vivarium.scripts;
+package io.vivarium.serialization;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -8,10 +8,10 @@ import java.util.Collection;
 import java.util.Scanner;
 
 import com.googlecode.gwtstreamer.client.Streamer;
-import io.vivarium.scripts.json.JSONConverter;
-import io.vivarium.serialization.MapSerializer;
 
-public class ScriptIO
+import io.vivarium.util.UserFacingError;
+
+public class FileIO
 {
     public static void saveSerializer(MapSerializer serializer, String fileName, Format f)
     {

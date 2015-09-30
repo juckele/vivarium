@@ -11,6 +11,8 @@ import org.apache.commons.cli.Option;
 import io.vivarium.audit.AuditFunction;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializationEngine;
 
@@ -51,7 +53,7 @@ public class CreateBlueprint extends CommonsScript
             try
             {
                 auditFile = commandLine.getOptionValue(AUDIT_INPUT_FILE);
-                for (MapSerializer mapSerializer : ScriptIO.loadObjects(auditFile, Format.JSON))
+                for (MapSerializer mapSerializer : FileIO.loadObjects(auditFile, Format.JSON))
                 {
                     auditFunctions.add((AuditFunction) mapSerializer);
                 }
@@ -73,7 +75,7 @@ public class CreateBlueprint extends CommonsScript
             try
             {
                 speciesFile = commandLine.getOptionValue(SPECIES_INPUT_FILE);
-                for (MapSerializer mapSerializer : ScriptIO.loadObjects(speciesFile, Format.JSON))
+                for (MapSerializer mapSerializer : FileIO.loadObjects(speciesFile, Format.JSON))
                 {
                     species.add((Species) mapSerializer);
                 }
@@ -105,7 +107,7 @@ public class CreateBlueprint extends CommonsScript
 
         // Save the blueprint
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        ScriptIO.saveSerializer(blueprint, outputFile, Format.JSON);
+        FileIO.saveSerializer(blueprint, outputFile, Format.JSON);
     }
 
     @Override

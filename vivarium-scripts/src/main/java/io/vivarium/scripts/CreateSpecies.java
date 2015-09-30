@@ -8,6 +8,8 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import io.vivarium.core.Species;
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
 
 public class CreateSpecies extends CommonsScript
@@ -39,7 +41,7 @@ public class CreateSpecies extends CommonsScript
 
         // Save the blueprint
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        ScriptIO.saveSerializer(species, outputFile, Format.JSON);
+        FileIO.saveSerializer(species, outputFile, Format.JSON);
     }
 
     @Override

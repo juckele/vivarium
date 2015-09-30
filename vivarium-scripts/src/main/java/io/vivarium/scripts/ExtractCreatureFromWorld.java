@@ -8,6 +8,8 @@ import org.apache.commons.cli.Option;
 
 import io.vivarium.core.Creature;
 import io.vivarium.core.World;
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 import io.vivarium.util.Rand;
 
 public class ExtractCreatureFromWorld extends CommonsScript
@@ -42,7 +44,7 @@ public class ExtractCreatureFromWorld extends CommonsScript
         String worldFile = commandLine.getOptionValue(WORLD_INPUT_FILE);
         try
         {
-            world = (World) ScriptIO.loadObject(worldFile, Format.JSON);
+            world = (World) FileIO.loadObject(worldFile, Format.JSON);
         }
         catch (ClassCastException e)
         {
@@ -75,7 +77,7 @@ public class ExtractCreatureFromWorld extends CommonsScript
 
         // Save the creature
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        ScriptIO.saveSerializer(creature, outputFile, Format.JSON);
+        FileIO.saveSerializer(creature, outputFile, Format.JSON);
 
     }
 

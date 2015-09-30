@@ -1,4 +1,4 @@
-package io.vivarium.scripts;
+package io.vivarium.util;
 
 public class UserFacingError extends RuntimeException
 {

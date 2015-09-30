@@ -8,6 +8,8 @@ import org.apache.commons.cli.Option;
 
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.World;
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 
 public class CreateWorld extends CommonsScript
 {
@@ -44,7 +46,7 @@ public class CreateWorld extends CommonsScript
             try
             {
                 blueprintFile = commandLine.getOptionValue(BLUEPRINT_INPUT_FILE);
-                blueprint = (Blueprint) ScriptIO.loadObject(blueprintFile, Format.JSON);
+                blueprint = (Blueprint) FileIO.loadObject(blueprintFile, Format.JSON);
             }
             catch (ClassCastException e)
             {
@@ -68,7 +70,7 @@ public class CreateWorld extends CommonsScript
 
         // Save the world
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        ScriptIO.saveSerializer(world, outputFile, Format.JSON);
+        FileIO.saveSerializer(world, outputFile, Format.JSON);
     }
 
     @Override

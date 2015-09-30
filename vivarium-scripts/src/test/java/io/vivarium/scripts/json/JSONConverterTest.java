@@ -2,9 +2,11 @@ package io.vivarium.scripts.json;
 
 import org.junit.Test;
 
+import com.johnuckele.vtest.Tester;
+
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.World;
-import com.johnuckele.vtest.Tester;
+import io.vivarium.serialization.JSONConverter;
 
 public class JSONConverterTest
 {

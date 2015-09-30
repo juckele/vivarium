@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
 import io.vivarium.core.Creature;
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 
 public class ExtractCreatureFromWorldTest
 {
@@ -40,7 +42,7 @@ public class ExtractCreatureFromWorldTest
             String[] commandArgs = { "-w", path + "w.viv", "-o", path + "c.viv" };
             ExtractCreatureFromWorld.main(commandArgs);
         }
-        Creature u = (Creature) ScriptIO.loadObject(path + "c.viv", Format.JSON);
+        Creature u = (Creature) FileIO.loadObject(path + "c.viv", Format.JSON);
         assertNotNull("Creature is loaded from file correctly", u);
         assertNotNull("Creature has brain object correctly reloaded", u.getBrain());
         assertTrue("Creature has reasonable ID", u.getID() >= 0 && u.getID() < (worldSize - 2) * (worldSize - 2));
@@ -55,7 +57,7 @@ public class ExtractCreatureFromWorldTest
             String[] commandArgs = { "-w", path + "w.viv", "-o", path + "c.viv" };
             ExtractCreatureFromWorld.main(commandArgs);
         }
-        u = (Creature) ScriptIO.loadObject(path + "c.viv", Format.JSON);
+        u = (Creature) FileIO.loadObject(path + "c.viv", Format.JSON);
         assertEquals("Creature age should match age of world", u.getAge(), 200);
     }
 }

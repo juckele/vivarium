@@ -1,4 +1,4 @@
-package io.vivarium.scripts.json;
+package io.vivarium.serialization;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -6,11 +6,6 @@ import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import io.vivarium.serialization.MapSerializer;
-import io.vivarium.serialization.SerializationCategory;
-import io.vivarium.serialization.SerializationEngine;
-import io.vivarium.serialization.SerializedCollection;
 
 public class JSONConverter
 {

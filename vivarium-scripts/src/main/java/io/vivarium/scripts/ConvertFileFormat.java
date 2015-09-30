@@ -6,6 +6,8 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 import io.vivarium.serialization.MapSerializer;
 
 public class ConvertFileFormat extends CommonsScript
@@ -41,12 +43,12 @@ public class ConvertFileFormat extends CommonsScript
         // Load the file
         Format inputFormat = Format.parseFormat(commandLine.getOptionValue(INPUT_FORMAT));
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
-        MapSerializer object = ScriptIO.loadObject(inputFile, inputFormat);
+        MapSerializer object = FileIO.loadObject(inputFile, inputFormat);
 
         // Save the blueprint
         Format outputFormat = Format.parseFormat(commandLine.getOptionValue(OUTPUT_FORMAT));
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        ScriptIO.saveSerializer(object, outputFile, outputFormat);
+        FileIO.saveSerializer(object, outputFile, outputFormat);
     }
 
     @Override

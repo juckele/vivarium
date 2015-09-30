@@ -1,6 +1,8 @@
 package io.vivarium.scripts;
 
 import io.vivarium.core.World;
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 import io.vivarium.visualization.RenderCode;
 
 public class RenderWorld extends Script
@@ -29,7 +31,7 @@ public class RenderWorld extends Script
     @Override
     protected void run(String[] args)
     {
-        World w = (World) ScriptIO.loadObject(args[0], Format.JSON);
+        World w = (World) FileIO.loadObject(args[0], Format.JSON);
         System.out.println(w.render(RenderCode.WORLD_MAP));
         System.out.println(w.render(RenderCode.BRAIN_WEIGHTS));
         // System.out.println(w.toString(RenderCode.CREATURE_LIST));

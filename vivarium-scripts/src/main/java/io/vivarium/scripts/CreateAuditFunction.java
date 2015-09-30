@@ -10,6 +10,8 @@ import org.apache.commons.cli.Option;
 
 import io.vivarium.audit.AuditFunction;
 import io.vivarium.audit.AuditType;
+import io.vivarium.serialization.FileIO;
+import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
 
 public class CreateAuditFunction extends CommonsScript
@@ -58,7 +60,7 @@ public class CreateAuditFunction extends CommonsScript
 
         // Save the audit function
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        ScriptIO.saveSerializer(auditFunction, outputFile, Format.JSON);
+        FileIO.saveSerializer(auditFunction, outputFile, Format.JSON);
     }
 
     @Override
