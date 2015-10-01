@@ -1,6 +1,142 @@
+/* html */
+
+/* top elements */
+* { 
+    margin: 0;
+    padding: 0;
+}
 body {
-    background-color: #000F00;
-    color: #EFFFEF;
+    margin: 5;
+    padding: 5;
+    color: #D0FFD0;
+    text-align: left;
+    background: #000400;
+    font-family: monospace
+}
+div {
+    margin: 5;
+    padding: 5;
+}
+
+/* links */
+a {
+    background-color: inherit;
+    text-decoration: none;
+    color: #2222ff;
+}
+a:hover {
+    background-color: inherit;
+    text-decoration: underline;
+}
+a:visited { 
+    color: #9840A8;
+}
+
+.header_link {
+    color: #ffffff;
+}
+
+.sidebar_link {
+    color: #ffffff;
+}
+gray {
+    color: #888;
+}
+
+/* images */
+img {
+}
+img.no-border {
+    border: none;
+}
+
+/* blocks */
+code {
+    margin: 5px;
+    padding: 10px;
+    text-align: left;
+    display: block;
+    overflow: auto;
+    white-space: pre;
+    background: #fff;
+    border: 1px solid #bbb;
+}
+blockquote {
+    margin: 5px;
+    padding: 10px;
+    text-align: left;
+    overflow: auto;
+    white-space: pre;
+    background: #fff;
+    border: 1px solid #bbb;
+}
+block-left {
+    margin: 5px;
+    padding: 10px;
+    float: left;
     text-align: center;
-    font-size: 200%;
+    overflow: auto;
+    white-space: pre;
+    background: #fff;
+    border: 1px solid #bbb;
+}
+block-right {
+    margin: 5px;
+    padding: 10px;
+    float: right;
+    text-align: center;
+    overflow: auto;
+    white-space: pre;
+    background: #fff;
+    border: 1px solid #bbb;
+}
+
+/* layout */
+
+#header-content, #footer-content, #content {
+    width: 810px;
+}
+
+/* sections */
+header {
+    background-color:black;
+    color:white;
+    text-align:center;
+    padding:5px;
+}
+sidebar {
+    line-height:30px;
+    background-color:#000000;
+    height:350px;
+    width:140px;
+    float:left;
+}
+.sidebar_iframe {
+    height:700px;
+    width:140px;
+}
+section {
+    padding:10px; 
+}
+paragraph {
+    margin: 5px;
+    padding: 10px;
+    text-align: left;
+    display: block;
+    overflow: auto;
+    max-width: 800px;
+}
+blurb {
+    margin: 5px;
+    padding: 10px;
+    width: 300px;
+    float:left;
+    background-color:#00000f;
+}
+footer {
+    background-color:black;
+    color:white;
+    clear:both;
+    text-align:center;
+    padding:5px; 
 }
