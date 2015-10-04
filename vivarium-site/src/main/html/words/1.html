@@ -7,14 +7,81 @@
     <link rel="icon" href="/favicon.ico" type="image/png">
   </head>
   <body>
-    <header>
-      <h3>1. What?</h3>
-    </header>
     <sidebar>
       <iframe src="/sidebar.html" class="sidebar_iframe" frameborder="0" scrolling="no" id="iframe"></iframe>
     </sidebar>
     <paragraph>
-      Vivarium is an artificial life simulation.
+      <header>
+	<h3>1. What?</h3>
+	<h4>An overview of Vivarium</h4>
+	Sun Oct&nbsp;&nbsp;4 2015
+	</header>
+    </paragraph>
+    <paragraph>
+      Vivarium is an artificial life simulation. The simulation consists of terrain, food, and creatures. Creatures in the simulation have a genome that is used to build a nuerological model for the creature. These creatures live, eat, breed, and die, all using a digital brain that is derived from their genome.
+    </paragraph>
+    <paragraph>
+      <block-left>FIG. 1<table>
+	  <tr>
+	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+	  <tr>
+	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+	  <tr>
+	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+      </table></block-left>
+      <block-left>FIG. 2<table>
+	  <tr>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+	  <tr>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/F.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+	  <tr>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+      </table></block-left>
+      A world in vivarium has static non-moving walls. These walls line the edge of a world, and there can be additional walls scattered around the middle of a world. Figure 1 shows an example arrangement of walls. Another major supporting world element in a Vivarium world is food. Food is a resource that spawns in empty space at a low rate during every tick. Figure 2 shows a piece of food.
+    </paragraph>
+    <paragraph>
+      <block-right>FIG. 3<table>
+	  <tr>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+	  <tr>
+	    <td><img src="/i/B.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/G.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+	  <tr>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
+	  </tr>
+      </table></block-right>
+      The main focus of a Vivarium simulation is the creatures. Figure 3 shows a male (red) and female (blue) creature. On each tick of the simulation, each creature receives a set of inputs. These inputs are fed into the brain of the creature, and the creature picks an action to perform. In the visualizer currently online on the main page, each creature receives a very limited set of inputs: Whether it's a female, whether is is facing a wall, whether is it facing food, whether it is facing another creature, and the percent energy it has left.
+    </paragraph>
+    <paragraph>
+      Creature brains are small neural networks, and the weights between each node in the neural network are a gene that is passed on, recombined, and mutated over the generations. It's through many small iterations and selections that these creatures will, given enough time, learn to use the resources that their world gives them much more efficiently.
+    </paragraph>
+    <paragraph>
+      <a href="/words/2.html">2. Why?</a>
     </paragraph>
   </body>
 </html>
