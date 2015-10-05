@@ -14,7 +14,7 @@ import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class World implements MapSerializer
 {
     @SerializedParameter

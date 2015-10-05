@@ -3,7 +3,7 @@ package io.vivarium.audit;
 import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public abstract class AuditFunction implements MapSerializer
 {
     @SerializedParameter

@@ -52,7 +52,7 @@ public class SpriteRenderer
         }
     };
 
-    @SuppressWarnings("serial")
+    @SuppressWarnings("serial") // Never actually serialized
     private static final HashMap<Sprite, Integer> SPRITE_TO_Y_OFFSET = new HashMap<Sprite, Integer>()
     {
         {

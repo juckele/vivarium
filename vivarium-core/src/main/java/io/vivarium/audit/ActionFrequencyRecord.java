@@ -6,7 +6,7 @@ import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.serialization.SerializedParameter;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class ActionFrequencyRecord extends AuditRecord
 {
     // The action tally is a 5x dimensional counter of actions.
@@ -50,8 +50,8 @@ public class ActionFrequencyRecord extends AuditRecord
         {
             resizeTally();
         }
-        _tally[generation - 1][isFemale ? 1 : 0][isPregnant ? 1 : 0][Action.convertActionToInteger(action)][wasSuccessful ? 1
-                : 0]++;
+        _tally[generation - 1][isFemale ? 1 : 0][isPregnant ? 1 : 0][Action
+                .convertActionToInteger(action)][wasSuccessful ? 1 : 0]++;
     }
 
     private void resizeTally()

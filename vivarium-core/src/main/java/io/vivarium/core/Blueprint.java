@@ -6,7 +6,7 @@ import io.vivarium.audit.AuditFunction;
 import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class Blueprint implements MapSerializer
 {
     // World Generation

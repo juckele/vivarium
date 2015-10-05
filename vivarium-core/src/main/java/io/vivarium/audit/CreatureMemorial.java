@@ -3,7 +3,7 @@ package io.vivarium.audit;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class CreatureMemorial extends AuditRecord
 {
     private CreatureMemorial()

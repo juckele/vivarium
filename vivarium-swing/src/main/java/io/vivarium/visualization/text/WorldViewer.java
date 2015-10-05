@@ -11,7 +11,7 @@ import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.visualization.RenderCode;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Never actually serialized
 public class WorldViewer extends JFrame
 {
     public static final int OVERVIEW_ONLY = 1;

@@ -8,7 +8,7 @@ import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class Creature implements MapSerializer
 {
     // Meta information

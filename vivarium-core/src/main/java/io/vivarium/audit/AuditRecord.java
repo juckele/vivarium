@@ -5,7 +5,7 @@ import io.vivarium.core.World;
 import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public abstract class AuditRecord implements MapSerializer
 {
     @SerializedParameter

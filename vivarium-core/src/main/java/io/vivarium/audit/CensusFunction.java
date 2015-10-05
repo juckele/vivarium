@@ -1,6 +1,6 @@
 package io.vivarium.audit;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class CensusFunction extends AuditFunction
 {
     public CensusFunction()

@@ -6,7 +6,7 @@ import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.serialization.SerializedParameter;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class CensusRecord extends AuditRecord
 {
     @SerializedParameter

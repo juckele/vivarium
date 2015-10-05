@@ -3,7 +3,7 @@ package io.vivarium.core.brain;
 import io.vivarium.serialization.MapSerializer;
 import io.vivarium.visualization.RenderCode;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Default serialization is never used for a durable store
 public abstract class Brain implements MapSerializer
 {
     public abstract BrainType getBrainType();

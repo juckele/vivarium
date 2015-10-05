@@ -7,7 +7,7 @@ import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-@SuppressWarnings("serial")
+@SuppressWarnings("serial") // Never actually serialized
 public class WorldViewerFrameController extends JPanel implements ActionListener
 {
     private WorldViewer _targetWorldViewer;
