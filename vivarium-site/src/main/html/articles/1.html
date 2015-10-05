@@ -18,10 +18,10 @@
 	</header>
     </paragraph>
     <paragraph>
-      Vivarium is an artificial life simulation. The simulation consists of terrain, food, and creatures. Creatures in the simulation have a genome that is used to build a nuerological model for the creature. These creatures live, eat, breed, and die, all using a digital brain that is derived from their genome.
+      Vivarium is an artificial life simulation. The simulation consists of walls, food, and creatures.
     </paragraph>
     <paragraph>
-      <block-left>FIG. 1<table>
+      <block-left>FIG. 1.1<table>
 	  <tr>
 	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
@@ -38,7 +38,7 @@
 	    <td><img src="/i/W.png" alt=" "style="width:32px;height:32px;"/></td>
 	  </tr>
       </table></block-left>
-      <block-left>FIG. 2<table>
+      <block-left>FIG. 1.2<table>
 	  <tr>
 	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
@@ -55,10 +55,10 @@
 	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
 	  </tr>
       </table></block-left>
-      A world in vivarium has static non-moving walls. These walls line the edge of a world, and there can be additional walls scattered around the middle of a world. Figure 1 shows an example arrangement of walls. Another major supporting world element in a Vivarium world is food. Food is a resource that spawns in empty space at a low rate during every tick. Figure 2 shows a piece of food.
+      A world in vivarium has static non-moving walls. These walls line the edge of a world, and additional walls are scattered around the middle of a world. Figure 1.1 shows an example arrangement of walls. A Vivarium world also has food. Food is a resource that spawns in empty space with a low probability every tick. Figure 1.2 shows a piece of food.
     </paragraph>
     <paragraph>
-      <block-right>FIG. 3<table>
+      <block-right>FIG. 1.3<table>
 	  <tr>
 	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
@@ -75,7 +75,10 @@
 	    <td><img src="/i/E.png" alt=" "style="width:32px;height:32px;"/></td>
 	  </tr>
       </table></block-right>
-      The main focus of a Vivarium simulation is the creatures. Figure 3 shows a male (red) and female (blue) creature. On each tick of the simulation, each creature receives a set of inputs. These inputs are fed into the brain of the creature, and the creature picks an action to perform. In the visualizer currently online on the main page, each creature receives a very limited set of inputs: Whether it's a female, whether is is facing a wall, whether is it facing food, whether it is facing another creature, and the percent energy it has left.
+      The main focus of a Vivarium simulation is the creatures. Figure 1.3 shows a male (red) and female (blue) creature. Creatures in the simulation have a genome that is used to build a neurological model for the creature. These creatures live, eat, breed, and die, all using a digital brain that is derived from their genome.
+    </paragraph>
+    <paragraph>
+      On each tick of the simulation, each creature receives a set of inputs. These inputs are fed into the brain of the creature, and the creature picks an action to perform. In the current visualizer (<a href="/life/">watch</a>), each creature receives a very limited set of inputs: Whether it is female, whether it is facing a wall, whether it is facing food, whether it is facing another creature, and the percent energy it has left.
     </paragraph>
     <paragraph>
       Creature brains are small neural networks, and the weights between each node in the neural network are a gene that is passed on, recombined, and mutated over the generations. It's through many small iterations and selections that these creatures will, given enough time, learn to use the resources that their world gives them much more efficiently.
