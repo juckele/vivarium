@@ -25,6 +25,8 @@ import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.core.brain.NeuralNetworkBrain;
 import io.vivarium.core.brain.RandomBrain;
+import io.vivarium.core.simulation.Simulation;
+import io.vivarium.core.simulation.TickLimitHook;
 
 public class SerializationEngine
 {
@@ -65,60 +67,71 @@ public class SerializationEngine
 
     private MapSerializer makeUninitializedMapSerializer(String clazzName)
     {
-        try {
-        Constructor<?> constructor;
-		if (clazzName.equals(Species.class.getSimpleName()))
+        try
         {
-        	constructor = Species.class.getDeclaredConstructor();
+            Constructor<?> constructor;
+            if (clazzName.equals(Species.class.getSimpleName()))
+            {
+                constructor = Species.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(Blueprint.class.getSimpleName()))
+            {
+                constructor = Blueprint.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(RandomBrain.class.getSimpleName()))
+            {
+                constructor = RandomBrain.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(NeuralNetworkBrain.class.getSimpleName()))
+            {
+                constructor = NeuralNetworkBrain.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(Creature.class.getSimpleName()))
+            {
+                constructor = Creature.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(World.class.getSimpleName()))
+            {
+                constructor = World.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(CensusFunction.class.getSimpleName()))
+            {
+                constructor = CensusFunction.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(CensusRecord.class.getSimpleName()))
+            {
+                constructor = CensusRecord.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(ActionFrequencyFunction.class.getSimpleName()))
+            {
+                constructor = ActionFrequencyFunction.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(ActionFrequencyRecord.class.getSimpleName()))
+            {
+                constructor = ActionFrequencyRecord.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(Simulation.class.getSimpleName()))
+            {
+                constructor = Simulation.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(TickLimitHook.class.getSimpleName()))
+            {
+                constructor = TickLimitHook.class.getDeclaredConstructor();
+            }
+            else
+            {
+                throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
+            }
+            constructor.setAccessible(true);
+            return (MapSerializer) constructor.newInstance();
         }
-        else if (clazzName.equals(Blueprint.class.getSimpleName()))
+        catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
+                | NoSuchMethodException | SecurityException e)
         {
-        	constructor = Blueprint.class.getDeclaredConstructor();
+            e.printStackTrace();
+            throw new RuntimeException(
+                    "Reflection during serialization failed. Unable to create new instance of " + clazzName + ". ", e);
         }
-        else if (clazzName.equals(RandomBrain.class.getSimpleName()))
-        {
-        	constructor = RandomBrain.class.getDeclaredConstructor();
-        }
-        else if (clazzName.equals(NeuralNetworkBrain.class.getSimpleName()))
-        {
-        	constructor = NeuralNetworkBrain.class.getDeclaredConstructor();
-        }
-        else if (clazzName.equals(Creature.class.getSimpleName()))
-        {
-        	constructor = Creature.class.getDeclaredConstructor();
-        }
-        else if (clazzName.equals(World.class.getSimpleName()))
-        {
-        	constructor = World.class.getDeclaredConstructor();
-        }
-        else if (clazzName.equals(CensusFunction.class.getSimpleName()))
-        {
-        	constructor = CensusFunction.class.getDeclaredConstructor();
-        }
-        else if (clazzName.equals(CensusRecord.class.getSimpleName()))
-        {
-        	constructor = CensusRecord.class.getDeclaredConstructor();
-        }
-        else if (clazzName.equals(ActionFrequencyFunction.class.getSimpleName()))
-        {
-        	constructor = ActionFrequencyFunction.class.getDeclaredConstructor();
-        }
-        else if (clazzName.equals(ActionFrequencyRecord.class.getSimpleName()))
-        {
-        	constructor = ActionFrequencyRecord.class.getDeclaredConstructor();
-        }
-        else
-        {
-            throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
-        }
-		constructor.setAccessible(true);
-		return (MapSerializer) constructor.newInstance();
-		} catch (InstantiationException | IllegalAccessException
-				| IllegalArgumentException | InvocationTargetException
-				| NoSuchMethodException | SecurityException e) {
-			e.printStackTrace();
-			throw new RuntimeException("Reflection during serialization failed. Unable to create new instance of "+clazzName+". ", e);
-		}
     }
 
     /**

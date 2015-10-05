@@ -8,7 +8,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-public class RunSimulationTest
+public class CreateSimulationTest
 {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -21,28 +21,24 @@ public class RunSimulationTest
     }
 
     @Test
-    public void testDefaultWithWorld()
+    public void testDefault()
     {
         {
             String[] commandArgs = { "-o", path + "w.viv" };
-            CreateWorld.main(commandArgs);
-        }
-        {
-            String[] commandArgs = { "-i", path + "w.viv", "-o", path + "w2.viv", "-t", "5000" };
-            RunSimulation.main(commandArgs);
+            CreateSimulation.main(commandArgs);
         }
     }
 
     @Test
-    public void testDefaultWithSimulation()
+    public void testWithBlueprint()
     {
         {
-            String[] commandArgs = { "-o", path + "s.viv", "-t", "5000" };
-            CreateSimulation.main(commandArgs);
+            String[] commandArgs = { "-o", path + "b.viv" };
+            CreateBlueprint.main(commandArgs);
         }
         {
-            String[] commandArgs = { "-i", path + "s.viv", "-o", path + "s2.viv" };
-            RunSimulation.main(commandArgs);
+            String[] commandArgs = { "-o", path + "w.viv", "-b", path + "b.viv" };
+            CreateSimulation.main(commandArgs);
         }
     }
 }

@@ -325,6 +325,11 @@ public class World implements MapSerializer
         }
     }
 
+    public int getTickCounter()
+    {
+        return _tick;
+    }
+
     private void moveObject(int r, int c, Direction direction)
     {
         int r1 = r;

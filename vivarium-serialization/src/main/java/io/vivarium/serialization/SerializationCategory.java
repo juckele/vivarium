@@ -11,10 +11,12 @@ import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.core.brain.Brain;
+import io.vivarium.core.simulation.Hook;
+import io.vivarium.core.simulation.Simulation;
 
 public enum SerializationCategory
 {
-    AUDIT_FUNCTION, AUDIT_RECORD, BRAIN, BLUEPRINT, CREATURE, SPECIES, WORLD;
+    AUDIT_FUNCTION, AUDIT_RECORD, BRAIN, BLUEPRINT, CREATURE, SPECIES, WORLD, HOOK, SIMULATION;
 
     public static List<SerializationCategory> rankedValues()
     {
@@ -51,6 +53,14 @@ public enum SerializationCategory
         {
             return WORLD;
         }
+        else if (Hook.class.isAssignableFrom(clazz))
+        {
+            return HOOK;
+        }
+        else if (Simulation.class.isAssignableFrom(clazz))
+        {
+            return SIMULATION;
+        }
         else
         {
             throw new IllegalStateException("Unable to determine serialization category of " + clazz);
@@ -58,5 +68,5 @@ public enum SerializationCategory
     }
 
     private static final SerializationCategory[] RANKED_VALUES = { SPECIES, AUDIT_FUNCTION, BLUEPRINT, BRAIN, CREATURE,
-            AUDIT_RECORD, WORLD };
+            AUDIT_RECORD, WORLD, HOOK, SIMULATION };
 }
