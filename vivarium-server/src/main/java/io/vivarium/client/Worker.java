@@ -6,11 +6,13 @@ import java.net.URISyntaxException;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import vivarium.io.net.Constants;
+
 public class Worker extends WebSocketClient
 {
     public Worker() throws URISyntaxException
     {
-        super(new URI("http", null, "localhost", 13731, "/", null, null));
+        super(new URI("http", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
     }
 
     @Override

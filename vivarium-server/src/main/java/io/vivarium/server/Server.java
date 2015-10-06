@@ -1,5 +1,7 @@
 package io.vivarium.server;
 
+import io.vivarium.client.Worker;
+
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -8,11 +10,11 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import io.vivarium.client.Worker;
+import vivarium.io.net.Constants;
 
 public class Server extends WebSocketServer
 {
-    public static InetSocketAddress PORT = new InetSocketAddress(13731);
+    private final static InetSocketAddress PORT = new InetSocketAddress(Constants.DEFAULT_PORT);
 
     public Server() throws UnknownHostException
     {
