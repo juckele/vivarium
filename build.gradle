@@ -94,6 +94,7 @@ project(':vivarium-server') {
     dependencies {
         compile project(':vivarium-core')
         compile project(':vivarium-serialization')
+	compile 'org.postgresql:postgresql:9.4-1201-jdbc41'
         compile 'org.java-websocket:Java-WebSocket:1.3.0'
     }
 }
