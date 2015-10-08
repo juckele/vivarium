@@ -1,7 +1,5 @@
 package io.vivarium.experiment;
 
-import java.util.ArrayList;
-
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.scripts.CreateWorld;
@@ -9,14 +7,18 @@ import io.vivarium.scripts.RunSimulation;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 
+import java.util.ArrayList;
+
 public class NormalizationConvergence
 {
     /**
      * Runs the NormalizationConvergence experiment.
      *
-     * Hypothesis: Normalizing creature genomes will cause speedier converge and produce creatures with higher fitness
-     * by reducing genetic drift in 'inactive' genes. Genetic drift in inactive genes is dangerous, because a has the
-     * risk of inheriting an active version when recombined from parents with sufficiently distant inactive genes.
+     * Hypothesis: Normalizing creature genomes will cause speedier convergence and produce creatures with higher
+     * average fitness by reducing genetic drift in 'inactive' genes. Genetic drift in inactive genes is hypothesized to
+     * be dangerous because offspring have the risk of inheriting an active version when recombined from parents with
+     * sufficiently distant inactive genes (this is a product of the Gaussian recombination of scalar genes used in
+     * offspring creation)
      *
      * @param args
      */
