@@ -33,6 +33,15 @@ public class JSONConverter
         return engine.deserializeList(collection);
     }
 
+    public static List<MapSerializer> jsonStringToSerializerList(String jsonString,
+            SerializationCategory desiredCategory)
+    {
+        JSONObject jsonObject = new JSONObject(jsonString);
+        SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
+        SerializationEngine engine = new SerializationEngine();
+        return engine.deserializeList(collection, desiredCategory);
+    }
+
     private static JSONObject convertFromSerializedCollection(SerializedCollection collection)
     {
         JSONObject jsonObject = new JSONObject();

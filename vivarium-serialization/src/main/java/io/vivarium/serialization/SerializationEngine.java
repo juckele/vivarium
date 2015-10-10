@@ -546,4 +546,39 @@ public class SerializationEngine
         }
         return objects;
     }
+
+    /**
+     * Returns a List of MapSerializer objects from a serialized collection. The objects returned will be the objects
+     * with the serialization category passed into this method.
+     *
+     * @param collection
+     * @return
+     */
+    public List<MapSerializer> deserializeList(SerializedCollection collection, SerializationCategory desiredCategory)
+    {
+        _collection = collection;
+        MapSerializer object = null;
+        List<MapSerializer> objects = new LinkedList<MapSerializer>();
+        for (SerializationCategory category : SerializationCategory.rankedValues())
+        {
+            // If a higher ranked category has objects in it, discard the contents of the
+            // objects list by making a new list.
+            if (collection.hasNext(category))
+            {
+                objects = new LinkedList<MapSerializer>();
+            }
+            while (collection.hasNext(category))
+            {
+                HashMap<String, Object> map = collection.popNext(category);
+                object = deserializeMap(map);
+                objects.add(object);
+            }
+            // If we are deserializing the desired rank, return now (don't deserialize higher ranks)
+            if (desiredCategory == category)
+            {
+                return objects;
+            }
+        }
+        throw new IllegalStateException("SerializationCategory " + desiredCategory + " is not ranked.");
+    }
 }

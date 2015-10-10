@@ -116,6 +116,19 @@ public class FileIO
         }
     }
 
+    public static Collection<MapSerializer> loadObjects(String fileName, SerializationCategory desiredCategory,
+            Format f)
+    {
+        if (f == Format.JSON)
+        {
+            return loadObjectsWithJSON(fileName, desiredCategory);
+        }
+        else
+        {
+            throw new UserFacingError("Loading format " + f + " is not supported");
+        }
+    }
+
     private static MapSerializer loadObjectWithJSON(String fileName)
     {
         String jsonString = loadFileToString(fileName);
@@ -126,6 +139,12 @@ public class FileIO
     {
         String jsonString = loadFileToString(fileName);
         return JSONConverter.jsonStringToSerializerList(jsonString);
+    }
+
+    private static Collection<MapSerializer> loadObjectsWithJSON(String fileName, SerializationCategory desiredCategory)
+    {
+        String jsonString = loadFileToString(fileName);
+        return JSONConverter.jsonStringToSerializerList(jsonString, desiredCategory);
     }
 
     private static MapSerializer loadObjectWithGwtStreamer(String fileName)
