@@ -29,6 +29,18 @@ public class FileIO
         }
     }
 
+    public static void saveSerializerCollection(MapSerializerCollection serializer, String fileName, Format f)
+    {
+        if (f == Format.JSON)
+        {
+            saveObjectCollectionWithJSON(serializer, fileName);
+        }
+        else
+        {
+            throw new UserFacingError("Writing format " + f + " is not supported.");
+        }
+    }
+
     public static void saveStringToFile(String dataString, String fileName)
     {
         FileOutputStream fos = null;
@@ -88,6 +100,12 @@ public class FileIO
         saveStringToFile(jsonString, fileName);
     }
 
+    private static void saveObjectCollectionWithJSON(MapSerializerCollection serializer, String fileName)
+    {
+        String jsonString = JSONConverter.serializerToJSONString(serializer);
+        saveStringToFile(jsonString, fileName);
+    }
+
     public static MapSerializer loadObject(String fileName, Format f)
     {
         if (f == Format.JSON)
@@ -116,12 +134,11 @@ public class FileIO
         }
     }
 
-    public static Collection<MapSerializer> loadObjects(String fileName, SerializationCategory desiredCategory,
-            Format f)
+    public static MapSerializerCollection loadObjectCollection(String fileName, Format f)
     {
         if (f == Format.JSON)
         {
-            return loadObjectsWithJSON(fileName, desiredCategory);
+            return loadObjectCollectionWithJSON(fileName);
         }
         else
         {
@@ -141,10 +158,10 @@ public class FileIO
         return JSONConverter.jsonStringToSerializerList(jsonString);
     }
 
-    private static Collection<MapSerializer> loadObjectsWithJSON(String fileName, SerializationCategory desiredCategory)
+    private static MapSerializerCollection loadObjectCollectionWithJSON(String fileName)
     {
         String jsonString = loadFileToString(fileName);
-        return JSONConverter.jsonStringToSerializerList(jsonString, desiredCategory);
+        return JSONConverter.jsonStringToSerializerCollection(jsonString);
     }
 
     private static MapSerializer loadObjectWithGwtStreamer(String fileName)

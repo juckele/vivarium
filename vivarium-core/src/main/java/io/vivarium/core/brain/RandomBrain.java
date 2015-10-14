@@ -28,6 +28,12 @@ public class RandomBrain extends Brain
     }
 
     @Override
+    public void normalizeWeights()
+    {
+        // No weights, nothing to normalize
+    }
+
+    @Override
     public BrainType getBrainType()
     {
         return BrainType.RANDOM;
@@ -68,5 +74,4 @@ public class RandomBrain extends Brain
         RandomBrain brain = new RandomBrain(species, parentBrain1, parentBrain2);
         return brain;
     }
-
 }

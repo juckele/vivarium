@@ -31,7 +31,7 @@ subprojects {
     apply plugin: 'eclipse'
     apply plugin: 'findbugs'
 
-    version = '0.3'
+    version = '0.3.1'
 
     eclipseSetup.dependsOn cleanEclipseProject
     eclipseSetup.dependsOn eclipseProject
@@ -144,6 +144,10 @@ project(':vivarium-scripts') {
         archiveName = 'extract-creature-from-world'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.ExtractCreatureFromWorld'
     }
+    task jarNormalizeBrainGenomes( type: OneJar ) {
+        archiveName = 'normalize-brain-genomes'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.NormalizeBrainGenomes'
+    }
     task jarRunSimulation( type: OneJar ) {
         archiveName = 'run-simulation'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.RunSimulation'
@@ -159,6 +163,7 @@ project(':vivarium-scripts') {
     jarCollection.dependsOn jarCreateSimulation
     jarCollection.dependsOn jarCreateWorld
     jarCollection.dependsOn jarExtractCreatureFromWorld
+    jarCollection.dependsOn jarNormalizeBrainGenomes
     jarCollection.dependsOn jarRunSimulation
     build.dependsOn jarCollection
 

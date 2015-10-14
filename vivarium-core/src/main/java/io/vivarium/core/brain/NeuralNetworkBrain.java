@@ -145,7 +145,7 @@ public class NeuralNetworkBrain extends Brain
         }
     }
 
-    private void normalizeWeights()
+    public void normalizeWeights()
     {
         double sumOfSquares = 0;
         for (int i = 0; i < _weights.length; i++)

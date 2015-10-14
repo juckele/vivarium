@@ -21,6 +21,11 @@ public abstract class Brain implements MapSerializer
      */
     public abstract double[] outputs(double[] inputs);
 
+    /**
+     * Applies a brain defined normalization procedure to a brain.
+     */
+    public abstract void normalizeWeights();
+
     public abstract String render(RenderCode code);
 
     @Override

@@ -17,6 +17,14 @@ public class JSONConverter
         return jsonObject.toString();
     }
 
+    public static String serializerToJSONString(MapSerializerCollection serializers)
+    {
+        SerializationEngine engine = new SerializationEngine();
+        SerializedCollection collection = engine.serialize(serializers);
+        JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection);
+        return jsonObject.toString();
+    }
+
     public static MapSerializer jsonStringToSerializer(String jsonString)
     {
         JSONObject jsonObject = new JSONObject(jsonString);
@@ -33,13 +41,12 @@ public class JSONConverter
         return engine.deserializeList(collection);
     }
 
-    public static List<MapSerializer> jsonStringToSerializerList(String jsonString,
-            SerializationCategory desiredCategory)
+    public static MapSerializerCollection jsonStringToSerializerCollection(String jsonString)
     {
         JSONObject jsonObject = new JSONObject(jsonString);
         SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
         SerializationEngine engine = new SerializationEngine();
-        return engine.deserializeList(collection, desiredCategory);
+        return engine.deserializeCollection(collection);
     }
 
     private static JSONObject convertFromSerializedCollection(SerializedCollection collection)

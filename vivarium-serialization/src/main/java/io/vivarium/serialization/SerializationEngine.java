@@ -148,6 +148,27 @@ public class SerializationEngine
         return _collection;
     }
 
+    /**
+     * Creates a SerializedCollection object from a MapSerializerCollection.
+     *
+     * @param object
+     * @return
+     */
+    public SerializedCollection serialize(MapSerializerCollection collection)
+    {
+        _collection = new SerializedCollection();
+        // Start by recursively serializing the top level object
+        for (SerializationCategory category : SerializationCategory.rankedValues())
+        {
+            List<MapSerializer> list = collection.get(category);
+            for (MapSerializer object : list)
+            {
+                serializeObjectIntoCollection(object);
+            }
+        }
+        return _collection;
+    }
+
     private void serializeObjectIntoCollection(MapSerializer object)
     {
         try
@@ -549,36 +570,26 @@ public class SerializationEngine
 
     /**
      * Returns a List of MapSerializer objects from a serialized collection. The objects returned will be the objects
-     * with the serialization category passed into this method.
+     * with the highest relative serialization category ranking.
      *
      * @param collection
      * @return
      */
-    public List<MapSerializer> deserializeList(SerializedCollection collection, SerializationCategory desiredCategory)
+    public MapSerializerCollection deserializeCollection(SerializedCollection collection)
     {
         _collection = collection;
         MapSerializer object = null;
-        List<MapSerializer> objects = new LinkedList<MapSerializer>();
+        MapSerializerCollection objects = new MapSerializerCollection();
         for (SerializationCategory category : SerializationCategory.rankedValues())
         {
-            // If a higher ranked category has objects in it, discard the contents of the
-            // objects list by making a new list.
-            if (collection.hasNext(category))
-            {
-                objects = new LinkedList<MapSerializer>();
-            }
             while (collection.hasNext(category))
             {
                 HashMap<String, Object> map = collection.popNext(category);
                 object = deserializeMap(map);
                 objects.add(object);
             }
-            // If we are deserializing the desired rank, return now (don't deserialize higher ranks)
-            if (desiredCategory == category)
-            {
-                return objects;
-            }
         }
-        throw new IllegalStateException("SerializationCategory " + desiredCategory + " is not ranked.");
+        return objects;
     }
+
 }
