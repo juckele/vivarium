@@ -13,6 +13,13 @@ buildscript {
 allprojects {
     apply plugin: 'jacoco'
 
+    task buildInfo {
+        def cmd = "git rev-parse HEAD"
+        def proc = cmd.execute()
+        ext.revision = proc.text.trim()
+        ext.timestamp = String.valueOf(System.currentTimeMillis())
+    }
+
     repositories {
         jcenter()
     }
@@ -116,41 +123,74 @@ project(':vivarium-graph') {
 project(':vivarium-scripts') {
     apply plugin: 'gradle-one-jar'
 
+    ext.sharedManifest = manifest {
+        attributes 'viviarium-version': version
+        attributes 'git-revision': buildInfo.revision
+	attributes 'build-timestamp': buildInfo.timestamp
+    }
+
     task jarConvertFileFormat( type: OneJar ) {
         archiveName = 'convert-file-format'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.ConvertFileFormat'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
     task jarCreateAuditFunction( type: OneJar ) {
         archiveName = 'create-audit-function'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.CreateAuditFunction'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
     task jarCreateBlueprint( type: OneJar ) {
         archiveName = 'create-blueprint'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.CreateBlueprint'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
     task jarCreateSpecies( type: OneJar ) {
         archiveName = 'create-species'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.CreateSpecies'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
     task jarCreateSimulation( type: OneJar ) {
         archiveName = 'create-simulation'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.CreateSimulation'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
     task jarCreateWorld( type: OneJar ) {
         archiveName = 'create-world'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.CreateWorld'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
     task jarExtractCreatureFromWorld( type: OneJar ) {
         archiveName = 'extract-creature-from-world'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.ExtractCreatureFromWorld'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
     task jarNormalizeBrainGenomes( type: OneJar ) {
         archiveName = 'normalize-brain-genomes'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.NormalizeBrainGenomes'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
     task jarRunSimulation( type: OneJar ) {
         archiveName = 'run-simulation'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.RunSimulation'
+        manifest = project.manifest {
+            from sharedManifest
+        }
     }
 
     task jarCollection {
