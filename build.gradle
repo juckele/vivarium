@@ -85,6 +85,8 @@ subprojects {
 
 project(':vivarium-core') {
     dependencies {
+        compile 'com.google.guava:guava:18.0'
+        compile 'com.google.guava:guava-gwt:18.0'
 	compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
     }
 }
@@ -237,6 +239,8 @@ project(':vivarium-web') {
 
     dependencies {
         compile project(':vivarium-core')
+        compile 'com.google.guava:guava:18.0'
+        compile 'com.google.guava:guava-gwt:18.0'
 	compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
     }
 }

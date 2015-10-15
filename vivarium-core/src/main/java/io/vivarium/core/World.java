@@ -9,13 +9,13 @@ import io.vivarium.audit.AuditFunction;
 import io.vivarium.audit.AuditRecord;
 import io.vivarium.core.brain.Brain;
 import io.vivarium.core.brain.BrainType;
-import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
+import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class World implements MapSerializer
+public class World extends VivariumObject
 {
     @SerializedParameter
     private int _maximumCreatureID;

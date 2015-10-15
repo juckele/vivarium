@@ -3,11 +3,11 @@ package io.vivarium.core;
 import java.util.ArrayList;
 
 import io.vivarium.audit.AuditFunction;
-import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
+import io.vivarium.serialization.VivariumObject;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class Blueprint implements MapSerializer
+public class Blueprint extends VivariumObject
 {
     // World Generation
     @SerializedParameter

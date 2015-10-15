@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 public class JSONConverter
 {
-    public static String serializerToJSONString(MapSerializer serializer)
+    public static String serializerToJSONString(VivariumObject serializer)
     {
         SerializationEngine engine = new SerializationEngine();
         SerializedCollection collection = engine.serialize(serializer);
@@ -25,7 +25,7 @@ public class JSONConverter
         return jsonObject.toString();
     }
 
-    public static MapSerializer jsonStringToSerializer(String jsonString)
+    public static VivariumObject jsonStringToSerializer(String jsonString)
     {
         JSONObject jsonObject = new JSONObject(jsonString);
         SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
@@ -33,7 +33,7 @@ public class JSONConverter
         return engine.deserialize(collection);
     }
 
-    public static List<MapSerializer> jsonStringToSerializerList(String jsonString)
+    public static List<VivariumObject> jsonStringToSerializerList(String jsonString)
     {
         JSONObject jsonObject = new JSONObject(jsonString);
         SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);

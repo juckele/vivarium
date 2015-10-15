@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 import io.vivarium.core.World;
-import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
+import io.vivarium.serialization.VivariumObject;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class Simulation implements MapSerializer
+public class Simulation extends VivariumObject
 {
     @SerializedParameter
     private World _world;

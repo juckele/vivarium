@@ -2,14 +2,14 @@ package io.vivarium.core;
 
 import io.vivarium.core.brain.Brain;
 import io.vivarium.core.brain.BrainType;
-import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
+import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class Creature implements MapSerializer
+public class Creature extends VivariumObject
 {
     // Meta information
     @SerializedParameter

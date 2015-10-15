@@ -1,11 +1,11 @@
 package io.vivarium.core;
 
 import io.vivarium.core.brain.BrainType;
-import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
+import io.vivarium.serialization.VivariumObject;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class Species implements MapSerializer
+public class Species extends VivariumObject
 {
     // Physical traits
     @SerializedParameter

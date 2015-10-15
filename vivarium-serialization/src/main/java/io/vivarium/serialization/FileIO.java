@@ -13,7 +13,7 @@ import io.vivarium.util.UserFacingError;
 
 public class FileIO
 {
-    public static void saveSerializer(MapSerializer serializer, String fileName, Format f)
+    public static void saveSerializer(VivariumObject serializer, String fileName, Format f)
     {
         if (f == Format.JSON)
         {
@@ -88,13 +88,13 @@ public class FileIO
         }
     }
 
-    private static void saveObjectWithGwtStreamer(MapSerializer serializer, String fileName)
+    private static void saveObjectWithGwtStreamer(VivariumObject serializer, String fileName)
     {
         String gwtString = Streamer.get().toString(serializer);
         saveStringToFile(gwtString, fileName);
     }
 
-    private static void saveObjectWithJSON(MapSerializer serializer, String fileName)
+    private static void saveObjectWithJSON(VivariumObject serializer, String fileName)
     {
         String jsonString = JSONConverter.serializerToJSONString(serializer);
         saveStringToFile(jsonString, fileName);
@@ -106,7 +106,7 @@ public class FileIO
         saveStringToFile(jsonString, fileName);
     }
 
-    public static MapSerializer loadObject(String fileName, Format f)
+    public static VivariumObject loadObject(String fileName, Format f)
     {
         if (f == Format.JSON)
         {
@@ -122,7 +122,7 @@ public class FileIO
         }
     }
 
-    public static Collection<MapSerializer> loadObjects(String fileName, Format f)
+    public static Collection<VivariumObject> loadObjects(String fileName, Format f)
     {
         if (f == Format.JSON)
         {
@@ -146,13 +146,13 @@ public class FileIO
         }
     }
 
-    private static MapSerializer loadObjectWithJSON(String fileName)
+    private static VivariumObject loadObjectWithJSON(String fileName)
     {
         String jsonString = loadFileToString(fileName);
         return JSONConverter.jsonStringToSerializer(jsonString);
     }
 
-    private static Collection<MapSerializer> loadObjectsWithJSON(String fileName)
+    private static Collection<VivariumObject> loadObjectsWithJSON(String fileName)
     {
         String jsonString = loadFileToString(fileName);
         return JSONConverter.jsonStringToSerializerList(jsonString);
@@ -164,9 +164,9 @@ public class FileIO
         return JSONConverter.jsonStringToSerializerCollection(jsonString);
     }
 
-    private static MapSerializer loadObjectWithGwtStreamer(String fileName)
+    private static VivariumObject loadObjectWithGwtStreamer(String fileName)
     {
         String gwtString = loadFileToString(fileName);
-        return (MapSerializer) Streamer.get().fromString(gwtString);
+        return (VivariumObject) Streamer.get().fromString(gwtString);
     }
 }

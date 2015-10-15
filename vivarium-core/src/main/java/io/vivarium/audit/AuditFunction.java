@@ -1,10 +1,10 @@
 package io.vivarium.audit;
 
-import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
+import io.vivarium.serialization.VivariumObject;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public abstract class AuditFunction implements MapSerializer
+public abstract class AuditFunction extends VivariumObject
 {
     @SerializedParameter
     protected AuditType _auditType;

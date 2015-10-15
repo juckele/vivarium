@@ -27,6 +27,7 @@ import io.vivarium.core.brain.NeuralNetworkBrain;
 import io.vivarium.core.brain.RandomBrain;
 import io.vivarium.core.simulation.Simulation;
 import io.vivarium.core.simulation.TickLimitHook;
+import io.vivarium.util.UUID;
 
 public class SerializationEngine
 {
@@ -35,37 +36,37 @@ public class SerializationEngine
     public static final String CLASS_KEY = "+class";
     public static final Map<String, Object> EMPTY_OBJECT_MAP = Collections
             .unmodifiableMap(new HashMap<String, Object>());
-    public static final Map<SerializationCategory, HashMap<MapSerializer, Integer>> EMPTY_REFERENCE_MAP = Collections
-            .unmodifiableMap(new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>());
-    public static final Map<SerializationCategory, HashMap<Integer, MapSerializer>> EMPTY_DEREFERENCE_MAP = Collections
-            .unmodifiableMap(new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>());
+    public static final Map<SerializationCategory, HashMap<VivariumObject, Integer>> EMPTY_REFERENCE_MAP = Collections
+            .unmodifiableMap(new HashMap<SerializationCategory, HashMap<VivariumObject, Integer>>());
+    public static final Map<SerializationCategory, HashMap<Integer, VivariumObject>> EMPTY_DEREFERENCE_MAP = Collections
+            .unmodifiableMap(new HashMap<SerializationCategory, HashMap<Integer, VivariumObject>>());
 
     private SerializedCollection _collection;
-    private HashMap<SerializationCategory, HashMap<MapSerializer, Integer>> _referenceMap;
-    private HashMap<SerializationCategory, HashMap<Integer, MapSerializer>> _dereferenceMap;
+    private HashMap<SerializationCategory, HashMap<VivariumObject, Integer>> _referenceMap;
+    private HashMap<SerializationCategory, HashMap<Integer, VivariumObject>> _dereferenceMap;
 
     public SerializationEngine()
     {
         _collection = new SerializedCollection();
-        _referenceMap = new HashMap<SerializationCategory, HashMap<MapSerializer, Integer>>();
-        _dereferenceMap = new HashMap<SerializationCategory, HashMap<Integer, MapSerializer>>();
+        _referenceMap = new HashMap<SerializationCategory, HashMap<VivariumObject, Integer>>();
+        _dereferenceMap = new HashMap<SerializationCategory, HashMap<Integer, VivariumObject>>();
     }
 
     @SuppressWarnings("unchecked")
-    public MapSerializer deserializeMap(HashMap<String, Object> map)
+    public VivariumObject deserializeMap(HashMap<String, Object> map)
     {
         map = (HashMap<String, Object>) map.clone();
         String clazzName = (String) map.remove(CLASS_KEY);
         map.remove(CATEGORY_KEY);
         int referenceID = (int) map.remove(ID_KEY);
-        MapSerializer object = makeUninitializedMapSerializer(clazzName);
+        VivariumObject object = makeUninitializedMapSerializer(clazzName);
         deserialize(object, map);
         object.finalizeSerialization();
         storeIDToReference(referenceID, object);
         return object;
     }
 
-    private MapSerializer makeUninitializedMapSerializer(String clazzName)
+    private VivariumObject makeUninitializedMapSerializer(String clazzName)
     {
         try
         {
@@ -123,7 +124,7 @@ public class SerializationEngine
                 throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
             }
             constructor.setAccessible(true);
-            return (MapSerializer) constructor.newInstance();
+            return (VivariumObject) constructor.newInstance();
         }
         catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
                 | NoSuchMethodException | SecurityException e)
@@ -140,7 +141,7 @@ public class SerializationEngine
      * @param object
      * @return
      */
-    public SerializedCollection serialize(MapSerializer object)
+    public SerializedCollection serialize(VivariumObject object)
     {
         _collection = new SerializedCollection();
         // Start by recursively serializing the top level object
@@ -160,8 +161,8 @@ public class SerializationEngine
         // Start by recursively serializing the top level object
         for (SerializationCategory category : SerializationCategory.rankedValues())
         {
-            List<MapSerializer> list = collection.get(category);
-            for (MapSerializer object : list)
+            List<VivariumObject> list = collection.get(category);
+            for (VivariumObject object : list)
             {
                 serializeObjectIntoCollection(object);
             }
@@ -169,7 +170,7 @@ public class SerializationEngine
         return _collection;
     }
 
-    private void serializeObjectIntoCollection(MapSerializer object)
+    private void serializeObjectIntoCollection(VivariumObject object)
     {
         try
         {
@@ -190,30 +191,30 @@ public class SerializationEngine
         }
     }
 
-    private void storeReferenceToID(MapSerializer object, int objectID)
+    private void storeReferenceToID(VivariumObject object, int objectID)
     {
         SerializationCategory category = SerializationCategory.getCategoryForClass(object.getClass());
         if (!_referenceMap.containsKey(category))
         {
-            _referenceMap.put(category, new HashMap<MapSerializer, Integer>());
+            _referenceMap.put(category, new HashMap<VivariumObject, Integer>());
         }
         _referenceMap.get(category).put(object, objectID);
     }
 
-    private void storeIDToReference(int objectID, MapSerializer object)
+    private void storeIDToReference(int objectID, VivariumObject object)
     {
         SerializationCategory category = SerializationCategory.getCategoryForClass(object.getClass());
         if (!_dereferenceMap.containsKey(category))
         {
-            _dereferenceMap.put(category, new HashMap<Integer, MapSerializer>());
+            _dereferenceMap.put(category, new HashMap<Integer, VivariumObject>());
         }
         _dereferenceMap.get(category).put(objectID, object);
     }
 
-    private Integer getReferenceID(MapSerializer object)
+    private Integer getReferenceID(VivariumObject object)
     {
         SerializationCategory serializationCategory = SerializationCategory.getCategoryForClass(object.getClass());
-        HashMap<MapSerializer, Integer> category = _referenceMap.get(serializationCategory);
+        HashMap<VivariumObject, Integer> category = _referenceMap.get(serializationCategory);
         if (category == null)
         {
             serializeObjectIntoCollection(object);
@@ -228,9 +229,9 @@ public class SerializationEngine
         return id;
     }
 
-    private MapSerializer getReferenceObject(SerializationCategory category, int objectID)
+    private VivariumObject getReferenceObject(SerializationCategory category, int objectID)
     {
-        HashMap<Integer, MapSerializer> categoryMap = _dereferenceMap.get(category);
+        HashMap<Integer, VivariumObject> categoryMap = _dereferenceMap.get(category);
         return categoryMap.get(objectID);
     }
 
@@ -267,10 +268,10 @@ public class SerializationEngine
             }
             return list;
         }
-        else if (MapSerializer.class.isAssignableFrom(clazz))
+        else if (VivariumObject.class.isAssignableFrom(clazz))
         {
             // Reference crap hereB
-            return getReferenceID((MapSerializer) object);
+            return getReferenceID((VivariumObject) object);
         }
         else if (Enum.class.isAssignableFrom(clazz))
         {
@@ -282,13 +283,17 @@ public class SerializationEngine
             // Do nothing because this can be saved as is
             return object;
         }
+        else if (clazz == UUID.class)
+        {
+            return object.toString();
+        }
         else
         {
             throw new UnsupportedOperationException("Cannot handle parameter type " + clazz);
         }
     }
 
-    private HashMap<String, Object> serializeMapSerializer(MapSerializer object, int id) throws IllegalAccessException
+    private HashMap<String, Object> serializeMapSerializer(VivariumObject object, int id) throws IllegalAccessException
     {
         HashMap<String, Object> map = new HashMap<String, Object>();
         map.put(ID_KEY, id);
@@ -327,7 +332,7 @@ public class SerializationEngine
         return clazz.isPrimitive() || clazz == Boolean.class || clazz == Integer.class || clazz == Double.class;
     }
 
-    private Set<Field> getSerializedParameters(MapSerializer object)
+    private Set<Field> getSerializedParameters(VivariumObject object)
     {
         HashSet<Field> annotatedFields = new HashSet<Field>();
         Class<?> clazz = object.getClass();
@@ -356,7 +361,7 @@ public class SerializationEngine
         return fieldName.substring(fieldName.lastIndexOf('_') + 1);
     }
 
-    public void deserialize(MapSerializer object, Map<String, Object> map)
+    public void deserialize(VivariumObject object, Map<String, Object> map)
     {
         try
         {
@@ -445,7 +450,7 @@ public class SerializationEngine
             }
             return list;
         }
-        else if (MapSerializer.class.isAssignableFrom(clazz))
+        else if (VivariumObject.class.isAssignableFrom(clazz))
         {
             // Reference crap here
             return getReferenceObject(SerializationCategory.getCategoryForClass(clazz), (Integer) object);
@@ -469,6 +474,10 @@ public class SerializationEngine
                 return object;
             }
         }
+        else if (clazz == UUID.class)
+        {
+            return UUID.fromString((String) object);
+        }
         else
         {
             throw new UnsupportedOperationException("Cannot handle parameter type " + clazz);
@@ -489,6 +498,10 @@ public class SerializationEngine
         {
             return Double.parseDouble(s);
         }
+        else if (clazz == UUID.class)
+        {
+            return UUID.fromString(s);
+        }
         else
         {
             throw new UnsupportedOperationException("Unable to parse primitive " + clazz);
@@ -501,10 +514,10 @@ public class SerializationEngine
      * @param original
      * @return
      */
-    public MapSerializer makeCopy(MapSerializer original)
+    public VivariumObject makeCopy(VivariumObject original)
     {
         SerializedCollection collection = serialize(original);
-        MapSerializer copy = deserialize(collection);
+        VivariumObject copy = deserialize(collection);
         return copy;
     }
 
@@ -520,9 +533,9 @@ public class SerializationEngine
      *             If there is not a single object in the collection which holds the highest relative serialization
      *             category ranking.
      */
-    public MapSerializer deserialize(SerializedCollection collection) throws IllegalStateException
+    public VivariumObject deserialize(SerializedCollection collection) throws IllegalStateException
     {
-        List<MapSerializer> objects = deserializeList(collection);
+        List<VivariumObject> objects = deserializeList(collection);
         if (objects.size() == 1)
         {
             return objects.get(0);
@@ -545,18 +558,18 @@ public class SerializationEngine
      * @param collection
      * @return
      */
-    public List<MapSerializer> deserializeList(SerializedCollection collection)
+    public List<VivariumObject> deserializeList(SerializedCollection collection)
     {
         _collection = collection;
-        MapSerializer object = null;
-        List<MapSerializer> objects = new LinkedList<MapSerializer>();
+        VivariumObject object = null;
+        List<VivariumObject> objects = new LinkedList<VivariumObject>();
         for (SerializationCategory category : SerializationCategory.rankedValues())
         {
             // If a higher ranked category has objects in it, discard the contents of the
             // objects list by making a new list.
             if (collection.hasNext(category))
             {
-                objects = new LinkedList<MapSerializer>();
+                objects = new LinkedList<VivariumObject>();
             }
             while (collection.hasNext(category))
             {
@@ -578,7 +591,7 @@ public class SerializationEngine
     public MapSerializerCollection deserializeCollection(SerializedCollection collection)
     {
         _collection = collection;
-        MapSerializer object = null;
+        VivariumObject object = null;
         MapSerializerCollection objects = new MapSerializerCollection();
         for (SerializationCategory category : SerializationCategory.rankedValues())
         {

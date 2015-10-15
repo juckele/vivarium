@@ -2,11 +2,11 @@ package io.vivarium.audit;
 
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.serialization.MapSerializer;
 import io.vivarium.serialization.SerializedParameter;
+import io.vivarium.serialization.VivariumObject;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public abstract class AuditRecord implements MapSerializer
+public abstract class AuditRecord extends VivariumObject
 {
     @SerializedParameter
     protected Species _trackedSpecies;

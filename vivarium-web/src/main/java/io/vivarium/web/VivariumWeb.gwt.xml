@@ -19,6 +19,8 @@
 
   <!-- For GWT side serialization/copying                         -->
   <inherits name="com.googlecode.gwtstreamer.GWTStreamer"/>
+  <!-- For GWT Guava                                              -->
+  <inherits name="com.google.common.io.Io"/>
 
   <!-- Other module inherits                                      -->
   <inherits name='io.vivarium.Vivarium' />

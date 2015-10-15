@@ -1,10 +1,10 @@
 package io.vivarium.core.brain;
 
-import io.vivarium.serialization.MapSerializer;
+import io.vivarium.serialization.VivariumObject;
 import io.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public abstract class Brain implements MapSerializer
+public abstract class Brain extends VivariumObject
 {
     public abstract BrainType getBrainType();
 
