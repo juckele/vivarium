@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Scanner;
 
 import com.googlecode.gwtstreamer.client.Streamer;
@@ -19,21 +18,21 @@ public class FileIO
         {
             saveObjectWithJSON(serializer, fileName);
         }
-        else if (f == Format.GWT)
-        {
-            saveObjectWithGwtStreamer(serializer, fileName);
-        }
         else
         {
             throw new UserFacingError("Writing format " + f + " is not supported.");
         }
     }
 
-    public static void saveSerializerCollection(MapSerializerCollection serializer, String fileName, Format f)
+    public static void saveSerializerCollection(VivariumObjectCollection serializer, String fileName, Format f)
     {
         if (f == Format.JSON)
         {
             saveObjectCollectionWithJSON(serializer, fileName);
+        }
+        else if (f == Format.GWT)
+        {
+            saveObjectCollectionWithGwtStreamer(serializer, fileName);
         }
         else
         {
@@ -88,7 +87,7 @@ public class FileIO
         }
     }
 
-    private static void saveObjectWithGwtStreamer(VivariumObject serializer, String fileName)
+    private static void saveObjectCollectionWithGwtStreamer(VivariumObjectCollection serializer, String fileName)
     {
         String gwtString = Streamer.get().toString(serializer);
         saveStringToFile(gwtString, fileName);
@@ -100,73 +99,38 @@ public class FileIO
         saveStringToFile(jsonString, fileName);
     }
 
-    private static void saveObjectCollectionWithJSON(MapSerializerCollection serializer, String fileName)
+    private static void saveObjectCollectionWithJSON(VivariumObjectCollection serializer, String fileName)
     {
         String jsonString = JSONConverter.serializerToJSONString(serializer);
         saveStringToFile(jsonString, fileName);
     }
 
-    public static VivariumObject loadObject(String fileName, Format f)
-    {
-        if (f == Format.JSON)
-        {
-            return loadObjectWithJSON(fileName);
-        }
-        else if (f == Format.GWT)
-        {
-            return loadObjectWithGwtStreamer(fileName);
-        }
-        else
-        {
-            throw new UserFacingError("Loading format " + f + " is not supported");
-        }
-    }
-
-    public static Collection<VivariumObject> loadObjects(String fileName, Format f)
-    {
-        if (f == Format.JSON)
-        {
-            return loadObjectsWithJSON(fileName);
-        }
-        else
-        {
-            throw new UserFacingError("Loading format " + f + " is not supported");
-        }
-    }
-
-    public static MapSerializerCollection loadObjectCollection(String fileName, Format f)
+    public static VivariumObjectCollection loadObjectCollection(String fileName, Format f)
     {
         if (f == Format.JSON)
         {
             return loadObjectCollectionWithJSON(fileName);
         }
+        else if (f == Format.GWT)
+        {
+            return loadObjectCollectionWithGwtStreamer(fileName);
+        }
         else
         {
             throw new UserFacingError("Loading format " + f + " is not supported");
         }
     }
 
-    private static VivariumObject loadObjectWithJSON(String fileName)
-    {
-        String jsonString = loadFileToString(fileName);
-        return JSONConverter.jsonStringToSerializer(jsonString);
-    }
-
-    private static Collection<VivariumObject> loadObjectsWithJSON(String fileName)
-    {
-        String jsonString = loadFileToString(fileName);
-        return JSONConverter.jsonStringToSerializerList(jsonString);
-    }
-
-    private static MapSerializerCollection loadObjectCollectionWithJSON(String fileName)
+    private static VivariumObjectCollection loadObjectCollectionWithJSON(String fileName)
     {
         String jsonString = loadFileToString(fileName);
         return JSONConverter.jsonStringToSerializerCollection(jsonString);
     }
 
-    private static VivariumObject loadObjectWithGwtStreamer(String fileName)
+    // TODO: This is no longer connected and needs to be reconnected somehow.
+    private static VivariumObjectCollection loadObjectCollectionWithGwtStreamer(String fileName)
     {
         String gwtString = loadFileToString(fileName);
-        return (VivariumObject) Streamer.get().fromString(gwtString);
+        return (VivariumObjectCollection) Streamer.get().fromString(gwtString);
     }
 }

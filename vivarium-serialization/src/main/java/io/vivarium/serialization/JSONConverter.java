@@ -9,75 +9,56 @@ import org.json.JSONObject;
 
 public class JSONConverter
 {
+    private static final String OBJECT_KEY = "objects";
+
     public static String serializerToJSONString(VivariumObject serializer)
     {
         SerializationEngine engine = new SerializationEngine();
-        SerializedCollection collection = engine.serialize(serializer);
+        MapCollection collection = engine.serialize(serializer);
         JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection);
         return jsonObject.toString();
     }
 
-    public static String serializerToJSONString(MapSerializerCollection serializers)
+    public static String serializerToJSONString(VivariumObjectCollection serializers)
     {
         SerializationEngine engine = new SerializationEngine();
-        SerializedCollection collection = engine.serialize(serializers);
+        MapCollection collection = engine.serialize(serializers);
         JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection);
         return jsonObject.toString();
     }
 
-    public static VivariumObject jsonStringToSerializer(String jsonString)
+    public static VivariumObjectCollection jsonStringToSerializerCollection(String jsonString)
     {
         JSONObject jsonObject = new JSONObject(jsonString);
-        SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
-        SerializationEngine engine = new SerializationEngine();
-        return engine.deserialize(collection);
-    }
-
-    public static List<VivariumObject> jsonStringToSerializerList(String jsonString)
-    {
-        JSONObject jsonObject = new JSONObject(jsonString);
-        SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
-        SerializationEngine engine = new SerializationEngine();
-        return engine.deserializeList(collection);
-    }
-
-    public static MapSerializerCollection jsonStringToSerializerCollection(String jsonString)
-    {
-        JSONObject jsonObject = new JSONObject(jsonString);
-        SerializedCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
+        MapCollection collection = JSONConverter.convertFromJSONObject(jsonObject);
         SerializationEngine engine = new SerializationEngine();
         return engine.deserializeCollection(collection);
     }
 
-    private static JSONObject convertFromSerializedCollection(SerializedCollection collection)
+    private static JSONObject convertFromSerializedCollection(MapCollection collection)
     {
         JSONObject jsonObject = new JSONObject();
-        for (SerializationCategory category : SerializationCategory.values())
+        while (collection.hasNext())
         {
-            while (collection.hasNext(category))
-            {
-                HashMap<String, Object> map = collection.popNext(category);
-                JSONObject categoryMapObject = new JSONObject(map);
-                jsonObject.append(category.name(), categoryMapObject);
-            }
+            HashMap<String, Object> map = collection.popNext();
+            JSONObject categoryMapObject = new JSONObject(map);
+            jsonObject.append(OBJECT_KEY, categoryMapObject);
         }
         return jsonObject;
     }
 
-    private static SerializedCollection convertFromJSONObject(JSONObject jsonObject)
+    private static MapCollection convertFromJSONObject(JSONObject jsonObject)
     {
-        SerializedCollection collection = new SerializedCollection();
-        for (Object key : jsonObject.keySet())
+        MapCollection collection = new MapCollection();
+
+        JSONArray categoryArray = jsonObject.getJSONArray(OBJECT_KEY);
+        for (int i = 0; i < categoryArray.length(); i++)
         {
-            String category = "" + key;
-            JSONArray categoryArray = jsonObject.getJSONArray(category);
-            for (int i = 0; i < categoryArray.length(); i++)
-            {
-                JSONObject objectI = categoryArray.getJSONObject(i);
-                HashMap<String, Object> map = innerConvertFromJSONObject(objectI);
-                collection.addObject(map);
-            }
+            JSONObject objectI = categoryArray.getJSONObject(i);
+            HashMap<String, Object> map = innerConvertFromJSONObject(objectI);
+            collection.addObject(map);
         }
+
         return collection;
     }
 

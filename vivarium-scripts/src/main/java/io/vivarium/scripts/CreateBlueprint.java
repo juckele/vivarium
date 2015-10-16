@@ -13,7 +13,6 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
-import io.vivarium.serialization.VivariumObject;
 import io.vivarium.serialization.SerializationEngine;
 
 public class CreateBlueprint extends CommonsScript
@@ -53,9 +52,10 @@ public class CreateBlueprint extends CommonsScript
             try
             {
                 auditFile = commandLine.getOptionValue(AUDIT_INPUT_FILE);
-                for (VivariumObject mapSerializer : FileIO.loadObjects(auditFile, Format.JSON))
+                for (AuditFunction auditFunction : FileIO.loadObjectCollection(auditFile, Format.JSON)
+                        .get(AuditFunction.class))
                 {
-                    auditFunctions.add((AuditFunction) mapSerializer);
+                    auditFunctions.add(auditFunction);
                 }
                 if (auditFunctions.isEmpty())
                 {
@@ -75,9 +75,9 @@ public class CreateBlueprint extends CommonsScript
             try
             {
                 speciesFile = commandLine.getOptionValue(SPECIES_INPUT_FILE);
-                for (VivariumObject mapSerializer : FileIO.loadObjects(speciesFile, Format.JSON))
+                for (Species specie : FileIO.loadObjectCollection(speciesFile, Format.JSON).get(Species.class))
                 {
-                    species.add((Species) mapSerializer);
+                    species.add(specie);
                 }
                 if (species.isEmpty())
                 {

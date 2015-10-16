@@ -9,9 +9,7 @@ import org.apache.commons.cli.Option;
 import io.vivarium.core.brain.Brain;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
-import io.vivarium.serialization.VivariumObject;
-import io.vivarium.serialization.MapSerializerCollection;
-import io.vivarium.serialization.SerializationCategory;
+import io.vivarium.serialization.VivariumObjectCollection;
 
 public class NormalizeBrainGenomes extends CommonsScript
 {
@@ -42,16 +40,15 @@ public class NormalizeBrainGenomes extends CommonsScript
         // Load the file
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
 
-        MapSerializerCollection mapSerializerCollection = FileIO.loadObjectCollection(inputFile, Format.JSON);
-        List<VivariumObject> brains = mapSerializerCollection.get(SerializationCategory.BRAIN);
-        for (VivariumObject untypedBrain : brains)
+        VivariumObjectCollection collection = FileIO.loadObjectCollection(inputFile, Format.JSON);
+        List<Brain> brains = collection.get(Brain.class);
+        for (Brain brain : brains)
         {
-            Brain brain = (Brain) untypedBrain;
             brain.normalizeWeights();
         }
 
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        FileIO.saveSerializerCollection(mapSerializerCollection, outputFile, Format.JSON);
+        FileIO.saveSerializerCollection(collection, outputFile, Format.JSON);
     }
 
     @Override

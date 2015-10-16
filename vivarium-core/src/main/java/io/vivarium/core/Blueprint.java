@@ -12,6 +12,7 @@ public class Blueprint extends VivariumObject
     // World Generation
     @SerializedParameter
     private int _width = 25;
+    @SerializedParameter
     private int _height = 25;
     @SerializedParameter
     private double _foodGenerationProbability = 0.01;

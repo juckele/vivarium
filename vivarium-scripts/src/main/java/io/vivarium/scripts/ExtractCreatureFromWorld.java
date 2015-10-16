@@ -44,7 +44,7 @@ public class ExtractCreatureFromWorld extends CommonsScript
         String worldFile = commandLine.getOptionValue(WORLD_INPUT_FILE);
         try
         {
-            world = (World) FileIO.loadObject(worldFile, Format.JSON);
+            world = FileIO.loadObjectCollection(worldFile, Format.JSON).getFirst(World.class);
         }
         catch (ClassCastException e)
         {

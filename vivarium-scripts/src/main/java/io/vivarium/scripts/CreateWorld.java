@@ -46,7 +46,7 @@ public class CreateWorld extends CommonsScript
             try
             {
                 blueprintFile = commandLine.getOptionValue(BLUEPRINT_INPUT_FILE);
-                blueprint = (Blueprint) FileIO.loadObject(blueprintFile, Format.JSON);
+                blueprint = FileIO.loadObjectCollection(blueprintFile, Format.JSON).getFirst(Blueprint.class);
             }
             catch (ClassCastException e)
             {

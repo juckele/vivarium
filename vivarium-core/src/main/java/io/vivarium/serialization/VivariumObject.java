@@ -8,7 +8,12 @@ import io.vivarium.util.UUID;
 public abstract class VivariumObject implements Streamable
 {
     @SerializedParameter
-    UUID _uuid = UUID.randomUUID();
+    private UUID _uuid = UUID.randomUUID();
 
     public abstract void finalizeSerialization();
+
+    UUID getUUID()
+    {
+        return _uuid;
+    }
 }

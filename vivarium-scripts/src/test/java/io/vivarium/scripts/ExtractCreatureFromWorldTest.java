@@ -42,7 +42,7 @@ public class ExtractCreatureFromWorldTest
             String[] commandArgs = { "-w", path + "w.viv", "-o", path + "c.viv" };
             ExtractCreatureFromWorld.main(commandArgs);
         }
-        Creature u = (Creature) FileIO.loadObject(path + "c.viv", Format.JSON);
+        Creature u = FileIO.loadObjectCollection(path + "c.viv", Format.JSON).getFirst(Creature.class);
         assertNotNull("Creature is loaded from file correctly", u);
         assertNotNull("Creature has brain object correctly reloaded", u.getBrain());
         assertTrue("Creature has reasonable ID", u.getID() >= 0 && u.getID() < (worldSize - 2) * (worldSize - 2));
@@ -57,7 +57,7 @@ public class ExtractCreatureFromWorldTest
             String[] commandArgs = { "-w", path + "w.viv", "-o", path + "c.viv" };
             ExtractCreatureFromWorld.main(commandArgs);
         }
-        u = (Creature) FileIO.loadObject(path + "c.viv", Format.JSON);
+        u = FileIO.loadObjectCollection(path + "c.viv", Format.JSON).getFirst(Creature.class);
         assertEquals("Creature age should match age of world", u.getAge(), 200);
     }
 }

@@ -82,4 +82,16 @@ public class UUID implements Serializable, Streamable
 
         return vid;
     }
+
+    @Override
+    public int hashCode()
+    {
+        return toString().hashCode();
+    }
+
+    @Override
+    public boolean equals(Object that)
+    {
+        return this.toString().equals(String.valueOf(that));
+    }
 }

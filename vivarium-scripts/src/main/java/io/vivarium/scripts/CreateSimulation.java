@@ -61,7 +61,7 @@ public class CreateSimulation extends CommonsScript
             try
             {
                 blueprintFile = commandLine.getOptionValue(BLUEPRINT_INPUT_FILE);
-                blueprint = (Blueprint) FileIO.loadObject(blueprintFile, Format.JSON);
+                blueprint = FileIO.loadObjectCollection(blueprintFile, Format.JSON).getFirst(Blueprint.class);
             }
             catch (ClassCastException e)
             {
@@ -82,7 +82,7 @@ public class CreateSimulation extends CommonsScript
             try
             {
                 worldFile = commandLine.getOptionValue(WORLD_INPUT_FILE);
-                world = (World) FileIO.loadObject(worldFile, Format.JSON);
+                world = FileIO.loadObjectCollection(worldFile, Format.JSON).getFirst(World.class);
             }
             catch (ClassCastException e)
             {

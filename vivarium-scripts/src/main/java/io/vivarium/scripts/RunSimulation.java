@@ -11,7 +11,8 @@ import io.vivarium.core.World;
 import io.vivarium.core.simulation.Simulation;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
-import io.vivarium.serialization.SerializationCategory;
+import io.vivarium.serialization.VivariumObject;
+import io.vivarium.serialization.VivariumObjectCollection;
 
 public class RunSimulation extends CommonsScript
 {
@@ -54,24 +55,23 @@ public class RunSimulation extends CommonsScript
     {
         // Load the file
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
-        Object object = FileIO.loadObject(inputFile, Format.JSON);
-        Simulation simulation;
-        SerializationCategory inputType = null;
-        if (World.class.isAssignableFrom(object.getClass()))
+        VivariumObjectCollection collection = FileIO.loadObjectCollection(inputFile, Format.JSON);
+        Class<? extends VivariumObject> inputType;
+        Simulation simulation = collection.getFirst(Simulation.class);
+        World world = collection.getFirst(World.class);
+        if (simulation != null)
         {
-            inputType = SerializationCategory.WORLD;
-            World world = (World) object;
-            simulation = new Simulation(world);
+            inputType = Simulation.class;
         }
-        else if (Simulation.class.isAssignableFrom(object.getClass()))
+        else if (world != null)
         {
-            inputType = SerializationCategory.SIMULATION;
-            simulation = (Simulation) object;
+            inputType = World.class;
+            simulation = new Simulation(collection.getFirst(World.class));
         }
         else
         {
             String extendedMessage = "input file " + inputFile
-                    + " does not contain a world or simulation as top level objects";
+                    + " does not contain a world or simulation object and cannot be run";
             throw new IllegalStateException(extendedMessage);
         }
 
@@ -121,7 +121,7 @@ public class RunSimulation extends CommonsScript
             else
             {
                 // Nothing is specified, input must be a simulation. This is still has potential to hang
-                if (inputType == SerializationCategory.SIMULATION)
+                if (inputType == Simulation.class)
                 {
                     // TODO: Validate that the simulation has appropriate end hooks
                     simulation.runUntilCompletion();
@@ -131,12 +131,11 @@ public class RunSimulation extends CommonsScript
 
         // Save the result;
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        if (inputType == SerializationCategory.WORLD)
+        if (inputType == World.class)
         {
-            World world = simulation.getWorld();
             FileIO.saveSerializer(world, outputFile, Format.JSON);
         }
-        else if (inputType == SerializationCategory.SIMULATION)
+        else if (inputType == Simulation.class)
         {
             FileIO.saveSerializer(simulation, outputFile, Format.JSON);
         }

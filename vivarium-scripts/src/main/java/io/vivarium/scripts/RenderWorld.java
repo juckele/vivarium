@@ -31,11 +31,9 @@ public class RenderWorld extends Script
     @Override
     protected void run(String[] args)
     {
-        World w = (World) FileIO.loadObject(args[0], Format.JSON);
+        World w = FileIO.loadObjectCollection(args[0], Format.JSON).getFirst(World.class);
         System.out.println(w.render(RenderCode.WORLD_MAP));
         System.out.println(w.render(RenderCode.BRAIN_WEIGHTS));
-        // System.out.println(w.toString(RenderCode.CREATURE_LIST));
-        // System.out.println(w.toString(RenderCode.DEAD_CREATURE_LIST));
     }
 
     public static void main(String[] args)

@@ -31,7 +31,7 @@ public class RenderCreature extends Script
     @Override
     protected void run(String[] args)
     {
-        Creature c = (Creature) FileIO.loadObject(args[0], Format.JSON);
+        Creature c = FileIO.loadObjectCollection(args[0], Format.JSON).getFirst(Creature.class);
         System.out.println(c.getBrain().render(RenderCode.BRAIN_WEIGHTS));
         System.out.println(c.render(RenderCode.COMPLEX_CREATURE, -1, -1));
 

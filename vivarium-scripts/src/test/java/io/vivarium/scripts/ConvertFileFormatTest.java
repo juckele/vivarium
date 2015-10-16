@@ -23,18 +23,22 @@ public class ConvertFileFormatTest
     @Test
     public void testIteratedConversion() throws IOException
     {
+        System.out.println("A");
         {
             String[] commandArgs = { "-o", path + "b.viv" };
             CreateBlueprint.main(commandArgs);
         }
+        System.out.println("B");
         {
             String[] commandArgs = { "-i", path + "b.viv", "-x", "JSON", "-o", path + "b.gwt", "-y", "GWT" };
             ConvertFileFormat.main(commandArgs);
         }
+        System.out.println("C");
         {
             String[] commandArgs = { "-i", path + "b.gwt", "-x", "GWT", "-o", path + "b2.viv", "-y", "JSON" };
             ConvertFileFormat.main(commandArgs);
         }
+        System.out.println("D");
     }
 
 }
