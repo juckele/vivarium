@@ -12,6 +12,8 @@ import io.vivarium.util.UserFacingError;
 
 public class FileIO
 {
+    public static final int FILE_FORMAT_VERSION = 1;
+
     public static void saveSerializer(VivariumObject serializer, String fileName, Format f)
     {
         if (f == Format.JSON)

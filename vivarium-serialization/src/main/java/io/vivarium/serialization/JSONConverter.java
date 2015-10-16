@@ -10,6 +10,7 @@ import org.json.JSONObject;
 public class JSONConverter
 {
     private static final String OBJECT_KEY = "objects";
+    private static final String VERSION_KEY = "fileFormatVersion";
 
     public static String serializerToJSONString(VivariumObject serializer)
     {
@@ -44,6 +45,7 @@ public class JSONConverter
             JSONObject categoryMapObject = new JSONObject(map);
             jsonObject.append(OBJECT_KEY, categoryMapObject);
         }
+        jsonObject.put(VERSION_KEY, FileIO.FILE_FORMAT_VERSION);
         return jsonObject;
     }
 
