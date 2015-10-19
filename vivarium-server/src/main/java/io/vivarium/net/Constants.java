@@ -1,4 +1,4 @@
-package vivarium.io.net;
+package io.vivarium.net;
 
 public class Constants
 {

@@ -104,6 +104,8 @@ project(':vivarium-server') {
         compile project(':vivarium-serialization')
 	compile 'org.postgresql:postgresql:9.4-1201-jdbc41'
         compile 'org.java-websocket:Java-WebSocket:1.3.0'
+        compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
+        compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
     }
 }
 
