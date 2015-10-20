@@ -75,8 +75,8 @@ public class WorldPopulator
             random -= s.getInitialGenerationProbability();
         }
         // If we fall through the for loop returns, it's because we've fundamentally screwed up our math.
-        throw new IllegalStateException("Species s.getInitialGenerationProbability() should sum to "
-                + _creatureProbability);
+        throw new IllegalStateException(
+                "Species s.getInitialGenerationProbability() should sum to " + _creatureProbability);
     }
 
 }

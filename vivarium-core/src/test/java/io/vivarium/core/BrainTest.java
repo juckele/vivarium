@@ -6,9 +6,10 @@ package io.vivarium.core;
 
 import org.junit.Test;
 
+import com.johnuckele.vtest.Tester;
+
 import io.vivarium.core.brain.NeuralNetworkBrain;
 import io.vivarium.util.Functions;
-import com.johnuckele.vtest.Tester;
 
 public class BrainTest
 {

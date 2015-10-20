@@ -8,13 +8,14 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
+import com.johnuckele.vtest.Tester;
+
 import io.vivarium.audit.AuditFunction;
 import io.vivarium.audit.CensusFunction;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
-import com.johnuckele.vtest.Tester;
 
 public class CensusTest
 {

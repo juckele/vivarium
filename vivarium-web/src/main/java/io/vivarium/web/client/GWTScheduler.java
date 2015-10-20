@@ -5,6 +5,7 @@
 package io.vivarium.web.client;
 
 import com.google.gwt.animation.client.AnimationScheduler;
+
 import io.vivarium.visualization.animation.SchedulingDelegate;
 
 public class GWTScheduler extends SchedulingDelegate

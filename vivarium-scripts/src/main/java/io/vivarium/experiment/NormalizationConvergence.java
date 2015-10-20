@@ -4,14 +4,14 @@
 
 package io.vivarium.experiment;
 
+import java.util.ArrayList;
+
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
-
-import java.util.ArrayList;
 
 public class NormalizationConvergence
 {

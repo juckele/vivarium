@@ -13,9 +13,9 @@ import io.vivarium.serialization.SerializationEngine;
 
 public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
 {
-    private int       _initialPopulation;
+    private int _initialPopulation;
     private Blueprint _blueprint;
-    private double    _simulationDuration;
+    private double _simulationDuration;
 
     public TimeToExtinctionFF(Blueprint blueprint, int initialPopulation, int simulationDuration)
     {

@@ -21,12 +21,12 @@ import io.vivarium.visualization.RenderCode;
  */
 public class GeneticAlgorithmRunner
 {
-    Species                           _species;
-    int                               _currentGeneration = 1;
-    int                               _generations       = 100;
-    int                               _populationSize    = 100;
-    ArrayList<Pair<Double, Creature>> _population        = new ArrayList<Pair<Double, Creature>>(_populationSize);
-    private FitnessFunction           _fitnessFunction;
+    Species _species;
+    int _currentGeneration = 1;
+    int _generations = 100;
+    int _populationSize = 100;
+    ArrayList<Pair<Double, Creature>> _population = new ArrayList<Pair<Double, Creature>>(_populationSize);
+    private FitnessFunction _fitnessFunction;
 
     public GeneticAlgorithmRunner(Species species, FitnessFunction fitnessFunction)
     {

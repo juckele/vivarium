@@ -149,6 +149,7 @@ public class NeuralNetworkBrain extends Brain
         }
     }
 
+    @Override
     public void normalizeWeights()
     {
         double sumOfSquares = 0;

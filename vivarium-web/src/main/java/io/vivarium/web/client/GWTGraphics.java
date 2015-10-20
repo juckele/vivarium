@@ -7,6 +7,7 @@ package io.vivarium.web.client;
 import com.google.gwt.animation.client.AnimationScheduler;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
+
 import io.vivarium.core.Direction;
 import io.vivarium.visualization.animation.GraphicalDelegate;
 
