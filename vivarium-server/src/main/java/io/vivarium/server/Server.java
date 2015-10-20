@@ -1,5 +1,6 @@
 package io.vivarium.server;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
@@ -7,13 +8,13 @@ import java.net.UnknownHostException;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
+import org.json.JSONObject;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.client.Worker;
 import io.vivarium.net.Constants;
-import io.vivarium.net.common.ServerGreeting;
+import io.vivarium.net.common.Pledge;
 
 public class Server extends WebSocketServer
 {
@@ -31,17 +32,6 @@ public class Server extends WebSocketServer
     public void onOpen(WebSocket conn, ClientHandshake handshake)
     {
         System.out.println("SERVER: Web Socket Connection Oopened. " + conn + " ~ " + handshake);
-        String jsonGreeting = "X";
-        try
-        {
-            jsonGreeting = mapper.writeValueAsString(new ServerGreeting());
-        }
-        catch (JsonProcessingException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        conn.send("HELLO FROM SERVER " + jsonGreeting);
     }
 
     @Override
@@ -54,8 +44,26 @@ public class Server extends WebSocketServer
     @Override
     public void onMessage(WebSocket conn, String message)
     {
+        try
+        {
+            JSONObject json = new JSONObject(message);
+            String type = json.get("type").toString();
+            switch (type)
+            {
+                case Pledge.TYPE:
+                    System.out.println("It's a pledge!");
+                    Pledge pledge = mapper.readValue(message, Pledge.class);
+                    System.out.println("Worker .... " + pledge.workerID + " has said it will do my bidding!");
+                    break;
+            }
+        }
+        catch (IOException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
         System.out.println("SERVER: Web Socket Message . " + conn + " ~ " + message);
-        if (i < 10)
+        if (i < 3)
         {
             conn.send("REPLY FROM SERVER! + " + i);
             i++;

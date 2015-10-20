@@ -43,7 +43,7 @@ public class Worker extends WebSocketClient
     public void onMessage(String message)
     {
         System.err.println("WORKER: Message the Message " + message);
-        this.send("Reply to mesmes!");
+        // this.send("Reply to mesmes!");
     }
 
     @Override

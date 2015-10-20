@@ -15,6 +15,14 @@ public class Pledge extends Message
     public final int slots;
     public final int throughput;
 
+    @SuppressWarnings("unused") // Used by Jackson
+    private Pledge()
+    {
+        workerID = UUID.randomUUID();
+        slots = -1;
+        throughput = -1;
+    }
+
     public Pledge(UUID workerID)
     {
         this.workerID = workerID;
