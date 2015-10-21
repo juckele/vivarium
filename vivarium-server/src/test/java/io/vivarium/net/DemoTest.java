@@ -19,5 +19,8 @@ public class DemoTest
 
         Worker w = new Worker();
         w.connect();
+
+        Worker w2 = new Worker();
+        w2.connect();
     }
 }
