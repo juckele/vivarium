@@ -8,8 +8,6 @@ buildscript {
     }
 }
 
-
-
 allprojects {
     apply plugin: 'jacoco'
 
@@ -87,7 +85,7 @@ project(':vivarium-core') {
     dependencies {
         compile 'com.google.guava:guava:18.0'
         compile 'com.google.guava:guava-gwt:18.0'
-	compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
+        compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
     }
 }
 
@@ -102,7 +100,7 @@ project(':vivarium-server') {
     dependencies {
         compile project(':vivarium-core')
         compile project(':vivarium-serialization')
-	compile 'org.postgresql:postgresql:9.4-1201-jdbc41'
+        compile 'org.postgresql:postgresql:9.4-1201-jdbc41'
         compile 'org.java-websocket:Java-WebSocket:1.3.0'
         compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
         compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
@@ -112,7 +110,7 @@ project(':vivarium-server') {
 project(':vivarium-ga') {
     dependencies {
         compile project(':vivarium-core')
-	compile project(':vivarium-serialization')
+    	compile project(':vivarium-serialization')
         compile 'org.javatuples:javatuples:1.2'
     }
 }
@@ -120,7 +118,7 @@ project(':vivarium-ga') {
 project(':vivarium-graph') {
     dependencies {
         compile project(':vivarium-core')
-	compile 'jfree:jfreechart:1.0.9'
+        compile 'jfree:jfreechart:1.0.9'
     }
 }
 
@@ -213,8 +211,8 @@ project(':vivarium-scripts') {
 
     dependencies {
         compile project(':vivarium-core')
-	compile project(':vivarium-serialization')
-	compile project(':vivarium-graph')
+        compile project(':vivarium-serialization')
+        compile project(':vivarium-graph')
         compile 'commons-cli:commons-cli:1.3.1'
     }
 }
@@ -223,7 +221,7 @@ project(':vivarium-swing') {
     dependencies {
         compile project(':vivarium-core')
         compile project(':vivarium-scripts')
-	compile 'net.java.dev.jna:jna-platform:4.0.0'
+        compile 'net.java.dev.jna:jna-platform:4.0.0'
     }
 }
 
@@ -243,7 +241,7 @@ project(':vivarium-web') {
         compile project(':vivarium-core')
         compile 'com.google.guava:guava:18.0'
         compile 'com.google.guava:guava-gwt:18.0'
-	compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
+        compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
     }
 }
 
