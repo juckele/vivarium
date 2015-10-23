@@ -2,5 +2,5 @@ package io.vivarium.net.common;
 
 public enum JobType
 {
-    SIMULATION
+    RUN_SIMULATION, CREATE_WORLD
 }
