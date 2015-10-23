@@ -24,9 +24,10 @@ public class Rand
     // Random number state
     private static Random _random = new Random();
     private static long _randomLong = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
+    private static long _randomLong2 = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
 
     /**
-     * Sets the pseudorandom seed to generate predictable behavior. javaRandomDouble uses LCG and this class has a
+     * Sets the psuedorandom seed to generate predictable behavior. javaRandomDouble uses LCG and this class has a
      * slightly faster Xorshift algorithm. Setting this seed will set the seeds for both the LCG and Xorshift seeds,
      * which become independent after the initial set.
      *
@@ -44,6 +45,7 @@ public class Rand
         }
         _random = new Random(seed);
         _randomLong = seed;
+        _randomLong2 = seed;
     }
 
     /**
@@ -57,9 +59,9 @@ public class Rand
     }
 
     /**
-     * Get a pseudorandom double with the range (-1,1)
+     * Get a psuedorandom double with the range (-1,1)
      *
-     * @return A pseudorandom double
+     * @return A psuedorandom double
      */
     public static double getRandomDouble()
     {
@@ -67,9 +69,9 @@ public class Rand
     }
 
     /**
-     * Get a pseudorandom positive double with the range [0,1)
+     * Get a psuedorandom positive double with the range [0,1)
      *
-     * @return A pseudorandom double
+     * @return A psuedorandom double
      */
     public static double getRandomPositiveDouble()
     {
@@ -77,11 +79,11 @@ public class Rand
     }
 
     /**
-     * Get a pseudorandom int with range [0,range)
+     * Get a psuedorandom int with range [0,range)
      *
      * @param range
      *            the number of possible return values
-     * @return A pseudorandom double [0,range)
+     * @return A psuedorandom double [0,range)
      */
     public static int getRandomInt(int range)
     {
@@ -89,9 +91,9 @@ public class Rand
     }
 
     /**
-     * Get a pseudorandom double from a Gaussian distribution with a mean of 0.0 and a standard deviation of 1.0
+     * Get a psuedorandom double from a Gaussian distribution with a mean of 0.0 and a standard deviation of 1.0
      *
-     * @return A pseudorandom Gaussian double
+     * @return A psuedorandom Gaussian double
      */
     public static double getRandomGaussian()
     {
@@ -99,9 +101,9 @@ public class Rand
     }
 
     /**
-     * Get a psuedorandom long
+     * Get a psuedorandom long generated with XorShift.
      *
-     * @return A pseudorandom long
+     * @return A psuedorandom long
      */
     public static long getRandomLong()
     {
@@ -110,4 +112,19 @@ public class Rand
         _randomLong ^= (_randomLong << 4);
         return _randomLong;
     }
+
+    /**
+     * Get a psuedorandom long generated with XorShift. This long uses a different seed from the getRandomLong method,
+     * in case a caller needs two independent random numbers.
+     *
+     * @return A psuedorandom long
+     */
+    public static long getRandomLong2()
+    {
+        _randomLong2 ^= (_randomLong2 << 21);
+        _randomLong2 ^= (_randomLong2 >>> 35);
+        _randomLong2 ^= (_randomLong2 << 4);
+        return _randomLong2;
+    }
+
 }

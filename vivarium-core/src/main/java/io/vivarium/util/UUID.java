@@ -24,8 +24,10 @@ import com.google.common.primitives.Longs;
 import com.googlecode.gwtstreamer.client.Streamable;
 
 /**
- * Guava based UUID implementation for compatibility with GWT. This class is more or less a plug in replacement for the
- * standard java.util.UUID.
+ * Guava based UUID implementation for compatibility with GWT. This class can be used as a plug in replacement for the
+ * standard java.util.UUID, but it's worth noting that GWT does not support SecureRandom, so this UUID implementation
+ * does not provide the same guarantee of entropy. It's much preferable to generate UUIDs from the java.util.UUID and
+ * convert into this class before sending to GWT if possible.
  *
  * @author John H. Uckele
  */
@@ -43,8 +45,9 @@ public class UUID implements Serializable, Streamable
     {
         UUID uuid = new UUID();
 
+        // This is compatible with a real UUID, but it is not cryptographically secure.
         uuid._long1 = Rand.getRandomLong();
-        uuid._long2 = Rand.getRandomLong();
+        uuid._long2 = Rand.getRandomLong2();
 
         return uuid;
     }
