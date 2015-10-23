@@ -57,28 +57,15 @@ public class RunSimulationTest
     }
 
     @Test
-    public void testDefaultWithSimulation()
-    {
-        {
-            String[] commandArgs = { "-o", path + "s.viv", "-t", "5000" };
-            CreateSimulation.main(commandArgs);
-        }
-        {
-            String[] commandArgs = { "-i", path + "s.viv", "-o", path + "s2.viv" };
-            RunSimulation.main(commandArgs);
-        }
-    }
-
-    @Test
     public void testTimeLimitAndTickLimit()
     {
         {
-            String[] commandArgs = { "-o", path + "s.viv", "-t", "1" };
-            CreateSimulation.main(commandArgs);
+            String[] commandArgs = { "-o", path + "w.viv" };
+            CreateWorld.main(commandArgs);
         }
         long start = System.currentTimeMillis();
         {
-            String[] commandArgs = { "-i", path + "s.viv", "-o", path + "s2.viv", "-s", "1" };
+            String[] commandArgs = { "-i", path + "w.viv", "-o", path + "s2.viv", "-s", "1", "-t", "1" };
             RunSimulation.main(commandArgs);
         }
         long end = System.currentTimeMillis();

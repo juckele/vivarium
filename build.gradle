@@ -159,13 +159,6 @@ project(':vivarium-scripts') {
             from sharedManifest
         }
     }
-    task jarCreateSimulation( type: OneJar ) {
-        archiveName = 'create-simulation'+'-'+version+'.jar'
-        mainClass = 'io.vivarium.scripts.CreateSimulation'
-        manifest = project.manifest {
-            from sharedManifest
-        }
-    }
     task jarCreateWorld( type: OneJar ) {
         archiveName = 'create-world'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.CreateWorld'
@@ -202,7 +195,6 @@ project(':vivarium-scripts') {
     jarCollection.dependsOn jarCreateAuditFunction
     jarCollection.dependsOn jarCreateBlueprint
     jarCollection.dependsOn jarCreateSpecies
-    jarCollection.dependsOn jarCreateSimulation
     jarCollection.dependsOn jarCreateWorld
     jarCollection.dependsOn jarExtractCreatureFromWorld
     jarCollection.dependsOn jarNormalizeBrainGenomes

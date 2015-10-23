@@ -29,8 +29,6 @@ import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.core.brain.NeuralNetworkBrain;
 import io.vivarium.core.brain.RandomBrain;
-import io.vivarium.core.simulation.Simulation;
-import io.vivarium.core.simulation.TickLimitHook;
 import io.vivarium.util.UUID;
 
 public class SerializationEngine
@@ -129,14 +127,6 @@ public class SerializationEngine
             else if (clazzName.equals(ActionFrequencyRecord.class.getSimpleName()))
             {
                 constructor = ActionFrequencyRecord.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(Simulation.class.getSimpleName()))
-            {
-                constructor = Simulation.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(TickLimitHook.class.getSimpleName()))
-            {
-                constructor = TickLimitHook.class.getDeclaredConstructor();
             }
             else
             {

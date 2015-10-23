@@ -15,8 +15,8 @@ import io.vivarium.core.World;
 import io.vivarium.core.simulation.Simulation;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
-import io.vivarium.serialization.VivariumObject;
 import io.vivarium.serialization.VivariumObjectCollection;
+import io.vivarium.util.UserFacingError;
 
 public class RunSimulation extends CommonsScript
 {
@@ -60,23 +60,11 @@ public class RunSimulation extends CommonsScript
         // Load the file
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
         VivariumObjectCollection collection = FileIO.loadObjectCollection(inputFile, Format.JSON);
-        Class<? extends VivariumObject> inputType;
-        Simulation simulation = collection.getFirst(Simulation.class);
         World world = collection.getFirst(World.class);
-        if (simulation != null)
+        if (world == null)
         {
-            inputType = Simulation.class;
-        }
-        else if (world != null)
-        {
-            inputType = World.class;
-            simulation = new Simulation(collection.getFirst(World.class));
-        }
-        else
-        {
-            String extendedMessage = "input file " + inputFile
-                    + " does not contain a world or simulation object and cannot be run";
-            throw new IllegalStateException(extendedMessage);
+            String extendedMessage = "input file " + inputFile + " does not contain a world object and cannot be run";
+            throw new UserFacingError(extendedMessage);
         }
 
         Long maxTicks = null;
@@ -107,12 +95,12 @@ public class RunSimulation extends CommonsScript
             if (maxTime != null)
             {
                 // Both ticks and time are specified
-                simulation.runForUpTo(maxTicks, maxTime, timeUnit);
+                Simulation.runForUpTo(world, maxTicks, maxTime, timeUnit);
             }
             else
             {
                 // Only ticks are specified
-                simulation.runForUpTo(maxTicks);
+                Simulation.runForUpTo(world, maxTicks);
             }
         }
         else
@@ -120,35 +108,19 @@ public class RunSimulation extends CommonsScript
             if (maxTime != null)
             {
                 // Only time is specified
-                simulation.runForUpTo(maxTime, timeUnit);
+                Simulation.runForUpTo(world, maxTime, timeUnit);
             }
             else
             {
-                // Nothing is specified, input must be a simulation. This is still has potential to hang
-                if (inputType == Simulation.class)
-                {
-                    // TODO: Validate that the simulation has appropriate end hooks
-                    simulation.runUntilCompletion();
-                }
+                // Nothing is specified, this will hang if run
+                String extendedMessage = "A time limit or tick limit must be specified or a simulation will not halt.";
+                throw new UserFacingError(extendedMessage);
             }
         }
 
         // Save the result;
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        if (inputType == World.class)
-        {
-            FileIO.saveSerializer(world, outputFile, Format.JSON);
-        }
-        else if (inputType == Simulation.class)
-        {
-            FileIO.saveSerializer(simulation, outputFile, Format.JSON);
-        }
-        else
-        {
-            String extendedMessage = "unable to save type " + inputType + " after running simulation";
-            throw new IllegalStateException(extendedMessage);
-
-        }
+        FileIO.saveSerializer(world, outputFile, Format.JSON);
     }
 
     @Override
