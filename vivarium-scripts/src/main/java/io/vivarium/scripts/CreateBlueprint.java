@@ -95,7 +95,7 @@ public class CreateBlueprint extends CommonsScript
                 throw new IllegalStateException(extendedMessage, e);
             }
         }
-        Map<String, Object> extraOptions = this.extraArgsAsMap();
+        Map<String, Object> extraOptions = this.extraArgsAsMap(commandLine);
 
         // Build the blueprint
         Blueprint blueprint = Blueprint.makeDefault();

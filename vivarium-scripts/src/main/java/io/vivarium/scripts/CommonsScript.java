@@ -20,32 +20,49 @@ import org.apache.commons.cli.ParseException;
 
 public abstract class CommonsScript
 {
-    private CommandLine _commandLine;
-
     public CommonsScript(String[] args)
+    {
+        runAsScript(args);
+    }
+
+    public CommonsScript()
+    {
+    }
+
+    public void runAsScript(String[] args)
+    {
+        CommandLine commandLine = parseArgs(args);
+        if (commandLine != null)
+        {
+            run(commandLine);
+        }
+    }
+
+    protected CommandLine parseArgs(String[] args)
     {
         DefaultParser parser = new DefaultParser();
         try
         {
-            _commandLine = parser.parse(this.getOptions(), args);
-            if (_commandLine.hasOption("help"))
+            CommandLine commandLine = parser.parse(this.getOptions(), args);
+            if (commandLine.hasOption("help"))
             {
                 printUsageAndExit();
             }
             else
             {
-                run(_commandLine);
+                return commandLine;
             }
         }
         catch (ParseException e)
         {
             printUsageAndExit();
         }
+        return null;
     }
 
-    protected Map<String, Object> extraArgsAsMap()
+    protected Map<String, Object> extraArgsAsMap(CommandLine commandLine)
     {
-        String[] args = _commandLine.getArgs();
+        String[] args = commandLine.getArgs();
         HashMap<String, Object> map = new HashMap<String, Object>();
         for (int i = 0; i + 1 < args.length; i += 2)
         {

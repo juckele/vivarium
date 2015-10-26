@@ -37,7 +37,7 @@ public class CreateSpecies extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        Map<String, Object> extraOptions = this.extraArgsAsMap();
+        Map<String, Object> extraOptions = this.extraArgsAsMap(commandLine);
 
         // Build the species
         Species species = Species.makeDefault();

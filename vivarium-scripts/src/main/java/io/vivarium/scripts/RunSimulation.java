@@ -27,9 +27,19 @@ public class RunSimulation extends CommonsScript
     private static final String MINUTES = "minutes";
     private static final String HOURS = "hours";
 
+    public RunSimulation()
+    {
+        super();
+    }
+
     public RunSimulation(String[] args)
     {
-        super(args);
+        super();
+        CommandLine commandLine = parseArgs(args);
+        if (commandLine != null)
+        {
+            run(commandLine);
+        }
     }
 
     // WebWorld worldCopy = Streamer.get().deepCopy(world);
@@ -67,6 +77,7 @@ public class RunSimulation extends CommonsScript
             throw new UserFacingError(extendedMessage);
         }
 
+        // Parse tick / time limits
         Long maxTicks = null;
         if (commandLine.hasOption(TICKS))
         {
@@ -90,6 +101,16 @@ public class RunSimulation extends CommonsScript
             timeUnit = TimeUnit.HOURS;
         }
 
+        // Run the simulation
+        run(world, maxTicks, maxTime, timeUnit);
+
+        // Save the result;
+        String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
+        FileIO.saveSerializer(world, outputFile, Format.JSON);
+    }
+
+    public void run(World world, Long maxTicks, Long maxTime, TimeUnit timeUnit)
+    {
         if (maxTicks != null)
         {
             if (maxTime != null)
@@ -117,10 +138,6 @@ public class RunSimulation extends CommonsScript
                 throw new UserFacingError(extendedMessage);
             }
         }
-
-        // Save the result;
-        String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        FileIO.saveSerializer(world, outputFile, Format.JSON);
     }
 
     @Override
@@ -137,7 +154,7 @@ public class RunSimulation extends CommonsScript
 
     public static void main(String[] args)
     {
-        new RunSimulation(args);
+        RunSimulation task = new RunSimulation();
+        task.runAsScript(args);
     }
-
 }

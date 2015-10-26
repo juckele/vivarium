@@ -42,7 +42,7 @@ public class CreateAuditFunction extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        Map<String, Object> extraOptions = this.extraArgsAsMap();
+        Map<String, Object> extraOptions = this.extraArgsAsMap(commandLine);
 
         // Determine the correct type
         String auditTypeString = commandLine.getOptionValue(AUDIT_TYPE);
