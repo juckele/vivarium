@@ -4,14 +4,12 @@
 
 package io.vivarium.net.common;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
+
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class Message
 {
-    public final String type;
-
     protected Message()
     {
-        type = getType();
     }
-
-    protected abstract String getType();
 }

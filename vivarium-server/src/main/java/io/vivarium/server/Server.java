@@ -12,12 +12,12 @@ import java.net.UnknownHostException;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
-import org.json.JSONObject;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.client.Worker;
 import io.vivarium.net.Constants;
+import io.vivarium.net.common.Message;
 import io.vivarium.net.common.Pledge;
 
 public class Server extends WebSocketServer
@@ -50,15 +50,12 @@ public class Server extends WebSocketServer
     {
         try
         {
-            JSONObject json = new JSONObject(message);
-            String type = json.get("type").toString();
-            switch (type)
+            System.out.println("It's a pledge!");
+            Message untypedMessage = mapper.readValue(message, Message.class);
+            if (untypedMessage instanceof Pledge)
             {
-                case Pledge.TYPE:
-                    System.out.println("It's a pledge!");
-                    Pledge pledge = mapper.readValue(message, Pledge.class);
-                    System.out.println("Worker .... " + pledge.workerID + " has said it will do my bidding!");
-                    break;
+                Pledge pledge = (Pledge) untypedMessage;
+                System.out.println("Worker .... " + pledge.workerID + " has said it will do my bidding!");
             }
         }
         catch (IOException e)
