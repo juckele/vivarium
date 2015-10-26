@@ -6,19 +6,16 @@ package io.vivarium.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.UUID;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.net.Constants;
 
 public class Client extends WebSocketClient
 {
-    private UUID _clientID = UUID.randomUUID();
-    private ObjectMapper mapper = new ObjectMapper();
+    // private UUID _clientID = UUID.randomUUID();
+    // private ObjectMapper mapper = new ObjectMapper();
 
     public Client() throws URISyntaxException
     {
