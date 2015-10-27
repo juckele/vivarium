@@ -187,6 +187,13 @@ project(':vivarium-scripts') {
             from sharedManifest
         }
     }
+    task jarRunBenchmark( type: OneJar ) {
+        archiveName = 'run-benchmark'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.RunBenchmark'
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
 
     task jarCollection {
         description = "Creates a complete set of stand-alone jars for scripts in this project."
@@ -199,6 +206,7 @@ project(':vivarium-scripts') {
     jarCollection.dependsOn jarExtractCreatureFromWorld
     jarCollection.dependsOn jarNormalizeBrainGenomes
     jarCollection.dependsOn jarRunSimulation
+    jarCollection.dependsOn jarRunBenchmark
     build.dependsOn jarCollection
 
     dependencies {

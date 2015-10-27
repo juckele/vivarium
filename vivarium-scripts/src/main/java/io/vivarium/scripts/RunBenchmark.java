@@ -42,24 +42,20 @@ public class RunBenchmark extends CommonsScript
     {
         try
         {
-            System.out.println("Running single thread benchmark:");
+            System.out.println("Running benchmarks:");
+
             // Do this just to give the JIT Compiler some stuff to optimize
             inlineTest(100);
 
+            // Now run the actual benchmarkks now that the the Java VM is warmed up
             int iterations = 1000;
-            int size = 10;
+            int size = 40;
             double result;
-            System.out.println("Inline:");
-            result = iterateTest(iterations, size);
-            System.out.println(String.format("%sx%s:\n Average: %4.3e\n\n", size, size, result));
-
-            System.out.println("Threads");
-            for (int threadCount = 1; threadCount <= 16; threadCount++)
+            for (int threadCount = 1; threadCount <= 8; threadCount++)
             {
-                size = 100;
                 result = threadTest(threadCount, iterations, size);
-                System.out.println(
-                        String.format("%sx%s (%s threads):\n Average: %4.3e\n\n", size, size, threadCount, result));
+                System.out.print(String.format("%sx%s (%s threads):\n Creature Ticks / Second: %4.3e\n\n", size, size,
+                        threadCount, result));
             }
         }
         catch (Exception e)
