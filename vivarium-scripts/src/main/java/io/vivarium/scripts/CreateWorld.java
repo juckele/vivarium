@@ -14,6 +14,7 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.World;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
+import io.vivarium.serialization.SerializationEngine;
 
 public class CreateWorld extends CommonsScript
 {
@@ -43,7 +44,7 @@ public class CreateWorld extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        Blueprint blueprint;
+        Blueprint blueprint = null;
         if (commandLine.hasOption(BLUEPRINT_INPUT_FILE))
         {
             String blueprintFile = null;
@@ -59,22 +60,41 @@ public class CreateWorld extends CommonsScript
                 throw new IllegalStateException(extendedMessage, e);
             }
         }
-        else
-        {
-            blueprint = Blueprint.makeDefault();
-        }
+        Integer size = null;
         if (commandLine.hasOption(SIZE_OPTION))
         {
-            int size = Integer.parseInt(commandLine.getOptionValue(SIZE_OPTION));
-            blueprint.setSize(size);
+            size = Integer.parseInt(commandLine.getOptionValue(SIZE_OPTION));
         }
 
         // Build the world
-        World world = new World(blueprint);
+        World world = run(blueprint, size);
 
         // Save the world
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
         FileIO.saveSerializer(world, outputFile, Format.JSON);
+    }
+
+    /**
+     * Creates a world given an (optional) Blueprint and (optional) world size.
+     *
+     * @param blueprint
+     *            Optional blueprint. A default blueprint is created if this value is null.
+     * @param size
+     *            Optional size override. If this value is passed in, the world will be created with this size.
+     * @return The new world.
+     */
+    public World run(Blueprint blueprint, Integer size)
+    {
+        if (blueprint == null)
+        {
+            blueprint = Blueprint.makeDefault();
+        }
+        if (size != null)
+        {
+            SerializationEngine serializer = new SerializationEngine();
+            blueprint = serializer.makeCopy(blueprint);
+        }
+        return new World(blueprint);
     }
 
     @Override

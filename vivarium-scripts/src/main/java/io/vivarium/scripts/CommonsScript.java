@@ -22,14 +22,21 @@ public abstract class CommonsScript
 {
     public CommonsScript(String[] args)
     {
-        runAsScript(args);
+        run(args);
     }
 
     public CommonsScript()
     {
     }
 
-    public void runAsScript(String[] args)
+    /**
+     * Runs the script taking in an array of String objects. These strings can represent the arguments passed in as
+     * command line options.
+     *
+     * @param args
+     *            Arguments to be parsed as options and values.
+     */
+    public void run(String[] args)
     {
         CommandLine commandLine = parseArgs(args);
         if (commandLine != null)

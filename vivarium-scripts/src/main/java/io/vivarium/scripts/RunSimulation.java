@@ -42,8 +42,6 @@ public class RunSimulation extends CommonsScript
         }
     }
 
-    // WebWorld worldCopy = Streamer.get().deepCopy(world);
-
     @Override
     protected List<Option> getScriptSpecificOptions()
     {
@@ -109,6 +107,20 @@ public class RunSimulation extends CommonsScript
         FileIO.saveSerializer(world, outputFile, Format.JSON);
     }
 
+    /**
+     * Simulates a World for at most a given number of ticks and a given length of time. One of maxTicks or maxTime is
+     * required.
+     *
+     * @param world
+     *            The world to simulate.
+     * @param maxTicks
+     *            The number of ticks to stop the simulation after.
+     * @param maxTime
+     *            The length of time to stop the simulation after.
+     * @param timeUnit
+     *            The unit of time that maxTime is measured in. Only checked if maxTime is not null.
+     * @return nothing, this method changes the World object passed in to it.
+     */
     public void run(World world, Long maxTicks, Long maxTime, TimeUnit timeUnit)
     {
         if (maxTicks != null)
@@ -155,6 +167,6 @@ public class RunSimulation extends CommonsScript
     public static void main(String[] args)
     {
         RunSimulation task = new RunSimulation();
-        task.runAsScript(args);
+        task.run(args);
     }
 }

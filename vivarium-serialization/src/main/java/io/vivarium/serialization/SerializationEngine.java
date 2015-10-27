@@ -484,16 +484,18 @@ public class SerializationEngine
     }
 
     /**
-     * Creates a copy of a deserialized
+     * Creates a deep copy of a vivarium object
      *
      * @param original
-     * @return
+     *            The object to copy
+     * @return The copy of the original object
      */
-    public VivariumObject makeCopy(VivariumObject original)
+    @SuppressWarnings("unchecked")
+    public <T extends VivariumObject> T makeCopy(T original)
     {
         MapCollection collection = serialize(original);
         VivariumObjectCollection collectionCopy = deserializeCollection(collection);
-        return collectionCopy.getObject(original.getUUID());
+        return (T) collectionCopy.getObject(original.getUUID());
     }
 
     /**
