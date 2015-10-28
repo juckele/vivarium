@@ -45,7 +45,7 @@ public class NormalizeBrainGenomes extends CommonsScript
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
 
         VivariumObjectCollection collection = FileIO.loadObjectCollection(inputFile, Format.JSON);
-        List<Brain> brains = collection.get(Brain.class);
+        List<Brain> brains = collection.getAll(Brain.class);
         for (Brain brain : brains)
         {
             brain.normalizeWeights();

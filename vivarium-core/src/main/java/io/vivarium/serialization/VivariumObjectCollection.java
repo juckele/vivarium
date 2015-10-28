@@ -27,7 +27,7 @@ public class VivariumObjectCollection implements Streamable
     }
 
     @SuppressWarnings("unchecked") // Not actually unchecked...
-    public <T extends VivariumObject> List<T> get(Class<T> clazz)
+    public <T extends VivariumObject> List<T> getAll(Class<T> clazz)
     {
         List<T> result = new LinkedList<T>();
 

@@ -167,7 +167,7 @@ public class SerializationEngine
     public MapCollection serialize(VivariumObjectCollection collection)
     {
         _collection = new MapCollection();
-        List<VivariumObject> list = collection.get(VivariumObject.class);
+        List<VivariumObject> list = collection.getAll(VivariumObject.class);
         for (VivariumObject object : list)
         {
             serializeObjectIntoCollection(object);

@@ -57,7 +57,7 @@ public class CreateBlueprint extends CommonsScript
             {
                 auditFile = commandLine.getOptionValue(AUDIT_INPUT_FILE);
                 for (AuditFunction auditFunction : FileIO.loadObjectCollection(auditFile, Format.JSON)
-                        .get(AuditFunction.class))
+                        .getAll(AuditFunction.class))
                 {
                     auditFunctions.add(auditFunction);
                 }
@@ -79,7 +79,7 @@ public class CreateBlueprint extends CommonsScript
             try
             {
                 speciesFile = commandLine.getOptionValue(SPECIES_INPUT_FILE);
-                for (Species specie : FileIO.loadObjectCollection(speciesFile, Format.JSON).get(Species.class))
+                for (Species specie : FileIO.loadObjectCollection(speciesFile, Format.JSON).getAll(Species.class))
                 {
                     species.add(specie);
                 }
