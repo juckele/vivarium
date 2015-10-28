@@ -93,6 +93,7 @@ public class CreateWorld extends CommonsScript
         {
             SerializationEngine serializer = new SerializationEngine();
             blueprint = serializer.makeCopy(blueprint);
+            blueprint.setSize(size);
         }
         return new World(blueprint);
     }
