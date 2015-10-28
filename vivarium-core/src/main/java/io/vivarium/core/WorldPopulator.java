@@ -42,7 +42,7 @@ public class WorldPopulator
 
     public EntityType getNextEntityType()
     {
-        double random = Rand.getRandomPositiveDouble();
+        double random = Rand.getInstance().getRandomPositiveDouble();
         if (random < this._wallProbability)
         {
             return EntityType.WALL;
@@ -65,7 +65,7 @@ public class WorldPopulator
 
     public Species getNextCreatureSpecies()
     {
-        double random = Rand.getRandomPositiveDouble() * _creatureProbability;
+        double random = Rand.getInstance().getRandomPositiveDouble() * _creatureProbability;
         for (Species s : _species)
         {
             if (random < s.getInitialGenerationProbability())

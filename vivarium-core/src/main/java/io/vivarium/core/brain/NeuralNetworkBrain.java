@@ -52,7 +52,7 @@ public class NeuralNetworkBrain extends Brain
         {
             for (int k = 0; k < _weights[0][j].length; k++)
             {
-                _weights[0][j][k] = randomInitialization ? Rand.getRandomDouble() : 1;
+                _weights[0][j][k] = randomInitialization ? Rand.getInstance().getRandomDouble() : 1;
             }
         }
         if (normalize)
@@ -75,7 +75,7 @@ public class NeuralNetworkBrain extends Brain
                 for (int k = 0; k < _weights[i][j].length; k++)
                 {
                     // Mix first
-                    double randomValue = Rand.getRandomPositiveDouble();
+                    double randomValue = Rand.getInstance().getRandomPositiveDouble();
                     // Sometimes mix the two values with a gaussian
                     // approximation.
                     if (randomValue < species.getInheritanceGaussianMixRate())
@@ -87,14 +87,14 @@ public class NeuralNetworkBrain extends Brain
                         // This can cause a mix to introduce values higher or
                         // lower than
                         // either parent, which is by design.
-                        double gaussianRandomValue = Rand.getRandomGaussian() / 2 + 0.5;
+                        double gaussianRandomValue = Rand.getInstance().getRandomGaussian() / 2 + 0.5;
                         double weightDifference = brain2._weights[i][j][k] - brain1._weights[i][j][k];
                         _weights[i][j][k] = brain1._weights[i][j][k] + gaussianRandomValue * weightDifference;
                     }
                     // Otherwise pick one value
                     else
                     {
-                        randomValue = Rand.getRandomPositiveDouble();
+                        randomValue = Rand.getInstance().getRandomPositiveDouble();
                         if (randomValue < 0.5)
                         {
                             _weights[i][j] = brain1._weights[i][j];
@@ -106,15 +106,15 @@ public class NeuralNetworkBrain extends Brain
                     }
 
                     // Sometimes mutate
-                    randomValue = Rand.getRandomPositiveDouble();
+                    randomValue = Rand.getInstance().getRandomPositiveDouble();
                     if (randomValue < species.getMutationRate())
                     {
-                        randomValue = Rand.getRandomPositiveDouble();
+                        randomValue = Rand.getInstance().getRandomPositiveDouble();
                         if (randomValue < species.getMutationSmallScaleRate())
                         {
                             // Gaussian multiplication mutation,
                             // μ = 1 and σ = 0.2
-                            double gaussianRandomValue = Rand.getRandomGaussian() / 5 + 1;
+                            double gaussianRandomValue = Rand.getInstance().getRandomGaussian() / 5 + 1;
                             _weights[i][j][k] = gaussianRandomValue * _weights[i][j][k];
                         }
                         else
@@ -123,7 +123,7 @@ public class NeuralNetworkBrain extends Brain
                             if (randomValue < species.getMutationRandomRate())
                             {
                                 // Random mutation
-                                _weights[i][j][k] = Rand.getRandomDouble();
+                                _weights[i][j][k] = Rand.getInstance().getRandomDouble();
                             }
                             else
                             {
@@ -220,7 +220,7 @@ public class NeuralNetworkBrain extends Brain
         {
             // Bias units
             outputs[i] += weights[i][0] * 1;
-            outputs[i] += weights[i][1] * Rand.getRandomDouble();
+            outputs[i] += weights[i][1] * Rand.getInstance().getRandomDouble();
             // prior units
             for (int j = 0; j < inputs.length; j++)
             {

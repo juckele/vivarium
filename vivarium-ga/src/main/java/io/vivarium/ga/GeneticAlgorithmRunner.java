@@ -96,10 +96,10 @@ public class GeneticAlgorithmRunner
         System.out.println("Total fitness is " + fitnessSum);
         for (int i = 0; i < _populationSize; i++)
         {
-            int parent1Index = Math.max(Rand.getRandomInt(_populationSize - i) + i,
-                    Rand.getRandomInt(_populationSize - i) + i);
-            int parent2Index = Math.max(Rand.getRandomInt(_populationSize - i) + i,
-                    Rand.getRandomInt(_populationSize - i) + i);
+            int parent1Index = Math.max(Rand.getInstance().getRandomInt(_populationSize - i) + i,
+                    Rand.getInstance().getRandomInt(_populationSize - i) + i);
+            int parent2Index = Math.max(Rand.getInstance().getRandomInt(_populationSize - i) + i,
+                    Rand.getInstance().getRandomInt(_populationSize - i) + i);
             Creature parent1 = _population.get(parent1Index).getValue1();
             Creature parent2 = _population.get(parent2Index).getValue1();
             Creature child = new Creature(parent1, parent2);

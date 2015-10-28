@@ -49,7 +49,8 @@ public class ExtractCreatureFromWorldTest
         Creature u = FileIO.loadObjectCollection(path + "c.viv", Format.JSON).getFirst(Creature.class);
         assertNotNull("Creature is loaded from file correctly", u);
         assertNotNull("Creature has brain object correctly reloaded", u.getBrain());
-        assertTrue("Creature has reasonable ID", u.getID() >= 0 && u.getID() < (worldSize - 2) * (worldSize - 2));
+        assertTrue("Creature has reasonable ID: " + u.getID(),
+                u.getID() >= 0 && u.getID() < (worldSize - 2) * (worldSize - 2));
         assertEquals("Creature should have zero age on fresh creation", u.getAge(), 0);
         // Run for a few hundred ticks
         {

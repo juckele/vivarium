@@ -10,6 +10,8 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.core.simulation.Simulation;
+import io.vivarium.util.Rand;
+import io.vivarium.util.ThreadRandAllocator;
 
 public class RunBenchmark extends CommonsScript
 {
@@ -44,6 +46,9 @@ public class RunBenchmark extends CommonsScript
         {
             System.out.println("Running benchmarks:");
 
+            // If we're running multi-threaded code, we need to use a multi-threaded random allocator
+            Rand.setAllocator(new ThreadRandAllocator());
+
             // Do this just to give the JIT Compiler some stuff to optimize
             inlineTest(100);
 
@@ -51,10 +56,10 @@ public class RunBenchmark extends CommonsScript
             int iterations = 1000;
             int size = 40;
             double result;
-            for (int threadCount = 1; threadCount <= 8; threadCount++)
+            for (int threadCount = 1; threadCount <= 16; threadCount++)
             {
                 result = threadTest(threadCount, iterations, size);
-                System.out.print(String.format("%sx%s (%s threads):\n Creature Ticks / Second: %4.3e\n\n", size, size,
+                System.out.print(String.format("%sx%s (%s threads):%n Creature Ticks / Second: %4.3e%n%n", size, size,
                         threadCount, result));
             }
         }

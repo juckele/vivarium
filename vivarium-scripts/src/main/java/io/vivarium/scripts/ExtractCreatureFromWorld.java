@@ -75,7 +75,7 @@ public class ExtractCreatureFromWorld extends CommonsScript
         else
         {
             LinkedList<Creature> list = world.getCreatures();
-            int creatureIndex = Rand.getRandomInt(list.size());
+            int creatureIndex = Rand.getInstance().getRandomInt(list.size());
             creature = list.get(creatureIndex);
         }
 

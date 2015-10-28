@@ -46,8 +46,8 @@ public class UUID implements Serializable, Streamable
         UUID uuid = new UUID();
 
         // This is compatible with a real UUID, but it is not cryptographically secure.
-        uuid._long1 = Rand.getRandomLong();
-        uuid._long2 = Rand.getRandomLong2();
+        uuid._long1 = Rand.getInstance().getRandomLong();
+        uuid._long2 = Rand.getInstance().getRandomLong2();
 
         return uuid;
     }

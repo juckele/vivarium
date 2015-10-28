@@ -310,7 +310,7 @@ public class World extends VivariumObject
             {
                 if (_entityGrid[r][c] == EntityType.EMPTY)
                 {
-                    double randomNumber = Rand.getRandomPositiveDouble();
+                    double randomNumber = Rand.getInstance().getRandomPositiveDouble();
                     if (randomNumber < this._blueprint.getFoodGenerationProbability())
                     {
                         setObject(EntityType.FOOD, r, c);
@@ -510,8 +510,8 @@ public class World extends VivariumObject
         boolean immigrantPlaced = false;
         while (!immigrantPlaced)
         {
-            int r = Rand.getRandomInt(this._height);
-            int c = Rand.getRandomInt(this._width);
+            int r = Rand.getInstance().getRandomInt(this._height);
+            int c = Rand.getInstance().getRandomInt(this._width);
             if (_entityGrid[r][c] == EntityType.EMPTY)
             {
                 addCreature(creature, r, c);

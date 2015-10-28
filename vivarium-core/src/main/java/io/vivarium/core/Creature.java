@@ -139,7 +139,7 @@ public class Creature extends VivariumObject
         _soundOutputs = new double[_species.getSoundChannelCount()];
 
         // Set gender
-        double randomNumber = Rand.getRandomPositiveDouble();
+        double randomNumber = Rand.getInstance().getRandomPositiveDouble();
         if (randomNumber < _species.getFemaleThreshold())
         {
             this._gender = Gender.FEMALE;
@@ -152,7 +152,7 @@ public class Creature extends VivariumObject
         // Set the per Creature random seed (this is
         // currently only used to set animation offsets in
         // GWT viewer)
-        this._randomSeed = Rand.getRandomPositiveDouble();
+        this._randomSeed = Rand.getInstance().getRandomPositiveDouble();
 
         // Set defaults
         this._age = 0;

@@ -21,10 +21,24 @@ import java.util.Random;
 
 public class Rand
 {
+    // Allocator instance, this needs to be changed to get good performance in a multi-threaded
+    // environment, but needs to use the SimpleRandAllocator to work with GWT by default.
+    private static RandAllocator _allocator = new SimpleRandAllocator();
+
     // Random number state
-    private static Random _random = new Random();
-    private static long _randomLong = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
-    private static long _randomLong2 = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
+    private Random _random = new Random();
+    private long _randomLong = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
+    private long _randomLong2 = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
+
+    public static Rand getInstance()
+    {
+        return _allocator.getInstance();
+    }
+
+    public synchronized static void setAllocator(RandAllocator allocator)
+    {
+        _allocator = allocator;
+    }
 
     /**
      * Sets the psuedorandom seed to generate predictable behavior. javaRandomDouble uses LCG and this class has a
@@ -37,11 +51,11 @@ public class Rand
      * @param seed
      *            the seed to set, must not be zero
      */
-    public static void setRandomSeed(int seed)
+    public void setRandomSeed(int seed)
     {
         if (seed == 0)
         {
-            // throw new Error("Random seeds cannot be zero");
+            throw new Error("Random seeds cannot be zero");
         }
         _random = new Random(seed);
         _randomLong = seed;
@@ -52,9 +66,9 @@ public class Rand
      * Sets the seed to a psuedorandomly generated value. This is useful for test clearing a deliberately set seed in
      * test cases.
      */
-    public static void setRandomSeed()
+    public void setRandomSeed()
     {
-        _random = new Random();
+        // _random = new Random();
         _randomLong = (long) (_random.nextDouble() * (Long.MAX_VALUE - 1) + 1);
     }
 
@@ -63,9 +77,9 @@ public class Rand
      *
      * @return A psuedorandom double
      */
-    public static double getRandomDouble()
+    public double getRandomDouble()
     {
-        return (double) Rand.getRandomLong() / Long.MAX_VALUE;
+        return (double) getRandomLong() / Long.MAX_VALUE;
     }
 
     /**
@@ -73,7 +87,7 @@ public class Rand
      *
      * @return A psuedorandom double
      */
-    public static double getRandomPositiveDouble()
+    public double getRandomPositiveDouble()
     {
         return _random.nextDouble();
     }
@@ -85,7 +99,7 @@ public class Rand
      *            the number of possible return values
      * @return A psuedorandom double [0,range)
      */
-    public static int getRandomInt(int range)
+    public int getRandomInt(int range)
     {
         return _random.nextInt(range);
     }
@@ -95,7 +109,7 @@ public class Rand
      *
      * @return A psuedorandom Gaussian double
      */
-    public static double getRandomGaussian()
+    public double getRandomGaussian()
     {
         return _random.nextGaussian();
     }
@@ -105,7 +119,7 @@ public class Rand
      *
      * @return A psuedorandom long
      */
-    public static long getRandomLong()
+    public long getRandomLong()
     {
         _randomLong ^= (_randomLong << 21);
         _randomLong ^= (_randomLong >>> 35);
@@ -119,7 +133,7 @@ public class Rand
      *
      * @return A psuedorandom long
      */
-    public static long getRandomLong2()
+    public long getRandomLong2()
     {
         _randomLong2 ^= (_randomLong2 << 21);
         _randomLong2 ^= (_randomLong2 >>> 35);

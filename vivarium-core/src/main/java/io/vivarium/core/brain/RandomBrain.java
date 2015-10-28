@@ -48,7 +48,7 @@ public class RandomBrain extends Brain
     {
         for (int i = 0; i < _outputs.length; i++)
         {
-            _outputs[i] = Rand.getRandomDouble();
+            _outputs[i] = Rand.getInstance().getRandomDouble();
         }
         return _outputs;
     }
