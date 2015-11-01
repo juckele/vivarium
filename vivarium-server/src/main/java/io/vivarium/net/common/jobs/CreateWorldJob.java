@@ -1,25 +1,23 @@
-package io.vivarium.net.common;
+package io.vivarium.net.common.jobs;
 
 import java.util.List;
 import java.util.UUID;
 
-public class SimulationJob extends Job
+public class CreateWorldJob extends Job
 {
     public final UUID sourceDocumentID;
     public final UUID outputDocumentID;
-    public final long endTick;
 
-    public SimulationJob(List<Job> dependencies, UUID sourceDocumentID, UUID outputDocumentID, long endTick)
+    public CreateWorldJob(List<Job> dependencies, UUID sourceDocumentID, UUID outputDocumentID)
     {
         super(dependencies);
         this.sourceDocumentID = sourceDocumentID;
         this.outputDocumentID = outputDocumentID;
-        this.endTick = endTick;
     }
 
     @Override
     protected JobType getType()
     {
-        return JobType.RUN_SIMULATION;
+        return JobType.CREATE_WORLD;
     }
 }

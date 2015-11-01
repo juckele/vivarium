@@ -6,16 +6,26 @@ package io.vivarium.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.NotYetConnectedException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.UUID;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import io.vivarium.net.Constants;
+import io.vivarium.net.common.jobs.CreateWorldJob;
+import io.vivarium.net.common.jobs.Job;
+import io.vivarium.net.common.messages.CreateJob;
 
 public class Client extends WebSocketClient
 {
     // private UUID _clientID = UUID.randomUUID();
-    // private ObjectMapper mapper = new ObjectMapper();
+    private ObjectMapper mapper = new ObjectMapper();
 
     public Client() throws URISyntaxException
     {
@@ -26,11 +36,19 @@ public class Client extends WebSocketClient
     public void onOpen(ServerHandshake handshakedata)
     {
         System.err.println("CLIENT: Shake it Open " + handshakedata);
-        /*
-         * try { this.send(data); this.send(mapper.writeValueAsString(new Pledge(_workerID))); } catch
-         * (NotYetConnectedException | JsonProcessingException e) { // TODO Auto-generated catch block
-         * e.printStackTrace(); }
-         */
+        try
+        {
+            List<Job> a = new LinkedList<Job>();
+            UUID b = UUID.randomUUID();
+            UUID c = UUID.randomUUID();
+            Job job = new CreateWorldJob(a, b, c);
+            this.send(mapper.writeValueAsString(new CreateJob(job)));
+        }
+        catch (NotYetConnectedException | JsonProcessingException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     @Override

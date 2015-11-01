@@ -1,4 +1,4 @@
-package io.vivarium.net.common;
+package io.vivarium.net.common.messages;
 
 import java.util.UUID;
 

@@ -1,4 +1,6 @@
-package io.vivarium.net.common;
+package io.vivarium.net.common.messages;
+
+import io.vivarium.net.common.jobs.Job;
 
 public class CreateJob extends Message
 {

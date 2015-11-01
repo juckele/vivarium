@@ -17,8 +17,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.client.Worker;
 import io.vivarium.net.Constants;
-import io.vivarium.net.common.Message;
-import io.vivarium.net.common.Pledge;
+import io.vivarium.net.common.messages.Message;
+import io.vivarium.net.common.messages.Pledge;
 
 public class Server extends WebSocketServer
 {
