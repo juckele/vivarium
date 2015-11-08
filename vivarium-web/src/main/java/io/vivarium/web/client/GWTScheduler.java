@@ -49,6 +49,7 @@ public class GWTScheduler extends SchedulingDelegate
                 _visualizer.tickWorld();
             }
         }
+        _visualizer.tickWorld();
         _visualizer.renderWorld();
     }
 }
