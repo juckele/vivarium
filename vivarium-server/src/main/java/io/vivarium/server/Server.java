@@ -8,22 +8,29 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.client.Worker;
 import io.vivarium.net.Constants;
 import io.vivarium.net.common.messages.Message;
 import io.vivarium.net.common.messages.Pledge;
+import io.vivarium.net.common.messages.RequestResource;
+import io.vivarium.net.common.messages.SendResource;
 
 public class Server extends WebSocketServer
 {
     private final static InetSocketAddress PORT = new InetSocketAddress(Constants.DEFAULT_PORT);
 
+    private Map<UUID, JsonNode> resources = new HashMap<UUID, JsonNode>();
     private int i = 0;
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -56,6 +63,25 @@ public class Server extends WebSocketServer
             {
                 Pledge pledge = (Pledge) untypedMessage;
                 System.out.println("Worker .... " + pledge.workerID + " has said it will do my bidding!");
+            }
+            else if (untypedMessage instanceof SendResource)
+            {
+                SendResource sendResourceMessage = (SendResource) untypedMessage;
+                resources.put(sendResourceMessage.resourceID, sendResourceMessage.jsonData);
+            }
+            else if (untypedMessage instanceof RequestResource)
+            {
+                RequestResource requestResourceMessage = (RequestResource) untypedMessage;
+                if (resources.containsKey(requestResourceMessage.resourceID))
+                {
+                    SendResource response = new SendResource(requestResourceMessage.resourceID,
+                            resources.get(requestResourceMessage.resourceID));
+                    conn.send(mapper.writeValueAsString(response));
+                }
+            }
+            else
+            {
+                System.err.println("SERVER: Unhandled message of type " + untypedMessage.getClass().getSimpleName());
             }
         }
         catch (IOException e)

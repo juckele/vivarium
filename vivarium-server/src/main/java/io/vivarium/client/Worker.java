@@ -31,7 +31,7 @@ public class Worker extends WebSocketClient
     @Override
     public void onOpen(ServerHandshake handshakedata)
     {
-        System.err.println("WORKER: Shake it Open " + handshakedata);
+        System.out.println("WORKER: Shake it Open " + handshakedata);
         try
         {
             this.send(mapper.writeValueAsString(new Pledge(_workerID)));
@@ -46,20 +46,20 @@ public class Worker extends WebSocketClient
     @Override
     public void onMessage(String message)
     {
-        System.err.println("WORKER: Message the Message " + message);
+        System.out.println("WORKER: Message the Message " + message);
         // this.send("Reply to mesmes!");
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote)
     {
-        System.err.println("WORKER: Close it down " + code + " / " + reason + " + " + remote);
+        System.out.println("WORKER: Close it down " + code + " / " + reason + " + " + remote);
     }
 
     @Override
     public void onError(Exception ex)
     {
-        System.err.println("WORKER: ERROR " + ex);
+        System.out.println("WORKER: ERROR " + ex);
     }
 
     public static void main(String[] args)

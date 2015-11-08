@@ -7,6 +7,7 @@ package io.vivarium.net;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 
+import io.vivarium.client.Client;
 import io.vivarium.client.Worker;
 import io.vivarium.server.Server;
 
@@ -17,10 +18,10 @@ public class DemoTest
         Server s = new Server();
         s.start();
 
+        Client c = new Client();
+        c.connect();
+
         Worker w = new Worker();
         w.connect();
-
-        Worker w2 = new Worker();
-        w2.connect();
     }
 }

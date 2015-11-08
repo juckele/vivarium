@@ -28,8 +28,8 @@ public class Pledge extends Message
     public Pledge(UUID workerID)
     {
         this.workerID = workerID;
-        this.slots = 1;
-        this.throughput = 10;
+        this.slots = 12;
+        this.throughput = 100_000_000;
     }
 
     public Pledge(UUID workerID, int slots, int throughput)
