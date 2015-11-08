@@ -282,6 +282,8 @@ public class World extends VivariumObject
                 && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
                 // And that creature also is trying to breed
                 && _creatureGrid[facingR][facingC].getAction() == Action.BREED
+                // And that creature is the opposite gender
+                && _creatureGrid[facingR][facingC].getIsFemale() != creature.getIsFemale()
                 // Make sure the creatures are facing each other
                 && creature.getFacing() == Direction.flipDirection(_creatureGrid[facingR][facingC].getFacing()))
         {
