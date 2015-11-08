@@ -1,0 +1,25 @@
+@startuml
+
+skinparam backgroundColor #111111
+
+skinparam classFontName Monaco
+skinparam titleFontName Monaco
+skinparam classFontColor #D0FFD0
+skinparam titleFontColor #D0FFD0
+skinparam classFontSize 14
+skinparam titleFontSize 14
+
+skinparam classBackgroundColor #000400
+
+skinparam classBorderColor #D0FFD0
+skinparam objectArrowColor #D0FFD0
+
+"Age" -right-> "Sense"
+"Sense" -down-> "Plan"
+"Plan" -left-> "Act"
+"Act" .up.> "Age"
+
+hide members
+hide circle
+
+@enduml
