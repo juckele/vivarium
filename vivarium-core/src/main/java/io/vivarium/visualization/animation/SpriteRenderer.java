@@ -24,18 +24,12 @@ public class SpriteRenderer
     private static int HALO_CREATURE_2_Y = 1 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int HALO_CREATURE_3_X = 2 * SOURCE_PIXEL_BLOCK_SIZE;
     private static int HALO_CREATURE_3_Y = 1 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_1_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_1_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_2_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_2_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_3_X = 2 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int RED_CREATURE_3_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_1_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_1_Y = 3 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_2_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_2_Y = 3 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_3_X = 2 * SOURCE_PIXEL_BLOCK_SIZE;
-    private static int BLUE_CREATURE_3_Y = 3 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int CREATURE_1_X = 0 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int CREATURE_1_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int CREATURE_2_X = 1 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int CREATURE_2_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int CREATURE_3_X = 2 * SOURCE_PIXEL_BLOCK_SIZE;
+    private static int CREATURE_3_Y = 2 * SOURCE_PIXEL_BLOCK_SIZE;
 
     @SuppressWarnings("serial")
     private static HashMap<Sprite, Integer> SPRITE_TO_X_OFFSET = new HashMap<Sprite, Integer>()
@@ -47,12 +41,9 @@ public class SpriteRenderer
             put(Sprite.HALO_CREATURE_1, HALO_CREATURE_1_X);
             put(Sprite.HALO_CREATURE_2, HALO_CREATURE_2_X);
             put(Sprite.HALO_CREATURE_3, HALO_CREATURE_3_X);
-            put(Sprite.RED_CREATURE_1, RED_CREATURE_1_X);
-            put(Sprite.RED_CREATURE_2, RED_CREATURE_2_X);
-            put(Sprite.RED_CREATURE_3, RED_CREATURE_3_X);
-            put(Sprite.BLUE_CREATURE_1, BLUE_CREATURE_1_X);
-            put(Sprite.BLUE_CREATURE_2, BLUE_CREATURE_2_X);
-            put(Sprite.BLUE_CREATURE_3, BLUE_CREATURE_3_X);
+            put(Sprite.CREATURE_1, CREATURE_1_X);
+            put(Sprite.CREATURE_2, CREATURE_2_X);
+            put(Sprite.CREATURE_3, CREATURE_3_X);
         }
     };
 
@@ -66,26 +57,24 @@ public class SpriteRenderer
             put(Sprite.HALO_CREATURE_1, HALO_CREATURE_1_Y);
             put(Sprite.HALO_CREATURE_2, HALO_CREATURE_2_Y);
             put(Sprite.HALO_CREATURE_3, HALO_CREATURE_3_Y);
-            put(Sprite.RED_CREATURE_1, RED_CREATURE_1_Y);
-            put(Sprite.RED_CREATURE_2, RED_CREATURE_2_Y);
-            put(Sprite.RED_CREATURE_3, RED_CREATURE_3_Y);
-            put(Sprite.BLUE_CREATURE_1, BLUE_CREATURE_1_Y);
-            put(Sprite.BLUE_CREATURE_2, BLUE_CREATURE_2_Y);
-            put(Sprite.BLUE_CREATURE_3, BLUE_CREATURE_3_Y);
+            put(Sprite.CREATURE_1, CREATURE_1_Y);
+            put(Sprite.CREATURE_2, CREATURE_2_Y);
+            put(Sprite.CREATURE_3, CREATURE_3_Y);
         }
     };
 
-    public static void drawSprite(GraphicalDelegate graphicalSystem, Sprite sprite, int x, int y)
+    public static void drawSprite(GraphicalDelegate graphicalSystem, Sprite sprite, int colorOffset, int x, int y)
     {
-        drawSprite(graphicalSystem, sprite, x, y, Direction.NORTH);
+        drawSprite(graphicalSystem, sprite, colorOffset, x, y, Direction.NORTH);
     }
 
-    public static void drawSprite(GraphicalDelegate graphicalSystem, Sprite sprite, int x, int y, Direction heading)
+    public static void drawSprite(GraphicalDelegate graphicalSystem, Sprite sprite, int colorOffset, int x, int y,
+            Direction heading)
     {
         graphicalSystem.drawImage(RENDER_PIXEL_BLOCK_SIZE * x, RENDER_PIXEL_BLOCK_SIZE * y,
                 RENDER_PIXEL_BLOCK_SIZE * x + RENDER_PIXEL_BLOCK_SIZE,
                 RENDER_PIXEL_BLOCK_SIZE * y + RENDER_PIXEL_BLOCK_SIZE, SPRITE_TO_X_OFFSET.get(sprite),
                 SPRITE_TO_Y_OFFSET.get(sprite), SPRITE_TO_X_OFFSET.get(sprite) + SOURCE_PIXEL_BLOCK_SIZE,
-                SPRITE_TO_Y_OFFSET.get(sprite) + SOURCE_PIXEL_BLOCK_SIZE, heading);
+                SPRITE_TO_Y_OFFSET.get(sprite) + SOURCE_PIXEL_BLOCK_SIZE, colorOffset, heading);
     }
 }

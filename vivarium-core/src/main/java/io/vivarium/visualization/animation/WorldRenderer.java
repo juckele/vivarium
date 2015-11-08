@@ -10,6 +10,8 @@ import io.vivarium.core.World;
 
 public abstract class WorldRenderer
 {
+    private static final int DEFAULT_COLOR = 0;
+
     public static void renderWorld(GraphicalDelegate graphicalSystem, World w1, World w2, double interpolation,
             int selectedCreatureID)
     {
@@ -22,13 +24,13 @@ public abstract class WorldRenderer
         // Draw the exterior walls
         for (int i = 0; i < w.getWorldWidth(); i++)
         {
-            SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, i, 0);
-            SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, i, w.getWorldHeight() - 1);
+            SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, DEFAULT_COLOR, i, 0);
+            SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, DEFAULT_COLOR, i, w.getWorldHeight() - 1);
         }
         for (int i = 0; i < w.getWorldHeight(); i++)
         {
-            SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, 0, i);
-            SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, w.getWorldWidth() - 1, i);
+            SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, DEFAULT_COLOR, 0, i);
+            SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, DEFAULT_COLOR, w.getWorldWidth() - 1, i);
         }
         // Draw the floor and interior walls
         for (int i = 1; i < w.getWorldHeight() - 1; i++)
@@ -38,11 +40,11 @@ public abstract class WorldRenderer
 
                 if (w.getEntityType(i, j) == EntityType.WALL)
                 {
-                    SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, j, i);
+                    SpriteRenderer.drawSprite(graphicalSystem, Sprite.WALL, DEFAULT_COLOR, j, i);
                 }
                 else
                 {
-                    SpriteRenderer.drawSprite(graphicalSystem, Sprite.FLOOR, j, i);
+                    SpriteRenderer.drawSprite(graphicalSystem, Sprite.FLOOR, DEFAULT_COLOR, j, i);
                 }
 
             }
@@ -59,7 +61,7 @@ public abstract class WorldRenderer
             {
                 if (w.getEntityType(i, j) == EntityType.FOOD)
                 {
-                    SpriteRenderer.drawSprite(graphicalSystem, Sprite.FOOD, j, i);
+                    SpriteRenderer.drawSprite(graphicalSystem, Sprite.FOOD, DEFAULT_COLOR, j, i);
                 }
                 else if (w.getEntityType(i, j) == EntityType.CREATURE)
                 {
@@ -84,47 +86,45 @@ public abstract class WorldRenderer
                         {
                             creatureSprites = Sprite.HALO_CREATURE_2;
                         }
-                        SpriteRenderer.drawSprite(graphicalSystem, creatureSprites, j, i, creature.getFacing());
+                        SpriteRenderer.drawSprite(graphicalSystem, creatureSprites, DEFAULT_COLOR, j, i,
+                                creature.getFacing());
                     }
+
+                    if (offsetMilliseconds < 250)
+                    {
+                        creatureSprites = Sprite.CREATURE_1;
+                    }
+                    else if (offsetMilliseconds < 500)
+                    {
+                        creatureSprites = Sprite.CREATURE_2;
+                    }
+                    else if (offsetMilliseconds < 750)
+                    {
+                        creatureSprites = Sprite.CREATURE_3;
+                    }
+                    else
+                    {
+                        creatureSprites = Sprite.CREATURE_2;
+                    }
+
+                    int creatureColor;
                     if (creature.getIsFemale())
                     {
-                        if (offsetMilliseconds < 250)
+                        if (creature.getGestation() != 0)
                         {
-                            creatureSprites = Sprite.BLUE_CREATURE_1;
-                        }
-                        else if (offsetMilliseconds < 500)
-                        {
-                            creatureSprites = Sprite.BLUE_CREATURE_2;
-                        }
-                        else if (offsetMilliseconds < 750)
-                        {
-                            creatureSprites = Sprite.BLUE_CREATURE_3;
+                            creatureColor = 2;
                         }
                         else
                         {
-                            creatureSprites = Sprite.BLUE_CREATURE_2;
+                            creatureColor = 1;
                         }
                     }
                     else
                     {
-                        if (offsetMilliseconds < 250)
-                        {
-                            creatureSprites = Sprite.RED_CREATURE_1;
-                        }
-                        else if (offsetMilliseconds < 500)
-                        {
-                            creatureSprites = Sprite.RED_CREATURE_2;
-                        }
-                        else if (offsetMilliseconds < 750)
-                        {
-                            creatureSprites = Sprite.RED_CREATURE_3;
-                        }
-                        else
-                        {
-                            creatureSprites = Sprite.RED_CREATURE_2;
-                        }
+                        creatureColor = 0;
                     }
-                    SpriteRenderer.drawSprite(graphicalSystem, creatureSprites, j, i, creature.getFacing());
+                    SpriteRenderer.drawSprite(graphicalSystem, creatureSprites, creatureColor, j, i,
+                            creature.getFacing());
                 }
             }
         }

@@ -11,12 +11,15 @@ import io.vivarium.visualization.animation.SchedulingDelegate;
 public class GWTScheduler extends SchedulingDelegate
 {
     private VivariumWeb _webApp;
-    private int tick;
     private double lastTickTimestamp;
+    private boolean _tickEveryFrame;
+    private int _ticksPerStep;
 
-    public GWTScheduler(VivariumWeb webApp)
+    public GWTScheduler(VivariumWeb webApp, boolean tickEveryFrame, int ticksPerStep)
     {
         _webApp = webApp;
+        _tickEveryFrame = tickEveryFrame;
+        _ticksPerStep = ticksPerStep;
     }
 
     @Override
@@ -29,27 +32,18 @@ public class GWTScheduler extends SchedulingDelegate
 
     public void execute(double timestamp)
     {
-        if (tick > 0)
+        if (lastTickTimestamp == 0)
         {
-            if (timestamp >= lastTickTimestamp + 1000)
+            lastTickTimestamp = timestamp;
+        }
+        if (timestamp >= lastTickTimestamp + 1000 || _tickEveryFrame)
+        {
+            lastTickTimestamp = timestamp;
+            for (int i = 0; i < _ticksPerStep; i++)
             {
-                lastTickTimestamp = timestamp;
                 _visualizer.tickWorld();
             }
         }
-        else
-        {
-            if (lastTickTimestamp == 0)
-            {
-                lastTickTimestamp = timestamp;
-            }
-            if (timestamp >= lastTickTimestamp + 1000)
-            {
-                lastTickTimestamp = timestamp;
-                _visualizer.tickWorld();
-            }
-        }
-        _visualizer.tickWorld();
         _visualizer.renderWorld();
     }
 }

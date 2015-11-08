@@ -14,7 +14,9 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
+import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import io.vivarium.core.Blueprint;
@@ -37,9 +39,44 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private Image colorImage;
     private Image spriteImage;
 
+    private boolean _debug = false;
+    private boolean _tickEveryFrame = false;
+    private int _ticksPerStep = 1;
+
+    private Label _fpsCounter;
+
     @Override
     public void onModuleLoad()
     {
+        // Get options from parameters
+        String debug = Window.Location.getParameter("debug");
+        if (debug != null && debug.toLowerCase().equals("true"))
+        {
+            _debug = true;
+        }
+        String tick = Window.Location.getParameter("tick");
+        if (tick != null)
+        {
+            if (tick.toLowerCase().equals("perframe"))
+            {
+                _tickEveryFrame = true;
+                _ticksPerStep = 1;
+            }
+            else
+            {
+                try
+                {
+                    _ticksPerStep = Integer.valueOf(tick);
+                    _tickEveryFrame = true;
+                }
+                catch (NumberFormatException e)
+                {
+                    // Do nothing
+                }
+            }
+        }
+
+        // Build the world
         Blueprint blueprint = Blueprint.makeDefault();
         Species s = Species.makeDefault();
         ArrayList<Species> species = new ArrayList<Species>();
@@ -48,14 +85,23 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         blueprint.setSize(30);
         blueprint.setWidth(45);
         world = new World(blueprint);
+
+        // Set up the visualizer graphics
         gwtGraphics = new GWTGraphics(this);
-        gwtScheduler = new GWTScheduler(this);
+        gwtScheduler = new GWTScheduler(this, _tickEveryFrame, _ticksPerStep);
         visualizer = new Visualizer(world, gwtGraphics, gwtScheduler);
         displayWorld();
     }
 
     private void displayWorld()
     {
+        if (_debug)
+        {
+            _fpsCounter = new Label();
+            _fpsCounter.getElement().getStyle().setColor("white");
+            RootPanel.get().add(_fpsCounter);
+        }
+
         _tempCanvas = Canvas.createIfSupported();
         _tempCanvas.setCoordinateSpaceWidth(300);
         _tempCanvas.setCoordinateSpaceHeight(300);
@@ -124,7 +170,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 
             // Copy creature, make a red one
             data = context1.getImageData(0, 64, 96, 32);
-            scaleData(data, 0.8f, 0.4f, 0.4f);
+            scaleData(data, 0.8f, 0.0f, 0.0f);
             context2.putImageData(data, 0, 64);
             // Copy creature, make a teal one
             data = context1.getImageData(0, 64, 96, 32);
@@ -134,10 +180,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
             data = context1.getImageData(0, 64, 96, 32);
             scaleData(data, 0.4f, 0.0f, 0.8f);
             context2.putImageData(data, 0, 128);
-            // Copy creature, make an orange one
-            data = context1.getImageData(0, 64, 96, 32);
-            scaleData(data, 0.8f, 0.4f, 0.0f);
-            context2.putImageData(data, 0, 160);
 
             // Load the color image now
             colorImage = new Image();
@@ -181,6 +223,14 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 
         // Schedule the next frame
         gwtScheduler.execute(timestamp);
+    }
+
+    public void setCurrentFrameRate(double fps)
+    {
+        if (_debug)
+        {
+            _fpsCounter.setText(String.valueOf((int) fps));
+        }
     }
 
 }

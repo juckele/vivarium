@@ -13,7 +13,7 @@ public abstract class GraphicalDelegate
     int _selectedCreatureID;
 
     public abstract void drawImage(int dx1, int dy1, int dx2, int dy2, int sx1, int sy1, int sx2, int sy2,
-            Direction heading);
+            int colorOffset, Direction heading);
 
     public abstract void requestRender();
 
