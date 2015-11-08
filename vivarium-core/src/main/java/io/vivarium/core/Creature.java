@@ -368,13 +368,15 @@ public class Creature extends VivariumObject
                 break;
             case BREED:
                 // Trying to breed for no good reason is still tiring
-                this._food -= 10;
+                this._food += _species.getBreedingFoodRate();
                 break;
             case EAT:
-                this._food -= 1;
+                // Trying to eat nothing and failing costs nothing (this has been changed because the file format
+                // doesn't have a variable for this cost currently. This cost could be reintroduced later)
                 break;
             case MOVE:
-                this._food -= 1;
+                this._food += _species.getMovingFoodRate();
+                ;
                 break;
             case DIE:
                 break;
