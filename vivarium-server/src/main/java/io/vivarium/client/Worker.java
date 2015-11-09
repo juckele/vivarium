@@ -25,7 +25,7 @@ public class Worker extends WebSocketClient
 
     public Worker() throws URISyntaxException
     {
-        super(new URI("http", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
+        super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
     }
 
     @Override

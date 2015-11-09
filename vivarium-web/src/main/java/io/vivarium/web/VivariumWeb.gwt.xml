@@ -17,6 +17,8 @@
   <!-- <inherits name='com.google.gwt.user.theme.chrome.Chrome'/> -->
   <!-- <inherits name='com.google.gwt.user.theme.dark.Dark'/>     -->
 
+  <!-- For GWT WS support -->
+  <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
   <!-- For GWT side serialization/copying                         -->
   <inherits name="com.googlecode.gwtstreamer.GWTStreamer"/>
   <!-- For GWT Guava                                              -->

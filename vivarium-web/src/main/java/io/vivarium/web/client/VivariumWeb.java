@@ -6,6 +6,11 @@ package io.vivarium.web.client;
 
 import java.util.ArrayList;
 
+import javax.annotation.Nonnull;
+
+import org.realityforge.gwt.websockets.client.WebSocket;
+import org.realityforge.gwt.websockets.client.WebSocketListenerAdapter;
+
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
@@ -75,6 +80,11 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 }
             }
         }
+        String ws = Window.Location.getParameter("ws");
+        if (ws != null && ws.toLowerCase().equals("true"))
+        {
+            startWS();
+        }
 
         // Build the world
         Blueprint blueprint = Blueprint.makeDefault();
@@ -91,6 +101,31 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         gwtScheduler = new GWTScheduler(this, _tickEveryFrame, _ticksPerStep);
         visualizer = new Visualizer(world, gwtGraphics, gwtScheduler);
         displayWorld();
+    }
+
+    private void startWS()
+    {
+        final WebSocket webSocket = WebSocket.newWebSocketIfSupported();
+        if (null != webSocket)
+        {
+            webSocket.setListener(new WebSocketListenerAdapter()
+            {
+                @Override
+                public void onOpen(@Nonnull final WebSocket webSocket)
+                {
+                    // After we have connected we can send
+                    webSocket.send("Hello from the GWT server!");
+                }
+
+                @Override
+                public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final String data)
+                {
+                    // After we receive a message back we can close the socket
+                    // webSocket.close();
+                }
+            });
+            webSocket.connect("ws://localhost:13731/");
+        }
     }
 
     private void displayWorld()

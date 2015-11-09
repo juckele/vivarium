@@ -242,7 +242,7 @@ project(':vivarium-web') {
         compile 'com.google.guava:guava:18.0'
         compile 'com.google.guava:guava-gwt:18.0'
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
-        compile 'org.realityforge.gwt.websockets:gwt-websockets:0.3'
+        compile 'org.realityforge.gwt.websockets:gwt-websockets:1.1.2'
     }
 }
 

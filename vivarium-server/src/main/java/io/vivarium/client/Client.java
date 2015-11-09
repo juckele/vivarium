@@ -28,7 +28,7 @@ public class Client extends WebSocketClient
 
     public Client() throws URISyntaxException
     {
-        super(new URI("http", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
+        super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
     }
 
     @Override
