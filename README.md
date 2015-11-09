@@ -1,14 +1,18 @@
 # Vivarium
 
-Vivarium is an artificial life simulation, and how I spend much of my time outside of work.
+Vivarium is an artificial life simulation, and how I spend much of my time 
+outside of work.
 
 ## Motivation
 
-The project is based on the hypothesis that a genetic algorithm is limited by its fitness function, and that designing a sufficient fitness function for a poorly understood task is unapproachably difficult.
+The project is based on the hypothesis that a genetic algorithm is limited by 
+its fitness function, and that designing a sufficient fitness function for a 
+poorly understood task is unapproachably difficult.
 
 ## Recent Work
 
-The project has since grown much bigger, and I've added functionality to explore many options within the simulations.
+I've recently launched vivrium.io to serve as a place to demo the project and 
+share articles I've written about vivarium.
 
 ## License
 
