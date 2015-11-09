@@ -34,18 +34,15 @@ public class Client extends WebSocketClient
     @Override
     public void onOpen(ServerHandshake handshakedata)
     {
-        System.out.println("CLIENT: Shake it Open " + handshakedata);
+        System.out.println("CLIENT: connection opened " + handshakedata);
         try
         {
             UUID resourceID = UUID.randomUUID();
 
+            // Create a world and upload it
             Blueprint blueprint = Blueprint.makeDefault();
             String jsonString = JSONConverter.serializerToJSONString(blueprint, resourceID);
             SendResource uploadBlueprint = new SendResource(jsonString);
-            // List<Job> a = new LinkedList<Job>();
-            // UUID b = UUID.randomUUID();
-            // UUID c = UUID.randomUUID();
-            // Job job = new CreateWorldJob(a, b, c);
             this.send(mapper.writeValueAsString(uploadBlueprint));
 
             // Let's try getting the resource we just uploaded to make sure it works...
@@ -62,20 +59,19 @@ public class Client extends WebSocketClient
     @Override
     public void onMessage(String message)
     {
-        System.out.println("CLIENT: Message the Message " + message);
-        // this.send("Reply to mesmes!");
+        System.out.println("CLIENT: Received message " + message);
     }
 
     @Override
     public void onClose(int code, String reason, boolean remote)
     {
-        System.out.println("CLIENT: Close it down " + code + " / " + reason + " + " + remote);
+        System.out.println("CLIENT: connection to server closed " + code + " / " + reason + " + " + remote);
     }
 
     @Override
     public void onError(Exception ex)
     {
-        System.out.println("CLIENT: ERROR " + ex);
+        System.out.println("CLIENT: error " + ex);
     }
 
     public static void main(String[] args)

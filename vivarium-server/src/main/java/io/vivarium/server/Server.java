@@ -6,7 +6,6 @@ package io.vivarium.server;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,7 +18,6 @@ import org.java_websocket.server.WebSocketServer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import io.vivarium.client.Worker;
 import io.vivarium.net.Constants;
 import io.vivarium.net.common.messages.Message;
 import io.vivarium.net.common.messages.Pledge;
@@ -31,6 +29,8 @@ public class Server extends WebSocketServer
     private final static InetSocketAddress PORT = new InetSocketAddress(Constants.DEFAULT_PORT);
 
     private Map<UUID, JsonNode> resources = new HashMap<UUID, JsonNode>();
+    private Map<UUID, Pledge> workers = new HashMap<UUID, Pledge>();
+
     private int i = 0;
     private ObjectMapper mapper = new ObjectMapper();
 
@@ -42,7 +42,7 @@ public class Server extends WebSocketServer
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake)
     {
-        System.out.println("SERVER: Web Socket Connection Oopened. " + conn + " ~ " + handshake);
+        System.out.println("SERVER: Web Socket Connection Opened. " + conn + " ~ " + handshake);
     }
 
     @Override
@@ -53,16 +53,15 @@ public class Server extends WebSocketServer
     }
 
     @Override
-    public void onMessage(WebSocket conn, String message)
+    public synchronized void onMessage(WebSocket conn, String message)
     {
         try
         {
-            System.out.println("It's a pledge!");
             Message untypedMessage = mapper.readValue(message, Message.class);
             if (untypedMessage instanceof Pledge)
             {
                 Pledge pledge = (Pledge) untypedMessage;
-                System.out.println("Worker .... " + pledge.workerID + " has said it will do my bidding!");
+                workers.put(pledge.workerID, pledge);
             }
             else if (untypedMessage instanceof SendResource)
             {
@@ -111,16 +110,7 @@ public class Server extends WebSocketServer
             Server server = new Server();
             server.start();
         }
-        catch (UnknownHostException e1)
-        {
-            e1.printStackTrace();
-        }
-        try
-        {
-            Worker worker = new Worker();
-            worker.connect();
-        }
-        catch (URISyntaxException e)
+        catch (UnknownHostException e)
         {
             e.printStackTrace();
         }
