@@ -4,16 +4,17 @@ Vivarium uses various third party libraries. A reference to each of these
 licenses is included at the boottom of this file.
 
 Apache License 2.0 libraries:
-- com.github.rholder:gradle-one-jar:1.0.4
-- de.richsource.gradle.plugins:gwt-gradle-plugin:0.6
-- com.google.guava:guava:18.0
-- com.google.guava:guava-gwt:18.0
-- gwt
 - com.fasterxml.jackson.core:jackson-core:2.6.3
 - com.fasterxml.jackson.core:jackson-databind:2.6.3
-- org.javatuples:javatuples:1.2
+- com.github.rholder:gradle-one-jar:1.0.4
+- com.google.guava:guava:18.0
+- com.google.guava:guava-gwt:18.0
 - commons-cli:commons-cli:1.3.1
+- de.richsource.gradle.plugins:gwt-gradle-plugin:0.6
+- gwt
 - net.java.dev.jna:jna-platform:4.0.0
+- org.javatuples:javatuples:1.2
+- org.realityforge.gwt.websockets:gwt-websockets:0.3
 
 The MIT License libraries:
 - com.johnuckele:vtest:0.9.3
