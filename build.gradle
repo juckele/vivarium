@@ -77,7 +77,7 @@ subprojects {
 
     tasks.withType(FindBugs) {
         excludeFilter = file("$rootProject.projectDir/config/findbugs/excludeFilter.xml")
-	ignoreFailures = true
+        ignoreFailures = true
     }
 }
 
@@ -110,7 +110,7 @@ project(':vivarium-server') {
 project(':vivarium-ga') {
     dependencies {
         compile project(':vivarium-core')
-    	compile project(':vivarium-serialization')
+        compile project(':vivarium-serialization')
         compile 'org.javatuples:javatuples:1.2'
     }
 }
@@ -128,7 +128,7 @@ project(':vivarium-scripts') {
     ext.sharedManifest = manifest {
         attributes 'viviarium-version': version
         attributes 'git-revision': buildInfo.revision
-	attributes 'build-timestamp': buildInfo.timestamp
+        attributes 'build-timestamp': buildInfo.timestamp
     }
 
     task jarConvertFileFormat( type: OneJar ) {
@@ -232,9 +232,9 @@ project(':vivarium-web') {
     gwt {
         gwtVersion='2.7.0'
 
-    	modules 'io.vivarium.web.VivariumWeb'
+        modules 'io.vivarium.web.VivariumWeb'
 
-	src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
+        src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
     }
 
     dependencies {
@@ -243,6 +243,7 @@ project(':vivarium-web') {
         compile 'com.google.guava:guava-gwt:18.0'
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
         compile 'org.realityforge.gwt.websockets:gwt-websockets:1.1.2'
+        compile 'com.github.nmorel.gwtjackson:gwt-jackson:0.10.0'
     }
 }
 
