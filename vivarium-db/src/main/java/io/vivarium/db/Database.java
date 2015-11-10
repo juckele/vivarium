@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package vivarium.io.db;
+package io.vivarium.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
