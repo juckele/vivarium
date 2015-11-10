@@ -232,7 +232,7 @@ project(':vivarium-web') {
     gwt {
         gwtVersion='2.7.0'
 
-        modules 'io.vivarium.web.VivariumWeb'
+        modules 'io.vivarium.Web'
 
         src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
     }
