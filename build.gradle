@@ -96,14 +96,37 @@ project(':vivarium-serialization') {
     }
 }
 
-project(':vivarium-server') {
+project(':vivarium-db') {
     dependencies {
         compile project(':vivarium-core')
         compile project(':vivarium-serialization')
-        compile 'org.postgresql:postgresql:9.4-1201-jdbc41'
+        compile 'org.postgresql:postgresql:9.4-1201-jdbc41' 
+    }
+}
+project(':vivarium-net') {
+    dependencies {
+        compile project(':vivarium-core')
         compile 'org.java-websocket:Java-WebSocket:1.3.0'
         compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
         compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
+    }
+}
+project(':vivarium-worker') {
+    dependencies {
+        compile project(':vivarium-core')
+        compile project(':vivarium-serialization') 
+    }
+}
+project(':vivarium-integration') {
+    dependencies {
+        compile project(':vivarium-server')
+        compile project(':vivarium-worker')
+    }
+}
+project(':vivarium-server') {
+    dependencies {
+        compile project(':vivarium-serialization')
+        compile project(':vivarium-net')
     }
 }
 
