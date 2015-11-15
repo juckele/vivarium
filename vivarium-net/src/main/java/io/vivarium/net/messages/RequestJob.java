@@ -1,4 +1,4 @@
-package io.vivarium.net.common.messages;
+package io.vivarium.net.messages;
 
 public class RequestJob extends Message
 {

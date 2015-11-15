@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.net.Constants;
-import io.vivarium.net.common.messages.Pledge;
+import io.vivarium.net.messages.Pledge;
 import io.vivarium.util.UUID;
 
 public class Worker extends WebSocketClient

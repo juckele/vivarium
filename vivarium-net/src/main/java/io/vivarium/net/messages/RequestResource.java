@@ -1,4 +1,4 @@
-package io.vivarium.net.common.messages;
+package io.vivarium.net.messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

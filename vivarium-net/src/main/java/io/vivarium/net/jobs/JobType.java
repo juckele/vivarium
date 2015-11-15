@@ -1,4 +1,4 @@
-package io.vivarium.net.common.jobs;
+package io.vivarium.net.jobs;
 
 public enum JobType
 {

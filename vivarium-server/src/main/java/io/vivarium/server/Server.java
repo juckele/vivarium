@@ -18,10 +18,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.net.Constants;
-import io.vivarium.net.common.messages.Message;
-import io.vivarium.net.common.messages.Pledge;
-import io.vivarium.net.common.messages.RequestResource;
-import io.vivarium.net.common.messages.SendResource;
+import io.vivarium.net.messages.Message;
+import io.vivarium.net.messages.Pledge;
+import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.SendResource;
 import io.vivarium.util.UUID;
 
 public class Server extends WebSocketServer

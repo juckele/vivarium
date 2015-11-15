@@ -16,8 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.core.Blueprint;
 import io.vivarium.net.Constants;
-import io.vivarium.net.common.messages.RequestResource;
-import io.vivarium.net.common.messages.SendResource;
+import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.SendResource;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.util.UUID;
 

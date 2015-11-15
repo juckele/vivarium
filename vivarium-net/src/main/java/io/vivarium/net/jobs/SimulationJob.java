@@ -1,4 +1,4 @@
-package io.vivarium.net.common.jobs;
+package io.vivarium.net.jobs;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import io.vivarium.net.UUIDDeserializer;
 import io.vivarium.net.UUIDSerializer;
 import io.vivarium.util.UUID;
 
-public class CreateWorldJob extends Job
+public class SimulationJob extends Job
 {
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
@@ -17,17 +17,19 @@ public class CreateWorldJob extends Job
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
     public final UUID outputDocumentID;
+    public final long endTick;
 
-    public CreateWorldJob(List<Job> dependencies, UUID sourceDocumentID, UUID outputDocumentID)
+    public SimulationJob(List<Job> dependencies, UUID sourceDocumentID, UUID outputDocumentID, long endTick)
     {
         super(dependencies);
         this.sourceDocumentID = sourceDocumentID;
         this.outputDocumentID = outputDocumentID;
+        this.endTick = endTick;
     }
 
     @Override
     protected JobType getType()
     {
-        return JobType.CREATE_WORLD;
+        return JobType.RUN_SIMULATION;
     }
 }

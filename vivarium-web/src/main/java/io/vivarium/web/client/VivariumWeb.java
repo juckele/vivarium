@@ -29,7 +29,7 @@ import com.google.gwt.user.client.ui.RootPanel;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.net.common.messages.Pledge;
+import io.vivarium.net.messages.Pledge;
 import io.vivarium.util.UUID;
 import io.vivarium.visualization.animation.Visualizer;
 

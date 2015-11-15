@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.net.common.jobs;
+package io.vivarium.net.jobs;
 
 import java.util.ArrayList;
 import java.util.List;

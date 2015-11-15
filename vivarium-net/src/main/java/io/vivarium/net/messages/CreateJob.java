@@ -1,9 +1,9 @@
-package io.vivarium.net.common.messages;
+package io.vivarium.net.messages;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import io.vivarium.net.common.jobs.Job;
+import io.vivarium.net.jobs.Job;
 
 public class CreateJob extends Message
 {
