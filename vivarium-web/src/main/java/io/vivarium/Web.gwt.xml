@@ -26,6 +26,9 @@
   <!-- For GWT Guava                                              -->
   <inherits name="com.google.common.io.Io"/>
 
+  <!-- Configuration for GWT Jackson support                      -->
+  <extend-configuration-property name="gwtjackson.configuration.extension" value="io.vivarium.web.Configuration" />
+
   <!-- Vivarium cross project modules                             -->
   <inherits name='io.vivarium.Net' />
   <inherits name='io.vivarium.Core' />
@@ -34,6 +37,7 @@
   <entry-point class='io.vivarium.web.client.VivariumWeb'/>
 
   <!-- Specify the paths for translatable code                    -->
+  <source path='web'/>
   <source path='web/client'/>
 
   <!-- allow Super Dev Mode -->

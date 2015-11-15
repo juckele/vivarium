@@ -1,5 +1,7 @@
 package io.vivarium.net.common.messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -19,7 +21,8 @@ public class RequestResource extends Message
         resourceID = null;
     }
 
-    public RequestResource(UUID resourceID)
+    @JsonCreator
+    public RequestResource(@JsonProperty("resourceID") UUID resourceID)
     {
         this.resourceID = resourceID;
     }

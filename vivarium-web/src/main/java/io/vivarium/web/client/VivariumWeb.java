@@ -11,11 +11,13 @@ import javax.annotation.Nonnull;
 import org.realityforge.gwt.websockets.client.WebSocket;
 import org.realityforge.gwt.websockets.client.WebSocketListenerAdapter;
 
+import com.github.nmorel.gwtjackson.client.ObjectMapper;
 import com.google.gwt.animation.client.AnimationScheduler.AnimationCallback;
 import com.google.gwt.canvas.client.Canvas;
 import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.canvas.dom.client.ImageData;
 import com.google.gwt.core.client.EntryPoint;
+import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
@@ -107,6 +109,11 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
 
     private void startWS()
     {
+        ObjectMapper<Pledge> mapper = GWT.create(MessageMapper.class);
+        Pledge p = new Pledge(UUID.randomUUID());
+        String encoding = mapper.write(p);
+        Window.alert(encoding);
+
         final WebSocket webSocket = WebSocket.newWebSocketIfSupported();
         if (null != webSocket)
         {
@@ -117,7 +124,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 {
                     // After we have connected we can send
                     webSocket.send("Hello from the GWT server!");
-                    new Pledge(UUID.randomUUID());
                 }
 
                 @Override

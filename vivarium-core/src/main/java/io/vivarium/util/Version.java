@@ -24,12 +24,13 @@ public class Version
     private static final int CURRENT_PATCH = 2;
 
     public static final int FILE_FORMAT_VERSION = 1;
+    public static final int NETWORK_PROTOCOL_VERSION = 1;
 
     public static final Version CURRENT_VERSION = new Version();
 
-    public final int major;
-    public final int minor;
-    public final int patch;
+    private final int major;
+    private final int minor;
+    private final int patch;
 
     private Version()
     {
@@ -43,5 +44,26 @@ public class Version
         this.major = major;
         this.minor = minor;
         this.patch = patch;
+    }
+
+    @Override
+    public String toString()
+    {
+        return major + "." + minor + "." + patch;
+    }
+
+    public Version(String string)
+    {
+        String[] chunks = string.split("\\.");
+        if (chunks.length == 3)
+        {
+            this.major = Integer.parseInt(chunks[0]);
+            this.minor = Integer.parseInt(chunks[1]);
+            this.patch = Integer.parseInt(chunks[2]);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unable to parse version not in format X.Y.Z: " + string);
+        }
     }
 }

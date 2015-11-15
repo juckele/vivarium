@@ -9,6 +9,8 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.vivarium.net.UUIDDeserializer;
 import io.vivarium.net.UUIDSerializer;
+import io.vivarium.net.VersionDeserializer;
+import io.vivarium.net.VersionSerializer;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
@@ -17,15 +19,19 @@ public class Pledge extends Message
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
     public UUID workerID;
-    public final Version version = Version.CURRENT_VERSION;
-    public final int fileformat = Version.FILE_FORMAT_VERSION;
-    public final int slots;
-    public final int throughput;
+    @JsonSerialize(using = VersionSerializer.class)
+    @JsonDeserialize(using = VersionDeserializer.class)
+    public Version version = Version.CURRENT_VERSION;
+    public int fileformat = Version.FILE_FORMAT_VERSION;
+    public int slots;
+    public int throughput;
 
     @SuppressWarnings("unused") // Used by Jackson
     private Pledge()
     {
-        workerID = UUID.randomUUID();
+        workerID = null;
+        version = null;
+        fileformat = -1;
         slots = -1;
         throughput = -1;
     }

@@ -2,6 +2,8 @@ package io.vivarium.net.common.messages;
 
 import java.io.IOException;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,7 +35,8 @@ public class SendResource extends Message
         jsonData = null;
     }
 
-    public SendResource(UUID resourceID, String jsonString)
+    @JsonCreator
+    public SendResource(@JsonProperty("resourceID") UUID resourceID, @JsonProperty("jsonData") String jsonString)
     {
         try
         {
