@@ -35,8 +35,7 @@ public class SendResource extends Message
         jsonData = null;
     }
 
-    @JsonCreator
-    public SendResource(@JsonProperty("resourceID") UUID resourceID, @JsonProperty("jsonData") String jsonString)
+    public SendResource(UUID resourceID, String jsonString)
     {
         try
         {
@@ -51,7 +50,8 @@ public class SendResource extends Message
         this.resourceID = resourceID;
     }
 
-    public SendResource(UUID resourceID, JsonNode jsonData)
+    @JsonCreator
+    public SendResource(@JsonProperty("resourceID") UUID resourceID, @JsonProperty("jsonData") JsonNode jsonData)
     {
         this.resourceID = resourceID;
         this.jsonData = jsonData;
