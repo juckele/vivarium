@@ -14,16 +14,20 @@ public class RequestResource extends Message
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
     final public UUID resourceID;
+    final public ResourceFormat resourceFormat;
 
     @SuppressWarnings("unused") // Used for Jackson deserialization
     private RequestResource()
     {
         resourceID = null;
+        resourceFormat = null;
     }
 
     @JsonCreator
-    public RequestResource(@JsonProperty("resourceID") UUID resourceID)
+    public RequestResource(@JsonProperty("resourceID") UUID resourceID,
+            @JsonProperty("resourceFormat") ResourceFormat resourceFormat)
     {
         this.resourceID = resourceID;
+        this.resourceFormat = resourceFormat;
     }
 }

@@ -31,7 +31,7 @@ public class DemoTest
         Client c2 = new Client(new DownloadWorldTask());
         c2.connect();
 
-        Thread.sleep(1000);
-        System.exit(0);
+        // Thread.sleep(1000);
+        // System.exit(0);
     }
 }

@@ -126,6 +126,7 @@ project(':vivarium-integration') {
 project(':vivarium-server') {
     dependencies {
         compile project(':vivarium-net')
+        compile project(':vivarium-scripts') 
     }
 }
 

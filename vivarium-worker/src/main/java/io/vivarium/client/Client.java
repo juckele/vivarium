@@ -36,7 +36,7 @@ public class Client extends WebSocketClient
     @Override
     public void onMessage(String message)
     {
-        System.out.println("CLIENT: Received message " + message.substring(0, 100));
+        System.out.println("CLIENT: Received message " + message.substring(0, Math.min(message.length(), 200)));
         System.out.println("task is " + _task);
         _task.onMessage(this, message);
     }

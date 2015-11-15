@@ -16,12 +16,16 @@ import org.java_websocket.server.WebSocketServer;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.googlecode.gwtstreamer.client.Streamer;
 
 import io.vivarium.net.Constants;
 import io.vivarium.net.messages.Message;
 import io.vivarium.net.messages.Pledge;
 import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResource;
+import io.vivarium.serialization.JSONConverter;
+import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 
 public class Server extends WebSocketServer
@@ -65,15 +69,34 @@ public class Server extends WebSocketServer
             else if (untypedMessage instanceof SendResource)
             {
                 SendResource sendResourceMessage = (SendResource) untypedMessage;
-                resources.put(sendResourceMessage.resourceID, sendResourceMessage.jsonData);
+                String jsonString = sendResourceMessage.dataString;
+                JsonNode jsonData = mapper.readTree(jsonString);
+                resources.put(sendResourceMessage.resourceID, jsonData);
             }
             else if (untypedMessage instanceof RequestResource)
             {
                 RequestResource requestResourceMessage = (RequestResource) untypedMessage;
                 if (resources.containsKey(requestResourceMessage.resourceID))
                 {
-                    SendResource response = new SendResource(requestResourceMessage.resourceID,
-                            resources.get(requestResourceMessage.resourceID));
+                    ResourceFormat resourceFormat = requestResourceMessage.resourceFormat;
+                    String jsonString = resources.get(requestResourceMessage.resourceID).toString();
+                    String dataString = null;
+                    if (resourceFormat == ResourceFormat.JSON)
+                    {
+                        dataString = jsonString;
+                    }
+                    else if (resourceFormat == ResourceFormat.GWT_STREAM)
+                    {
+                        VivariumObjectCollection collection = JSONConverter
+                                .jsonStringToSerializerCollection(jsonString);
+                        dataString = Streamer.get().toString(collection);
+                    }
+                    else
+                    {
+                        throw new IllegalStateException("Unexpected resource format " + resourceFormat);
+                    }
+                    SendResource response = new SendResource(requestResourceMessage.resourceID, dataString,
+                            resourceFormat);
                     conn.send(mapper.writeValueAsString(response));
                 }
             }
@@ -87,7 +110,8 @@ public class Server extends WebSocketServer
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("SERVER: Web Socket Message . " + conn + " ~ " + message.substring(0, 100));
+        System.out.println(
+                "SERVER: Web Socket Message . " + conn + " ~ " + message.substring(0, Math.min(message.length(), 200)));
     }
 
     @Override

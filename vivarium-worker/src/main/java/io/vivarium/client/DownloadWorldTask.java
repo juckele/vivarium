@@ -11,6 +11,7 @@ import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.net.messages.Message;
 import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResource;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
@@ -25,7 +26,7 @@ public class DownloadWorldTask extends ClientTask
         try
         {
             UUID resourceID = UUID.fromString("D51B6B31-84B5-0835-D5D5-05467AB4F04D");
-            RequestResource request = new RequestResource(resourceID);
+            RequestResource request = new RequestResource(resourceID, ResourceFormat.JSON);
             client.send(client.getMapper().writeValueAsString(request));
         }
         catch (NotYetConnectedException | JsonProcessingException e)
@@ -45,7 +46,7 @@ public class DownloadWorldTask extends ClientTask
             if (untypedMessage instanceof SendResource)
             {
                 SendResource sendResource = (SendResource) untypedMessage;
-                String jsonDataString = sendResource.jsonData.toString();
+                String jsonDataString = sendResource.dataString;
                 VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonDataString);
                 World world = collection.getFirst(World.class);
                 System.out.println("The DLed world has " + world.getCount(EntityType.CREATURE) + " creatures");

@@ -25,13 +25,16 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
+import com.googlecode.gwtstreamer.client.Streamer;
 
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.net.messages.Message;
 import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResource;
+import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 import io.vivarium.visualization.animation.Visualizer;
 
@@ -147,7 +150,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 public void onOpen(@Nonnull final WebSocket webSocket)
                 {
                     // After we have connected we can send
-                    RequestResource request = new RequestResource(_resourceID);
+                    RequestResource request = new RequestResource(_resourceID, ResourceFormat.GWT_STREAM);
                     webSocket.send(_mapper.write(request));
                 }
 
@@ -157,7 +160,14 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                     Message incomingMessage = _mapper.read(data);
                     if (incomingMessage instanceof SendResource)
                     {
-                        Window.alert("I'm getting the requested resources back!");
+                        SendResource sendResource = (SendResource) incomingMessage;
+                        VivariumObjectCollection collection = (VivariumObjectCollection) Streamer.get()
+                                .fromString(sendResource.dataString);
+
+                        // Finish loading
+                        world = collection.getFirst(World.class);
+                        setUpGraphics();
+                        displayWorld();
                     }
                     // After we receive a message back we can close the socket
                     // webSocket.close();

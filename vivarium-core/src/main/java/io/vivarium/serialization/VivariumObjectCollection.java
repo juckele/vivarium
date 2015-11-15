@@ -33,9 +33,15 @@ public class VivariumObjectCollection implements Streamable
 
         for (VivariumObject object : _data)
         {
-            if (clazz.isAssignableFrom(object.getClass()))
+            Class<?> specificClazz = object.getClass();
+            while (specificClazz != null)
             {
-                result.add((T) object);
+                if (specificClazz == clazz)
+                {
+                    result.add((T) object);
+                    break;
+                }
+                specificClazz = specificClazz.getSuperclass();
             }
         }
 
@@ -47,9 +53,14 @@ public class VivariumObjectCollection implements Streamable
     {
         for (VivariumObject object : _data)
         {
-            if (clazz.isAssignableFrom(object.getClass()))
+            Class<?> specificClazz = object.getClass();
+            while (specificClazz != null)
             {
-                return (T) object;
+                if (specificClazz == clazz)
+                {
+                    return (T) object;
+                }
+                specificClazz = specificClazz.getSuperclass();
             }
         }
         return null;
