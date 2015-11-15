@@ -29,7 +29,9 @@ import com.google.gwt.user.client.ui.RootPanel;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.net.messages.Pledge;
+import io.vivarium.net.messages.Message;
+import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.SendResource;
 import io.vivarium.util.UUID;
 import io.vivarium.visualization.animation.Visualizer;
 
@@ -53,6 +55,9 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private int _ticksPerStep = 1;
 
     private Label _fpsCounter;
+
+    private UUID _resourceID;
+    private ObjectMapper<Message> _mapper;
 
     @Override
     public void onModuleLoad()
@@ -85,11 +90,28 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
             }
         }
         String ws = Window.Location.getParameter("ws");
-        if (ws != null && ws.toLowerCase().equals("true"))
+        if (ws != null)
         {
+            if (ws.toLowerCase().equals("true"))
+            {
+                _resourceID = UUID.fromString("D51B6B31-84B5-0835-D5D5-05467AB4F04D");
+            }
+            else
+            {
+                _resourceID = UUID.fromString(ws);
+            }
             startWS();
         }
+        else
+        {
+            buildWorld();
+            setUpGraphics();
+            displayWorld();
+        }
+    }
 
+    private void buildWorld()
+    {
         // Build the world
         Blueprint blueprint = Blueprint.makeDefault();
         Species s = Species.makeDefault();
@@ -99,20 +121,22 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         blueprint.setSize(30);
         blueprint.setWidth(45);
         world = new World(blueprint);
+    }
 
+    private void setUpGraphics()
+    {
         // Set up the visualizer graphics
         gwtGraphics = new GWTGraphics(this);
         gwtScheduler = new GWTScheduler(this, _tickEveryFrame, _ticksPerStep);
         visualizer = new Visualizer(world, gwtGraphics, gwtScheduler);
-        displayWorld();
     }
 
     private void startWS()
     {
-        ObjectMapper<Pledge> mapper = GWT.create(MessageMapper.class);
-        Pledge p = new Pledge(UUID.randomUUID());
-        String encoding = mapper.write(p);
-        Window.alert(encoding);
+        _mapper = GWT.create(MessageMapper.class);
+        // Pledge p = new Pledge(UUID.randomUUID());
+        // String encoding = _mapper.write(p);
+        // Window.alert(encoding);
 
         final WebSocket webSocket = WebSocket.newWebSocketIfSupported();
         if (null != webSocket)
@@ -123,12 +147,18 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 public void onOpen(@Nonnull final WebSocket webSocket)
                 {
                     // After we have connected we can send
-                    webSocket.send("Hello from the GWT server!");
+                    RequestResource request = new RequestResource(_resourceID);
+                    webSocket.send(_mapper.write(request));
                 }
 
                 @Override
                 public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final String data)
                 {
+                    Message incomingMessage = _mapper.read(data);
+                    if (incomingMessage instanceof SendResource)
+                    {
+                        Window.alert("I'm getting the requested resources back!");
+                    }
                     // After we receive a message back we can close the socket
                     // webSocket.close();
                 }

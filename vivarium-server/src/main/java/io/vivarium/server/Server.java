@@ -31,7 +31,6 @@ public class Server extends WebSocketServer
     private Map<UUID, JsonNode> resources = new HashMap<UUID, JsonNode>();
     private Map<UUID, Pledge> workers = new HashMap<UUID, Pledge>();
 
-    private int i = 0;
     private ObjectMapper mapper = new ObjectMapper();
 
     public Server() throws UnknownHostException
@@ -88,12 +87,7 @@ public class Server extends WebSocketServer
             // TODO Auto-generated catch block
             e.printStackTrace();
         }
-        System.out.println("SERVER: Web Socket Message . " + conn + " ~ " + message);
-        if (i < 3)
-        {
-            conn.send("REPLY FROM SERVER! + " + i);
-            i++;
-        }
+        System.out.println("SERVER: Web Socket Message . " + conn + " ~ " + message.substring(0, 100));
     }
 
     @Override
