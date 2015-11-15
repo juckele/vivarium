@@ -26,7 +26,8 @@
   <!-- For GWT Guava                                              -->
   <inherits name="com.google.common.io.Io"/>
 
-  <!-- Other module inherits                                      -->
+  <!-- Vivarium cross project modules                             -->
+  <inherits name='io.vivarium.Net' />
   <inherits name='io.vivarium.Core' />
 
   <!-- Specify the app entry point class.                         -->

@@ -27,6 +27,8 @@ import com.google.gwt.user.client.ui.RootPanel;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
+import io.vivarium.net.common.messages.Pledge;
+import io.vivarium.util.UUID;
 import io.vivarium.visualization.animation.Visualizer;
 
 public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
@@ -115,6 +117,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 {
                     // After we have connected we can send
                     webSocket.send("Hello from the GWT server!");
+                    new Pledge(UUID.randomUUID());
                 }
 
                 @Override

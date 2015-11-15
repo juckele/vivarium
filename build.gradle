@@ -258,10 +258,12 @@ project(':vivarium-web') {
         modules 'io.vivarium.Web'
 
         src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
+        src += files(project(':vivarium-net').sourceSets.main.allJava.srcDirs)
     }
 
     dependencies {
         compile project(':vivarium-core')
+        compile project(':vivarium-net')
         compile 'com.google.guava:guava:18.0'
         compile 'com.google.guava:guava-gwt:18.0'
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
