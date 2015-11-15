@@ -23,6 +23,8 @@ public class Version
     private static final int CURRENT_MINOR = 3;
     private static final int CURRENT_PATCH = 2;
 
+    public static final int FILE_FORMAT_VERSION = 1;
+
     public static final Version CURRENT_VERSION = new Version();
 
     public final int major;

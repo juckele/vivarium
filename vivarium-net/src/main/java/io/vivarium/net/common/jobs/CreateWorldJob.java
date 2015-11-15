@@ -1,11 +1,21 @@
 package io.vivarium.net.common.jobs;
 
 import java.util.List;
-import java.util.UUID;
+
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
+import io.vivarium.net.UUIDDeserializer;
+import io.vivarium.net.UUIDSerializer;
+import io.vivarium.util.UUID;
 
 public class CreateWorldJob extends Job
 {
+    @JsonSerialize(using = UUIDSerializer.class)
+    @JsonDeserialize(using = UUIDDeserializer.class)
     public final UUID sourceDocumentID;
+    @JsonSerialize(using = UUIDSerializer.class)
+    @JsonDeserialize(using = UUIDDeserializer.class)
     public final UUID outputDocumentID;
 
     public CreateWorldJob(List<Job> dependencies, UUID sourceDocumentID, UUID outputDocumentID)

@@ -7,7 +7,6 @@ package io.vivarium.client;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.NotYetConnectedException;
-import java.util.UUID;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -17,6 +16,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.net.Constants;
 import io.vivarium.net.common.messages.Pledge;
+import io.vivarium.util.UUID;
 
 public class Worker extends WebSocketClient
 {

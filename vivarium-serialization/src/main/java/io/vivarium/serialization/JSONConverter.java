@@ -7,10 +7,12 @@ package io.vivarium.serialization;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.UUID;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import io.vivarium.util.UUID;
+import io.vivarium.util.Version;
 
 public class JSONConverter
 {
@@ -61,7 +63,7 @@ public class JSONConverter
             JSONObject categoryMapObject = new JSONObject(map);
             jsonObject.append(OBJECT_KEY, categoryMapObject);
         }
-        jsonObject.put(VERSION_KEY, FileIO.FILE_FORMAT_VERSION);
+        jsonObject.put(VERSION_KEY, Version.FILE_FORMAT_VERSION);
         jsonObject.put(ID_KEY, resourceUuid);
         return jsonObject;
     }

@@ -9,7 +9,6 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -23,6 +22,7 @@ import io.vivarium.net.common.messages.Message;
 import io.vivarium.net.common.messages.Pledge;
 import io.vivarium.net.common.messages.RequestResource;
 import io.vivarium.net.common.messages.SendResource;
+import io.vivarium.util.UUID;
 
 public class Server extends WebSocketServer
 {

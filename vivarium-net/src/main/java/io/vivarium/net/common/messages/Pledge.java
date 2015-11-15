@@ -4,16 +4,21 @@
 
 package io.vivarium.net.common.messages;
 
-import java.util.UUID;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.vivarium.serialization.FileIO;
+import io.vivarium.net.UUIDDeserializer;
+import io.vivarium.net.UUIDSerializer;
+import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
 public class Pledge extends Message
 {
-    public final UUID workerID;
+    @JsonSerialize(using = UUIDSerializer.class)
+    @JsonDeserialize(using = UUIDDeserializer.class)
+    public UUID workerID;
     public final Version version = Version.CURRENT_VERSION;
-    public final int fileformat = FileIO.FILE_FORMAT_VERSION;
+    public final int fileformat = Version.FILE_FORMAT_VERSION;
     public final int slots;
     public final int throughput;
 

@@ -7,7 +7,6 @@ package io.vivarium.client;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.NotYetConnectedException;
-import java.util.UUID;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
@@ -20,6 +19,7 @@ import io.vivarium.net.Constants;
 import io.vivarium.net.common.messages.RequestResource;
 import io.vivarium.net.common.messages.SendResource;
 import io.vivarium.serialization.JSONConverter;
+import io.vivarium.util.UUID;
 
 public class Client extends WebSocketClient
 {
@@ -42,7 +42,7 @@ public class Client extends WebSocketClient
             // Create a world and upload it
             Blueprint blueprint = Blueprint.makeDefault();
             String jsonString = JSONConverter.serializerToJSONString(blueprint, resourceID);
-            SendResource uploadBlueprint = new SendResource(jsonString);
+            SendResource uploadBlueprint = new SendResource(resourceID, jsonString);
             this.send(mapper.writeValueAsString(uploadBlueprint));
 
             // Let's try getting the resource we just uploaded to make sure it works...

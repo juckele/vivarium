@@ -114,6 +114,7 @@ project(':vivarium-net') {
 project(':vivarium-worker') {
     dependencies {
         compile project(':vivarium-core')
+        compile project(':vivarium-net')
         compile project(':vivarium-serialization') 
     }
 }
@@ -125,7 +126,6 @@ project(':vivarium-integration') {
 }
 project(':vivarium-server') {
     dependencies {
-        compile project(':vivarium-serialization')
         compile project(':vivarium-net')
     }
 }

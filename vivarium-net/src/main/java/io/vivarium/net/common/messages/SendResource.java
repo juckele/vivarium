@@ -1,18 +1,21 @@
 package io.vivarium.net.common.messages;
 
 import java.io.IOException;
-import java.util.UUID;
-
-import org.json.JSONObject;
 
 import com.fasterxml.jackson.annotation.JsonRawValue;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
-import io.vivarium.serialization.JSONConverter;
+import io.vivarium.net.UUIDDeserializer;
+import io.vivarium.net.UUIDSerializer;
+import io.vivarium.util.UUID;
 
 public class SendResource extends Message
 {
+    @JsonSerialize(using = UUIDSerializer.class)
+    @JsonDeserialize(using = UUIDDeserializer.class)
     final public UUID resourceID;
     final public JsonNode jsonData;
 
@@ -30,7 +33,7 @@ public class SendResource extends Message
         jsonData = null;
     }
 
-    public SendResource(String jsonString)
+    public SendResource(UUID resourceID, String jsonString)
     {
         try
         {
@@ -42,7 +45,7 @@ public class SendResource extends Message
             e.printStackTrace();
             throw new IllegalArgumentException("Unable to parse JSON");
         }
-        this.resourceID = UUID.fromString(new JSONObject(jsonString).get(JSONConverter.ID_KEY).toString());
+        this.resourceID = resourceID;
     }
 
     public SendResource(UUID resourceID, JsonNode jsonData)
