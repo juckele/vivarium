@@ -21,6 +21,8 @@ import com.google.gwt.core.shared.GWT;
 import com.google.gwt.dom.client.ImageElement;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.event.logical.shared.CloseEvent;
+import com.google.gwt.event.logical.shared.CloseHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
@@ -46,6 +48,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private Canvas _tempCanvas;
     private Canvas _tempCanvas2;
     private World world;
+    private VivariumObjectCollection _collection;
     private GWTGraphics gwtGraphics;
     private GWTScheduler gwtScheduler;
     private Visualizer visualizer;
@@ -62,16 +65,25 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private UUID _resourceID;
     private ObjectMapper<Message> _mapper;
 
+    private WebSocket _webSocket;
+    private boolean _saveOnClose;
+
+    private static final String DEBUG_KEY = "debug";
+    private static final String TICK_KEY = "tick";
+    private static final String WEB_SOCKET_KEY = "ws";
+    // save on close functionality also requires ws functionality to be turned on
+    private static final String SAVE_ON_CLOSE = "save";
+
     @Override
     public void onModuleLoad()
     {
         // Get options from parameters
-        String debug = Window.Location.getParameter("debug");
+        String debug = Window.Location.getParameter(DEBUG_KEY);
         if (debug != null && debug.toLowerCase().equals("true"))
         {
             _debug = true;
         }
-        String tick = Window.Location.getParameter("tick");
+        String tick = Window.Location.getParameter(TICK_KEY);
         if (tick != null)
         {
             if (tick.toLowerCase().equals("perframe"))
@@ -92,7 +104,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 }
             }
         }
-        String ws = Window.Location.getParameter("ws");
+        String ws = Window.Location.getParameter(WEB_SOCKET_KEY);
         if (ws != null)
         {
             if (ws.toLowerCase().equals("true"))
@@ -102,6 +114,12 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
             else
             {
                 _resourceID = UUID.fromString(ws);
+            }
+            String saveOnClose = Window.Location.getParameter(SAVE_ON_CLOSE);
+            if (saveOnClose != null)
+            {
+                _saveOnClose = true;
+                Window.alert("I want to save on close!");
             }
             startWS();
         }
@@ -141,10 +159,10 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         // String encoding = _mapper.write(p);
         // Window.alert(encoding);
 
-        final WebSocket webSocket = WebSocket.newWebSocketIfSupported();
-        if (null != webSocket)
+        _webSocket = WebSocket.newWebSocketIfSupported();
+        if (_webSocket != null)
         {
-            webSocket.setListener(new WebSocketListenerAdapter()
+            _webSocket.setListener(new WebSocketListenerAdapter()
             {
                 @Override
                 public void onOpen(@Nonnull final WebSocket webSocket)
@@ -161,11 +179,10 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                     if (incomingMessage instanceof SendResource)
                     {
                         SendResource sendResource = (SendResource) incomingMessage;
-                        VivariumObjectCollection collection = (VivariumObjectCollection) Streamer.get()
-                                .fromString(sendResource.dataString);
+                        _collection = (VivariumObjectCollection) Streamer.get().fromString(sendResource.dataString);
 
                         // Finish loading
-                        world = collection.getFirst(World.class);
+                        world = _collection.getFirst(World.class);
                         setUpGraphics();
                         displayWorld();
                     }
@@ -173,7 +190,26 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                     // webSocket.close();
                 }
             });
-            webSocket.connect("ws://localhost:13731/");
+            _webSocket.connect("ws://localhost:13731/");
+            if (_saveOnClose)
+            {
+                Window.addCloseHandler(new CloseHandler<Window>()
+                {
+                    @Override
+                    public void onClose(CloseEvent<Window> event)
+                    {
+                        Window.alert("Can I please save?");
+                        if (_webSocket != null && _webSocket.isConnected())
+                        {
+                            // After we have connected we can send
+                            SendResource sendMessage = new SendResource(_resourceID,
+                                    Streamer.get().toString(_collection), ResourceFormat.GWT_STREAM);
+                            _webSocket.send(_mapper.write(sendMessage));
+                            _webSocket.close();
+                        }
+                    }
+                });
+            }
         }
     }
 

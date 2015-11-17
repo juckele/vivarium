@@ -69,7 +69,22 @@ public class Server extends WebSocketServer
             else if (untypedMessage instanceof SendResource)
             {
                 SendResource sendResourceMessage = (SendResource) untypedMessage;
-                String jsonString = sendResourceMessage.dataString;
+                String dataString = sendResourceMessage.dataString;
+                String jsonString;
+                if (sendResourceMessage.resourceFormat == ResourceFormat.JSON)
+                {
+                    jsonString = sendResourceMessage.dataString;
+                }
+                else if (sendResourceMessage.resourceFormat == ResourceFormat.GWT_STREAM)
+                {
+                    VivariumObjectCollection collection = (VivariumObjectCollection) Streamer.get()
+                            .fromString(dataString);
+                    jsonString = JSONConverter.serializerToJSONString(collection, sendResourceMessage.resourceID);
+                }
+                else
+                {
+                    throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
+                }
                 JsonNode jsonData = mapper.readTree(jsonString);
                 resources.put(sendResourceMessage.resourceID, jsonData);
             }
