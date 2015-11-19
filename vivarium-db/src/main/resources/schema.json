@@ -1,0 +1,81 @@
+{
+    "tables": [
+        {
+            "name": "jobs",
+            "columns": [
+                {
+                    "name": "id",
+                    "type": "uuid",
+                    "primaryKey": "true"
+                }
+            ]
+        },
+        {
+            "name": "job_dependencies",
+            "columns": [
+                {
+                    "name": "job_id",
+                    "type": "uuid",
+                    "references": "jobs(id)"
+                },
+                {
+                    "name": "requires_job_id",
+                    "type": "uuid",
+                    "references": "jobs(id)"
+                }
+            ],
+            "constraints": [
+                "UNIQUE (job_id, waits_on_job_id)"
+            ]
+        },
+        {
+            "name": "simulation_jobs",
+            "columns": [
+                {
+                    "name": "job_id",
+                    "type": "uuid",
+                    "references": "jobs(id)",
+                    "primaryKey": "true"
+                },
+                {
+                    "name": "end_tick",
+                    "type": "bigint",
+                    "notNull": "true"
+                },
+                {
+                    "name": "source_resource_id",
+                    "type": "uuid",
+                    "references": "resources(id)",
+                    "notNull": "true"
+                },
+                {
+                    "name": "output_resource_id",
+                    "type": "uuid",
+                    "references": "resources(id)",
+                    "notNull": "true"
+                }
+            ],
+            "constraints": [
+                "UNIQUE (job_id, waits_on_job_id)"
+            ]
+        },
+        {
+            "name": "resources",
+            "columns": [
+                {
+                    "name": "id",
+                    "type": "uuid",
+                    "primaryKey": "true"
+                },
+                {
+                    "name": "data",
+                    "type": "json"
+                },
+                {
+                    "name": "file_format_version",
+                    "type": "int"
+                }
+            ]
+        }
+    ]
+}

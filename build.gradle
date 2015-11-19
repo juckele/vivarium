@@ -217,6 +217,13 @@ project(':vivarium-scripts') {
             from sharedManifest
         }
     }
+    task jarUpdateSchema( type: OneJar ) {
+        archiveName = 'update-schema'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.UpdateSchema'
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
 
     task jarCollection {
         description = "Creates a complete set of stand-alone jars for scripts in this project."
@@ -230,12 +237,16 @@ project(':vivarium-scripts') {
     jarCollection.dependsOn jarNormalizeBrainGenomes
     jarCollection.dependsOn jarRunSimulation
     jarCollection.dependsOn jarRunBenchmark
+    jarCollection.dependsOn jarUpdateSchema
     build.dependsOn jarCollection
 
     dependencies {
         compile project(':vivarium-core')
-        compile project(':vivarium-serialization')
+        compile project(':vivarium-db')
         compile project(':vivarium-graph')
+        compile project(':vivarium-serialization')
+        compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
+        compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
         compile 'commons-cli:commons-cli:1.3.1'
     }
 }
