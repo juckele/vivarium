@@ -22,13 +22,13 @@ public abstract class Job
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
     public final UUID jobID;
-    public final List<Job> dependencies;
+    public final List<UUID> dependencies;
 
-    public Job(List<Job> dependencies)
+    public Job(List<UUID> dependencies)
     {
         jobID = UUID.randomUUID();
         type = getType();
-        this.dependencies = new ArrayList<Job>(dependencies);
+        this.dependencies = new ArrayList<UUID>(dependencies);
     }
 
     protected abstract JobType getType();

@@ -19,7 +19,7 @@ public class SimulationJob extends Job
     public final UUID outputDocumentID;
     public final long endTick;
 
-    public SimulationJob(List<Job> dependencies, UUID sourceDocumentID, UUID outputDocumentID, long endTick)
+    public SimulationJob(List<UUID> dependencies, UUID sourceDocumentID, UUID outputDocumentID, long endTick)
     {
         super(dependencies);
         this.sourceDocumentID = sourceDocumentID;

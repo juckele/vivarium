@@ -18,7 +18,7 @@ public class CreateWorldJob extends Job
     @JsonDeserialize(using = UUIDDeserializer.class)
     public final UUID outputDocumentID;
 
-    public CreateWorldJob(List<Job> dependencies, UUID sourceDocumentID, UUID outputDocumentID)
+    public CreateWorldJob(List<UUID> dependencies, UUID sourceDocumentID, UUID outputDocumentID)
     {
         super(dependencies);
         this.sourceDocumentID = sourceDocumentID;
