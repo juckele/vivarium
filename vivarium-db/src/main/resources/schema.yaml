@@ -11,6 +11,39 @@ schema public:
     - all
   - PUBLIC:
     - all
+  table create_world_jobs:
+    columns:
+    - job_id:
+        not_null: true
+        type: uuid
+    - source_resource_id:
+        not_null: true
+        type: uuid
+    - output_resource_id:
+        not_null: true
+        type: uuid
+    foreign_keys:
+      create_world_jobs_output_resource_id_fkey:
+        columns:
+        - output_resource_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: resources
+      create_world_jobs_source_resource_id_fkey:
+        columns:
+        - source_resource_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: resources
+    owner: vivarium
+    primary_key:
+      create_world_jobs_pkey:
+        columns:
+        - job_id
   table job_dependencies:
     columns:
     - job_id:
