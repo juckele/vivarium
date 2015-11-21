@@ -1,0 +1,116 @@
+extension plpgsql:
+  description: PL/pgSQL procedural language
+  owner: postgres
+  schema: pg_catalog
+  version: '1.0'
+schema public:
+  description: standard public schema
+  owner: postgres
+  privileges:
+  - postgres:
+    - all
+  - PUBLIC:
+    - all
+  table job_dependencies:
+    columns:
+    - job_id:
+        type: uuid
+    - requires_job_id:
+        type: uuid
+    foreign_keys:
+      job_dependencies_job_id_fkey:
+        columns:
+        - job_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: jobs
+      job_dependencies_requires_job_id_fkey:
+        columns:
+        - requires_job_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: jobs
+    owner: vivarium
+    unique_constraints:
+      job_dependencies_job_id_requires_job_id_key:
+        columns:
+        - job_id
+        - requires_job_id
+  table jobs:
+    columns:
+    - id:
+        not_null: true
+        type: uuid
+    - status:
+        not_null: true
+        type: status
+    - priority:
+        not_null: true
+        type: smallint
+    owner: vivarium
+    primary_key:
+      jobs_pkey:
+        columns:
+        - id
+  table resources:
+    columns:
+    - id:
+        not_null: true
+        type: uuid
+    - data:
+        type: json
+    - file_format_version:
+        type: integer
+    owner: vivarium
+    primary_key:
+      resources_pkey:
+        columns:
+        - id
+  table simulation_jobs:
+    columns:
+    - job_id:
+        not_null: true
+        type: uuid
+    - end_tick:
+        not_null: true
+        type: bigint
+    - source_resource_id:
+        not_null: true
+        type: uuid
+    - output_resource_id:
+        not_null: true
+        type: uuid
+    foreign_keys:
+      simulation_jobs_output_resource_id_fkey:
+        columns:
+        - output_resource_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: resources
+      simulation_jobs_source_resource_id_fkey:
+        columns:
+        - source_resource_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: resources
+    owner: vivarium
+    primary_key:
+      simulation_jobs_pkey:
+        columns:
+        - job_id
+  type status:
+    labels:
+    - blocked
+    - waiting
+    - processing
+    - done
+    owner: vivarium
+
