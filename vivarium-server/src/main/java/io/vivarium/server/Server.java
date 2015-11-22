@@ -7,17 +7,21 @@ package io.vivarium.server;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.gwtstreamer.client.Streamer;
 
+import io.vivarium.db.DatabaseUtils;
+import io.vivarium.db.model.Resource;
 import io.vivarium.net.Constants;
 import io.vivarium.net.messages.Message;
 import io.vivarium.net.messages.Pledge;
@@ -32,14 +36,23 @@ public class Server extends WebSocketServer
 {
     private final static InetSocketAddress PORT = new InetSocketAddress(Constants.DEFAULT_PORT);
 
-    private Map<UUID, JsonNode> resources = new HashMap<UUID, JsonNode>();
     private Map<UUID, Pledge> workers = new HashMap<UUID, Pledge>();
 
     private ObjectMapper mapper = new ObjectMapper();
 
+    private Connection _connection;
+
     public Server() throws UnknownHostException
     {
         super(PORT);
+        try
+        {
+            _connection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -85,16 +98,17 @@ public class Server extends WebSocketServer
                 {
                     throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
                 }
-                JsonNode jsonData = mapper.readTree(jsonString);
-                resources.put(sendResourceMessage.resourceID, jsonData);
+                Resource.create(sendResourceMessage.resourceID, jsonString).persistToDatabase(_connection);
             }
             else if (untypedMessage instanceof RequestResource)
             {
                 RequestResource requestResourceMessage = (RequestResource) untypedMessage;
-                if (resources.containsKey(requestResourceMessage.resourceID))
+                UUID resourceID = requestResourceMessage.resourceID;
+                Optional<Resource> resource = Resource.getFromDatabase(_connection, resourceID);
+                if (resource.isPresent() && resource.get().jsonData.isPresent())
                 {
                     ResourceFormat resourceFormat = requestResourceMessage.resourceFormat;
-                    String jsonString = resources.get(requestResourceMessage.resourceID).toString();
+                    String jsonString = resource.get().jsonData.get();
                     String dataString = null;
                     if (resourceFormat == ResourceFormat.JSON)
                     {
@@ -120,7 +134,7 @@ public class Server extends WebSocketServer
                 System.err.println("SERVER: Unhandled message of type " + untypedMessage.getClass().getSimpleName());
             }
         }
-        catch (IOException e)
+        catch (IOException | SQLException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();
