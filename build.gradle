@@ -111,20 +111,9 @@ project(':vivarium-net') {
         compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
     }
 }
-project(':vivarium-worker') {
+project(':vivarium-ws') {
     dependencies {
-        compile project(':vivarium-net')
-        compile project(':vivarium-scripts') 
-    }
-}
-project(':vivarium-integration') {
-    dependencies {
-        compile project(':vivarium-server')
-        compile project(':vivarium-worker')
-    }
-}
-project(':vivarium-server') {
-    dependencies {
+        compile project(':vivarium-db')
         compile project(':vivarium-net')
         compile project(':vivarium-scripts') 
     }

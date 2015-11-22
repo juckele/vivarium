@@ -2,11 +2,9 @@ include 'vivarium-core',
 	'vivarium-db',
 	'vivarium-ga',
 	'vivarium-graph',
-	'vivarium-integration',
 	'vivarium-net',
 	'vivarium-scripts',
 	'vivarium-serialization',
-	'vivarium-server',
 	'vivarium-swing',
 	'vivarium-web',
-	'vivarium-worker'
+	'vivarium-ws'
