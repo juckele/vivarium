@@ -95,7 +95,7 @@ schema public:
         not_null: true
         type: uuid
     - data:
-        type: json
+        type: text
     - file_format_version:
         type: integer
     owner: vivarium
