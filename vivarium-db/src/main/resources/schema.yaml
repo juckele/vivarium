@@ -98,6 +98,16 @@ schema public:
         type: text
     - file_format_version:
         type: integer
+    - world_count:
+        type: integer
+    - blueprint_count:
+        type: integer
+    - species_count:
+        type: integer
+    - creature_count:
+        type: integer
+    - brain_count:
+        type: integer
     owner: vivarium
     primary_key:
       resources_pkey:

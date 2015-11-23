@@ -6,6 +6,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Optional;
 
+import io.vivarium.core.Blueprint;
+import io.vivarium.core.Creature;
+import io.vivarium.core.Species;
+import io.vivarium.core.World;
+import io.vivarium.core.brain.Brain;
+import io.vivarium.serialization.JSONConverter;
+import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
@@ -48,9 +55,36 @@ public class Resource
 
     public void persistToDatabase(Connection connection) throws SQLException
     {
+        Integer worldCount = null;
+        Integer blueprintCount = null;
+        Integer speciesCount = null;
+        Integer creatureCount = null;
+        Integer brainCount = null;
+        if (jsonData.isPresent())
+        {
+            VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonData.get());
+            worldCount = collection.getAll(World.class).size();
+            blueprintCount = collection.getAll(Blueprint.class).size();
+            speciesCount = collection.getAll(Species.class).size();
+            creatureCount = collection.getAll(Creature.class).size();
+            brainCount = collection.getAll(Brain.class).size();
+            System.out.println("worldCount   " + worldCount);
+        }
+        else
+        {
+            System.err.println("Empty rows?");
+        }
         Statement insertStatement = connection.createStatement();
-        String insertString = String.format("INSERT INTO resources VALUES ('%s', '%s', %s)", resourceID.toString(),
-                jsonData.get(), fileFormatVersion.get());
+        String jsonDataForSQL = (jsonData.isPresent() ? '\'' + jsonData.get() + '\'' : "null");
+        String updateString = String.format(
+                "UPDATE resources SET data=%s, file_format_version=%s, world_count=%s, blueprint_count=%s, species_count=%s, creature_count=%s, brain_count=%s  WHERE id='%s'",
+                jsonDataForSQL, fileFormatVersion.get(), worldCount, blueprintCount, speciesCount, creatureCount,
+                brainCount, resourceID.toString());
+        String insertString = String.format(
+                "INSERT INTO resources (id, data, file_format_version, world_count, blueprint_count, species_count, creature_count, brain_count) SELECT  '%s', %s, %s, %s, %s, %s, %s, %s WHERE NOT EXISTS (SELECT 1 FROM resources WHERE id='%s');",
+                resourceID.toString(), jsonDataForSQL, fileFormatVersion.get(), worldCount, blueprintCount,
+                speciesCount, creatureCount, brainCount, resourceID.toString());
+        insertStatement.execute(updateString);
         insertStatement.execute(insertString);
     }
 }
