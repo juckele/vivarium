@@ -48,7 +48,8 @@ public class RunBenchmark extends CommonsScript
     {
         try
         {
-            System.out.println("Running benchmarks:");
+            // System.out.println("Running benchmarks:");
+            System.out.println("threads,cts");
 
             // If we're running multi-threaded code, we need to use a multi-threaded random allocator
             Rand.setAllocator(new ThreadRandAllocator());
@@ -64,8 +65,12 @@ public class RunBenchmark extends CommonsScript
             for (int threadCount = 1; threadCount <= 16; threadCount++)
             {
                 result = threadTest(threadCount, iterations, size);
-                System.out.print(String.format("%sx%s (%s threads):%n Creature Ticks / Second: %4.3e%n%n", size, size,
-                        threadCount, result));
+                System.out.println(threadCount + "," + (int) result);
+                /*
+                 * System.out.print(String.format("%sx%s (%s threads):%n Creature Ticks / Second: %4.3e%n%n ~ %s", size,
+                 * size, threadCount, result, (int) result));
+                 */
+
             }
         }
         catch (Exception e)
@@ -126,7 +131,7 @@ public class RunBenchmark extends CommonsScript
         double total = 0;
         for (int i = 0; i < iterations; i++)
         {
-            double testRun = inlineTest(25);
+            double testRun = inlineTest(size);
             min = Math.min(min, testRun);
             max = Math.max(max, testRun);
             total += testRun;
