@@ -38,6 +38,9 @@ subprojects {
 
     version = '0.3.2'
 
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+
     eclipseSetup.dependsOn cleanEclipseProject
     eclipseSetup.dependsOn eclipseProject
     eclipseSetup.dependsOn cleanEclipseClasspath
