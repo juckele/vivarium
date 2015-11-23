@@ -1,9 +1,17 @@
+/*
+ * Copyright © 2015 John H Uckele. All rights reserved.
+ */
+
 package io.vivarium.db.model;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import io.vivarium.core.Blueprint;
@@ -11,6 +19,7 @@ import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.core.brain.Brain;
+import io.vivarium.db.DatabaseUtils;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
@@ -18,6 +27,19 @@ import io.vivarium.util.Version;
 
 public class Resource
 {
+    // Table name
+    private static final String TABLE_NAME = "resources";
+    // Column names
+    private static final String ID = "id";
+    private static final String DATA = "data";
+    private static final String FILE_FORMAT_VERSION = "file_format_version";
+    private static final String WORLD_COUNT = "world_count";
+    private static final String BLUEPRINT_COUNT = "blueprint_count";
+    private static final String SPECIES_COUNT = "species_count";
+    private static final String CREATURE_COUNT = "creature_count";
+    private static final String BRAIN_COUNT = "brain_count";
+
+    // relation data
     public final UUID resourceID;
     public final Optional<String> jsonData;
     public final Optional<Integer> fileFormatVersion;
@@ -34,15 +56,13 @@ public class Resource
         Statement queryStatement = connection.createStatement();
         // queryStatement.setObject(1, resourceID.toString());
         // System.out.println(queryStatement);
-        System.out.println("Hello");
         String queryString = "SELECT * FROM resources WHERE id = '" + resourceID.toString() + "'";
         System.out.println(queryString);
         ResultSet resourceResultSet = queryStatement.executeQuery(queryString);
-        System.out.println("Queired");
         while (resourceResultSet.next())
         {
-            String jsonData = resourceResultSet.getString("data");
-            Integer version = (Integer) resourceResultSet.getObject("file_format_version");
+            String jsonData = resourceResultSet.getString(DATA);
+            Integer version = (Integer) resourceResultSet.getObject(FILE_FORMAT_VERSION);
             return Optional.of((new Resource(resourceID, jsonData, version)));
         }
         return Optional.empty();
@@ -55,36 +75,31 @@ public class Resource
 
     public void persistToDatabase(Connection connection) throws SQLException
     {
-        Integer worldCount = null;
-        Integer blueprintCount = null;
-        Integer speciesCount = null;
-        Integer creatureCount = null;
-        Integer brainCount = null;
+        Map<String, Object> resourceRelation = new HashMap<String, Object>();
+        resourceRelation.put(ID, resourceID);
+        resourceRelation.put(DATA, jsonData.isPresent() ? jsonData.get() : null);
+        resourceRelation.put(FILE_FORMAT_VERSION, fileFormatVersion.isPresent() ? fileFormatVersion.get() : null);
+        resourceRelation.put(WORLD_COUNT, null);
+        resourceRelation.put(BLUEPRINT_COUNT, null);
+        resourceRelation.put(SPECIES_COUNT, null);
+        resourceRelation.put(CREATURE_COUNT, null);
+        resourceRelation.put(BRAIN_COUNT, null);
         if (jsonData.isPresent())
         {
             VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonData.get());
-            worldCount = collection.getAll(World.class).size();
-            blueprintCount = collection.getAll(Blueprint.class).size();
-            speciesCount = collection.getAll(Species.class).size();
-            creatureCount = collection.getAll(Creature.class).size();
-            brainCount = collection.getAll(Brain.class).size();
-            System.out.println("worldCount   " + worldCount);
+            resourceRelation.put(WORLD_COUNT, collection.getAll(World.class).size());
+            resourceRelation.put(BLUEPRINT_COUNT, collection.getAll(Blueprint.class).size());
+            resourceRelation.put(SPECIES_COUNT, collection.getAll(Species.class).size());
+            resourceRelation.put(CREATURE_COUNT, collection.getAll(Creature.class).size());
+            resourceRelation.put(BRAIN_COUNT, collection.getAll(Brain.class).size());
         }
-        else
-        {
-            System.err.println("Empty rows?");
-        }
-        Statement insertStatement = connection.createStatement();
-        String jsonDataForSQL = (jsonData.isPresent() ? '\'' + jsonData.get() + '\'' : "null");
-        String updateString = String.format(
-                "UPDATE resources SET data=%s, file_format_version=%s, world_count=%s, blueprint_count=%s, species_count=%s, creature_count=%s, brain_count=%s  WHERE id='%s'",
-                jsonDataForSQL, fileFormatVersion.get(), worldCount, blueprintCount, speciesCount, creatureCount,
-                brainCount, resourceID.toString());
-        String insertString = String.format(
-                "INSERT INTO resources (id, data, file_format_version, world_count, blueprint_count, species_count, creature_count, brain_count) SELECT  '%s', %s, %s, %s, %s, %s, %s, %s WHERE NOT EXISTS (SELECT 1 FROM resources WHERE id='%s');",
-                resourceID.toString(), jsonDataForSQL, fileFormatVersion.get(), worldCount, blueprintCount,
-                speciesCount, creatureCount, brainCount, resourceID.toString());
-        insertStatement.execute(updateString);
-        insertStatement.execute(insertString);
+        DatabaseUtils.upsert(connection, TABLE_NAME, resourceRelation, getPrimaryKeys());
+    }
+
+    private List<String> getPrimaryKeys()
+    {
+        List<String> primaryKeys = new LinkedList<String>();
+        primaryKeys.add(ID);
+        return primaryKeys;
     }
 }
