@@ -192,6 +192,12 @@ schema public:
     - id:
         not_null: true
         type: uuid
+    - version:
+        not_null: true
+        type: integer[]
+    - file_format_version:
+        not_null: true
+        type: integer
     - is_active:
         type: boolean
     - last_activity:
