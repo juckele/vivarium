@@ -103,4 +103,13 @@ public class DatabaseUtils
             sqlStatement.execute(insertStringBuilder.toString());
         }
     }
+
+    public static void upsert(Connection connection, String tableName, List<Map<String, Object>> relations,
+            List<String> keyColumns) throws SQLException
+    {
+        for (Map<String, Object> relation : relations)
+        {
+            upsert(connection, tableName, relation, keyColumns);
+        }
+    }
 }
