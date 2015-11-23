@@ -80,7 +80,7 @@ schema public:
         type: uuid
     - status:
         not_null: true
-        type: status
+        type: job_status
     - priority:
         not_null: true
         type: smallint
@@ -149,7 +149,7 @@ schema public:
       simulation_jobs_pkey:
         columns:
         - job_id
-  type status:
+  type job_status:
     labels:
     - blocked
     - waiting
