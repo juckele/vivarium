@@ -20,4 +20,9 @@
     <Bug pattern="DM_EXIT"/>
     <Class name="io.vivarium.visualization.animation.AnimatedWorldViewer"/>
   </Match>
+  <!-- We should not ever be accepting user input directly on any db utils, these should alsways go through well defined models beforehand -->
+  <Match>
+    <Bug pattern="SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING"/>
+    <Class name="io.vivarium.db.DatabaseUtils"/>
+  </Match>
 </FindBugsFilter>
