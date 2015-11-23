@@ -54,9 +54,10 @@ public class RunBenchmark extends CommonsScript
             Rand.setAllocator(new ThreadRandAllocator());
 
             // Do this just to give the JIT Compiler some stuff to optimize
-            inlineTest(100);
+            threadTest(4, 10, 100);
+            // inlineTest(100);
 
-            // Now run the actual benchmarkks now that the the Java VM is warmed up
+            // Now run the actual benchmarks now that the the Java VM is warmed up
             int iterations = 1000;
             int size = 40;
             double result;
@@ -71,7 +72,6 @@ public class RunBenchmark extends CommonsScript
         {
             e.printStackTrace();
         }
-
     }
 
     private static double threadTest(int threadPoolSize, int iterationsPerThread, int size) throws InterruptedException

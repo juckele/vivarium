@@ -23,8 +23,7 @@ public class Pledge extends Message
     @JsonDeserialize(using = VersionDeserializer.class)
     public Version version = Version.CURRENT_VERSION;
     public int fileformat = Version.FILE_FORMAT_VERSION;
-    public int slots;
-    public int throughput;
+    public int[] throughput;
 
     @SuppressWarnings("unused") // Used by Jackson
     private Pledge()
@@ -32,21 +31,18 @@ public class Pledge extends Message
         workerID = null;
         version = null;
         fileformat = -1;
-        slots = -1;
-        throughput = -1;
+        throughput = null;
     }
 
     public Pledge(UUID workerID)
     {
         this.workerID = workerID;
-        this.slots = 12;
-        this.throughput = 100_000_000;
+        throughput = new int[] { 10_000_000, 15_000_000, 20_000_000, 22_500_000, 25_000_000, 27_500_000, 30_000_000 };
     }
 
-    public Pledge(UUID workerID, int slots, int throughput)
+    public Pledge(UUID workerID, int slots, int[] throughput)
     {
         this.workerID = workerID;
-        this.slots = slots;
         this.throughput = throughput;
     }
 }
