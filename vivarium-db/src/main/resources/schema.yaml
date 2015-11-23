@@ -84,6 +84,21 @@ schema public:
     - priority:
         not_null: true
         type: smallint
+    - checked_out_by:
+        type: uuid
+    - checked_out_time:
+        type: timestamp with time zone
+    - completed_time:
+        type: timestamp with time zone
+    foreign_keys:
+      jobs_checked_out_by_fkey:
+        columns:
+        - checked_out_by
+        references:
+          columns:
+          - id
+          schema: public
+          table: workers
     owner: vivarium
     primary_key:
       jobs_pkey:
@@ -149,6 +164,43 @@ schema public:
       simulation_jobs_pkey:
         columns:
         - job_id
+  table throughputs:
+    columns:
+    - worker_id:
+        type: uuid
+    - slots:
+        type: smallint
+    - throughput:
+        type: integer
+    foreign_keys:
+      throughputs_worker_id_fkey:
+        columns:
+        - worker_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: workers
+    owner: vivarium
+    unique_constraints:
+      throughputs_worker_id_slots_key:
+        columns:
+        - worker_id
+        - slots
+  table workers:
+    columns:
+    - id:
+        not_null: true
+        type: uuid
+    - is_active:
+        type: boolean
+    - last_activity:
+        type: timestamp with time zone
+    owner: vivarium
+    primary_key:
+      workers_pkey:
+        columns:
+        - id
   type job_status:
     labels:
     - blocked
