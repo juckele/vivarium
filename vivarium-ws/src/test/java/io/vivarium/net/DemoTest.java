@@ -20,14 +20,20 @@ public class DemoTest
         Server s = new Server();
         s.start();
 
+        Thread.sleep(100);
+
         Client c = new Client(new CreateAndUploadWorldTask());
         c.connect();
+
+        Thread.sleep(100);
 
         Worker w = new Worker();
         w.connect();
 
+        Thread.sleep(100);
+
         // Don't try to request before they have it.
-        Thread.sleep(1000);
+        Thread.sleep(300);
         Client c2 = new Client(new DownloadWorldTask());
         c2.connect();
 
