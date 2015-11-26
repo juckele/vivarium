@@ -80,8 +80,8 @@ public class DatabaseUtils
             updateStringBuilder.append(";");
 
             // Builds an insert string in the form
-            // INSERT INTO table (key1, key2)
-            // SELECT value1, value2
+            // INSERT INTO table (key1, key2, id_key)
+            // SELECT value1, value2, id_value
             // WHERE NOT EXISTS (SELECT 1 FROM table WHERE id_key = id_value);
             StringBuilder insertStringBuilder = new StringBuilder();
             insertStringBuilder.append("INSERT INTO ");
@@ -90,7 +90,7 @@ public class DatabaseUtils
             insertStringBuilder.append(Joiner.on(", ").join(allColumns));
             insertStringBuilder.append(") SELECT ");
             insertStringBuilder.append(Joiner.on(", ")
-                    .join(nonKeyColumns.stream().map(i -> String.format("%s", sqlStrings.get(i))).iterator()));
+                    .join(allColumns.stream().map(i -> String.format("%s", sqlStrings.get(i))).iterator()));
             insertStringBuilder.append(" WHERE NOT EXISTS (SELECT 1 FROM ");
             insertStringBuilder.append(tableName);
             insertStringBuilder.append(" WHERE ");
