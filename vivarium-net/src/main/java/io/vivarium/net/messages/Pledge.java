@@ -19,30 +19,35 @@ public class Pledge extends Message
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
     public UUID workerID;
+    public boolean active;
     @JsonSerialize(using = VersionSerializer.class)
     @JsonDeserialize(using = VersionDeserializer.class)
-    public Version version = Version.CURRENT_VERSION;
-    public int fileformat = Version.FILE_FORMAT_VERSION;
-    public int[] throughput;
+    public Version codeVersion = Version.CURRENT_VERSION;
+    public int fileFormatVersion = Version.FILE_FORMAT_VERSION;
+    public int[] throughputs;
 
     @SuppressWarnings("unused") // Used by Jackson
     private Pledge()
     {
-        workerID = null;
-        version = null;
-        fileformat = -1;
-        throughput = null;
     }
 
     public Pledge(UUID workerID)
     {
         this.workerID = workerID;
-        throughput = new int[] { 10_000_000, 15_000_000, 20_000_000, 22_500_000, 25_000_000, 27_500_000, 30_000_000 };
+        this.active = true;
+        this.codeVersion = Version.CURRENT_VERSION;
+        this.fileFormatVersion = Version.FILE_FORMAT_VERSION;
+        // Hand waved throughput counts for now that happen to be somewhat close to various machines I own
+        this.throughputs = new int[] { 20_000_000, 35_000_000, 50_000_000, 60_500_000, 70_000_000, 80_000_000,
+                85_000_000, 86_000_000, 87_000_000, 88_000_000, 89_000_000, 90_000_000 };
     }
 
-    public Pledge(UUID workerID, int slots, int[] throughput)
+    public Pledge(UUID workerID, boolean active, Version codeVersion, int fileFormatVersion, int[] throughputs)
     {
         this.workerID = workerID;
-        this.throughput = throughput;
+        this.active = active;
+        this.codeVersion = codeVersion;
+        this.fileFormatVersion = fileFormatVersion;
+        this.throughputs = throughputs;
     }
 }

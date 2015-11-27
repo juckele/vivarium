@@ -17,6 +17,8 @@
 
 package io.vivarium.util;
 
+import com.google.common.base.Preconditions;
+
 public class Version
 {
     private static final int CURRENT_MAJOR = 0;
@@ -65,5 +67,13 @@ public class Version
         {
             throw new IllegalArgumentException("Unable to parse version not in format X.Y.Z: " + string);
         }
+    }
+
+    public Version(int[] versionNumbers)
+    {
+        Preconditions.checkArgument(versionNumbers.length == 3, "Input array for a version must be three elements");
+        this.major = versionNumbers[0];
+        this.minor = versionNumbers[1];
+        this.patch = versionNumbers[2];
     }
 }
