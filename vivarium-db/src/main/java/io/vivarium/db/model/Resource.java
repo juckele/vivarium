@@ -5,9 +5,7 @@
 package io.vivarium.db.model;
 
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,6 +18,7 @@ import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.core.brain.Brain;
 import io.vivarium.db.DatabaseUtils;
+import io.vivarium.db.Inequality;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
@@ -53,19 +52,23 @@ public class Resource
 
     public static Optional<Resource> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
     {
-        Statement queryStatement = connection.createStatement();
-        // queryStatement.setObject(1, resourceID.toString());
-        // System.out.println(queryStatement);
-        String queryString = "SELECT * FROM resources WHERE id = '" + resourceID.toString() + "'";
-        System.out.println(queryString);
-        ResultSet resourceResultSet = queryStatement.executeQuery(queryString);
-        while (resourceResultSet.next())
+        List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
+                Optional.of(Inequality.equalTo(ID, resourceID)));
+        if (relations.size() == 1)
         {
-            String jsonData = resourceResultSet.getString(DATA);
-            Integer version = (Integer) resourceResultSet.getObject(FILE_FORMAT_VERSION);
-            return Optional.of((new Resource(resourceID, jsonData, version)));
+            Map<String, Object> relation = relations.get(0);
+            Resource resource = new Resource(UUID.fromString(relation.get(ID).toString()),
+                    relation.get(DATA).toString(), (Integer) relation.get(FILE_FORMAT_VERSION));
+            return Optional.of(resource);
         }
-        return Optional.empty();
+        else if (relations.isEmpty())
+        {
+            return Optional.empty();
+        }
+        else
+        {
+            throw new IllegalStateException("Select of Resource returned multiple objects");
+        }
     }
 
     public static Resource create(UUID resourceID, String jsonData)

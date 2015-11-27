@@ -147,6 +147,7 @@ public class Server extends WebSocketServer
     public void onError(WebSocket conn, Exception ex)
     {
         System.out.println("SERVER: Web Socket Error . " + conn + " ~ " + ex);
+        ex.printStackTrace();
     }
 
     public static void main(String[] args)

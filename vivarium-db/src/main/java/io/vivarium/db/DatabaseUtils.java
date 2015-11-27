@@ -6,12 +6,15 @@ package io.vivarium.db;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import com.google.common.base.Joiner;
 
@@ -25,6 +28,51 @@ public class DatabaseUtils
         String url = "jdbc:postgresql://localhost/" + databaseName;
         Connection dbConnection = DriverManager.getConnection(url, username, password);
         return dbConnection;
+    }
+
+    public static List<Map<String, Object>> select(Connection connection, String tableName,
+            Optional<WhereCondition> condition) throws SQLException
+    {
+        List<Map<String, Object>> results = new LinkedList<Map<String, Object>>();
+
+        try (Statement queryStatement = connection.createStatement())
+        {
+            // Build the select query
+            StringBuilder selectStringBuilder = new StringBuilder();
+            selectStringBuilder.append("SELECT * FROM ");
+            selectStringBuilder.append(tableName);
+            if (condition.isPresent())
+            {
+                selectStringBuilder.append(" WHERE ");
+                selectStringBuilder.append(condition.get().toString());
+            }
+
+            // Execute the select
+            try (ResultSet resultSet = queryStatement.executeQuery(selectStringBuilder.toString()))
+            {
+                // Build column list
+                ResultSetMetaData resultMetaData = resultSet.getMetaData();
+                int columnCount = resultMetaData.getColumnCount();
+                LinkedList<String> columnNames = new LinkedList<String>();
+                for (int i = 1; i <= columnCount; i++)
+                {
+                    columnNames.add(resultMetaData.getColumnName(i));
+                }
+
+                // Build relation objects
+                while (resultSet.next())
+                {
+                    Map<String, Object> relation = new HashMap<String, Object>();
+                    for (String columnName : columnNames)
+                    {
+                        relation.put(columnName, resultSet.getObject(columnName));
+                    }
+                    results.add(relation);
+                }
+            }
+        }
+        return results;
+
     }
 
     public static void upsert(Connection connection, String tableName, Map<String, Object> relation,
@@ -49,19 +97,7 @@ public class DatabaseUtils
             Map<String, String> sqlStrings = new HashMap<String, String>();
             for (String columnName : allColumns)
             {
-                Object columnValue = relation.get(columnName);
-                if (columnValue == null)
-                {
-                    sqlStrings.put(columnName, "null");
-                }
-                else if (Reflection.isPrimitive(columnValue.getClass()))
-                {
-                    sqlStrings.put(columnName, relation.get(columnName).toString());
-                }
-                else
-                {
-                    sqlStrings.put(columnName, '\'' + relation.get(columnName).toString() + '\'');
-                }
+                sqlStrings.put(columnName, toSqlString(relation.get(columnName)));
             }
 
             // Builds an update string in the form
@@ -101,6 +137,22 @@ public class DatabaseUtils
             // Run the upsert statements.
             sqlStatement.execute(updateStringBuilder.toString());
             sqlStatement.execute(insertStringBuilder.toString());
+        }
+    }
+
+    static String toSqlString(Object object)
+    {
+        if (object == null)
+        {
+            return "null";
+        }
+        else if (Reflection.isPrimitive(object.getClass()))
+        {
+            return object.toString();
+        }
+        else
+        {
+            return '\'' + object.toString() + '\'';
         }
     }
 

@@ -43,7 +43,6 @@ public class DownloadWorldTask extends ClientTask
     @Override
     public void onMessage(Client client, String message)
     {
-        System.out.println("CLIENT TASK: RECEVING MESSAGES? ");
         try
         {
             Message untypedMessage = client.getMapper().readValue(message, Message.class);

@@ -10,7 +10,4 @@ public enum InequalityType
             return "=";
         }
     };
-
-    @Override
-    public abstract String toString();
 }
