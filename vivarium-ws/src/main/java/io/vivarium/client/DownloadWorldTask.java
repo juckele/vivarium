@@ -29,7 +29,7 @@ public class DownloadWorldTask extends ClientTask
     {
         try
         {
-            UUID resourceID = UUID.fromString("D51B6B31-84B5-0835-D5D5-05467AB4F04D");
+            UUID resourceID = UUID.fromString("d51b6b31-84b5-0835-d5d5-05467ab4f04d");
             RequestResource request = new RequestResource(resourceID, ResourceFormat.JSON);
             client.send(client.getMapper().writeValueAsString(request));
         }

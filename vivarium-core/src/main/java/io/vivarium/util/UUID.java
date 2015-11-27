@@ -59,13 +59,13 @@ public class UUID implements Serializable, Streamable
 
         // encode first long
         byte[] bytes1 = Longs.toByteArray(_long1);
-        sb.append(BaseEncoding.base16().encode(bytes1, 0, 4)).append('-');
-        sb.append(BaseEncoding.base16().encode(bytes1, 4, 2)).append('-');
-        sb.append(BaseEncoding.base16().encode(bytes1, 6, 2)).append('-');
+        sb.append(BaseEncoding.base16().lowerCase().encode(bytes1, 0, 4)).append('-');
+        sb.append(BaseEncoding.base16().lowerCase().encode(bytes1, 4, 2)).append('-');
+        sb.append(BaseEncoding.base16().lowerCase().encode(bytes1, 6, 2)).append('-');
         // encode second long
         byte[] bytes2 = Longs.toByteArray(_long2);
-        sb.append(BaseEncoding.base16().encode(bytes2, 0, 2)).append('-');
-        sb.append(BaseEncoding.base16().encode(bytes2, 2, 6));
+        sb.append(BaseEncoding.base16().lowerCase().encode(bytes2, 0, 2)).append('-');
+        sb.append(BaseEncoding.base16().lowerCase().encode(bytes2, 2, 6));
 
         return sb.toString();
     }
@@ -74,14 +74,14 @@ public class UUID implements Serializable, Streamable
     {
         UUID vid = new UUID();
 
-        s = s.replaceAll("-", "");
+        s = s.replaceAll("-", "").toLowerCase();
 
         // decode first long
-        byte[] bytes1 = BaseEncoding.base16().decode(s.substring(0, 16));
+        byte[] bytes1 = BaseEncoding.base16().lowerCase().decode(s.substring(0, 16));
         vid._long1 = Longs.fromByteArray(bytes1);
 
         // decode second long
-        byte[] bytes2 = BaseEncoding.base16().decode(s.substring(16, 32));
+        byte[] bytes2 = BaseEncoding.base16().lowerCase().decode(s.substring(16, 32));
         vid._long2 = Longs.fromByteArray(bytes2);
 
         return vid;

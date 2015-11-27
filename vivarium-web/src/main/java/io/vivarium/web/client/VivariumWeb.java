@@ -109,7 +109,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         {
             if (ws.toLowerCase().equals("true"))
             {
-                _resourceID = UUID.fromString("D51B6B31-84B5-0835-D5D5-05467AB4F04D");
+                _resourceID = UUID.fromString("d51b6b31-84b5-0835-d5d5-05467ab4f04d");
             }
             else
             {
