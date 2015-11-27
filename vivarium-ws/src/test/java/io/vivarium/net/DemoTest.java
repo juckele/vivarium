@@ -7,10 +7,10 @@ package io.vivarium.net;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
 
-import io.vivarium.client.Client;
-import io.vivarium.client.CreateAndUploadWorldTask;
-import io.vivarium.client.DownloadWorldTask;
-import io.vivarium.client.Worker;
+import io.vivarium.client.TaskClient;
+import io.vivarium.client.WorkerClient;
+import io.vivarium.client.task.CreateAndUploadWorldTask;
+import io.vivarium.client.task.DownloadWorldTask;
 import io.vivarium.server.Server;
 
 public class DemoTest
@@ -22,19 +22,19 @@ public class DemoTest
 
         Thread.sleep(100);
 
-        Client c = new Client(new CreateAndUploadWorldTask());
+        TaskClient c = new TaskClient(new CreateAndUploadWorldTask());
         c.connect();
 
         Thread.sleep(100);
 
-        Worker w = new Worker();
+        WorkerClient w = new WorkerClient();
         w.connect();
 
         Thread.sleep(100);
 
         // Don't try to request before they have it.
         Thread.sleep(300);
-        Client c2 = new Client(new DownloadWorldTask());
+        TaskClient c2 = new TaskClient(new DownloadWorldTask());
         c2.connect();
 
         // Thread.sleep(1000);

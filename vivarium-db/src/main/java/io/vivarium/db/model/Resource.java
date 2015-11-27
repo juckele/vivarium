@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import com.google.common.base.Preconditions;
+
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
@@ -43,8 +45,9 @@ public class Resource
     public final Optional<String> jsonData;
     public final Optional<Integer> fileFormatVersion;
 
-    private Resource(UUID resourceID, String jsonData, Integer fileFormatVersion)
+    public Resource(UUID resourceID, String jsonData, Integer fileFormatVersion)
     {
+        Preconditions.checkNotNull(resourceID, "resourceID cannot be null");
         this.resourceID = resourceID;
         this.jsonData = Optional.of(jsonData);
         this.fileFormatVersion = Optional.of(fileFormatVersion);

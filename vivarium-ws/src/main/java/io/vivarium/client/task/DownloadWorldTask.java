@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.client;
+package io.vivarium.client.task;
 
 import java.io.IOException;
 import java.nio.channels.NotYetConnectedException;
@@ -11,6 +11,7 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
+import io.vivarium.client.TaskClient;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.net.messages.Message;
@@ -21,11 +22,11 @@ import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 
-public class DownloadWorldTask extends ClientTask
+public class DownloadWorldTask extends Task
 {
 
     @Override
-    public void onOpen(Client client, ServerHandshake handshakedata)
+    public void onOpen(TaskClient client, ServerHandshake handshakedata)
     {
         try
         {
@@ -41,7 +42,7 @@ public class DownloadWorldTask extends ClientTask
     }
 
     @Override
-    public void onMessage(Client client, String message)
+    public void onMessage(TaskClient client, String message)
     {
         try
         {
@@ -63,12 +64,12 @@ public class DownloadWorldTask extends ClientTask
     }
 
     @Override
-    public void onClose(Client client, int code, String reason, boolean remote)
+    public void onClose(TaskClient client, int code, String reason, boolean remote)
     {
     }
 
     @Override
-    public void onError(Client client, Exception ex)
+    public void onError(TaskClient client, Exception ex)
     {
     }
 

@@ -12,15 +12,17 @@ import org.java_websocket.handshake.ServerHandshake;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import io.vivarium.client.task.NullTask;
+import io.vivarium.client.task.Task;
 import io.vivarium.net.Constants;
 
-public class Client extends WebSocketClient
+public class TaskClient extends WebSocketClient
 {
     // private UUID _clientID = UUID.randomUUID();
     private ObjectMapper _mapper = new ObjectMapper();
-    private ClientTask _task;
+    private Task _task;
 
-    public Client(ClientTask task) throws URISyntaxException
+    public TaskClient(Task task) throws URISyntaxException
     {
         super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
         this._task = task;
@@ -52,6 +54,7 @@ public class Client extends WebSocketClient
     public void onError(Exception ex)
     {
         System.out.println("CLIENT: error " + ex);
+        ex.printStackTrace();
         _task.onError(this, ex);
     }
 
@@ -59,7 +62,7 @@ public class Client extends WebSocketClient
     {
         try
         {
-            Client worker = new Client(new NullTask());
+            TaskClient worker = new TaskClient(new NullTask());
             worker.connect();
 
         }

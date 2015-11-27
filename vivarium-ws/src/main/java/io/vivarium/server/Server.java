@@ -31,6 +31,7 @@ import io.vivarium.net.messages.SendResource;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
+import io.vivarium.util.Version;
 
 public class Server extends WebSocketServer
 {
@@ -98,7 +99,8 @@ public class Server extends WebSocketServer
                 {
                     throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
                 }
-                Resource.create(sendResourceMessage.resourceID, jsonString).persistToDatabase(_connection);
+                new Resource(sendResourceMessage.resourceID, jsonString, Version.FILE_FORMAT_VERSION)
+                        .persistToDatabase(_connection);
             }
             else if (untypedMessage instanceof RequestResource)
             {

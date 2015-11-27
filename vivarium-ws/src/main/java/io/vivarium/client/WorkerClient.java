@@ -18,12 +18,12 @@ import io.vivarium.net.Constants;
 import io.vivarium.net.messages.Pledge;
 import io.vivarium.util.UUID;
 
-public class Worker extends WebSocketClient
+public class WorkerClient extends WebSocketClient
 {
     private UUID _workerID = UUID.randomUUID();
     private ObjectMapper mapper = new ObjectMapper();
 
-    public Worker() throws URISyntaxException
+    public WorkerClient() throws URISyntaxException
     {
         super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
     }
@@ -38,7 +38,6 @@ public class Worker extends WebSocketClient
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -47,7 +46,6 @@ public class Worker extends WebSocketClient
     public void onMessage(String message)
     {
         System.out.println("WORKER: message received " + message);
-        // this.send("Reply to mesmes!");
     }
 
     @Override
@@ -60,13 +58,14 @@ public class Worker extends WebSocketClient
     public void onError(Exception ex)
     {
         System.out.println("WORKER: error " + ex);
+        ex.printStackTrace();
     }
 
     public static void main(String[] args)
     {
         try
         {
-            Worker worker = new Worker();
+            WorkerClient worker = new WorkerClient();
             worker.connect();
 
         }
