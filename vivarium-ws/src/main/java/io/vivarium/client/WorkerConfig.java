@@ -41,17 +41,6 @@ public class WorkerConfig
         this.throughputs = throughputs;
     }
 
-    public static WorkerConfig loadWorkerConfig()
-    {
-        return loadWorkerConfig(DEFAULT_PATH, true);
-    }
-
-    public static WorkerConfig loadWorkerConfig(String filePath, boolean generateIfNotFound)
-    {
-        Preconditions.checkNotNull(filePath);
-        return loadWorkerConfig(new File(filePath), generateIfNotFound);
-    }
-
     public static WorkerConfig loadWorkerConfig(File file, boolean generateIfNotFound)
     {
         Preconditions.checkNotNull(file);
@@ -70,7 +59,7 @@ public class WorkerConfig
                 {
                     UUID machineUUID = getMachineUUID();
                     WorkerConfig generatedConfig = new WorkerConfig(machineUUID, DEFAULT_THROUGHPUTS);
-                    generatedConfig.persistWorkerConfig();
+                    generatedConfig.persistWorkerConfig(file);
                     return generatedConfig;
                 }
                 catch (FileNotFoundException e)
@@ -90,7 +79,7 @@ public class WorkerConfig
         catch (JsonParseException | JsonMappingException e)
         {
             e.printStackTrace();
-            throw new RuntimeException(e);
+            throw new UserFacingError("Unable to read parse file " + file.getAbsolutePath());
         }
         catch (IOException e)
         {
@@ -105,18 +94,7 @@ public class WorkerConfig
         return UUID.fromString(uuidString);
     }
 
-    public void persistWorkerConfig()
-    {
-        persistWorkerConfig(DEFAULT_PATH);
-    }
-
-    public void persistWorkerConfig(String filePath)
-    {
-        Preconditions.checkNotNull(filePath);
-        persistWorkerConfig(new File(filePath));
-    }
-
-    public void persistWorkerConfig(File file)
+    private void persistWorkerConfig(File file)
     {
         Preconditions.checkNotNull(file);
         try

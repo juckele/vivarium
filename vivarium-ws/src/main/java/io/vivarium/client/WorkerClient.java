@@ -4,6 +4,7 @@
 
 package io.vivarium.client;
 
+import java.io.File;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.NotYetConnectedException;
@@ -25,7 +26,7 @@ public class WorkerClient extends WebSocketClient
     public WorkerClient() throws URISyntaxException
     {
         super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
-        config = WorkerConfig.loadWorkerConfig();
+        config = WorkerConfig.loadWorkerConfig(new File(WorkerConfig.DEFAULT_PATH), true);
     }
 
     @Override
