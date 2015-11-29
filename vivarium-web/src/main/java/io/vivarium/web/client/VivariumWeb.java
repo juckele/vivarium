@@ -95,7 +95,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
             {
                 try
                 {
-                    _ticksPerStep = Integer.valueOf(tick);
+                    _ticksPerStep = Integer.parseInt(tick);
                     _tickEveryFrame = true;
                 }
                 catch (NumberFormatException e)

@@ -4,9 +4,11 @@
        simulation tick.-->
   <Match>
     <Bug pattern="EI_EXPOSE_REP"/>
+    <Package name="io.vivarium.core"/>
   </Match>
   <Match>
-    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Bug pattern="EI_EXPOSE_REP"/>
+    <Package name="io.vivarium.core.brain"/>
   </Match>
   <!-- This looks like a false positive from the method, it's FileOutputStream is closed
        in a finally block. -->
@@ -19,5 +21,25 @@
   <Match>
     <Bug pattern="DM_EXIT"/>
     <Class name="io.vivarium.visualization.animation.AnimatedWorldViewer"/>
+  </Match>
+  <!-- Messages in the net project use public values that are not read in the project, findBugs shouldn't worry about these -->
+  <Match>
+    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    <Package name="io.vivarium.net.messages"/>
+  </Match>
+  <!-- Messages don't use final because the jackson-gwt library we're using panics about this at runtime, but there's not a worry about malicious code here-->
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Package name="io.vivarium.net.messages"/>
+  </Match>
+  <!-- The database models don't always prevent underlying objects from changing, but this isn't exposed to external code -->
+  <Match>
+    <Bug pattern="EI_EXPOSE_REP2"/>
+    <Package name="io.vivarium.db.model"/>
+  </Match>
+  <!-- The database utils are currently vulnerable to SQL Injection, but no user input is currently allowed without being parsed as valid objects first (currently no free-text is allowed) -->
+  <Match>
+    <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
+    <Class name="io.vivarium.db.DatabaseUtils"/>
   </Match>
 </FindBugsFilter>

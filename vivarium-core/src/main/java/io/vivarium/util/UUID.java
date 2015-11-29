@@ -35,21 +35,25 @@ public class UUID implements Serializable, Streamable
 {
     private static final long serialVersionUID = -3965221404087809719L;
     private static final BaseEncoding ENCODING = BaseEncoding.base16().lowerCase();
-    private long _long1;
-    private long _long2;
+    private final long _long1;
+    private final long _long2;
 
     private UUID()
     {
+        _long1 = 0;
+        _long2 = 0;
+    }
+
+    private UUID(long long1, long long2)
+    {
+        _long1 = long1;
+        _long2 = long2;
     }
 
     public static UUID randomUUID()
     {
-        UUID uuid = new UUID();
-
         // This is compatible with a real UUID, but it is not cryptographically secure.
-        uuid._long1 = Rand.getInstance().getRandomLong();
-        uuid._long2 = Rand.getInstance().getRandomLong2();
-        return uuid;
+        return new UUID(Rand.getInstance().getRandomLong(), Rand.getInstance().getRandomLong2());
     }
 
     @Override
@@ -72,19 +76,17 @@ public class UUID implements Serializable, Streamable
 
     public static UUID fromString(String s)
     {
-        UUID uuid = new UUID();
-
         s = s.replaceAll("-", "").toLowerCase();
 
         // decode first long
         byte[] bytes1 = ENCODING.decode(s.substring(0, 16));
-        uuid._long1 = Longs.fromByteArray(bytes1);
+        long long1 = Longs.fromByteArray(bytes1);
 
         // decode second long
         byte[] bytes2 = ENCODING.decode(s.substring(16, 32));
-        uuid._long2 = Longs.fromByteArray(bytes2);
+        long long2 = Longs.fromByteArray(bytes2);
 
-        return uuid;
+        return new UUID(long1, long2);
     }
 
     @Override
