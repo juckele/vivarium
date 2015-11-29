@@ -54,7 +54,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private Visualizer visualizer;
     private Image baseImage;
     private Image colorImage;
-    private Image spriteImage;
 
     private boolean _debug = false;
     private boolean _tickEveryFrame = false;
@@ -246,7 +245,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         // Once we add this image, the browser will start loading.
         // When we get an event that load is completed, we can start doing work again.
         RootPanel.get().add(baseImage);
-        RootPanel.get().add(spriteImage);
     }
 
     private void allImagesLoaded()
@@ -312,14 +310,6 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         {
             allImagesLoaded();
         }
-        if (event.getSource() == spriteImage)
-        {
-            // If the sprite image is loaded, everything has been loaded
-            allImagesLoaded();
-
-        }
-        // For now we only have one image so if we get any loaded
-        // events we're immediately good to go.
     }
 
     private void scaleData(ImageData data, float redFactor, float greenFactor, float blueFactor)
