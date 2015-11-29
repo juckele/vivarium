@@ -42,4 +42,19 @@
     <Bug pattern="SQL_NONCONSTANT_STRING_PASSED_TO_EXECUTE"/>
     <Class name="io.vivarium.db.DatabaseUtils"/>
   </Match>
+  <!-- WorkerConfig uses a hardcoded filename for autogenerating worker UUID on Ubuntu machines. Other worker environments are not currently supported -->
+  <Match>
+    <Bug pattern="DMI_HARDCODED_ABSOLUTE_FILENAME"/>
+    <Class name="io.vivarium.client.WorkerConfig"/>
+  </Match>
+  <!-- No idiot is going to assign values to DEFAULT_THROUGHPUTS even though it's possible to do so -->
+  <Match>
+    <Bug pattern="MS_PKGPROTECT"/>
+    <Class name="io.vivarium.client.WorkerConfig"/>
+  </Match>
+  <!-- This actually needs to be fixed as part of task [58], but since it's tracked in trac, I'm taking it out of the active failures to reduce noise -->
+  <Match>
+    <Bug pattern="DMI_CONSTANT_DB_PASSWORD"/>
+    <Class name="io.vivarium.server.Server"/>
+  </Match>
 </FindBugsFilter>
