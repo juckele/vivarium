@@ -50,32 +50,23 @@ public class FileIO
 
     public static void saveStringToFile(String dataString, String fileName)
     {
-        FileOutputStream fos = null;
         try
         {
-            File file = new File(fileName);
-            fos = new FileOutputStream(file);
-            byte[] jsonByteData = dataString.getBytes("UTF-8");
-            fos.write(jsonByteData);
-            fos.flush();
+            saveStringToFile(dataString, new File(fileName));
         }
         catch (IOException e)
         {
             throw new UserFacingError("Unable to write the file " + fileName);
         }
-        finally
+    }
+
+    public static void saveStringToFile(String dataString, File file) throws IOException
+    {
+        try (FileOutputStream fos = new FileOutputStream(file))
         {
-            try
-            {
-                if (fos != null)
-                {
-                    fos.close();
-                }
-            }
-            catch (IOException e)
-            {
-                throw new UserFacingError("Unable to close the file stream");
-            }
+            byte[] jsonByteData = dataString.getBytes("UTF-8");
+            fos.write(jsonByteData);
+            fos.flush();
         }
     }
 
@@ -83,15 +74,19 @@ public class FileIO
     {
         try
         {
-            File file = new File(fileName);
-            Scanner scanner = new Scanner(file, "UTF-8");
-            String dataString = scanner.useDelimiter("\\Z").next();
-            scanner.close();
-            return dataString;
+            return loadFileToString(new File(fileName));
         }
         catch (FileNotFoundException e)
         {
             throw new UserFacingError("Unable to read the file " + fileName);
+        }
+    }
+
+    public static String loadFileToString(File file) throws FileNotFoundException
+    {
+        try (Scanner scanner = new Scanner(file, "UTF-8"))
+        {
+            return scanner.useDelimiter("\\Z").next();
         }
     }
 

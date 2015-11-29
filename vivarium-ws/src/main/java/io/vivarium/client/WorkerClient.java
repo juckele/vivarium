@@ -16,17 +16,16 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.net.Constants;
 import io.vivarium.net.messages.Pledge;
-import io.vivarium.util.UUID;
 
 public class WorkerClient extends WebSocketClient
 {
-    private final UUID _workerID;
+    private final WorkerConfig config;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public WorkerClient(UUID uuid) throws URISyntaxException
+    public WorkerClient() throws URISyntaxException
     {
         super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
-        _workerID = uuid;
+        config = WorkerConfig.loadWorkerConfig();
     }
 
     @Override
@@ -35,7 +34,7 @@ public class WorkerClient extends WebSocketClient
         System.out.println("WORKER: connection opened with client " + handshakedata);
         try
         {
-            this.send(mapper.writeValueAsString(new Pledge(_workerID)));
+            this.send(mapper.writeValueAsString(new Pledge(config.workerID, config.throughputs)));
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {
@@ -66,7 +65,7 @@ public class WorkerClient extends WebSocketClient
     {
         try
         {
-            WorkerClient worker = new WorkerClient(UUID.fromString("c02f97b1-5cba-8f27-22a9-29895e37bb3f"));
+            WorkerClient worker = new WorkerClient();
             worker.connect();
 
         }
