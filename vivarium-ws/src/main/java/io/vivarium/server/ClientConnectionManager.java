@@ -16,7 +16,7 @@ import io.vivarium.util.UUID;
 
 public class ClientConnectionManager
 {
-    private static final int DUPLICATE_CONNECTION = 2127;
+    public static final int DUPLICATE_CONNECTION = 2127;
     private Map<UUID, WebSocket> workerIDToConnection = new HashMap<UUID, WebSocket>();
     private Map<WebSocket, UUID> connectionToWorkerID = new HashMap<WebSocket, UUID>();
 

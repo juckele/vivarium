@@ -17,6 +17,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.net.Constants;
 import io.vivarium.net.messages.Pledge;
+import io.vivarium.server.ClientConnectionManager;
 
 public class WorkerClient extends WebSocketClient
 {
@@ -53,6 +54,14 @@ public class WorkerClient extends WebSocketClient
     public void onClose(int code, String reason, boolean remote)
     {
         System.out.println("WORKER: connection closed " + code + " / " + reason + " + " + remote);
+        if (code == ClientConnectionManager.DUPLICATE_CONNECTION)
+        {
+            System.out.println("Another worker with our UUID has connected. Terminating operation.");
+        }
+        else
+        {
+            // TODO: Attempt to reconnect
+        }
     }
 
     @Override

@@ -18,7 +18,6 @@ import io.vivarium.net.Constants;
 
 public class TaskClient extends WebSocketClient
 {
-    // private UUID _clientID = UUID.randomUUID();
     private ObjectMapper _mapper = new ObjectMapper();
     private Task _task;
 
