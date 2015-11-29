@@ -1,4 +1,8 @@
-package io.vivarium.net.cliet;
+/*
+ * Copyright © 2015 John H Uckele. All rights reserved.
+ */
+
+package io.vivarium.client;
 
 import java.io.File;
 import java.io.IOException;
@@ -10,7 +14,6 @@ import org.junit.rules.TemporaryFolder;
 
 import com.johnuckele.vtest.Tester;
 
-import io.vivarium.client.WorkerConfig;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.util.UserFacingError;
 
