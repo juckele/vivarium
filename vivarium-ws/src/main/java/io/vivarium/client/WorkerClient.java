@@ -20,12 +20,13 @@ import io.vivarium.util.UUID;
 
 public class WorkerClient extends WebSocketClient
 {
-    private UUID _workerID = UUID.randomUUID();
-    private ObjectMapper mapper = new ObjectMapper();
+    private final UUID _workerID;
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    public WorkerClient() throws URISyntaxException
+    public WorkerClient(UUID uuid) throws URISyntaxException
     {
         super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
+        _workerID = uuid;
     }
 
     @Override
@@ -65,7 +66,7 @@ public class WorkerClient extends WebSocketClient
     {
         try
         {
-            WorkerClient worker = new WorkerClient();
+            WorkerClient worker = new WorkerClient(UUID.fromString("c02f97b1-5cba-8f27-22a9-29895e37bb3f"));
             worker.connect();
 
         }

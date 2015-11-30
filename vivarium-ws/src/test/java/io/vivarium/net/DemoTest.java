@@ -12,6 +12,7 @@ import io.vivarium.client.WorkerClient;
 import io.vivarium.client.task.CreateAndUploadWorldTask;
 import io.vivarium.client.task.DownloadWorldTask;
 import io.vivarium.server.Server;
+import io.vivarium.util.UUID;
 
 public class DemoTest
 {
@@ -27,7 +28,7 @@ public class DemoTest
 
         Thread.sleep(100);
 
-        WorkerClient w = new WorkerClient();
+        WorkerClient w = new WorkerClient(UUID.fromString("c02f97b1-5cba-8f27-22a9-29895e37bb3f"));
         w.connect();
 
         Thread.sleep(100);

@@ -9,8 +9,7 @@ import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Date;
 import java.util.Optional;
 
 import org.java_websocket.WebSocket;
@@ -22,6 +21,7 @@ import com.googlecode.gwtstreamer.client.Streamer;
 
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.model.Resource;
+import io.vivarium.db.model.Worker;
 import io.vivarium.net.Constants;
 import io.vivarium.net.messages.Message;
 import io.vivarium.net.messages.Pledge;
@@ -37,18 +37,18 @@ public class Server extends WebSocketServer
 {
     private final static InetSocketAddress PORT = new InetSocketAddress(Constants.DEFAULT_PORT);
 
-    private Map<UUID, Pledge> workers = new HashMap<UUID, Pledge>();
+    private ClientConnectionManager connectionManager = new ClientConnectionManager();
 
     private ObjectMapper mapper = new ObjectMapper();
 
-    private Connection _connection;
+    private Connection _databaseConnection;
 
     public Server() throws UnknownHostException
     {
         super(PORT);
         try
         {
-            _connection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
+            _databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
         }
         catch (SQLException e)
         {
@@ -78,7 +78,10 @@ public class Server extends WebSocketServer
             if (untypedMessage instanceof Pledge)
             {
                 Pledge pledge = (Pledge) untypedMessage;
-                workers.put(pledge.workerID, pledge);
+                Worker worker = new Worker(pledge.workerID, pledge.throughputs, pledge.active, new Date(),
+                        pledge.fileFormatVersion, pledge.codeVersion);
+                worker.persistToDatabase(_databaseConnection);
+                connectionManager.registerWorker(pledge.workerID, conn);
             }
             else if (untypedMessage instanceof SendResource)
             {
@@ -99,14 +102,15 @@ public class Server extends WebSocketServer
                 {
                     throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
                 }
-                new Resource(sendResourceMessage.resourceID, jsonString, Version.FILE_FORMAT_VERSION)
-                        .persistToDatabase(_connection);
+                Resource resource = new Resource(sendResourceMessage.resourceID, jsonString,
+                        Version.FILE_FORMAT_VERSION);
+                resource.persistToDatabase(_databaseConnection);
             }
             else if (untypedMessage instanceof RequestResource)
             {
                 RequestResource requestResourceMessage = (RequestResource) untypedMessage;
                 UUID resourceID = requestResourceMessage.resourceID;
-                Optional<Resource> resource = Resource.getFromDatabase(_connection, resourceID);
+                Optional<Resource> resource = Resource.getFromDatabase(_databaseConnection, resourceID);
                 if (resource.isPresent() && resource.get().jsonData.isPresent())
                 {
                     ResourceFormat resourceFormat = requestResourceMessage.resourceFormat;
