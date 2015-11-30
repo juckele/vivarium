@@ -54,6 +54,11 @@ public class Version
         return major + "." + minor + "." + patch;
     }
 
+    public int[] toArray()
+    {
+        return new int[] { major, minor, patch };
+    }
+
     public Version(String string)
     {
         String[] chunks = string.split("\\.");

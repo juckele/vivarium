@@ -5,8 +5,8 @@
 package io.vivarium.db.model;
 
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class Worker
     // insert into workers (id, throughputs, is_active, last_activity, file_format_version, code_version) select
     // 'ec1bb1e7-d471-363e-7724-bf995021f543', '{100, 150, 200}', true, now(), 1, '{0,3,2}';
 
-    private Worker(UUID workerID, int[] throughputs, boolean isActive, Date lastActivity, int fileFormatVersion,
+    public Worker(UUID workerID, int[] throughputs, boolean isActive, Date lastActivity, int fileFormatVersion,
             Version codeVersion)
     {
         Preconditions.checkNotNull(workerID, "workerID cannot be null");

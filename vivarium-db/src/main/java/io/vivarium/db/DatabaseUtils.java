@@ -4,6 +4,7 @@
 
 package io.vivarium.db;
 
+import java.lang.reflect.Array;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import com.google.common.base.Joiner;
 
 import io.vivarium.util.Reflection;
+import io.vivarium.util.Version;
 
 public class DatabaseUtils
 {
@@ -142,13 +144,36 @@ public class DatabaseUtils
 
     static String toSqlString(Object object)
     {
+        // Quick exit for nulls
         if (object == null)
         {
             return "null";
         }
-        else if (Reflection.isPrimitive(object.getClass()))
+
+        // Type conversion if required
+        if (object.getClass() == Version.class)
+        {
+            // DB stores Version objects as arrays, so convert this to an array for easy encoding.
+            object = ((Version) object).toArray();
+        }
+
+        // Generate the string
+        if (Reflection.isPrimitive(object.getClass()))
         {
             return object.toString();
+        }
+        else if (object.getClass().isArray())
+        {
+            StringBuilder arrayString = new StringBuilder();
+            arrayString.append("'{");
+            List<String> elements = new LinkedList<String>();
+            for (int i = 0; i < Array.getLength(object); i++)
+            {
+                elements.add(toSqlString(Array.get(object, i)));
+            }
+            arrayString.append(Joiner.on(", ").join(elements));
+            arrayString.append("}'");
+            return arrayString.toString();
         }
         else
         {
