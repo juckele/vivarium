@@ -12,7 +12,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.vivarium.client.TaskClient;
 import io.vivarium.net.jobs.Job;
-import io.vivarium.net.messages.CreateJob;
+import io.vivarium.net.messages.CreateJobMessage;
 
 public class CreateJobTask extends Task
 {
@@ -28,7 +28,7 @@ public class CreateJobTask extends Task
     {
         try
         {
-            CreateJob message = new CreateJob(_job);
+            CreateJobMessage message = new CreateJobMessage(_job);
             client.send(client.getMapper().writeValueAsString(message));
         }
         catch (NotYetConnectedException | JsonProcessingException e)

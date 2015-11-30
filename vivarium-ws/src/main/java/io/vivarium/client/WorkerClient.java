@@ -16,7 +16,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.net.Constants;
-import io.vivarium.net.messages.Pledge;
+import io.vivarium.net.messages.WorkerPledgeMessage;
 import io.vivarium.server.ClientConnectionManager;
 
 public class WorkerClient extends WebSocketClient
@@ -36,7 +36,7 @@ public class WorkerClient extends WebSocketClient
         System.out.println("WORKER: connection opened with client " + handshakedata);
         try
         {
-            this.send(mapper.writeValueAsString(new Pledge(config.workerID, config.throughputs)));
+            this.send(mapper.writeValueAsString(new WorkerPledgeMessage(config.workerID, config.throughputs)));
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {

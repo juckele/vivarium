@@ -9,12 +9,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.vivarium.net.jobs.Job;
 
-public class CreateJob extends Message
+public class CreateJobMessage extends Message
 {
     public final Job job;
 
     @JsonCreator
-    public CreateJob(@JsonProperty("job") Job job)
+    public CreateJobMessage(@JsonProperty("job") Job job)
     {
         this.job = job;
     }

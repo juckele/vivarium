@@ -33,9 +33,9 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.net.messages.Message;
-import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.RequestResourceMessage;
 import io.vivarium.net.messages.ResourceFormat;
-import io.vivarium.net.messages.SendResource;
+import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 import io.vivarium.visualization.animation.Visualizer;
@@ -167,7 +167,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 public void onOpen(@Nonnull final WebSocket webSocket)
                 {
                     // After we have connected we can send
-                    RequestResource request = new RequestResource(_resourceID, ResourceFormat.GWT_STREAM);
+                    RequestResourceMessage request = new RequestResourceMessage(_resourceID, ResourceFormat.GWT_STREAM);
                     webSocket.send(_mapper.write(request));
                 }
 
@@ -175,9 +175,9 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                 public void onMessage(@Nonnull final WebSocket webSocket, @Nonnull final String data)
                 {
                     Message incomingMessage = _mapper.read(data);
-                    if (incomingMessage instanceof SendResource)
+                    if (incomingMessage instanceof SendResourceMessage)
                     {
-                        SendResource sendResource = (SendResource) incomingMessage;
+                        SendResourceMessage sendResource = (SendResourceMessage) incomingMessage;
                         _collection = (VivariumObjectCollection) Streamer.get().fromString(sendResource.dataString);
 
                         // Finish loading
@@ -201,7 +201,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                         if (_webSocket != null && _webSocket.isConnected())
                         {
                             // After we have connected we can send
-                            SendResource sendMessage = new SendResource(_resourceID,
+                            SendResourceMessage sendMessage = new SendResourceMessage(_resourceID,
                                     Streamer.get().toString(_collection), ResourceFormat.GWT_STREAM);
                             _webSocket.send(_mapper.write(sendMessage));
                             _webSocket.close();

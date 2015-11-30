@@ -15,9 +15,9 @@ import io.vivarium.client.TaskClient;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.net.messages.Message;
-import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.RequestResourceMessage;
 import io.vivarium.net.messages.ResourceFormat;
-import io.vivarium.net.messages.SendResource;
+import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
@@ -31,7 +31,7 @@ public class DownloadWorldTask extends Task
         try
         {
             UUID resourceID = UUID.fromString("d51b6b31-84b5-0835-d5d5-05467ab4f04d");
-            RequestResource request = new RequestResource(resourceID, ResourceFormat.JSON);
+            RequestResourceMessage request = new RequestResourceMessage(resourceID, ResourceFormat.JSON);
             client.send(client.getMapper().writeValueAsString(request));
         }
         catch (NotYetConnectedException | JsonProcessingException e)
@@ -47,9 +47,9 @@ public class DownloadWorldTask extends Task
         try
         {
             Message untypedMessage = client.getMapper().readValue(message, Message.class);
-            if (untypedMessage instanceof SendResource)
+            if (untypedMessage instanceof SendResourceMessage)
             {
-                SendResource sendResource = (SendResource) untypedMessage;
+                SendResourceMessage sendResource = (SendResourceMessage) untypedMessage;
                 String jsonDataString = sendResource.dataString;
                 VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonDataString);
                 World world = collection.getFirst(World.class);

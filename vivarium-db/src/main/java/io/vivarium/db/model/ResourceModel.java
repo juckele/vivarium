@@ -26,7 +26,7 @@ import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
-public class Resource
+public class ResourceModel
 {
     // Table name
     private static final String TABLE_NAME = "resources";
@@ -45,7 +45,7 @@ public class Resource
     public final Optional<String> jsonData;
     public final Optional<Integer> fileFormatVersion;
 
-    public Resource(UUID resourceID, String jsonData, Integer fileFormatVersion)
+    public ResourceModel(UUID resourceID, String jsonData, Integer fileFormatVersion)
     {
         Preconditions.checkNotNull(resourceID, "resourceID cannot be null");
         this.resourceID = resourceID;
@@ -53,14 +53,14 @@ public class Resource
         this.fileFormatVersion = Optional.of(fileFormatVersion);
     }
 
-    public static Optional<Resource> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
+    public static Optional<ResourceModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
                 Optional.of(Inequality.equalTo(ID, resourceID)));
         if (relations.size() == 1)
         {
             Map<String, Object> relation = relations.get(0);
-            Resource resource = new Resource(UUID.fromString(relation.get(ID).toString()),
+            ResourceModel resource = new ResourceModel(UUID.fromString(relation.get(ID).toString()),
                     relation.get(DATA).toString(), (Integer) relation.get(FILE_FORMAT_VERSION));
             return Optional.of(resource);
         }
@@ -74,9 +74,9 @@ public class Resource
         }
     }
 
-    public static Resource create(UUID resourceID, String jsonData)
+    public static ResourceModel create(UUID resourceID, String jsonData)
     {
-        return new Resource(resourceID, jsonData, Version.FILE_FORMAT_VERSION);
+        return new ResourceModel(resourceID, jsonData, Version.FILE_FORMAT_VERSION);
     }
 
     public void persistToDatabase(Connection connection) throws SQLException

@@ -20,7 +20,7 @@ import io.vivarium.db.Inequality;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
-public class Worker
+public class WorkerModel
 {
     // Table name
     private static final String TABLE_NAME = "workers";
@@ -42,7 +42,7 @@ public class Worker
     // insert into workers (id, throughputs, is_active, last_activity, file_format_version, code_version) select
     // 'ec1bb1e7-d471-363e-7724-bf995021f543', '{100, 150, 200}', true, now(), 1, '{0,3,2}';
 
-    public Worker(UUID workerID, int[] throughputs, boolean isActive, Date lastActivity, int fileFormatVersion,
+    public WorkerModel(UUID workerID, int[] throughputs, boolean isActive, Date lastActivity, int fileFormatVersion,
             Version codeVersion)
     {
         Preconditions.checkNotNull(workerID, "workerID cannot be null");
@@ -57,7 +57,7 @@ public class Worker
         this.codeVersion = codeVersion;
     }
 
-    public static Optional<Worker> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
+    public static Optional<WorkerModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
                 Optional.of(Inequality.equalTo(ID, resourceID)));
@@ -70,7 +70,7 @@ public class Worker
             Date lastActivity = (Date) relation.get(LAST_ACTIVITY);
             int fileFormatVersion = (Integer) relation.get(FILE_FORMAT_VERSION);
             Version codeVersion = new Version((int[]) relation.get(CODE_VERSION));
-            Worker resource = new Worker(id, throughputs, isActive, lastActivity, fileFormatVersion, codeVersion);
+            WorkerModel resource = new WorkerModel(id, throughputs, isActive, lastActivity, fileFormatVersion, codeVersion);
             return Optional.of(resource);
         }
         else if (relations.isEmpty())

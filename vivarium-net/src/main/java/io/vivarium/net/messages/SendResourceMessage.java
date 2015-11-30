@@ -13,25 +13,36 @@ import io.vivarium.net.UUIDDeserializer;
 import io.vivarium.net.UUIDSerializer;
 import io.vivarium.util.UUID;
 
-public class RequestResource extends Message
+public class SendResourceMessage extends Message
 {
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
     final public UUID resourceID;
+    final public String dataString;
     final public ResourceFormat resourceFormat;
 
     @SuppressWarnings("unused") // Used for Jackson deserialization
-    private RequestResource()
+    private SendResourceMessage()
     {
-        resourceID = null;
-        resourceFormat = null;
+        this.resourceID = null;
+        this.resourceFormat = null;
+        this.dataString = null;
     }
 
-    @JsonCreator
-    public RequestResource(@JsonProperty("resourceID") UUID resourceID,
-            @JsonProperty("resourceFormat") ResourceFormat resourceFormat)
+    public SendResourceMessage(UUID resourceID, String dataString, ResourceFormat resourceFormat)
     {
         this.resourceID = resourceID;
         this.resourceFormat = resourceFormat;
+        this.dataString = dataString;
+    }
+
+    @JsonCreator
+    public SendResourceMessage(@JsonProperty("resourceID") UUID resourceID,
+            @JsonProperty("resourceFormat") ResourceFormat resourceFormat,
+            @JsonProperty("dataString") String dataString)
+    {
+        this.resourceID = resourceID;
+        this.resourceFormat = resourceFormat;
+        this.dataString = dataString;
     }
 }

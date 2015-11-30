@@ -14,9 +14,9 @@ import io.vivarium.client.TaskClient;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
-import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.RequestResourceMessage;
 import io.vivarium.net.messages.ResourceFormat;
-import io.vivarium.net.messages.SendResource;
+import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.util.UUID;
 
@@ -35,11 +35,11 @@ public class CreateAndUploadWorldTask extends Task
             World world = new World(blueprint);
             System.out.println("The ULed world has " + world.getCount(EntityType.CREATURE) + " creatures");
             String jsonString = JSONConverter.serializerToJSONString(world, resourceID);
-            SendResource uploadBlueprint = new SendResource(resourceID, jsonString, ResourceFormat.JSON);
+            SendResourceMessage uploadBlueprint = new SendResourceMessage(resourceID, jsonString, ResourceFormat.JSON);
             client.send(client.getMapper().writeValueAsString(uploadBlueprint));
 
             // Let's try getting the resource we just uploaded to make sure it works...
-            RequestResource downloadBlueprint = new RequestResource(resourceID, ResourceFormat.JSON);
+            RequestResourceMessage downloadBlueprint = new RequestResourceMessage(resourceID, ResourceFormat.JSON);
             client.send(client.getMapper().writeValueAsString(downloadBlueprint));
         }
         catch (NotYetConnectedException | JsonProcessingException e)

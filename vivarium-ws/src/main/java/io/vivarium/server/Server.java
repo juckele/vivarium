@@ -20,14 +20,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.gwtstreamer.client.Streamer;
 
 import io.vivarium.db.DatabaseUtils;
-import io.vivarium.db.model.Resource;
-import io.vivarium.db.model.Worker;
+import io.vivarium.db.model.ResourceModel;
+import io.vivarium.db.model.WorkerModel;
 import io.vivarium.net.Constants;
 import io.vivarium.net.messages.Message;
-import io.vivarium.net.messages.Pledge;
-import io.vivarium.net.messages.RequestResource;
+import io.vivarium.net.messages.WorkerPledgeMessage;
+import io.vivarium.net.messages.RequestResourceMessage;
 import io.vivarium.net.messages.ResourceFormat;
-import io.vivarium.net.messages.SendResource;
+import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
@@ -75,17 +75,17 @@ public class Server extends WebSocketServer
         try
         {
             Message untypedMessage = mapper.readValue(message, Message.class);
-            if (untypedMessage instanceof Pledge)
+            if (untypedMessage instanceof WorkerPledgeMessage)
             {
-                acceptPledge(conn, (Pledge) untypedMessage);
+                acceptPledge(conn, (WorkerPledgeMessage) untypedMessage);
             }
-            else if (untypedMessage instanceof SendResource)
+            else if (untypedMessage instanceof SendResourceMessage)
             {
-                acceptResource(conn, (SendResource) untypedMessage);
+                acceptResource(conn, (SendResourceMessage) untypedMessage);
             }
-            else if (untypedMessage instanceof RequestResource)
+            else if (untypedMessage instanceof RequestResourceMessage)
             {
-                handleRequestForResource(conn, (RequestResource) untypedMessage);
+                handleRequestForResource(conn, (RequestResourceMessage) untypedMessage);
             }
             else
             {
@@ -101,15 +101,15 @@ public class Server extends WebSocketServer
                 "SERVER: Web Socket Message . " + conn + " ~ " + message.substring(0, Math.min(message.length(), 200)));
     }
 
-    private synchronized void acceptPledge(WebSocket webSocket, Pledge pledge) throws SQLException
+    private synchronized void acceptPledge(WebSocket webSocket, WorkerPledgeMessage pledge) throws SQLException
     {
-        Worker worker = new Worker(pledge.workerID, pledge.throughputs, pledge.active, new Date(),
+        WorkerModel worker = new WorkerModel(pledge.workerID, pledge.throughputs, pledge.active, new Date(),
                 pledge.fileFormatVersion, pledge.codeVersion);
         worker.persistToDatabase(_databaseConnection);
         connectionManager.registerWorker(pledge.workerID, webSocket);
     }
 
-    private void acceptResource(WebSocket webSocket, SendResource sendResourceMessage) throws SQLException
+    private void acceptResource(WebSocket webSocket, SendResourceMessage sendResourceMessage) throws SQLException
     {
         String dataString = sendResourceMessage.dataString;
         String jsonString;
@@ -126,15 +126,15 @@ public class Server extends WebSocketServer
         {
             throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
         }
-        Resource resource = new Resource(sendResourceMessage.resourceID, jsonString, Version.FILE_FORMAT_VERSION);
+        ResourceModel resource = new ResourceModel(sendResourceMessage.resourceID, jsonString, Version.FILE_FORMAT_VERSION);
         resource.persistToDatabase(_databaseConnection);
     }
 
-    private void handleRequestForResource(WebSocket webSocket, RequestResource requestResourceMessage)
+    private void handleRequestForResource(WebSocket webSocket, RequestResourceMessage requestResourceMessage)
             throws SQLException, IOException
     {
         UUID resourceID = requestResourceMessage.resourceID;
-        Optional<Resource> resource = Resource.getFromDatabase(_databaseConnection, resourceID);
+        Optional<ResourceModel> resource = ResourceModel.getFromDatabase(_databaseConnection, resourceID);
         if (resource.isPresent() && resource.get().jsonData.isPresent())
         {
             ResourceFormat resourceFormat = requestResourceMessage.resourceFormat;
@@ -153,7 +153,7 @@ public class Server extends WebSocketServer
             {
                 throw new IllegalStateException("Unexpected resource format " + resourceFormat);
             }
-            SendResource response = new SendResource(requestResourceMessage.resourceID, dataString, resourceFormat);
+            SendResourceMessage response = new SendResourceMessage(requestResourceMessage.resourceID, dataString, resourceFormat);
             webSocket.send(mapper.writeValueAsString(response));
         }
     }

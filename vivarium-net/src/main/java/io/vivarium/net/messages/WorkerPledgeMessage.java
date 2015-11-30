@@ -14,7 +14,7 @@ import io.vivarium.net.VersionSerializer;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
-public class Pledge extends Message
+public class WorkerPledgeMessage extends Message
 {
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
@@ -27,16 +27,16 @@ public class Pledge extends Message
     public int[] throughputs;
 
     @SuppressWarnings("unused") // Used by Jackson
-    private Pledge()
+    private WorkerPledgeMessage()
     {
     }
 
-    public Pledge(UUID workerID, int[] throughputs)
+    public WorkerPledgeMessage(UUID workerID, int[] throughputs)
     {
         this(workerID, true, Version.CURRENT_VERSION, Version.FILE_FORMAT_VERSION, throughputs);
     }
 
-    public Pledge(UUID workerID, boolean active, Version codeVersion, int fileFormatVersion, int[] throughputs)
+    public WorkerPledgeMessage(UUID workerID, boolean active, Version codeVersion, int fileFormatVersion, int[] throughputs)
     {
         this.workerID = workerID;
         this.active = active;

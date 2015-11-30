@@ -6,28 +6,15 @@ package io.vivarium.net.jobs;
 
 import java.util.List;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import io.vivarium.net.UUIDDeserializer;
-import io.vivarium.net.UUIDSerializer;
 import io.vivarium.util.UUID;
 
-public class SimulationJob extends Job
+public class SimulationJob extends PipeJob
 {
-    @JsonSerialize(using = UUIDSerializer.class)
-    @JsonDeserialize(using = UUIDDeserializer.class)
-    public final UUID sourceDocumentID;
-    @JsonSerialize(using = UUIDSerializer.class)
-    @JsonDeserialize(using = UUIDDeserializer.class)
-    public final UUID outputDocumentID;
     public final long endTick;
 
     public SimulationJob(List<UUID> dependencies, UUID sourceDocumentID, UUID outputDocumentID, long endTick)
     {
-        super(dependencies);
-        this.sourceDocumentID = sourceDocumentID;
-        this.outputDocumentID = outputDocumentID;
+        super(dependencies, sourceDocumentID, outputDocumentID);
         this.endTick = endTick;
     }
 
