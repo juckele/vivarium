@@ -70,70 +70,22 @@ public class Server extends WebSocketServer
     }
 
     @Override
-    public synchronized void onMessage(WebSocket conn, String message)
+    public void onMessage(WebSocket conn, String message)
     {
         try
         {
             Message untypedMessage = mapper.readValue(message, Message.class);
             if (untypedMessage instanceof Pledge)
             {
-                Pledge pledge = (Pledge) untypedMessage;
-                Worker worker = new Worker(pledge.workerID, pledge.throughputs, pledge.active, new Date(),
-                        pledge.fileFormatVersion, pledge.codeVersion);
-                worker.persistToDatabase(_databaseConnection);
-                connectionManager.registerWorker(pledge.workerID, conn);
+                acceptPledge(conn, (Pledge) untypedMessage);
             }
             else if (untypedMessage instanceof SendResource)
             {
-                SendResource sendResourceMessage = (SendResource) untypedMessage;
-                String dataString = sendResourceMessage.dataString;
-                String jsonString;
-                if (sendResourceMessage.resourceFormat == ResourceFormat.JSON)
-                {
-                    jsonString = sendResourceMessage.dataString;
-                }
-                else if (sendResourceMessage.resourceFormat == ResourceFormat.GWT_STREAM)
-                {
-                    VivariumObjectCollection collection = (VivariumObjectCollection) Streamer.get()
-                            .fromString(dataString);
-                    jsonString = JSONConverter.serializerToJSONString(collection, sendResourceMessage.resourceID);
-                }
-                else
-                {
-                    throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
-                }
-                Resource resource = new Resource(sendResourceMessage.resourceID, jsonString,
-                        Version.FILE_FORMAT_VERSION);
-                resource.persistToDatabase(_databaseConnection);
+                acceptResource(conn, (SendResource) untypedMessage);
             }
             else if (untypedMessage instanceof RequestResource)
             {
-                RequestResource requestResourceMessage = (RequestResource) untypedMessage;
-                UUID resourceID = requestResourceMessage.resourceID;
-                Optional<Resource> resource = Resource.getFromDatabase(_databaseConnection, resourceID);
-                if (resource.isPresent() && resource.get().jsonData.isPresent())
-                {
-                    ResourceFormat resourceFormat = requestResourceMessage.resourceFormat;
-                    String jsonString = resource.get().jsonData.get();
-                    String dataString = null;
-                    if (resourceFormat == ResourceFormat.JSON)
-                    {
-                        dataString = jsonString;
-                    }
-                    else if (resourceFormat == ResourceFormat.GWT_STREAM)
-                    {
-                        VivariumObjectCollection collection = JSONConverter
-                                .jsonStringToSerializerCollection(jsonString);
-                        dataString = Streamer.get().toString(collection);
-                    }
-                    else
-                    {
-                        throw new IllegalStateException("Unexpected resource format " + resourceFormat);
-                    }
-                    SendResource response = new SendResource(requestResourceMessage.resourceID, dataString,
-                            resourceFormat);
-                    conn.send(mapper.writeValueAsString(response));
-                }
+                handleRequestForResource(conn, (RequestResource) untypedMessage);
             }
             else
             {
@@ -147,6 +99,63 @@ public class Server extends WebSocketServer
         }
         System.out.println(
                 "SERVER: Web Socket Message . " + conn + " ~ " + message.substring(0, Math.min(message.length(), 200)));
+    }
+
+    private synchronized void acceptPledge(WebSocket webSocket, Pledge pledge) throws SQLException
+    {
+        Worker worker = new Worker(pledge.workerID, pledge.throughputs, pledge.active, new Date(),
+                pledge.fileFormatVersion, pledge.codeVersion);
+        worker.persistToDatabase(_databaseConnection);
+        connectionManager.registerWorker(pledge.workerID, webSocket);
+    }
+
+    private void acceptResource(WebSocket webSocket, SendResource sendResourceMessage) throws SQLException
+    {
+        String dataString = sendResourceMessage.dataString;
+        String jsonString;
+        if (sendResourceMessage.resourceFormat == ResourceFormat.JSON)
+        {
+            jsonString = sendResourceMessage.dataString;
+        }
+        else if (sendResourceMessage.resourceFormat == ResourceFormat.GWT_STREAM)
+        {
+            VivariumObjectCollection collection = (VivariumObjectCollection) Streamer.get().fromString(dataString);
+            jsonString = JSONConverter.serializerToJSONString(collection, sendResourceMessage.resourceID);
+        }
+        else
+        {
+            throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
+        }
+        Resource resource = new Resource(sendResourceMessage.resourceID, jsonString, Version.FILE_FORMAT_VERSION);
+        resource.persistToDatabase(_databaseConnection);
+    }
+
+    private void handleRequestForResource(WebSocket webSocket, RequestResource requestResourceMessage)
+            throws SQLException, IOException
+    {
+        UUID resourceID = requestResourceMessage.resourceID;
+        Optional<Resource> resource = Resource.getFromDatabase(_databaseConnection, resourceID);
+        if (resource.isPresent() && resource.get().jsonData.isPresent())
+        {
+            ResourceFormat resourceFormat = requestResourceMessage.resourceFormat;
+            String jsonString = resource.get().jsonData.get();
+            String dataString = null;
+            if (resourceFormat == ResourceFormat.JSON)
+            {
+                dataString = jsonString;
+            }
+            else if (resourceFormat == ResourceFormat.GWT_STREAM)
+            {
+                VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonString);
+                dataString = Streamer.get().toString(collection);
+            }
+            else
+            {
+                throw new IllegalStateException("Unexpected resource format " + resourceFormat);
+            }
+            SendResource response = new SendResource(requestResourceMessage.resourceID, dataString, resourceFormat);
+            webSocket.send(mapper.writeValueAsString(response));
+        }
     }
 
     @Override
