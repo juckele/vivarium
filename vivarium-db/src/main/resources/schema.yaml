@@ -12,38 +12,45 @@ schema public:
   - PUBLIC:
     - all
   table create_world_jobs:
+    check_constraints:
+      create_world_type_check:
+        columns:
+        - job_type
+        expression: (job_type = 'create_world'::job_type)
     columns:
-    - job_id:
+    - id:
+        inherited: true
         not_null: true
         type: uuid
-    - source_resource_id:
+    - job_type:
+        inherited: true
+        type: job_type
+    - status:
+        inherited: true
         not_null: true
+        type: job_status
+    - priority:
+        inherited: true
+        not_null: true
+        type: smallint
+    - checked_out_by:
+        inherited: true
+        type: uuid
+    - checked_out_time:
+        inherited: true
+        type: timestamp with time zone
+    - completed_time:
+        inherited: true
+        type: timestamp with time zone
+    - source_resource_id:
+        inherited: true
         type: uuid
     - output_resource_id:
-        not_null: true
+        inherited: true
         type: uuid
-    foreign_keys:
-      create_world_jobs_output_resource_id_fkey:
-        columns:
-        - output_resource_id
-        references:
-          columns:
-          - id
-          schema: public
-          table: resources
-      create_world_jobs_source_resource_id_fkey:
-        columns:
-        - source_resource_id
-        references:
-          columns:
-          - id
-          schema: public
-          table: resources
+    inherits:
+    - pipe_jobs
     owner: vivarium
-    primary_key:
-      create_world_jobs_pkey:
-        columns:
-        - job_id
   table job_dependencies:
     columns:
     - job_id:
@@ -78,6 +85,8 @@ schema public:
     - id:
         not_null: true
         type: uuid
+    - job_type:
+        type: job_type
     - status:
         not_null: true
         type: job_status
@@ -104,6 +113,56 @@ schema public:
       jobs_pkey:
         columns:
         - id
+  table pipe_jobs:
+    columns:
+    - id:
+        inherited: true
+        not_null: true
+        type: uuid
+    - job_type:
+        inherited: true
+        type: job_type
+    - status:
+        inherited: true
+        not_null: true
+        type: job_status
+    - priority:
+        inherited: true
+        not_null: true
+        type: smallint
+    - checked_out_by:
+        inherited: true
+        type: uuid
+    - checked_out_time:
+        inherited: true
+        type: timestamp with time zone
+    - completed_time:
+        inherited: true
+        type: timestamp with time zone
+    - source_resource_id:
+        type: uuid
+    - output_resource_id:
+        type: uuid
+    foreign_keys:
+      pipe_jobs_output_resource_id_fkey:
+        columns:
+        - output_resource_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: resources
+      pipe_jobs_source_resource_id_fkey:
+        columns:
+        - source_resource_id
+        references:
+          columns:
+          - id
+          schema: public
+          table: resources
+    inherits:
+    - jobs
+    owner: vivarium
   table resources:
     columns:
     - id:
@@ -128,60 +187,67 @@ schema public:
       resources_pkey:
         columns:
         - id
-  table simulation_jobs:
+  table run_simulation_jobs:
+    check_constraints:
+      create_world_type_check:
+        columns:
+        - job_type
+        expression: (job_type = 'run_simulation'::job_type)
     columns:
-    - job_id:
+    - id:
+        inherited: true
         not_null: true
+        type: uuid
+    - job_type:
+        inherited: true
+        type: job_type
+    - status:
+        inherited: true
+        not_null: true
+        type: job_status
+    - priority:
+        inherited: true
+        not_null: true
+        type: smallint
+    - checked_out_by:
+        inherited: true
+        type: uuid
+    - checked_out_time:
+        inherited: true
+        type: timestamp with time zone
+    - completed_time:
+        inherited: true
+        type: timestamp with time zone
+    - source_resource_id:
+        inherited: true
+        type: uuid
+    - output_resource_id:
+        inherited: true
         type: uuid
     - end_tick:
         not_null: true
         type: bigint
-    - source_resource_id:
-        not_null: true
-        type: uuid
-    - output_resource_id:
-        not_null: true
-        type: uuid
-    foreign_keys:
-      simulation_jobs_output_resource_id_fkey:
-        columns:
-        - output_resource_id
-        references:
-          columns:
-          - id
-          schema: public
-          table: resources
-      simulation_jobs_source_resource_id_fkey:
-        columns:
-        - source_resource_id
-        references:
-          columns:
-          - id
-          schema: public
-          table: resources
+    inherits:
+    - pipe_jobs
     owner: vivarium
-    primary_key:
-      simulation_jobs_pkey:
-        columns:
-        - job_id
   table workers:
     columns:
     - id:
         not_null: true
         type: uuid
+    - is_active:
+        type: boolean
+    - last_activity:
+        type: timestamp with time zone
+    - file_format_version:
+        not_null: true
+        type: integer
     - throughputs:
         not_null: true
         type: bigint[]
     - code_version:
         not_null: true
         type: integer[]
-    - file_format_version:
-        not_null: true
-        type: integer
-    - is_active:
-        type: boolean
-    - last_activity:
-        type: timestamp with time zone
     owner: vivarium
     primary_key:
       workers_pkey:
@@ -193,5 +259,10 @@ schema public:
     - waiting
     - processing
     - done
+    owner: vivarium
+  type job_type:
+    labels:
+    - create_world
+    - run_simulation
     owner: vivarium
 
