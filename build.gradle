@@ -119,6 +119,7 @@ project(':vivarium-ws') {
         compile project(':vivarium-db')
         compile project(':vivarium-net')
         compile project(':vivarium-scripts') 
+        compile 'com.google.dagger:dagger:2.0.2'
     }
 }
 
