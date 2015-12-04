@@ -6,3 +6,5 @@ vivarium-web/war/
 build/
 test.*
 worker_config.json
+*.iml
+.idea/
