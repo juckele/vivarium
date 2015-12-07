@@ -6,11 +6,14 @@ package io.vivarium.db;
 
 import org.junit.Test;
 
+import com.johnuckele.vtest.Tester;
+
 public class DatabaseConnectionTest
 {
     @Test
     public void testConnectToDatabase()
     {
-        DatabaseConnection x = io.vivarium.db.DaggerDatabaseSystem.create().connect();
+        DatabaseConnection databaseConnection = DaggerDatabaseSystem.create().connect();
+        Tester.isNotNull("DatabaseConnection should be non-null", databaseConnection);
     }
 }
