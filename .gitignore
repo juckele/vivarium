@@ -1,6 +1,9 @@
 .project
 .classpath
 .gradle/
+.settings/gradle/
+*/.settings/gradle/
+*/.apt_generated
 bin/
 vivarium-web/war/
 build/
