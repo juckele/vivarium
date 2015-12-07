@@ -6,9 +6,11 @@ package io.vivarium.db;
 
 import javax.inject.Inject;
 
-public class PostgresDatabaseConnection extends DatabaseConnection {
-	@Inject
-	public PostgresDatabaseConnection() {
-		// DO A THANG
-	}
+public class PostgresDatabaseConnection extends DatabaseConnection
+{
+    @Inject
+    public PostgresDatabaseConnection()
+    {
+        // DO A THANG
+    }
 }
