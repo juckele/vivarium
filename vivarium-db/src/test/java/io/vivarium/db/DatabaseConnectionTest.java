@@ -6,10 +6,12 @@ package io.vivarium.db;
 
 import org.junit.Test;
 
-public class DatabaseConnectionTest {
-	@Test
-	public void testConnectToDatabase() {
-		DaggerDatabaseSystem;
-		Class<?> x = DatabaseSystem.class;
-	}
+public class DatabaseConnectionTest
+{
+    @Test
+    public void testConnectToDatabase()
+    {
+        // DaggerDatabaseSystem;
+        Class<?> x = DatabaseSystem.class;
+    }
 }
