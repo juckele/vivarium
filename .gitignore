@@ -1,5 +1,6 @@
 .project
 .classpath
+.factorypath
 .gradle/
 .settings/gradle/
 */.settings/gradle/
