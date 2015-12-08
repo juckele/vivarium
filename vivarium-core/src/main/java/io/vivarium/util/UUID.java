@@ -52,8 +52,17 @@ public class UUID implements Serializable, Streamable
 
     public static UUID randomUUID()
     {
-        // This is compatible with a real UUID, but it is not cryptographically secure.
-        return new UUID(Rand.getInstance().getRandomLong(), Rand.getInstance().getRandomLong2());
+        // This is compatible with a real UUID, but it is not cryptographically secure. In an isolated environment, the
+        // cycle time of this UUID generator is only 2^64-1, but there are also 2^64 different possible cycles, so
+        // collisions should remain improbable.
+        long long1 = (Rand.getInstance().getRandomLong()
+                | 0b00000000_00000000_00000000_00000000_00000000_00000000_01000000_00000000L)
+                & 0b11111111_11111111_11111111_11111111_11111111_11111111_01001111_11111111L;
+        long long2 = (Rand.getInstance().getRandomLong2()
+                | 0b10000000_00000000_00000000_00000000_00000000_00000000_00000000_00000000L)
+                & 0b10111111_11111111_11111111_11111111_11111111_11111111_11111111_11111111L;
+
+        return new UUID(long1, long2);
     }
 
     @Override
