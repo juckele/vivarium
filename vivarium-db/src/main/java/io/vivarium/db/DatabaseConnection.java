@@ -4,7 +4,7 @@
 
 package io.vivarium.db;
 
-public class DatabaseConnection
+public interface DatabaseConnection
 {
 
 }
