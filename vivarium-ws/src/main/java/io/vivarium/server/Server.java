@@ -20,14 +20,19 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.gwtstreamer.client.Streamer;
 
 import io.vivarium.db.DatabaseUtils;
+import io.vivarium.db.model.JobModel;
+import io.vivarium.db.model.JobStatus;
 import io.vivarium.db.model.ResourceModel;
+import io.vivarium.db.model.RunSimulationJobModel;
 import io.vivarium.db.model.WorkerModel;
 import io.vivarium.net.Constants;
+import io.vivarium.net.jobs.SimulationJob;
+import io.vivarium.net.messages.CreateJobMessage;
 import io.vivarium.net.messages.Message;
-import io.vivarium.net.messages.WorkerPledgeMessage;
 import io.vivarium.net.messages.RequestResourceMessage;
 import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResourceMessage;
+import io.vivarium.net.messages.WorkerPledgeMessage;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
@@ -87,6 +92,10 @@ public class Server extends WebSocketServer
             {
                 handleRequestForResource(conn, (RequestResourceMessage) untypedMessage);
             }
+            else if (untypedMessage instanceof CreateJobMessage)
+            {
+                acceptJob(conn, (CreateJobMessage) untypedMessage);
+            }
             else
             {
                 System.err.println("SERVER: Unhandled message of type " + untypedMessage.getClass().getSimpleName());
@@ -126,8 +135,26 @@ public class Server extends WebSocketServer
         {
             throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
         }
-        ResourceModel resource = new ResourceModel(sendResourceMessage.resourceID, jsonString, Version.FILE_FORMAT_VERSION);
+        ResourceModel resource = new ResourceModel(sendResourceMessage.resourceID, jsonString,
+                Version.FILE_FORMAT_VERSION);
         resource.persistToDatabase(_databaseConnection);
+    }
+
+    private void acceptJob(WebSocket conn, CreateJobMessage createJobMessage) throws SQLException
+    {
+        JobModel job;
+        if (createJobMessage.job instanceof SimulationJob)
+        {
+            SimulationJob simulationJob = (SimulationJob) createJobMessage.job;
+            job = new RunSimulationJobModel(simulationJob.jobID, JobStatus.WAITING, (short) 0, null, null, null,
+                    simulationJob.endTick, simulationJob.sourceDocumentID, simulationJob.outputDocumentID,
+                    simulationJob.dependencies);
+        }
+        else
+        {
+            throw new IllegalStateException("Unexpected job type " + createJobMessage.job.getClass().getSimpleName());
+        }
+        job.persistToDatabase(_databaseConnection);
     }
 
     private void handleRequestForResource(WebSocket webSocket, RequestResourceMessage requestResourceMessage)
@@ -153,7 +180,8 @@ public class Server extends WebSocketServer
             {
                 throw new IllegalStateException("Unexpected resource format " + resourceFormat);
             }
-            SendResourceMessage response = new SendResourceMessage(requestResourceMessage.resourceID, dataString, resourceFormat);
+            SendResourceMessage response = new SendResourceMessage(requestResourceMessage.resourceID, dataString,
+                    resourceFormat);
             webSocket.send(mapper.writeValueAsString(response));
         }
     }

@@ -18,10 +18,18 @@ public abstract class PipeJob extends Job
     @JsonDeserialize(using = UUIDDeserializer.class)
     public final UUID outputDocumentID;
 
+    protected PipeJob()
+    {
+        super();
+        sourceDocumentID = null;
+        outputDocumentID = null;
+    }
+
     public PipeJob(List<UUID> dependencies, UUID sourceDocumentID, UUID outputDocumentID)
     {
         super(dependencies);
         this.sourceDocumentID = sourceDocumentID;
         this.outputDocumentID = outputDocumentID;
     }
+
 }

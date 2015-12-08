@@ -24,9 +24,8 @@ import io.vivarium.db.Inequality;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
-import io.vivarium.util.Version;
 
-public class ResourceModel
+public class ResourceModel implements DatabaseObjectModel
 {
     // Table name
     private static final String TABLE_NAME = "resources";
@@ -49,8 +48,8 @@ public class ResourceModel
     {
         Preconditions.checkNotNull(resourceID, "resourceID cannot be null");
         this.resourceID = resourceID;
-        this.jsonData = Optional.of(jsonData);
-        this.fileFormatVersion = Optional.of(fileFormatVersion);
+        this.jsonData = jsonData != null ? Optional.of(jsonData) : Optional.empty();
+        this.fileFormatVersion = fileFormatVersion != null ? Optional.of(fileFormatVersion) : Optional.empty();
     }
 
     public static Optional<ResourceModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
@@ -74,11 +73,7 @@ public class ResourceModel
         }
     }
 
-    public static ResourceModel create(UUID resourceID, String jsonData)
-    {
-        return new ResourceModel(resourceID, jsonData, Version.FILE_FORMAT_VERSION);
-    }
-
+    @Override
     public void persistToDatabase(Connection connection) throws SQLException
     {
         Map<String, Object> resourceRelation = new HashMap<String, Object>();
@@ -107,5 +102,11 @@ public class ResourceModel
         List<String> primaryKeys = new LinkedList<String>();
         primaryKeys.add(ID);
         return primaryKeys;
+    }
+
+    @Override
+    public String getTableName()
+    {
+        return TABLE_NAME;
     }
 }

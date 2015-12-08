@@ -12,6 +12,12 @@ public class SimulationJob extends PipeJob
 {
     public final long endTick;
 
+    private SimulationJob()
+    {
+        super();
+        this.endTick = 0;
+    }
+
     public SimulationJob(List<UUID> dependencies, UUID sourceDocumentID, UUID outputDocumentID, long endTick)
     {
         super(dependencies, sourceDocumentID, outputDocumentID);

@@ -20,7 +20,7 @@ import io.vivarium.db.Inequality;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
-public class WorkerModel
+public class WorkerModel implements DatabaseObjectModel
 {
     // Table name
     private static final String TABLE_NAME = "workers";
@@ -70,7 +70,8 @@ public class WorkerModel
             Date lastActivity = (Date) relation.get(LAST_ACTIVITY);
             int fileFormatVersion = (Integer) relation.get(FILE_FORMAT_VERSION);
             Version codeVersion = new Version((int[]) relation.get(CODE_VERSION));
-            WorkerModel resource = new WorkerModel(id, throughputs, isActive, lastActivity, fileFormatVersion, codeVersion);
+            WorkerModel resource = new WorkerModel(id, throughputs, isActive, lastActivity, fileFormatVersion,
+                    codeVersion);
             return Optional.of(resource);
         }
         else if (relations.isEmpty())
@@ -83,6 +84,7 @@ public class WorkerModel
         }
     }
 
+    @Override
     public void persistToDatabase(Connection connection) throws SQLException
     {
         Map<String, Object> resourceRelation = new HashMap<String, Object>();
@@ -101,4 +103,11 @@ public class WorkerModel
         primaryKeys.add(ID);
         return primaryKeys;
     }
+
+    @Override
+    public String getTableName()
+    {
+        return TABLE_NAME;
+    }
+
 }

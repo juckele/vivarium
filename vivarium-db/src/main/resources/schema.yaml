@@ -16,7 +16,7 @@ schema public:
       create_world_type_check:
         columns:
         - job_type
-        expression: (job_type = 'create_world'::job_type)
+        expression: (job_type = 'CREATE_WORLD'::job_type)
     columns:
     - id:
         inherited: true
@@ -192,7 +192,7 @@ schema public:
       create_world_type_check:
         columns:
         - job_type
-        expression: (job_type = 'run_simulation'::job_type)
+        expression: (job_type = 'RUN_SIMULATION'::job_type)
     columns:
     - id:
         inherited: true
@@ -255,14 +255,14 @@ schema public:
         - id
   type job_status:
     labels:
-    - blocked
-    - waiting
-    - processing
-    - done
+    - BLOCKED
+    - WAITING
+    - PROCESSING
+    - DONE
     owner: vivarium
   type job_type:
     labels:
-    - create_world
-    - run_simulation
+    - CREATE_WORLD
+    - RUN_SIMULATION
     owner: vivarium
 

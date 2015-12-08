@@ -136,6 +136,11 @@ public class DatabaseUtils
                     .join(keyColumns.stream().map(i -> String.format("%s=%s", i, sqlStrings.get(i))).iterator()));
             insertStringBuilder.append(");");
 
+            if (!tableName.equals("resources"))
+            {
+                System.out.println(updateStringBuilder.toString());
+                System.out.println(insertStringBuilder.toString());
+            }
             // Run the upsert statements.
             sqlStatement.execute(updateStringBuilder.toString());
             sqlStatement.execute(insertStringBuilder.toString());
@@ -148,6 +153,18 @@ public class DatabaseUtils
         if (object == null)
         {
             return "null";
+        }
+        // Quick recur for Optionals
+        if (object.getClass() == Optional.class)
+        {
+            if (((Optional<?>) object).isPresent())
+            {
+                return toSqlString(((Optional<?>) object).get());
+            }
+            else
+            {
+                return toSqlString(null);
+            }
         }
 
         // Type conversion if required
@@ -187,6 +204,105 @@ public class DatabaseUtils
         for (Map<String, Object> relation : relations)
         {
             upsert(connection, tableName, relation, keyColumns);
+        }
+    }
+
+    /**
+     * Inserts and deletes entries from a junction table until a select against the provided keyColumn returns the
+     * exactly the same entries as the provided relations.
+     *
+     * @param connection
+     *            The active connection to the database to update
+     * @param tableName
+     *            The name of the table. The named table should probably be a junction table.
+     * @param relations
+     *            A list of relations that should be in the junction table after completion.
+     * @param keyColumn
+     *            The column name to select against.
+     * @param keyValue
+     *            The column name to select against.
+     * @throws SQLException
+     */
+    public static void updateJunctionTable(Connection connection, String tableName, List<Map<String, Object>> relations,
+            String keyColumn, Object keyValue) throws SQLException
+    {
+        // Build lists for all columns and non-key columns for streaming over while we build the the SQL statements.
+        List<String> allColumns = new LinkedList<String>();
+        List<String> nonKeyColumns = new LinkedList<String>();
+        if (relations.size() == 0)
+        {
+            allColumns.add(keyColumn);
+        }
+        else
+        {
+            Map<String, Object> sampleRelation = relations.get(0); // Assumes that all relations define the same keys.
+            allColumns.addAll(sampleRelation.keySet());
+            for (String columnName : sampleRelation.keySet())
+            {
+                if (!keyColumn.equals(columnName))
+                {
+                    nonKeyColumns.add(columnName);
+                }
+            }
+        }
+
+        try (Statement sqlStatement = connection.createStatement();)
+        {
+            // Builds an delete string in the form
+            // DELETE FROM tableName
+            // WHERE keyColumn = keyValue
+            // AND column1 NOT IN(relations.get(0).get(column1), relations.get(1).get(column1));
+            StringBuilder deleteStringBuilder = new StringBuilder();
+            deleteStringBuilder.append("DELETE FROM ");
+            deleteStringBuilder.append(tableName);
+            deleteStringBuilder.append(" WHERE ");
+            deleteStringBuilder.append(keyColumn);
+            deleteStringBuilder.append('=');
+            deleteStringBuilder.append(toSqlString(keyValue));
+            for (String nonKeyColumn : nonKeyColumns)
+            {
+                deleteStringBuilder.append(" AND ");
+                deleteStringBuilder.append(nonKeyColumn);
+                deleteStringBuilder.append(" NOT IN(");
+                deleteStringBuilder.append(
+                        Joiner.on(", ").join(relations.stream().map(i -> toSqlString(i.get(nonKeyColumn))).iterator()));
+                deleteStringBuilder.append(")");
+
+            }
+
+            StringBuilder insertStringBuilder = new StringBuilder();
+            insertStringBuilder.append("INSERT INTO ");
+            insertStringBuilder.append(tableName);
+            insertStringBuilder.append(" (");
+            insertStringBuilder.append(Joiner.on(", ").join(allColumns));
+            insertStringBuilder.append(") ");
+            boolean firstSelect = true;
+            for (Map<String, Object> relation : relations)
+            {
+                if (!firstSelect)
+                {
+                    insertStringBuilder.append(" UNION ");
+                }
+                else
+                {
+                    firstSelect = false;
+                }
+                insertStringBuilder.append("SELECT ");
+                insertStringBuilder.append(Joiner.on(", ").join(
+                        allColumns.stream().map(i -> String.format("%s", toSqlString(relation.get(i)))).iterator()));
+                insertStringBuilder.append(" WHERE NOT EXISTS (SELECT 1 FROM ");
+                insertStringBuilder.append(tableName);
+                insertStringBuilder.append(" WHERE ");
+                insertStringBuilder.append(Joiner.on(" AND ").join(allColumns.stream()
+                        .map(i -> String.format("%s=%s", i, toSqlString(relation.get(i)))).iterator()));
+                insertStringBuilder.append(");");
+            }
+
+            System.out.println(deleteStringBuilder.toString());
+            System.out.println(insertStringBuilder.toString());
+            // Run the delete & insert statements.
+            sqlStatement.execute(deleteStringBuilder.toString());
+            sqlStatement.execute(insertStringBuilder.toString());
         }
     }
 }

@@ -22,7 +22,16 @@ public abstract class Job
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
     public final UUID jobID;
+    @JsonSerialize(contentUsing = UUIDSerializer.class)
+    @JsonDeserialize(contentUsing = UUIDDeserializer.class)
     public final List<UUID> dependencies;
+
+    protected Job()
+    {
+        type = null;
+        jobID = null;
+        dependencies = null;
+    }
 
     public Job(List<UUID> dependencies)
     {
