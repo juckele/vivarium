@@ -109,11 +109,18 @@ project(':vivarium-db') {
         compile project(':vivarium-core')
         compile project(':vivarium-serialization')
         compile 'org.postgresql:postgresql:9.4-1201-jdbc41' 
+        apt 'com.google.dagger:dagger:2.0.2'
         compile 'com.google.dagger:dagger:2.0.2'
+        testApt 'com.google.dagger:dagger:2.0.2'
+        testCompile 'com.google.dagger:dagger:2.0.2'
         apt 'com.google.dagger:dagger-compiler:2.0.2'
-        compileOnly 'com.google.dagger:dagger-compiler:2.0.2'
+        compile 'com.google.dagger:dagger-compiler:2.0.2'
+        testApt 'com.google.dagger:dagger-compiler:2.0.2'
+        testCompile 'com.google.dagger:dagger-compiler:2.0.2'
         apt 'com.google.auto.factory:auto-factory:1.0-beta3'
-        compileOnly 'com.google.auto.factory:auto-factory:1.0-beta3'
+        compile 'com.google.auto.factory:auto-factory:1.0-beta3'
+        testApt 'com.google.auto.factory:auto-factory:1.0-beta3'
+        testCompile 'com.google.auto.factory:auto-factory:1.0-beta3'
     }
 }
 project(':vivarium-net') {

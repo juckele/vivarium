@@ -6,6 +6,7 @@ package io.vivarium.db;
 
 import java.sql.SQLException;
 
-public interface DatabaseConnectionFactory {
-	DatabaseConnection createDatabaseConnection() throws SQLException;
+public interface DatabaseConnectionFactory
+{
+    DatabaseConnection createDatabaseConnection() throws SQLException;
 }
