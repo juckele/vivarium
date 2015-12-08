@@ -4,9 +4,7 @@
 
 package io.vivarium.db;
 
-import java.sql.SQLException;
-
 public interface DatabaseConnectionFactory
 {
-    DatabaseConnection createDatabaseConnection() throws SQLException;
+    DatabaseConnection createConnection(String databaseName, String username, String password);
 }

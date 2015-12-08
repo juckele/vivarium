@@ -4,17 +4,41 @@
 
 package io.vivarium.db;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import javax.inject.Inject;
 
-// @AutoFactory(implementing = DatabaseConnectionFactory.class)
+import com.google.auto.factory.AutoFactory;
+
+@AutoFactory(implementing = DatabaseConnectionFactory.class)
 public class PostgresDatabaseConnection implements DatabaseConnection
 {
+    private final Connection _databaseConnection;
+
     @Inject
-    public PostgresDatabaseConnection()
-    // public PostgresDatabaseConnection(@Provided String databaseName,
-    // @Provided String username,
-    // @Provided String password)
+    public PostgresDatabaseConnection(String databaseName, String username, String password)
     {
-        // DO A THANG
+        String url = "jdbc:postgresql://localhost/" + databaseName;
+        Connection connection = null;
+        try
+        {
+            connection = DriverManager.getConnection(url, username, password);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
+        finally
+        {
+            _databaseConnection = connection;
+        }
+    }
+
+    @Override
+    public boolean isConnected() throws SQLException
+    {
+        return _databaseConnection != null && !_databaseConnection.isClosed();
     }
 }

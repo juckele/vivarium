@@ -9,5 +9,7 @@ import dagger.Component;
 @Component()
 public interface TestDatabaseSystem
 {
-    MockDatabaseConnection createConnection();
+    MockDatabaseConnectionFactory createConnectionFactory();
+
+    // MockDatabaseConnection createConnection();
 }

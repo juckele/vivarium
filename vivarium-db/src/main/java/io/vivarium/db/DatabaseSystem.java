@@ -4,11 +4,12 @@
 
 package io.vivarium.db;
 
+import java.sql.SQLException;
+
 import dagger.Component;
 
-@Component(dependencies = DatabaseModule.class)
+@Component()
 public interface DatabaseSystem
 {
-    // DatabaseConnectionFactory createConnectionFactory();
-    PostgresDatabaseConnection createConnection();
+    PostgresDatabaseConnectionFactory createConnectionFactory() throws SQLException;
 }
