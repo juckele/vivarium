@@ -16,6 +16,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Properties;
 
 import com.google.common.base.Joiner;
 
@@ -28,7 +29,11 @@ public class DatabaseUtils
             throws SQLException
     {
         String url = "jdbc:postgresql://localhost/" + databaseName;
-        Connection dbConnection = DriverManager.getConnection(url, username, password);
+        Properties props = new Properties();
+        props.setProperty("user", username);
+        props.setProperty("password", password);
+        props.setProperty("stringtype", "unspecified");
+        Connection dbConnection = DriverManager.getConnection(url, props);
         return dbConnection;
     }
 
@@ -267,7 +272,6 @@ public class DatabaseUtils
                 deleteStringBuilder.append(
                         Joiner.on(", ").join(relations.stream().map(i -> toSqlString(i.get(nonKeyColumn))).iterator()));
                 deleteStringBuilder.append(")");
-
             }
 
             StringBuilder insertStringBuilder = new StringBuilder();
@@ -295,8 +299,9 @@ public class DatabaseUtils
                 insertStringBuilder.append(" WHERE ");
                 insertStringBuilder.append(Joiner.on(" AND ").join(allColumns.stream()
                         .map(i -> String.format("%s=%s", i, toSqlString(relation.get(i)))).iterator()));
-                insertStringBuilder.append(");");
+                insertStringBuilder.append(')');
             }
+            insertStringBuilder.append(';');
 
             System.out.println(deleteStringBuilder.toString());
             System.out.println(insertStringBuilder.toString());
