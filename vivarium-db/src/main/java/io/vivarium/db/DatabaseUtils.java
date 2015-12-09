@@ -21,6 +21,7 @@ import java.util.Properties;
 import com.google.common.base.Joiner;
 
 import io.vivarium.util.Reflection;
+import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
 public class DatabaseUtils
@@ -196,6 +197,10 @@ public class DatabaseUtils
             arrayString.append(Joiner.on(", ").join(elements));
             arrayString.append("}'");
             return arrayString.toString();
+        }
+        else if (object.getClass() == UUID.class)
+        {
+            return '\'' + object.toString() + "\'::uuid";
         }
         else
         {
