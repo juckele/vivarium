@@ -57,23 +57,6 @@ schema public:
         type: uuid
     - requires_job_id:
         type: uuid
-    foreign_keys:
-      job_dependencies_job_id_fkey:
-        columns:
-        - job_id
-        references:
-          columns:
-          - id
-          schema: public
-          table: jobs
-      job_dependencies_requires_job_id_fkey:
-        columns:
-        - requires_job_id
-        references:
-          columns:
-          - id
-          schema: public
-          table: jobs
     owner: vivarium
     unique_constraints:
       job_dependencies_job_id_requires_job_id_key:
