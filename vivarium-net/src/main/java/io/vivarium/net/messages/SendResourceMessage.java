@@ -17,9 +17,9 @@ public class SendResourceMessage extends Message
 {
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
-    final public UUID resourceID;
-    final public String dataString;
-    final public ResourceFormat resourceFormat;
+    public UUID resourceID;
+    public String dataString;
+    public ResourceFormat resourceFormat;
 
     @SuppressWarnings("unused") // Used for Jackson deserialization
     private SendResourceMessage()

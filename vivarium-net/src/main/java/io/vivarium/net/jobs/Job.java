@@ -18,13 +18,13 @@ import io.vivarium.util.UUID;
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class Job
 {
-    public final JobType type;
+    public JobType type;
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
-    public final UUID jobID;
+    public UUID jobID;
     @JsonSerialize(contentUsing = UUIDSerializer.class)
     @JsonDeserialize(contentUsing = UUIDDeserializer.class)
-    public final List<UUID> dependencies;
+    public List<UUID> dependencies;
 
     protected Job()
     {

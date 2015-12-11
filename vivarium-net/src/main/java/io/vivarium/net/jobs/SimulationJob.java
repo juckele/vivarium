@@ -10,7 +10,7 @@ import io.vivarium.util.UUID;
 
 public class SimulationJob extends PipeJob
 {
-    public final long endTick;
+    public long endTick;
 
     private SimulationJob()
     {

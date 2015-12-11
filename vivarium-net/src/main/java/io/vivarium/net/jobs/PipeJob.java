@@ -13,10 +13,10 @@ public abstract class PipeJob extends Job
 {
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
-    public final UUID sourceDocumentID;
+    public UUID sourceDocumentID;
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
-    public final UUID outputDocumentID;
+    public UUID outputDocumentID;
 
     protected PipeJob()
     {

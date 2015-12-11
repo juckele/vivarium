@@ -11,7 +11,7 @@ import io.vivarium.net.jobs.Job;
 
 public class CreateJobMessage extends Message
 {
-    public final Job job;
+    public Job job;
 
     @JsonCreator
     public CreateJobMessage(@JsonProperty("job") Job job)
