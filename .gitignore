@@ -2,6 +2,7 @@
 .classpath
 .factorypath
 .gradle/
+.settings/gradle/
 .settings/gradle.prefs
 */.settings/gradle/
 */.apt_generated
