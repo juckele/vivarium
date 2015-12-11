@@ -8,7 +8,9 @@ Apache License 2.0 libraries:
 - com.fasterxml.jackson.core:jackson-databind:2.6.3
 - com.github.nmorel.gwtjackson:gwt-jackson:0.10.0
 - com.github.rholder:gradle-one-jar:1.0.4
+- com.google.auto.factory:auto-factory:1.0-beta3
 - com.google.dagger:dagger:2.0.2
+- com.google.dagger:dagger-compiler:2.0.2
 - com.google.guava:guava:18.0
 - com.google.guava:guava-gwt:18.0
 - com.google.gwt:gwt-dev:2.7.0
