@@ -18,39 +18,42 @@
     <paragraph>
       <header>
 	<h4>A closer look at the simulation</h4>
-	Sun Nov&nbsp;&nbsp;8 2015
+	Fri Dec&nbsp;11 2015
       </header>
     </paragraph>
     <paragraph>
-      All of the values and behaviors discussed in this article are defaults. The Vivarium code allows many of these to be overridden on a per simulation basis. sad
+      Vivarium provides a high degree of flexibility with regard to creature physiology and neurology. All of the values and behaviors discussed in this article are defaults of the most primitive creatures typically simulated. The Vivarium code allows many of these defaults to be overridden on a per simulation basis, and more complicated life forms can be built.
     </paragraph>
     <paragraph>
-      <block-left>FIG. 3.1<br/><img src="/i/fig3_1.png" style="width:135px;height:131px;"/>
+      <block-left>FIG. 3.1 - Tick Phases<br/><img src="/i/fig3_1.png" style="width:135px;height:131px;"/>
       </block-left>
       The main tick cycle of vivarium consists of a few major phases. Figure 3.1 shows the sequence of the phases in each tick.
       <br/><br/>
       <ul style="list-style-type:none">
-	<li>Age: At the beginning of each tick, time based effects are computed. Creatures age, gestations progress, and energy levels of creatures decrease.<br/><br/></li>
-	<li>Sense: <br/><br/></li>
-	<li>Plan: <br/><br/></li>
-	<li>Act: <br/><br/></li>
+	<li><b>Age:</b> At the beginning of each tick, time based effects are computed. Creatures age, gestations progress, and energy levels of creatures decrease.<br/><br/></li>
+	<li><b>Plan:</b> Each creature is given new inputs based on their sensors. All creatures get their inputs before any creature acts.<br/><br/></li>
+	<li><b>Act:</b> After all creatures have been given sensor inputs, creatures actions will occur. The success or failure of actions will be determined, and the effects of the actions will be applied to the world. This phase includes death and birth of creatures.<br/><br/></li>
+	<li><b>World:</b> World effects outside of the control of creatures occur at the end of the tick. Currently, this only means spawning of food, but future weather effects or mechanical interactions might occur here.</li>
       </ul>
     </paragraph>
     <paragraph>
-      Sensors
+      The basic sensor set of a creature includes very little information. Each creature gets a few bits of information about the square directly in front of itself. The creature can see if it's directly facing a wall, another creature, or food. Each creature also gets two pieces of information about itself. Each creature has a Boolean input of whether it is female or not, and a 0-1 continuous value of how much energy it has (0 indicates 0%, 1 indicates 100% energy). 
     </paragraph>
     <paragraph>
-      Actions
+      The basic action set of a creature is similarly limited. Each creature has just a few voluntary actions. The list of voluntary actions is as follows: Rest, Turn Left, Turn Right, Move Forward, Eat, and Breed. Resting and turning are always successful. Move Forward requires the space in front of the creature to be empty to succeed. Eat requires the space in front of the creature to contain food to succeed. A failed attempt to Eat has no effect, and will not damage walls or creatures. Breed requires two creatures to both attempt to breed on the same tick, while facing each other, having unlike genders, the female must not be pregnant, and they must share species. There are also two involuntary actions. Creatures may Die, or Give Birth when appropriate conditions are met.
     </paragraph>
     <paragraph>
-      <block-right>FIG. 3.2<table>
+      Creatures do not choose when to die, instead they have two conditions that will override their normal actions. Creatures can die of old age, or starvation. Creatures have a lifespan of 20,000 ticks. The death of old creatures is an important driving factor in population health. Without a finite lifespan, individual creatures have an optimal strategy that does not include breeding. If a population becomes filled with non-breeding members, the entire population will eventually go extinct.
+    </paragraph>
+    <paragraph>
+      <block-right>FIG. 3.2 - Energy per action<table>
           <tr>
             <td>Per Tick (non-pregnant)</td>
             <td>&nbsp;</td>
             <td>-1</td>
           </tr>
           <tr>
-            <td>Per Tick (pregant)</td>
+            <td>Per Tick (pregnant)</td>
             <td>&nbsp;</td>
             <td>-2</td>
           </tr>
@@ -75,13 +78,10 @@
             <td>0</td>
           </tr>
       </table></block-right>
-      Creatures in Vivarium, like biological life forms, are limited by finite resources. The most critical resource for a vivarium creature is energy. Each creature has an energy store with a maximum value of 2,000. Creatures which reach zero energy die and are removed from the simulation. Creatures lose energy passively during each tick, and some actions have additional energy costs. Creatures gain energy when they eat food, but any excess energy beyond the creatures energy cap is wasted. Figure 3.2 shows the energy gain and loss from different sources.
+      The most critical resource for a vivarium creature is energy. Each creature has an energy store with a maximum value of 2,000. Creatures which reach zero energy die and are removed from the simulation. Creatures lose energy passively during each tick, and some actions have additional energy costs. Creatures gain energy when they eat food, but any excess energy beyond the creatures energy cap is wasted. Figure 3.2 shows the energy gain and loss from different sources.
     </paragraph>
     <paragraph>
-      Another limit that Vivarium creatures must cope with is a finite lifespan. A creature ages during every tick, and a creature has a maximum age of 20,000. Creatures that reach the maximum age will die of old age and be removed from the simulation. The limited lifespans end up being very important because mortal creatures place a higher emphasis on breeding, which allows a faster generational iteration.
-    </paragraph>
-    <paragraph>
-      Gestation
+      The second involuntary action is giving birth. Pregnant creatures have a gestation which increments by 1 every tick. At 2,000 gestation, the fetus is fully formed and will be birthed as an involuntary action. If birthing fails because the pregnant creature is not facing an open space, gestation will be decremented by 2, allowing the pregnant creature a chance to move to a more suitable location before attempt to give birth again.
     </paragraph>
     <paragraph>
       Previous: <a href="/articles/2.html">2. Why?</a>

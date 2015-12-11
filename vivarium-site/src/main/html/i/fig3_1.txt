@@ -14,10 +14,10 @@ skinparam classBackgroundColor #000400
 skinparam classBorderColor #D0FFD0
 skinparam objectArrowColor #D0FFD0
 
-"Age" -right-> "Sense"
-"Sense" -down-> "Plan"
-"Plan" -left-> "Act"
-"Act" .up.> "Age"
+"Age" -right-> "Plan"
+"Plan" -down-> "Act"
+"Act" -left-> "World"
+"World" .up.> "Age"
 
 hide members
 hide circle
