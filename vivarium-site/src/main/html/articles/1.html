@@ -18,14 +18,15 @@
     <paragraph>
       <header>
 	<h4>An overview of Vivarium</h4>
-	Sun Oct&nbsp;&nbsp;4 2015
+	Published: Sun Oct&nbsp;&nbsp;4 2015<br>
+	Updated: Fri Dev&nbsp;11 2015
       </header>
     </paragraph>
     <paragraph>
       Vivarium is an artificial life simulation. The simulation consists of walls, food, and creatures.
     </paragraph>
     <paragraph>
-      <block-left>FIG. 1.1<table>
+      <block-left><center>FIG. 1.1 - Walls<table>
 	  <tr>
 	    <td><img src="/i/W.png" style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/W.png" style="width:32px;height:32px;"/></td>
@@ -41,8 +42,8 @@
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/W.png" style="width:32px;height:32px;"/></td>
 	  </tr>
-      </table></block-left>
-      <block-left>FIG. 1.2<table>
+      </table></center></block-left>
+      <block-left><center>FIG. 1.2 - Food<table>
 	  <tr>
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
@@ -58,11 +59,11 @@
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
 	  </tr>
-      </table></block-left>
+      </table></center></block-left>
       A world in vivarium has static non-moving walls. These walls line the edge of a world, and additional walls are scattered around the middle of a world. Figure 1.1 shows an example arrangement of walls. A Vivarium world also has food. Food is a resource that spawns in empty space with a low probability every tick. Figure 1.2 shows a piece of food.
     </paragraph>
     <paragraph>
-      <block-right>FIG. 1.3<table>
+      <block-right><center>FIG. 1.3 - Creatures<table>
 	  <tr>
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
@@ -78,8 +79,8 @@
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
 	    <td><img src="/i/E.png" style="width:32px;height:32px;"/></td>
 	  </tr>
-      </table></block-right>
-      The main focus of a Vivarium simulation is the creatures. Figure 1.3 shows a male (red) and female (blue) creature. Creatures in the simulation have a genome that is used to build a neurological model for the creature. These creatures live, eat, breed, and die, all using a digital brain that is derived from their genome.
+      </table></center></block-right>
+      The main focus of a Vivarium simulation is the creatures. Figure 1.3 shows a male (red) and female (blue) creature. Pregnant female creatures (not pictured) are purple. Creatures in the simulation have a genome that is used to build a neurological model for the creature. These creatures live, eat, breed, and die, all using a digital brain that is derived from their genome.
     </paragraph>
     <paragraph>
       On each tick of the simulation, each creature receives a set of inputs. These inputs are fed into the brain of the creature, and the creature picks an action to perform. In the current visualizer (<a href="/life/">watch</a>), each creature receives a very limited set of inputs: Whether it is female, whether it is facing a wall, whether it is facing food, whether it is facing another creature, and the percent energy it has left. Each creature can choose to do one of a few actions as well: Rest, move fowards, turn left, turn right, eat, and breed.
