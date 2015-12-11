@@ -20,12 +20,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.googlecode.gwtstreamer.client.Streamer;
 
 import io.vivarium.db.DatabaseUtils;
+import io.vivarium.db.model.CreateWorldJobModel;
 import io.vivarium.db.model.JobModel;
 import io.vivarium.db.model.JobStatus;
 import io.vivarium.db.model.ResourceModel;
 import io.vivarium.db.model.RunSimulationJobModel;
 import io.vivarium.db.model.WorkerModel;
 import io.vivarium.net.Constants;
+import io.vivarium.net.jobs.CreateWorldJob;
 import io.vivarium.net.jobs.SimulationJob;
 import io.vivarium.net.messages.CreateJobMessage;
 import io.vivarium.net.messages.Message;
@@ -146,9 +148,15 @@ public class Server extends WebSocketServer
         if (createJobMessage.job instanceof SimulationJob)
         {
             SimulationJob simulationJob = (SimulationJob) createJobMessage.job;
-            job = new RunSimulationJobModel(simulationJob.jobID, JobStatus.WAITING, (short) 0, null, null, null,
+            job = new RunSimulationJobModel(simulationJob.jobID, JobStatus.BLOCKED, (short) 0, null, null, null,
                     simulationJob.endTick, simulationJob.sourceDocumentID, simulationJob.outputDocumentID,
                     simulationJob.dependencies);
+        }
+        else if (createJobMessage.job instanceof CreateWorldJob)
+        {
+            CreateWorldJob createWorldJob = (CreateWorldJob) createJobMessage.job;
+            job = new CreateWorldJobModel(createWorldJob.jobID, JobStatus.BLOCKED, (short) 0, null, null, null,
+                    createWorldJob.sourceDocumentID, createWorldJob.outputDocumentID, createWorldJob.dependencies);
         }
         else
         {

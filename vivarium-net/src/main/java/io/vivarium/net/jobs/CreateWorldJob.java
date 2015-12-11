@@ -10,6 +10,12 @@ import io.vivarium.util.UUID;
 
 public class CreateWorldJob extends PipeJob
 {
+    @SuppressWarnings("unused") // Used for Jackson deserialization
+    private CreateWorldJob()
+    {
+        super();
+    }
+
     public CreateWorldJob(List<UUID> dependencies, UUID sourceDocumentID, UUID outputDocumentID)
     {
         super(dependencies, sourceDocumentID, outputDocumentID);

@@ -236,11 +236,13 @@ public class DatabaseUtils
     public static void updateJunctionTable(Connection connection, String tableName, List<Map<String, Object>> relations,
             String keyColumn, Object keyValue) throws SQLException
     {
+        boolean deleteOnly = false;
         // Build lists for all columns and non-key columns for streaming over while we build the the SQL statements.
         List<String> allColumns = new LinkedList<String>();
         List<String> nonKeyColumns = new LinkedList<String>();
         if (relations.size() == 0)
         {
+            deleteOnly = true;
             allColumns.add(keyColumn);
         }
         else
@@ -308,11 +310,12 @@ public class DatabaseUtils
             }
             insertStringBuilder.append(';');
 
-            System.out.println(deleteStringBuilder.toString());
-            System.out.println(insertStringBuilder.toString());
             // Run the delete & insert statements.
             sqlStatement.execute(deleteStringBuilder.toString());
-            sqlStatement.execute(insertStringBuilder.toString());
+            if (!deleteOnly)
+            {
+                sqlStatement.execute(insertStringBuilder.toString());
+            }
         }
     }
 }

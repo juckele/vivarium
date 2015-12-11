@@ -12,6 +12,7 @@ public class SimulationJob extends PipeJob
 {
     public long endTick;
 
+    @SuppressWarnings("unused") // Used for Jackson deserialization
     private SimulationJob()
     {
         super();
