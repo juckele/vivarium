@@ -6,11 +6,15 @@ package io.vivarium.net;
 
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.util.concurrent.ExecutionException;
 
 import io.vivarium.client.TaskClient;
 import io.vivarium.client.WorkerClient;
-import io.vivarium.client.task.CreateAndUploadWorldTask;
-import io.vivarium.client.task.DownloadWorldTask;
+import io.vivarium.client.task.DownloadResourceTask;
+import io.vivarium.client.task.UploadResourceTask;
+import io.vivarium.core.Blueprint;
+import io.vivarium.core.EntityType;
+import io.vivarium.core.World;
 import io.vivarium.server.Server;
 
 public class DemoTest
@@ -22,8 +26,11 @@ public class DemoTest
 
         Thread.sleep(100);
 
-        TaskClient c1 = new TaskClient(new CreateAndUploadWorldTask());
+        World world = new World(Blueprint.makeDefault());
+        UploadResourceTask t1 = new UploadResourceTask(world);
+        TaskClient c1 = new TaskClient(t1);
         c1.connect();
+        System.out.println("New world with " + world.getCount(EntityType.CREATURE) + " creatures");
 
         /*
          * List<UUID> dependencies = new LinkedList<>();
@@ -43,10 +50,20 @@ public class DemoTest
 
         // Don't try to request before they have it.
         Thread.sleep(300);
-        TaskClient c3 = new TaskClient(new DownloadWorldTask());
+        DownloadResourceTask t3 = new DownloadResourceTask(t1.getResourceUUID());
+        TaskClient c3 = new TaskClient(t3);
         c3.connect();
+        try
+        {
+            World world_copy = (World) t3.waitForResource();
+            System.out.println("DL world with " + world_copy.getCount(EntityType.CREATURE) + " creatures");
+        }
+        catch (ExecutionException e)
+        {
+            e.printStackTrace();
+        }
 
-        Thread.sleep(1000);
+        // Thread.sleep(1000);
         System.exit(0);
     }
 }

@@ -9,38 +9,40 @@ import java.nio.channels.NotYetConnectedException;
 import org.java_websocket.handshake.ServerHandshake;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.google.common.base.Preconditions;
 
 import io.vivarium.client.TaskClient;
-import io.vivarium.core.Blueprint;
-import io.vivarium.core.EntityType;
-import io.vivarium.core.World;
-import io.vivarium.net.messages.RequestResourceMessage;
 import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.JSONConverter;
+import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.UUID;
 
-public class CreateAndUploadWorldTask extends Task
+public class UploadResourceTask extends Task
 {
+    private final VivariumObject _object;
+
+    public UploadResourceTask(VivariumObject object)
+    {
+        Preconditions.checkNotNull(object);
+        _object = object;
+    }
 
     @Override
     public void onOpen(TaskClient client, ServerHandshake handshakedata)
     {
         try
         {
-            UUID resourceID = UUID.fromString("d51b6b31-84b5-0835-d5d5-05467ab4f04d");
+            UUID resourceID = _object.getUUID();
 
             // Create a world and upload it
-            Blueprint blueprint = Blueprint.makeDefault();
-            World world = new World(blueprint);
-            System.out.println("The ULed world has " + world.getCount(EntityType.CREATURE) + " creatures");
-            String jsonString = JSONConverter.serializerToJSONString(world, resourceID);
-            SendResourceMessage uploadBlueprint = new SendResourceMessage(resourceID, jsonString, ResourceFormat.JSON);
-            client.send(client.getMapper().writeValueAsString(uploadBlueprint));
+            String jsonString = JSONConverter.serializerToJSONString(_object, resourceID);
+            SendResourceMessage uploadMessage = new SendResourceMessage(resourceID, jsonString, ResourceFormat.JSON);
+            client.send(client.getMapper().writeValueAsString(uploadMessage));
 
             // Let's try getting the resource we just uploaded to make sure it works...
-            RequestResourceMessage downloadBlueprint = new RequestResourceMessage(resourceID, ResourceFormat.JSON);
-            client.send(client.getMapper().writeValueAsString(downloadBlueprint));
+            // RequestResourceMessage downloadBlueprint = new RequestResourceMessage(resourceID, ResourceFormat.JSON);
+            // client.send(client.getMapper().writeValueAsString(downloadBlueprint));
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {
@@ -68,6 +70,11 @@ public class CreateAndUploadWorldTask extends Task
     {
         // TODO Auto-generated method stub
 
+    }
+
+    public UUID getResourceUUID()
+    {
+        return _object.getUUID();
     }
 
 }

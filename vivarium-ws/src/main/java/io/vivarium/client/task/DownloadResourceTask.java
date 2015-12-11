@@ -6,32 +6,40 @@ package io.vivarium.client.task;
 
 import java.io.IOException;
 import java.nio.channels.NotYetConnectedException;
+import java.util.concurrent.ExecutionException;
 
 import org.java_websocket.handshake.ServerHandshake;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import io.vivarium.client.TaskClient;
-import io.vivarium.core.EntityType;
-import io.vivarium.core.World;
 import io.vivarium.net.messages.Message;
 import io.vivarium.net.messages.RequestResourceMessage;
 import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.JSONConverter;
+import io.vivarium.serialization.VivariumObject;
 import io.vivarium.serialization.VivariumObjectCollection;
+import io.vivarium.util.SimpleFuture;
 import io.vivarium.util.UUID;
 
-public class DownloadWorldTask extends Task
+public class DownloadResourceTask extends Task
 {
+    private final UUID _uuid;
+    private SimpleFuture<VivariumObject> _object;
+
+    public DownloadResourceTask(UUID uuid)
+    {
+        _uuid = uuid;
+        _object = new SimpleFuture<>();
+    }
 
     @Override
     public void onOpen(TaskClient client, ServerHandshake handshakedata)
     {
         try
         {
-            UUID resourceID = UUID.fromString("d51b6b31-84b5-0835-d5d5-05467ab4f04d");
-            RequestResourceMessage request = new RequestResourceMessage(resourceID, ResourceFormat.JSON);
+            RequestResourceMessage request = new RequestResourceMessage(_uuid, ResourceFormat.JSON);
             client.send(client.getMapper().writeValueAsString(request));
         }
         catch (NotYetConnectedException | JsonProcessingException e)
@@ -52,8 +60,7 @@ public class DownloadWorldTask extends Task
                 SendResourceMessage sendResource = (SendResourceMessage) untypedMessage;
                 String jsonDataString = sendResource.dataString;
                 VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonDataString);
-                World world = collection.getFirst(World.class);
-                System.out.println("The DLed world has " + world.getCount(EntityType.CREATURE) + " creatures");
+                _object.put(collection.getObject(_uuid));
             }
         }
         catch (IOException e)
@@ -73,4 +80,8 @@ public class DownloadWorldTask extends Task
     {
     }
 
+    public VivariumObject waitForResource() throws InterruptedException, ExecutionException
+    {
+        return _object.get();
+    }
 }

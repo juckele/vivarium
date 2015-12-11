@@ -16,7 +16,7 @@ public abstract class VivariumObject implements Streamable
 
     public abstract void finalizeSerialization();
 
-    UUID getUUID()
+    public UUID getUUID()
     {
         return _uuid;
     }
