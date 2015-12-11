@@ -1,22 +1,33 @@
 /*
- * Copyright © 2015 John H Uckele. All rights reserved.
+ * a * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
 package io.vivarium.experiment;
 
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.LinkedList;
 
+import io.vivarium.client.TaskClient;
+import io.vivarium.client.task.CreateJobTask;
+import io.vivarium.client.task.UploadResourceTask;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
-import io.vivarium.scripts.CreateWorld;
-import io.vivarium.scripts.RunSimulation;
+import io.vivarium.net.jobs.CreateWorldJob;
+import io.vivarium.net.jobs.Job;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
+import io.vivarium.util.UUID;
 
 public class NormalizationConvergence
 {
+    private static int worldSize = 50;
+    private static int worldCountPerGroup = 1; // 24
+    private static long totalTicksPerWorld = 100; // 20_000_000
+    private static long snapshotsPerWorld = 5; // 100
+
     /**
-     * Runs the NormalizationConvergence experiment.
+     * Sets up the NormalizationConvergence experiment on a Vivarium research server.
      *
      * Hypothesis: Normalizing creature genomes will cause speedier convergence and produce creatures with higher
      * average fitness by reducing genetic drift in 'inactive' genes. Genetic drift in inactive genes is hypothesized to
@@ -25,18 +36,21 @@ public class NormalizationConvergence
      * offspring creation)
      *
      * @param args
+     * @throws URISyntaxException
      */
-    public static void main(String[] args)
+    public static void main(String[] args) throws URISyntaxException
     {
         // Make the blueprint with the default behavior
         Blueprint defaultBlueprint = Blueprint.makeDefault();
-        defaultBlueprint.setSize(50);
+        defaultBlueprint.setSize(worldSize);
         ArrayList<Species> defaultSpeciesList = new ArrayList<Species>();
         Species defaultSpecies = Species.makeDefault();
         defaultSpeciesList.add(defaultSpecies);
         defaultBlueprint.setSpecies(defaultSpeciesList);
 
         // Save the default blueprint
+        TaskClient defaultUploadClient = new TaskClient(new UploadResourceTask(defaultBlueprint));
+        defaultUploadClient.connect();
         FileIO.saveSerializer(defaultBlueprint, "defaultBlueprint.viv", Format.JSON);
 
         // Make the blueprint with the normalizing behavior
@@ -49,52 +63,29 @@ public class NormalizationConvergence
         normalizingBlueprint.setSpecies(normalizingSpeciesList);
 
         // Save the normalizing blueprint
-        FileIO.saveSerializer(normalizingBlueprint, "normalizingBlueprint.viv", Format.JSON);
+        TaskClient normalizingUploadClient = new TaskClient(new UploadResourceTask(normalizingBlueprint));
+        normalizingUploadClient.connect();
+        FileIO.saveSerializer(defaultBlueprint, "defaultBlueprint.viv", Format.JSON);
 
         // Start 20 simulations!
-        for (int i = 1; i <= 10; i++)
+        for (int i = 1; i <= worldCountPerGroup; i++)
         {
-            Thread t1 = new WorldRunnerThread("default", i, 20, 1000000);
-            t1.start();
-            Thread t2 = new WorldRunnerThread("normalizing", i, 20, 1000000);
-            t2.start();
+            // Create world creation jobs
+            Job createDefaultWorldJob = new CreateWorldJob(new LinkedList<>(), defaultBlueprint.getUUID(),
+                    UUID.randomUUID());
+            TaskClient createDefaultWorlClient = new TaskClient(new CreateJobTask(createDefaultWorldJob));
+            createDefaultWorlClient.connect();
+
+            // Create world creation jobs
+            Job createNormalizingWorldJob = new CreateWorldJob(new LinkedList<>(), normalizingBlueprint.getUUID(),
+                    UUID.randomUUID());
+            TaskClient createNormalizingWorlClient = new TaskClient(new CreateJobTask(createNormalizingWorldJob));
+            createNormalizingWorlClient.connect();
+
+            // Thread t1 = new WorldRunnerThread("default", i, 20, 1000000);
+            // t1.start();
+            // Thread t2 = new WorldRunnerThread("normalizing", i, 20, 1000000);
+            // t2.start();
         }
-    }
-
-    private static class WorldRunnerThread extends Thread
-    {
-        private final String _prefix;
-        private final int _iteration;
-        private final int _steps;
-        private final int _ticksPerStep;
-
-        WorldRunnerThread(String prefix, int iteration, int steps, int ticksPerStep)
-        {
-            this._prefix = prefix;
-            this._iteration = iteration;
-            this._steps = steps;
-            this._ticksPerStep = ticksPerStep;
-        }
-
-        @Override
-        public void run()
-        {
-            // Create a world
-            {
-                String[] args = { "-b", _prefix + "Blueprint.viv", "-o",
-                        _prefix + "World" + _iteration + "_step" + 0 + ".viv" };
-                CreateWorld.main(args);
-            }
-
-            // Run the world $steps times
-            for (int i = 0; i < _steps; i++)
-            {
-                // for $ticksPerStep each time
-                String[] args = { "-i", _prefix + "World" + _iteration + "_step" + i + ".viv", "-o",
-                        _prefix + "World" + _iteration + "_step" + (i + 1) + ".viv", "-t", "" + _ticksPerStep };
-                RunSimulation.main(args);
-            }
-        }
-
     }
 }
