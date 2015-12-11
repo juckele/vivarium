@@ -25,6 +25,10 @@
   <!-- Messages in the net project use public values that are not read in the project, findBugs shouldn't worry about these -->
   <Match>
     <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
+    <Package name="io.vivarium.net.jobs"/>
+  </Match>
+  <Match>
+    <Bug pattern="URF_UNREAD_PUBLIC_OR_PROTECTED_FIELD"/>
     <Package name="io.vivarium.net.messages"/>
   </Match>
   <!-- Messages don't use final because the jackson-gwt library we're using panics about this at runtime, but there's not a worry about malicious code here-->
