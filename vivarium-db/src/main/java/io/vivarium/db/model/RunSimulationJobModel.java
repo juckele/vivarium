@@ -1,46 +1,41 @@
 package io.vivarium.db.model;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
 
 import io.vivarium.util.UUID;
 
-public class RunSimulationJobModel extends PipeJobModel
+public class RunSimulationJobModel extends JobModel
 {
     // Column names
-    protected static final String END_TICK = "end_tick";
+    protected static final String END_TICK_PROPERTY = "end_tick";
     private final Long endTick;
 
     public RunSimulationJobModel(UUID jobID, JobStatus status, short priority, UUID checkoutOutByWorkerID,
-            Date checkoutOutTime, Date completedTime, long endTick, UUID sourceResourceID, UUID outputResourceID,
-            List<UUID> jobDependencies)
+            Date checkoutOutTime, Date completedTime, long endTick, Collection<UUID> inputResources,
+            Collection<UUID> outputResources, Collection<UUID> jobDependencies)
     {
         super(jobID, JobType.RUN_SIMULATION, status, priority, checkoutOutByWorkerID, checkoutOutTime, completedTime,
-                sourceResourceID, outputResourceID, jobDependencies);
+                inputResources, outputResources, jobDependencies);
         this.endTick = endTick;
     }
 
-    public RunSimulationJobModel(Map<String, Object> relation, List<UUID> jobDependencies)
+    public RunSimulationJobModel(Map<String, Object> relation, Map<String, String> properties,
+            Collection<UUID> inputResources, Collection<UUID> outputResources, Collection<UUID> jobDependencies)
     {
-        super(relation, jobDependencies);
-        Preconditions.checkNotNull(relation.get(END_TICK), "endTick cannot be null");
-        this.endTick = (Long) relation.get(END_TICK);
+        super(relation, properties, inputResources, outputResources, jobDependencies);
+        Preconditions.checkNotNull(properties.get(END_TICK_PROPERTY));
+        this.endTick = Long.parseLong(properties.get(END_TICK_PROPERTY));
     }
 
     @Override
-    protected Map<String, Object> getRelationModel()
+    protected Map<String, String> buildProperties()
     {
-        Map<String, Object> relation = super.getRelationModel();
-        relation.put(END_TICK, endTick);
-        return relation;
-    }
-
-    @Override
-    public String getTableName()
-    {
-        return "run_simulation_jobs";
+        Map<String, String> properties = super.buildProperties();
+        properties.put(END_TICK_PROPERTY, endTick.toString());
+        return properties;
     }
 }

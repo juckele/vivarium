@@ -11,38 +11,23 @@ import java.util.List;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import io.vivarium.util.UUID;
-import io.vivarium.util.Version;
-
 public class JSONConverter
 {
     private static final String OBJECT_KEY = "objects";
-    private static final String VERSION_KEY = "fileFormatVersion";
-    public static final String ID_KEY = "resourceID";
 
     public static String serializerToJSONString(VivariumObject serializer)
     {
-        return serializerToJSONString(serializer, UUID.randomUUID());
-    }
-
-    public static String serializerToJSONString(VivariumObject serializer, UUID resourceUuid)
-    {
         SerializationEngine engine = new SerializationEngine();
         MapCollection collection = engine.serialize(serializer);
-        JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection, resourceUuid);
+        JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection);
         return jsonObject.toString();
     }
 
     public static String serializerToJSONString(VivariumObjectCollection serializers)
     {
-        return serializerToJSONString(serializers, UUID.randomUUID());
-    }
-
-    public static String serializerToJSONString(VivariumObjectCollection serializers, UUID resourceUuid)
-    {
         SerializationEngine engine = new SerializationEngine();
         MapCollection collection = engine.serialize(serializers);
-        JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection, resourceUuid);
+        JSONObject jsonObject = JSONConverter.convertFromSerializedCollection(collection);
         return jsonObject.toString();
     }
 
@@ -54,17 +39,16 @@ public class JSONConverter
         return engine.deserializeCollection(collection);
     }
 
-    private static JSONObject convertFromSerializedCollection(MapCollection collection, UUID resourceUuid)
+    private static JSONObject convertFromSerializedCollection(MapCollection collection)
     {
         JSONObject jsonObject = new JSONObject();
+        jsonObject.put(OBJECT_KEY, new JSONArray());
         while (collection.hasNext())
         {
             HashMap<String, Object> map = collection.popNext();
             JSONObject categoryMapObject = new JSONObject(map);
             jsonObject.append(OBJECT_KEY, categoryMapObject);
         }
-        jsonObject.put(VERSION_KEY, Version.FILE_FORMAT_VERSION);
-        jsonObject.put(ID_KEY, resourceUuid);
         return jsonObject;
     }
 

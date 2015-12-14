@@ -16,6 +16,7 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.server.Server;
+import io.vivarium.util.UUID;
 
 public class DemoTest
 {
@@ -27,7 +28,7 @@ public class DemoTest
         Thread.sleep(100);
 
         World world = new World(Blueprint.makeDefault());
-        UploadResourceTask t1 = new UploadResourceTask(world);
+        UploadResourceTask t1 = new UploadResourceTask(UUID.randomUUID(), world);
         TaskClient c1 = new TaskClient(t1);
         c1.connect();
         System.out.println("New world with " + world.getCount(EntityType.CREATURE) + " creatures");

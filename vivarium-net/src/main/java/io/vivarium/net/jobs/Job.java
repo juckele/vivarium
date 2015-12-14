@@ -5,7 +5,7 @@
 package io.vivarium.net.jobs;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
@@ -24,19 +24,24 @@ public abstract class Job
     public UUID jobID;
     @JsonSerialize(contentUsing = UUIDSerializer.class)
     @JsonDeserialize(contentUsing = UUIDDeserializer.class)
-    public List<UUID> dependencies;
+    public Collection<UUID> inputResources;
+    @JsonSerialize(contentUsing = UUIDSerializer.class)
+    @JsonDeserialize(contentUsing = UUIDDeserializer.class)
+    public Collection<UUID> outputResources;
+    @JsonSerialize(contentUsing = UUIDSerializer.class)
+    @JsonDeserialize(contentUsing = UUIDDeserializer.class)
+    public Collection<UUID> dependencies;
 
     protected Job()
     {
-        type = null;
-        jobID = null;
-        dependencies = null;
     }
 
-    public Job(List<UUID> dependencies)
+    public Job(Collection<UUID> inputResources, Collection<UUID> outputResources, Collection<UUID> dependencies)
     {
         jobID = UUID.randomUUID();
         type = getType();
+        this.inputResources = new ArrayList<UUID>(inputResources);
+        this.outputResources = new ArrayList<UUID>(outputResources);
         this.dependencies = new ArrayList<UUID>(dependencies);
     }
 

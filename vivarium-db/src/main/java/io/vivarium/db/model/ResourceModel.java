@@ -103,10 +103,4 @@ public class ResourceModel implements DatabaseObjectModel
         primaryKeys.add(ID);
         return primaryKeys;
     }
-
-    @Override
-    public String getTableName()
-    {
-        return TABLE_NAME;
-    }
 }

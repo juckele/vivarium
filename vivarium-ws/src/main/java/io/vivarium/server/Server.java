@@ -96,6 +96,7 @@ public class Server extends WebSocketServer
             }
             else if (untypedMessage instanceof CreateJobMessage)
             {
+                System.out.println("CreateJobMessage: " + message);
                 acceptJob(conn, (CreateJobMessage) untypedMessage);
             }
             else
@@ -131,7 +132,7 @@ public class Server extends WebSocketServer
         else if (sendResourceMessage.resourceFormat == ResourceFormat.GWT_STREAM)
         {
             VivariumObjectCollection collection = (VivariumObjectCollection) Streamer.get().fromString(dataString);
-            jsonString = JSONConverter.serializerToJSONString(collection, sendResourceMessage.resourceID);
+            jsonString = JSONConverter.serializerToJSONString(collection);
         }
         else
         {
@@ -149,14 +150,14 @@ public class Server extends WebSocketServer
         {
             SimulationJob simulationJob = (SimulationJob) createJobMessage.job;
             job = new RunSimulationJobModel(simulationJob.jobID, JobStatus.BLOCKED, (short) 0, null, null, null,
-                    simulationJob.endTick, simulationJob.sourceDocumentID, simulationJob.outputDocumentID,
+                    simulationJob.endTick, simulationJob.inputResources, simulationJob.outputResources,
                     simulationJob.dependencies);
         }
         else if (createJobMessage.job instanceof CreateWorldJob)
         {
             CreateWorldJob createWorldJob = (CreateWorldJob) createJobMessage.job;
             job = new CreateWorldJobModel(createWorldJob.jobID, JobStatus.BLOCKED, (short) 0, null, null, null,
-                    createWorldJob.sourceDocumentID, createWorldJob.outputDocumentID, createWorldJob.dependencies);
+                    createWorldJob.inputResources, createWorldJob.outputResources, createWorldJob.dependencies);
         }
         else
         {

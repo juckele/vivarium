@@ -103,11 +103,4 @@ public class WorkerModel implements DatabaseObjectModel
         primaryKeys.add(ID);
         return primaryKeys;
     }
-
-    @Override
-    public String getTableName()
-    {
-        return TABLE_NAME;
-    }
-
 }

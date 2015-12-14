@@ -16,16 +16,29 @@ import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObject;
+import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 
 public class UploadResourceTask extends Task
 {
-    private final VivariumObject _object;
+    private final UUID _resourceID;
+    private final VivariumObjectCollection _objects;
 
-    public UploadResourceTask(VivariumObject object)
+    public UploadResourceTask(UUID resourceID, VivariumObject object)
     {
+        Preconditions.checkNotNull(resourceID);
         Preconditions.checkNotNull(object);
-        _object = object;
+        _resourceID = resourceID;
+        _objects = new VivariumObjectCollection();
+        _objects.add(object);
+    }
+
+    public UploadResourceTask(UUID resourceID, VivariumObjectCollection objects)
+    {
+        Preconditions.checkNotNull(resourceID);
+        Preconditions.checkNotNull(objects);
+        _resourceID = resourceID;
+        _objects = objects;
     }
 
     @Override
@@ -33,16 +46,10 @@ public class UploadResourceTask extends Task
     {
         try
         {
-            UUID resourceID = _object.getUUID();
-
             // Create a world and upload it
-            String jsonString = JSONConverter.serializerToJSONString(_object, resourceID);
-            SendResourceMessage uploadMessage = new SendResourceMessage(resourceID, jsonString, ResourceFormat.JSON);
+            String jsonString = JSONConverter.serializerToJSONString(_objects);
+            SendResourceMessage uploadMessage = new SendResourceMessage(_resourceID, jsonString, ResourceFormat.JSON);
             client.send(client.getMapper().writeValueAsString(uploadMessage));
-
-            // Let's try getting the resource we just uploaded to make sure it works...
-            // RequestResourceMessage downloadBlueprint = new RequestResourceMessage(resourceID, ResourceFormat.JSON);
-            // client.send(client.getMapper().writeValueAsString(downloadBlueprint));
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {
@@ -74,7 +81,7 @@ public class UploadResourceTask extends Task
 
     public UUID getResourceUUID()
     {
-        return _object.getUUID();
+        return _resourceID;
     }
 
 }

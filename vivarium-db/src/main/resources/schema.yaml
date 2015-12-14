@@ -62,7 +62,7 @@ schema public:
           columns:
           - id
           schema: public
-          table: jobs
+          table: resources
     owner: vivarium
     unique_constraints:
       job_input_resources_job_id_resource_id_key:
@@ -91,7 +91,7 @@ schema public:
           columns:
           - id
           schema: public
-          table: jobs
+          table: resources
     owner: vivarium
     unique_constraints:
       job_output_resources_job_id_resource_id_key:

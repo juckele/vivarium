@@ -4,11 +4,11 @@
 
 package io.vivarium.net.jobs;
 
-import java.util.List;
+import java.util.Collection;
 
 import io.vivarium.util.UUID;
 
-public class CreateWorldJob extends PipeJob
+public class CreateWorldJob extends Job
 {
     @SuppressWarnings("unused") // Used for Jackson deserialization
     private CreateWorldJob()
@@ -16,9 +16,10 @@ public class CreateWorldJob extends PipeJob
         super();
     }
 
-    public CreateWorldJob(List<UUID> dependencies, UUID sourceDocumentID, UUID outputDocumentID)
+    public CreateWorldJob(Collection<UUID> inputResources, Collection<UUID> outputResources,
+            Collection<UUID> dependencies)
     {
-        super(dependencies, sourceDocumentID, outputDocumentID);
+        super(inputResources, outputResources, dependencies);
     }
 
     @Override

@@ -4,11 +4,11 @@
 
 package io.vivarium.net.jobs;
 
-import java.util.List;
+import java.util.Collection;
 
 import io.vivarium.util.UUID;
 
-public class SimulationJob extends PipeJob
+public class SimulationJob extends Job
 {
     public long endTick;
 
@@ -19,9 +19,10 @@ public class SimulationJob extends PipeJob
         this.endTick = 0;
     }
 
-    public SimulationJob(List<UUID> dependencies, UUID sourceDocumentID, UUID outputDocumentID, long endTick)
+    public SimulationJob(Collection<UUID> inputResources, Collection<UUID> outputResources,
+            Collection<UUID> dependencies, long endTick)
     {
-        super(dependencies, sourceDocumentID, outputDocumentID);
+        super(inputResources, outputResources, dependencies);
         this.endTick = endTick;
     }
 

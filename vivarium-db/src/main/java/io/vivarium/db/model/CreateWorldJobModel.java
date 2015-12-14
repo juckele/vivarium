@@ -1,29 +1,24 @@
 package io.vivarium.db.model;
 
+import java.util.Collection;
 import java.util.Date;
-import java.util.List;
 import java.util.Map;
 
 import io.vivarium.util.UUID;
 
-public class CreateWorldJobModel extends PipeJobModel
+public class CreateWorldJobModel extends JobModel
 {
     public CreateWorldJobModel(UUID jobID, JobStatus status, short priority, UUID checkoutOutByWorkerID,
-            Date checkoutOutTime, Date completedTime, UUID sourceResourceID, UUID outputResourceID,
-            List<UUID> jobDependencies)
+            Date checkoutOutTime, Date completedTime, Collection<UUID> inputResources, Collection<UUID> outputResources,
+            Collection<UUID> jobDependencies)
     {
         super(jobID, JobType.CREATE_WORLD, status, priority, checkoutOutByWorkerID, checkoutOutTime, completedTime,
-                sourceResourceID, outputResourceID, jobDependencies);
+                inputResources, outputResources, jobDependencies);
     }
 
-    public CreateWorldJobModel(Map<String, Object> relation, List<UUID> jobDependencies)
+    public CreateWorldJobModel(Map<String, Object> relation, Map<String, String> properties,
+            Collection<UUID> inputResources, Collection<UUID> outputResources, Collection<UUID> jobDependencies)
     {
-        super(relation, jobDependencies);
-    }
-
-    @Override
-    public String getTableName()
-    {
-        return "create_world_jobs";
+        super(relation, properties, inputResources, outputResources, jobDependencies);
     }
 }

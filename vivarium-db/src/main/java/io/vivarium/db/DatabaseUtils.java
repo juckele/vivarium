@@ -142,11 +142,10 @@ public class DatabaseUtils
                     .join(keyColumns.stream().map(i -> String.format("%s=%s", i, sqlStrings.get(i))).iterator()));
             insertStringBuilder.append(");");
 
-            if (!tableName.equals("resources"))
-            {
-                System.out.println(updateStringBuilder.toString());
-                System.out.println(insertStringBuilder.toString());
-            }
+            System.out.println(updateStringBuilder.toString().substring(0,
+                    Math.min(updateStringBuilder.toString().length(), 500)));
+            System.out.println(insertStringBuilder.toString().substring(0,
+                    Math.min(insertStringBuilder.toString().length(), 500)));
             // Run the upsert statements.
             sqlStatement.execute(updateStringBuilder.toString());
             sqlStatement.execute(insertStringBuilder.toString());
@@ -310,10 +309,14 @@ public class DatabaseUtils
             }
             insertStringBuilder.append(';');
 
+            System.out.println(deleteStringBuilder.toString().substring(0,
+                    Math.min(deleteStringBuilder.toString().length(), 500)));
             // Run the delete & insert statements.
             sqlStatement.execute(deleteStringBuilder.toString());
             if (!deleteOnly)
             {
+                System.out.println(insertStringBuilder.toString().substring(0,
+                        Math.min(insertStringBuilder.toString().length(), 500)));
                 sqlStatement.execute(insertStringBuilder.toString());
             }
         }
