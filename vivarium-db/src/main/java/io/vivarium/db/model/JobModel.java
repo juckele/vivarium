@@ -123,7 +123,7 @@ public abstract class JobModel implements DatabaseObjectModel
                 RESOURCES_FROM_ID, this.jobID);
         DatabaseUtils.updateJunctionTable(connection, PROPERTY_TABLE_NAME, propertyRelations, PROPERTY_JOB_ID,
                 this.jobID);
-
+        connection.commit();
     }
 
     private List<String> getPrimaryKeys()
@@ -285,5 +285,6 @@ public abstract class JobModel implements DatabaseObjectModel
                 + "                            OR requires_status = 'DONE' )); \n";
         // @formatter:on
         connection.createStatement().executeQuery(updateString);
+        connection.commit();
     }
 }

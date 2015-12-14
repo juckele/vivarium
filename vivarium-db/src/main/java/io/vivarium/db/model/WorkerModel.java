@@ -95,6 +95,7 @@ public class WorkerModel implements DatabaseObjectModel
         resourceRelation.put(CODE_VERSION, codeVersion);
         resourceRelation.put(FILE_FORMAT_VERSION, fileFormatVersion);
         DatabaseUtils.upsert(connection, TABLE_NAME, resourceRelation, getPrimaryKeys());
+        connection.commit();
     }
 
     private List<String> getPrimaryKeys()

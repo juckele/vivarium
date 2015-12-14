@@ -35,6 +35,7 @@ public class DatabaseUtils
         props.setProperty("password", password);
         props.setProperty("stringtype", "unspecified");
         Connection dbConnection = DriverManager.getConnection(url, props);
+        dbConnection.setAutoCommit(false);
         return dbConnection;
     }
 

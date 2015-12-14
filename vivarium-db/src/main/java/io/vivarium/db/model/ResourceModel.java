@@ -95,6 +95,7 @@ public class ResourceModel implements DatabaseObjectModel
             resourceRelation.put(BRAIN_COUNT, collection.getAll(Brain.class).size());
         }
         DatabaseUtils.upsert(connection, TABLE_NAME, resourceRelation, getPrimaryKeys());
+        connection.commit();
     }
 
     private List<String> getPrimaryKeys()
