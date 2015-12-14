@@ -259,4 +259,31 @@ public abstract class JobModel implements DatabaseObjectModel
         }
         return dependencies;
     }
+
+    public static void updateJobStatuses(Connection connection) throws SQLException
+    {
+        // @formatter:off
+        // This changes all BLOCKED jobs which have no requirements or have only
+        // requirements which are done to have a status of WAITING instead.
+        String updateString = ""
+                + "UPDATE jobs \n"
+                + "SET    status = 'WAITING' \n"
+                + "WHERE  id IN (SELECT id \n"
+                + "              FROM   (SELECT jobs.id, \n"
+                + "                             jobs.status, \n"
+                + "                             Min(requires.status) AS requires_status \n"
+                + "                      FROM   jobs  \n"
+                + "                             LEFT OUTER JOIN job_dependencies \n"
+                + "                                          ON ( jobs.id = job_dependencies.job_id ) \n"
+                + "                             LEFT OUTER JOIN jobs AS requires \n"
+                + "                                          ON ( job_dependencies.requires_job_id \n"
+                + "                                               = \n"
+                + "                                             requires.id ) \n"
+                + "                      GROUP  BY jobs.id) AS t1 \n"
+                + "              WHERE  status = 'BLOCKED' \n"
+                + "                     AND ( requires_status IS NULL \n"
+                + "                            OR requires_status = 'DONE' )); \n";
+        // @formatter:on
+        connection.createStatement().executeQuery(updateString);
+    }
 }
