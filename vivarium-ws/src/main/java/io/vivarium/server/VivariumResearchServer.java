@@ -40,7 +40,7 @@ import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
-public class Server extends WebSocketServer
+public class VivariumResearchServer extends WebSocketServer
 {
     private ClientConnectionManager _connectionManager;
     private WorkloadManager _workloadManager;
@@ -49,7 +49,7 @@ public class Server extends WebSocketServer
 
     private Connection _databaseConnection;
 
-    public Server(InetSocketAddress port, Connection databaseConnection, ClientConnectionManager connectionManager,
+    public VivariumResearchServer(InetSocketAddress port, Connection databaseConnection, ClientConnectionManager connectionManager,
             WorkloadManager workloadManager) throws UnknownHostException
     {
         super(port);
@@ -206,7 +206,7 @@ public class Server extends WebSocketServer
         ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
         WorkloadManager workloadManager = new WorkloadManager(databaseConnection, clientConnectionManager);
         // Build Server
-        Server s = new Server(port, databaseConnection, clientConnectionManager, workloadManager);
+        VivariumResearchServer s = new VivariumResearchServer(port, databaseConnection, clientConnectionManager, workloadManager);
         s.start();
     }
 

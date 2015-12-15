@@ -17,7 +17,7 @@ import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.server.ClientConnectionManager;
-import io.vivarium.server.Server;
+import io.vivarium.server.VivariumResearchServer;
 import io.vivarium.server.WorkloadManager;
 import io.vivarium.util.UUID;
 
@@ -31,7 +31,7 @@ public class DemoTest
         ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
         WorkloadManager workloadManager = new WorkloadManager(databaseConnection, clientConnectionManager);
         // Build Server
-        Server s = new Server(port, databaseConnection, clientConnectionManager, workloadManager);
+        VivariumResearchServer s = new VivariumResearchServer(port, databaseConnection, clientConnectionManager, workloadManager);
         s.start();
 
         Thread.sleep(100);
