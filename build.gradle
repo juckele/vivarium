@@ -121,6 +121,7 @@ project(':vivarium-ws') {
     dependencies {
         compile project(':vivarium-db')
         compile project(':vivarium-net')
+        compile 'org.jppf:jppf-node:5.1.1'
     }
 }
 

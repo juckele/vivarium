@@ -17,6 +17,7 @@ Apache License 2.0 libraries:
 - de.richsource.gradle.plugins:gwt-gradle-plugin:0.6
 - net.java.dev.jna:jna-platform:4.0.0
 - org.javatuples:javatuples:1.2
+- org.jppf:jppf-node:5.1.1
 - org.realityforge.gwt.websockets:gwt-websockets:1.1.2
 
 The MIT License libraries:
