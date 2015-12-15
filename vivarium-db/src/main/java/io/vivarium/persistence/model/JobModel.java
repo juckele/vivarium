@@ -19,9 +19,10 @@ import com.google.common.base.Preconditions;
 
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.Inequality;
+import io.vivarium.persistence.PersistenceModel;
 import io.vivarium.util.UUID;
 
-public abstract class JobModel implements PersistenceModel
+public abstract class JobModel extends PersistenceModel
 {
     // Table name
     private static final String TABLE_NAME = "jobs";

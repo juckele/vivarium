@@ -21,11 +21,12 @@ import io.vivarium.core.World;
 import io.vivarium.core.brain.Brain;
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.Inequality;
+import io.vivarium.persistence.PersistenceModel;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 
-public class ResourceModel implements PersistenceModel
+public class ResourceModel extends PersistenceModel
 {
     // Table name
     private static final String TABLE_NAME = "resources";

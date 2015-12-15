@@ -17,10 +17,11 @@ import com.google.common.base.Preconditions;
 
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.Inequality;
+import io.vivarium.persistence.PersistenceModel;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
-public class WorkerModel implements PersistenceModel
+public class WorkerModel extends PersistenceModel
 {
     // Table name
     private static final String TABLE_NAME = "workers";
