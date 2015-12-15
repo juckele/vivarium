@@ -18,7 +18,7 @@ import java.util.Optional;
 import com.google.common.base.Preconditions;
 
 import io.vivarium.db.DatabaseUtils;
-import io.vivarium.db.Inequality;
+import io.vivarium.db.Relation;
 import io.vivarium.util.UUID;
 
 public abstract class JobModel extends PersistenceModel
@@ -209,7 +209,7 @@ public abstract class JobModel extends PersistenceModel
     static Optional<JobModel> getFromDatabase(Connection connection, UUID jobID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
-                Optional.of(Inequality.equalTo(ID, jobID)));
+                Optional.of(Relation.equalTo(ID, jobID)));
         if (relations.size() == 1)
         {
             // find the depencies
@@ -251,7 +251,7 @@ public abstract class JobModel extends PersistenceModel
     private static List<UUID> getDepdendenciesFromDatabase(Connection connection, UUID jobID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, DEPENDENCIES_TABLE_NAME,
-                Optional.of(Inequality.equalTo(DEPENDENCIES_FROM_ID, jobID)));
+                Optional.of(Relation.equalTo(DEPENDENCIES_FROM_ID, jobID)));
         List<UUID> dependencies = new LinkedList<>();
         for (Map<String, Object> relation : relations)
         {

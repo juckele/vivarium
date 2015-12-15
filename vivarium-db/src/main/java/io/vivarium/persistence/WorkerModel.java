@@ -16,7 +16,7 @@ import java.util.Optional;
 import com.google.common.base.Preconditions;
 
 import io.vivarium.db.DatabaseUtils;
-import io.vivarium.db.Inequality;
+import io.vivarium.db.Relation;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
@@ -60,7 +60,7 @@ public class WorkerModel extends PersistenceModel
     static Optional<WorkerModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
-                Optional.of(Inequality.equalTo(ID, resourceID)));
+                Optional.of(Relation.equalTo(ID, resourceID)));
         if (relations.size() == 1)
         {
             Map<String, Object> relation = relations.get(0);

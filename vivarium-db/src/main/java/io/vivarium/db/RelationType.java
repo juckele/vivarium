@@ -4,7 +4,7 @@
 
 package io.vivarium.db;
 
-public enum InequalityType
+public enum RelationType
 {
     EQUALS
     {

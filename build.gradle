@@ -8,7 +8,6 @@ buildscript {
     dependencies {
         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
         classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
-        classpath "net.ltgt.gradle:gradle-apt-plugin:0.5"
     }
 }
 
@@ -39,7 +38,6 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'findbugs'
-    apply plugin: "net.ltgt.apt"
 
     version = '0.3.2'
 
@@ -50,8 +48,6 @@ subprojects {
     eclipseSetup.dependsOn eclipseProject
     eclipseSetup.dependsOn cleanEclipseClasspath
     eclipseSetup.dependsOn eclipseClasspath
-    eclipseSetup.dependsOn cleanEclipseFactorypath
-    eclipseSetup.dependsOn eclipseFactorypath
 
     buildscript {
         repositories {
@@ -111,18 +107,6 @@ project(':vivarium-db') {
         compile project(':vivarium-core')
         compile project(':vivarium-serialization')
         compile 'org.postgresql:postgresql:9.4-1201-jdbc41' 
-        apt 'com.google.dagger:dagger:2.0.2'
-        compile 'com.google.dagger:dagger:2.0.2'
-        testApt 'com.google.dagger:dagger:2.0.2'
-        testCompile 'com.google.dagger:dagger:2.0.2'
-        apt 'com.google.dagger:dagger-compiler:2.0.2'
-        compile 'com.google.dagger:dagger-compiler:2.0.2'
-        testApt 'com.google.dagger:dagger-compiler:2.0.2'
-        testCompile 'com.google.dagger:dagger-compiler:2.0.2'
-        apt 'com.google.auto.factory:auto-factory:1.0-beta3'
-        compile 'com.google.auto.factory:auto-factory:1.0-beta3'
-        testApt 'com.google.auto.factory:auto-factory:1.0-beta3'
-        testCompile 'com.google.auto.factory:auto-factory:1.0-beta3'
     }
 }
 project(':vivarium-net') {
@@ -137,10 +121,6 @@ project(':vivarium-ws') {
     dependencies {
         compile project(':vivarium-db')
         compile project(':vivarium-net')
-        compile 'com.google.dagger:dagger:2.0.2'
-        apt 'com.google.dagger:dagger-compiler:2.0.2'
-        compileOnly 'com.google.auto.factory:auto-factory:1.0-beta3'
-        apt 'com.google.auto.factory:auto-factory:1.0-beta3'
     }
 }
 

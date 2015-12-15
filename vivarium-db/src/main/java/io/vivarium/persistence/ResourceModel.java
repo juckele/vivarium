@@ -20,7 +20,7 @@ import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.core.brain.Brain;
 import io.vivarium.db.DatabaseUtils;
-import io.vivarium.db.Inequality;
+import io.vivarium.db.Relation;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
@@ -55,7 +55,7 @@ public class ResourceModel extends PersistenceModel
     static Optional<ResourceModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
-                Optional.of(Inequality.equalTo(ID, resourceID)));
+                Optional.of(Relation.equalTo(ID, resourceID)));
         if (relations.size() == 1)
         {
             Map<String, Object> relation = relations.get(0);

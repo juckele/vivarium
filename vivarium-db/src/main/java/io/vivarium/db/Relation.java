@@ -4,22 +4,22 @@
 
 package io.vivarium.db;
 
-public class Inequality<T> implements WhereCondition
+public class Relation<T> implements WhereCondition
 {
-    public final InequalityType type;
+    public final RelationType type;
     public final String columnName;
     public final T value;
 
-    private Inequality(InequalityType type, String columnName, T value)
+    private Relation(RelationType type, String columnName, T value)
     {
         this.type = type;
         this.columnName = columnName;
         this.value = value;
     }
 
-    public static <T> Inequality<T> equalTo(String columnName, T value)
+    public static <T> Relation<T> equalTo(String columnName, T value)
     {
-        return new Inequality<T>(InequalityType.EQUALS, columnName, value);
+        return new Relation<T>(RelationType.EQUALS, columnName, value);
     }
 
     @Override
