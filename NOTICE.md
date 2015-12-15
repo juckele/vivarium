@@ -33,6 +33,7 @@ The PostgreSQL License libraries:
 
 LGPL libraries:
 - jfree:jfreechart:1.0.9
+- net.java.dev.jna:jna-platform:4.0.0
 
 JSON License libraries:
 - org.json:json:20140107
