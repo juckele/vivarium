@@ -206,36 +206,35 @@ public abstract class JobModel extends PersistenceModel
         return new HashMap<String, String>();
     }
 
+    static List<JobModel> getFromDatabase(Connection connection, JobStatus status) throws SQLException
+    {
+        List<JobModel> results = new LinkedList<>();
+        List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
+                Optional.of(Relation.equalTo(JOB_STATUS, status)));
+        for (Map<String, Object> relationMap : relations)
+        {
+            UUID jobID = UUID.fromString(relationMap.get(ID).toString());
+            Map<String, String> properties = getPropertiesFromDatabase(connection, jobID);
+            List<UUID> inputResources = getInputResourcesFromDatabase(connection, jobID);
+            List<UUID> outputResources = getOutputResourcesFromDatabase(connection, jobID);
+            List<UUID> dependecies = getDepdendenciesFromDatabase(connection, jobID);
+            JobModel job = inflateFromMap(relations.get(0), properties, inputResources, outputResources, dependecies);
+            results.add(job);
+        }
+        return results;
+    }
+
     static Optional<JobModel> getFromDatabase(Connection connection, UUID jobID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
                 Optional.of(Relation.equalTo(ID, jobID)));
         if (relations.size() == 1)
         {
-            // find the depencies
-            List<UUID> dependencies = getDepdendenciesFromDatabase(connection, jobID);
-
-            // Determine the type
-            Map<String, Object> relation = relations.get(0);
-            JobModel job;
-            JobType type = JobType.valueOf(relation.get(JOB_TYPE).toString());
-
-            Collection<UUID> inputResources = null; // TODO:
-            Collection<UUID> outputResouces = null; // TODO:
-            Map<String, String> properties = null; // TODO:
-            // Construct the sub-type
-            if (type == JobType.RUN_SIMULATION)
-            {
-                job = new RunSimulationJobModel(relation, properties, inputResources, outputResouces, dependencies);
-            }
-            else if (type == JobType.CREATE_WORLD)
-            {
-                job = new CreateWorldJobModel(relation, properties, inputResources, outputResouces, dependencies);
-            }
-            else
-            {
-                throw new IllegalStateException("Unable to get job type " + type + " from database.");
-            }
+            Map<String, String> properties = getPropertiesFromDatabase(connection, jobID);
+            List<UUID> inputResources = getInputResourcesFromDatabase(connection, jobID);
+            List<UUID> outputResources = getOutputResourcesFromDatabase(connection, jobID);
+            List<UUID> dependecies = getDepdendenciesFromDatabase(connection, jobID);
+            JobModel job = inflateFromMap(relations.get(0), properties, inputResources, outputResources, dependecies);
             return Optional.of(job);
         }
         else if (relations.isEmpty())
@@ -248,6 +247,30 @@ public abstract class JobModel extends PersistenceModel
         }
     }
 
+    private static JobModel inflateFromMap(Map<String, Object> map, Map<String, String> properties,
+            Collection<UUID> inputResources, Collection<UUID> outputResouces, Collection<UUID> dependencies)
+    {
+
+        // Determine the type
+        JobModel job;
+        JobType type = JobType.valueOf(map.get(JOB_TYPE).toString());
+
+        // Construct the sub-type
+        if (type == JobType.RUN_SIMULATION)
+        {
+            job = new RunSimulationJobModel(map, properties, inputResources, outputResouces, dependencies);
+        }
+        else if (type == JobType.CREATE_WORLD)
+        {
+            job = new CreateWorldJobModel(map, properties, inputResources, outputResouces, dependencies);
+        }
+        else
+        {
+            throw new IllegalStateException("Unable to get job type " + type + " from database.");
+        }
+        return job;
+    }
+
     private static List<UUID> getDepdendenciesFromDatabase(Connection connection, UUID jobID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, DEPENDENCIES_TABLE_NAME,
@@ -258,6 +281,42 @@ public abstract class JobModel extends PersistenceModel
             dependencies.add(UUID.fromString(relation.get(DEPENDENCIES_TO_ID).toString()));
         }
         return dependencies;
+    }
+
+    private static List<UUID> getInputResourcesFromDatabase(Connection connection, UUID jobID) throws SQLException
+    {
+        List<Map<String, Object>> relations = DatabaseUtils.select(connection, INPUT_RESOURCES_TABLE_NAME,
+                Optional.of(Relation.equalTo(RESOURCES_FROM_ID, jobID)));
+        List<UUID> resources = new LinkedList<>();
+        for (Map<String, Object> relation : relations)
+        {
+            resources.add(UUID.fromString(relation.get(RESOURCES_TO_ID).toString()));
+        }
+        return resources;
+    }
+
+    private static List<UUID> getOutputResourcesFromDatabase(Connection connection, UUID jobID) throws SQLException
+    {
+        List<Map<String, Object>> relations = DatabaseUtils.select(connection, OUTPUT_RESOURCES_TABLE_NAME,
+                Optional.of(Relation.equalTo(RESOURCES_FROM_ID, jobID)));
+        List<UUID> resources = new LinkedList<>();
+        for (Map<String, Object> relation : relations)
+        {
+            resources.add(UUID.fromString(relation.get(RESOURCES_TO_ID).toString()));
+        }
+        return resources;
+    }
+
+    private static Map<String, String> getPropertiesFromDatabase(Connection connection, UUID jobID) throws SQLException
+    {
+        List<Map<String, Object>> relations = DatabaseUtils.select(connection, PROPERTY_TABLE_NAME,
+                Optional.of(Relation.equalTo(PROPERTY_JOB_ID, jobID)));
+        Map<String, String> properties = new HashMap<>();
+        for (Map<String, Object> relation : relations)
+        {
+            properties.put((String) relation.get(PROPERTY_KEY), (String) relation.get(PROPERTY_VALUE));
+        }
+        return properties;
     }
 
     public static void updateJobStatuses(Connection connection) throws SQLException

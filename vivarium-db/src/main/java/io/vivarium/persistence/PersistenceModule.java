@@ -76,7 +76,23 @@ public class PersistenceModule
         }
         catch (SQLException e)
         {
-            return Optional.empty();
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
+    public List<JobModel> fetchJobsWithStatus(JobStatus status)
+    {
+        try
+        {
+            return JobModel.getFromDatabase(_databaseConnection, status);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
     public List<WorkerModel> fetchAllWorkers()
     {
