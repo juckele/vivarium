@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.persistence.model;
+package io.vivarium.persistence;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -17,7 +17,6 @@ import com.google.common.base.Preconditions;
 
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.Inequality;
-import io.vivarium.persistence.PersistenceModel;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 

@@ -5,9 +5,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Optional;
 
-import io.vivarium.persistence.model.JobModel;
-import io.vivarium.persistence.model.ResourceModel;
-import io.vivarium.persistence.model.WorkerModel;
 import io.vivarium.util.UUID;
 
 public class PersistenceModule

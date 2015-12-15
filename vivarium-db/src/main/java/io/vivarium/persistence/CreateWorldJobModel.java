@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.persistence.model;
+package io.vivarium.persistence;
 
 import java.util.Collection;
 import java.util.Date;

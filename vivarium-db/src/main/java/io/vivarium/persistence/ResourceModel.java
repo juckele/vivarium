@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.persistence.model;
+package io.vivarium.persistence;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -21,7 +21,6 @@ import io.vivarium.core.World;
 import io.vivarium.core.brain.Brain;
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.Inequality;
-import io.vivarium.persistence.PersistenceModel;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
