@@ -1,9 +1,9 @@
-package io.vivarium.db.model;
+package io.vivarium.persistence.model;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
-public interface DatabaseObjectModel
+public interface PersistenceModel
 {
     public void persistToDatabase(Connection connection) throws SQLException;
 }

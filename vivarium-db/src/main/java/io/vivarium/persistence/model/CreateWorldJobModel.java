@@ -1,4 +1,4 @@
-package io.vivarium.db.model;
+package io.vivarium.persistence.model;
 
 import java.util.Collection;
 import java.util.Date;

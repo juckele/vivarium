@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.db.model;
+package io.vivarium.persistence.model;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -25,7 +25,7 @@ import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 
-public class ResourceModel implements DatabaseObjectModel
+public class ResourceModel implements PersistenceModel
 {
     // Table name
     private static final String TABLE_NAME = "resources";

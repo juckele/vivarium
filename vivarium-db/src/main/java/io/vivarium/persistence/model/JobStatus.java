@@ -1,4 +1,4 @@
-package io.vivarium.db.model;
+package io.vivarium.persistence.model;
 
 public enum JobStatus
 {
