@@ -90,7 +90,6 @@ public class MessageRouter
         }
         catch (IOException | SQLException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
         System.out.println(
