@@ -7,6 +7,7 @@ package io.vivarium.persistence;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 import io.vivarium.util.UUID;
@@ -76,6 +77,17 @@ public class PersistenceModule
         catch (SQLException e)
         {
             return Optional.empty();
+
+    public List<WorkerModel> fetchAllWorkers()
+    {
+        try
+        {
+            return WorkerModel.getFromDatabase(_databaseConnection);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 }

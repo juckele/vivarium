@@ -57,22 +57,25 @@ public class WorkerModel extends PersistenceModel
         this.codeVersion = codeVersion;
     }
 
+    static List<WorkerModel> getFromDatabase(Connection connection) throws SQLException
+    {
+        List<WorkerModel> results = new LinkedList<>();
+        List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME, Optional.empty());
+        for (Map<String, Object> relationMap : relations)
+        {
+            results.add(inflateFromMap(relationMap));
+        }
+        return results;
+    }
+
     static Optional<WorkerModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
                 Optional.of(Relation.equalTo(ID, resourceID)));
         if (relations.size() == 1)
         {
-            Map<String, Object> relation = relations.get(0);
-            UUID id = UUID.fromString(relation.get(ID).toString());
-            int[] throughputs = (int[]) relation.get(THROUGHPUTS);
-            boolean isActive = (Boolean) relation.get(IS_ACTIVE);
-            Date lastActivity = (Date) relation.get(LAST_ACTIVITY);
-            int fileFormatVersion = (Integer) relation.get(FILE_FORMAT_VERSION);
-            Version codeVersion = new Version((int[]) relation.get(CODE_VERSION));
-            WorkerModel resource = new WorkerModel(id, throughputs, isActive, lastActivity, fileFormatVersion,
-                    codeVersion);
-            return Optional.of(resource);
+            Map<String, Object> relationMap = relations.get(0);
+            return Optional.of(inflateFromMap(relationMap));
         }
         else if (relations.isEmpty())
         {
@@ -82,6 +85,18 @@ public class WorkerModel extends PersistenceModel
         {
             throw new IllegalStateException("Select of Resource returned multiple objects");
         }
+    }
+
+    private static WorkerModel inflateFromMap(Map<String, Object> map)
+    {
+        UUID id = UUID.fromString(map.get(ID).toString());
+        int[] throughputs = (int[]) map.get(THROUGHPUTS);
+        boolean isActive = (Boolean) map.get(IS_ACTIVE);
+        Date lastActivity = (Date) map.get(LAST_ACTIVITY);
+        int fileFormatVersion = (Integer) map.get(FILE_FORMAT_VERSION);
+        Version codeVersion = new Version((int[]) map.get(CODE_VERSION));
+        WorkerModel model = new WorkerModel(id, throughputs, isActive, lastActivity, fileFormatVersion, codeVersion);
+        return model;
     }
 
     @Override
