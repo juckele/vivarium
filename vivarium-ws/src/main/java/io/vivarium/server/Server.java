@@ -42,25 +42,20 @@ import io.vivarium.util.Version;
 
 public class Server extends WebSocketServer
 {
-    private final static InetSocketAddress PORT = new InetSocketAddress(Constants.DEFAULT_PORT);
-
-    private ClientConnectionManager connectionManager = new ClientConnectionManager();
+    private ClientConnectionManager _connectionManager;
+    private WorkloadManager _workloadManager;
 
     private ObjectMapper mapper = new ObjectMapper();
 
     private Connection _databaseConnection;
 
-    public Server() throws UnknownHostException
+    public Server(InetSocketAddress port, Connection databaseConnection, ClientConnectionManager connectionManager,
+            WorkloadManager workloadManager) throws UnknownHostException
     {
-        super(PORT);
-        try
-        {
-            _databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-        }
+        super(port);
+        _databaseConnection = databaseConnection;
+        _connectionManager = connectionManager;
+        _workloadManager = workloadManager;
     }
 
     @Override
@@ -118,7 +113,7 @@ public class Server extends WebSocketServer
         WorkerModel worker = new WorkerModel(pledge.workerID, pledge.throughputs, pledge.active, new Date(),
                 pledge.fileFormatVersion, pledge.codeVersion);
         worker.persistToDatabase(_databaseConnection);
-        connectionManager.registerWorker(pledge.workerID, webSocket);
+        _connectionManager.registerWorker(pledge.workerID, webSocket);
     }
 
     private void acceptResource(WebSocket webSocket, SendResourceMessage sendResourceMessage) throws SQLException
@@ -202,18 +197,17 @@ public class Server extends WebSocketServer
         ex.printStackTrace();
     }
 
-    public static void main(String[] args)
+    public static void main(String[] args) throws Exception
     {
         System.out.println("SERVER: Running Vivarium Research Server.");
-        try
-        {
-            Server server = new Server();
-            server.start();
-        }
-        catch (UnknownHostException e)
-        {
-            e.printStackTrace();
-        }
+        // Builder server dependencies
+        InetSocketAddress port = new InetSocketAddress(Constants.DEFAULT_PORT);
+        Connection databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
+        ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
+        WorkloadManager workloadManager = new WorkloadManager(databaseConnection, clientConnectionManager);
+        // Build Server
+        Server s = new Server(port, databaseConnection, clientConnectionManager, workloadManager);
+        s.start();
     }
 
 }
