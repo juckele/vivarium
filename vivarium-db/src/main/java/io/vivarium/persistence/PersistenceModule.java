@@ -1,8 +1,14 @@
 package io.vivarium.persistence;
 
 import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Collection;
+import java.util.Optional;
 
-import io.vivarium.persistence.model.PersistenceModel;
+import io.vivarium.persistence.model.JobModel;
+import io.vivarium.persistence.model.ResourceModel;
+import io.vivarium.persistence.model.WorkerModel;
+import io.vivarium.util.UUID;
 
 public class PersistenceModule
 {
@@ -13,8 +19,63 @@ public class PersistenceModule
         _databaseConnection = databaseConnection;
     }
 
-    public void persist(PersistenceModel model)
+    public boolean persist(PersistenceModel model)
     {
+        try
+        {
+            model.persistToDatabase(_databaseConnection);
+            return true;
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean persist(Collection<PersistenceModel> models)
+    {
+        try
+        {
+            for (PersistenceModel model : models)
+            {
+                model.persistToDatabase(_databaseConnection);
+            }
+            return true;
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends PersistenceModel> Optional<T> fetch(UUID id, Class<T> clazz)
+    {
+        try
+        {
+            if (clazz == ResourceModel.class)
+            {
+                return (Optional<T>) ResourceModel.getFromDatabase(_databaseConnection, id);
+            }
+            if (clazz == WorkerModel.class)
+            {
+                return (Optional<T>) WorkerModel.getFromDatabase(_databaseConnection, id);
+            }
+            if (clazz == JobModel.class)
+            {
+                return (Optional<T>) JobModel.getFromDatabase(_databaseConnection, id);
+            }
+            else
+            {
+                throw new IllegalArgumentException("Unknown class" + clazz);
+            }
+        }
+        catch (SQLException e)
+        {
+            return Optional.empty();
+        }
 
     }
 }
