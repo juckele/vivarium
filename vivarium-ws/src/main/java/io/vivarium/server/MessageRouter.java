@@ -5,7 +5,6 @@
 package io.vivarium.server;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Date;
 import java.util.Optional;
 
@@ -88,7 +87,7 @@ public class MessageRouter
                 System.err.println("SERVER: Unhandled message of type " + untypedMessage.getClass().getSimpleName());
             }
         }
-        catch (IOException | SQLException e)
+        catch (IOException e)
         {
             e.printStackTrace();
         }
@@ -96,7 +95,7 @@ public class MessageRouter
                 "SERVER: Web Socket Message . " + conn + " ~ " + message.substring(0, Math.min(message.length(), 200)));
     }
 
-    private synchronized void acceptPledge(WebSocket webSocket, WorkerPledgeMessage pledge) throws SQLException
+    private synchronized void acceptPledge(WebSocket webSocket, WorkerPledgeMessage pledge)
     {
         WorkerModel worker = new WorkerModel(pledge.workerID, pledge.throughputs, pledge.active, new Date(),
                 pledge.fileFormatVersion, pledge.codeVersion);
@@ -104,7 +103,7 @@ public class MessageRouter
         _connectionManager.registerWorker(pledge.workerID, webSocket);
     }
 
-    private void acceptResource(WebSocket webSocket, SendResourceMessage sendResourceMessage) throws SQLException
+    private void acceptResource(WebSocket webSocket, SendResourceMessage sendResourceMessage)
     {
         String dataString = sendResourceMessage.dataString;
         String jsonString;
@@ -126,7 +125,7 @@ public class MessageRouter
         _persistenceModule.persist(resource);
     }
 
-    private void acceptJob(WebSocket conn, CreateJobMessage createJobMessage) throws SQLException
+    private void acceptJob(WebSocket conn, CreateJobMessage createJobMessage)
     {
         JobModel job;
         if (createJobMessage.job instanceof SimulationJob)
@@ -150,7 +149,7 @@ public class MessageRouter
     }
 
     private void handleRequestForResource(WebSocket webSocket, RequestResourceMessage requestResourceMessage)
-            throws SQLException, IOException
+            throws IOException
     {
         UUID resourceID = requestResourceMessage.resourceID;
         Optional<ResourceModel> resource = _persistenceModule.fetch(resourceID, ResourceModel.class);
