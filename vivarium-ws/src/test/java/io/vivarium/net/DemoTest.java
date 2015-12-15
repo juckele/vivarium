@@ -21,7 +21,7 @@ public class DemoTest
     public static void main(String[] args) throws Exception
     {
         // Run Server
-        VivariumResearchServer.main(null);
+        VivariumResearchServer.main(args);
 
         Thread.sleep(100);
 
