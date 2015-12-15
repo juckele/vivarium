@@ -4,8 +4,6 @@
 
 package io.vivarium.net;
 
-import java.net.InetSocketAddress;
-import java.sql.Connection;
 import java.util.concurrent.ExecutionException;
 
 import io.vivarium.client.TaskClient;
@@ -15,24 +13,15 @@ import io.vivarium.client.task.UploadResourceTask;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
-import io.vivarium.db.DatabaseUtils;
-import io.vivarium.server.ClientConnectionManager;
 import io.vivarium.server.VivariumResearchServer;
-import io.vivarium.server.WorkloadManager;
 import io.vivarium.util.UUID;
 
 public class DemoTest
 {
     public static void main(String[] args) throws Exception
     {
-        // Builder server dependencies
-        InetSocketAddress port = new InetSocketAddress(Constants.DEFAULT_PORT);
-        Connection databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
-        ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
-        WorkloadManager workloadManager = new WorkloadManager(databaseConnection, clientConnectionManager);
-        // Build Server
-        VivariumResearchServer s = new VivariumResearchServer(port, databaseConnection, clientConnectionManager, workloadManager);
-        s.start();
+        // Run Server
+        VivariumResearchServer.main(null);
 
         Thread.sleep(100);
 
