@@ -1,3 +1,7 @@
+/*
+ * Copyright © 2015 John H Uckele. All rights reserved.
+ */
+
 package org.jppf.node.idle;
 
 public class IdleTest
