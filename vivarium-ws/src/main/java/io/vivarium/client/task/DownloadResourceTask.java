@@ -25,12 +25,12 @@ import io.vivarium.util.UUID;
 public class DownloadResourceTask extends Task
 {
     private final UUID _uuid;
-    private SimpleFuture<VivariumObjectCollection> _object;
+    private SimpleFuture<VivariumObjectCollection> _objects;
 
     public DownloadResourceTask(UUID uuid)
     {
         _uuid = uuid;
-        _object = new SimpleFuture<>();
+        _objects = new SimpleFuture<>();
     }
 
     @Override
@@ -59,6 +59,7 @@ public class DownloadResourceTask extends Task
                 SendResourceMessage sendResource = (SendResourceMessage) untypedMessage;
                 String jsonDataString = sendResource.dataString;
                 VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonDataString);
+                _objects.put(collection);
             }
         }
         catch (IOException e)
@@ -80,6 +81,6 @@ public class DownloadResourceTask extends Task
 
     public VivariumObjectCollection waitForResource() throws InterruptedException, ExecutionException
     {
-        return _object.get();
+        return _objects.get();
     }
 }
