@@ -57,7 +57,7 @@ public class WorkerModel extends PersistenceModel
         this.codeVersion = codeVersion;
     }
 
-    public static Optional<WorkerModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
+    static Optional<WorkerModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
                 Optional.of(Inequality.equalTo(ID, resourceID)));
@@ -85,7 +85,7 @@ public class WorkerModel extends PersistenceModel
     }
 
     @Override
-    public void persistToDatabase(Connection connection) throws SQLException
+    protected void persistToDatabase(Connection connection) throws SQLException
     {
         Map<String, Object> resourceRelation = new HashMap<String, Object>();
         resourceRelation.put(ID, workerID);

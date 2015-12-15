@@ -9,6 +9,7 @@ import java.sql.Connection;
 
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.net.Constants;
+import io.vivarium.persistence.PersistenceModule;
 
 public class VivariumResearchServer
 {
@@ -40,9 +41,10 @@ public class VivariumResearchServer
 
         // Build server dependencies
         Connection databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
+        PersistenceModule persistenceModule = new PersistenceModule(databaseConnection);
         ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
-        WorkloadManager workloadManager = new WorkloadManager(databaseConnection, clientConnectionManager);
-        MessageRouter messageRouter = new MessageRouter(databaseConnection, clientConnectionManager, workloadManager);
+        WorkloadManager workloadManager = new WorkloadManager(persistenceModule, clientConnectionManager);
+        MessageRouter messageRouter = new MessageRouter(persistenceModule, clientConnectionManager, workloadManager);
         InetSocketAddress port = new InetSocketAddress(Constants.DEFAULT_PORT);
         ServerNetworkModule networkModule = new ServerNetworkModule(port, messageRouter);
 

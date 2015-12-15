@@ -52,7 +52,7 @@ public class ResourceModel extends PersistenceModel
         this.fileFormatVersion = fileFormatVersion != null ? Optional.of(fileFormatVersion) : Optional.empty();
     }
 
-    public static Optional<ResourceModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
+    static Optional<ResourceModel> getFromDatabase(Connection connection, UUID resourceID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
                 Optional.of(Inequality.equalTo(ID, resourceID)));

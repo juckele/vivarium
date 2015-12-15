@@ -4,16 +4,16 @@
 
 package io.vivarium.server;
 
-import java.sql.Connection;
+import io.vivarium.persistence.PersistenceModule;
 
 public class WorkloadManager
 {
-    private final Connection _databaseConnection;
+    private final PersistenceModule _persistenceModule;
     private final ClientConnectionManager _clientConnectionManager;
 
-    public WorkloadManager(Connection databaseConnection, ClientConnectionManager clientConnectionManager)
+    public WorkloadManager(PersistenceModule persistenceModule, ClientConnectionManager clientConnectionManager)
     {
-        _databaseConnection = databaseConnection;
+        _persistenceModule = persistenceModule;
         _clientConnectionManager = clientConnectionManager;
     }
 

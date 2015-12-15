@@ -206,7 +206,7 @@ public abstract class JobModel extends PersistenceModel
         return new HashMap<String, String>();
     }
 
-    public static Optional<JobModel> getFromDatabase(Connection connection, UUID jobID) throws SQLException
+    static Optional<JobModel> getFromDatabase(Connection connection, UUID jobID) throws SQLException
     {
         List<Map<String, Object>> relations = DatabaseUtils.select(connection, TABLE_NAME,
                 Optional.of(Inequality.equalTo(ID, jobID)));

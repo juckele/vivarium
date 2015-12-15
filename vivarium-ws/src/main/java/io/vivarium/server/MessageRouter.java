@@ -5,7 +5,6 @@
 package io.vivarium.server;
 
 import java.io.IOException;
-import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Optional;
@@ -27,6 +26,7 @@ import io.vivarium.net.messages.WorkerPledgeMessage;
 import io.vivarium.persistence.CreateWorldJobModel;
 import io.vivarium.persistence.JobModel;
 import io.vivarium.persistence.JobStatus;
+import io.vivarium.persistence.PersistenceModule;
 import io.vivarium.persistence.ResourceModel;
 import io.vivarium.persistence.RunSimulationJobModel;
 import io.vivarium.persistence.WorkerModel;
@@ -37,15 +37,15 @@ import io.vivarium.util.Version;
 
 public class MessageRouter
 {
-    private final Connection _databaseConnection;
+    private final PersistenceModule _persistenceModule;
     private final ClientConnectionManager _connectionManager;
     private final WorkloadManager _workloadManager;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public MessageRouter(Connection databaseConnection, ClientConnectionManager connectionManager,
+    public MessageRouter(PersistenceModule persistenceModule, ClientConnectionManager connectionManager,
             WorkloadManager workloadManager)
     {
-        _databaseConnection = databaseConnection;
+        _persistenceModule = persistenceModule;
         _connectionManager = connectionManager;
         _workloadManager = workloadManager;
     }
@@ -100,7 +100,7 @@ public class MessageRouter
     {
         WorkerModel worker = new WorkerModel(pledge.workerID, pledge.throughputs, pledge.active, new Date(),
                 pledge.fileFormatVersion, pledge.codeVersion);
-        worker.persistToDatabase(_databaseConnection);
+        _persistenceModule.persist(worker);
         _connectionManager.registerWorker(pledge.workerID, webSocket);
     }
 
@@ -123,7 +123,7 @@ public class MessageRouter
         }
         ResourceModel resource = new ResourceModel(sendResourceMessage.resourceID, jsonString,
                 Version.FILE_FORMAT_VERSION);
-        resource.persistToDatabase(_databaseConnection);
+        _persistenceModule.persist(resource);
     }
 
     private void acceptJob(WebSocket conn, CreateJobMessage createJobMessage) throws SQLException
@@ -146,14 +146,14 @@ public class MessageRouter
         {
             throw new IllegalStateException("Unexpected job type " + createJobMessage.job.getClass().getSimpleName());
         }
-        job.persistToDatabase(_databaseConnection);
+        _persistenceModule.persist(job);
     }
 
     private void handleRequestForResource(WebSocket webSocket, RequestResourceMessage requestResourceMessage)
             throws SQLException, IOException
     {
         UUID resourceID = requestResourceMessage.resourceID;
-        Optional<ResourceModel> resource = ResourceModel.getFromDatabase(_databaseConnection, resourceID);
+        Optional<ResourceModel> resource = _persistenceModule.fetch(resourceID, ResourceModel.class);
         if (resource.isPresent() && resource.get().jsonData.isPresent())
         {
             ResourceFormat resourceFormat = requestResourceMessage.resourceFormat;
