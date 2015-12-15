@@ -56,7 +56,7 @@ public class DemoTest
         c3.connect();
         try
         {
-            World world_copy = (World) t3.waitForResource();
+            World world_copy = t3.waitForResource().getFirst(World.class);
             System.out.println("DL world with " + world_copy.getCount(EntityType.CREATURE) + " creatures");
         }
         catch (ExecutionException e)

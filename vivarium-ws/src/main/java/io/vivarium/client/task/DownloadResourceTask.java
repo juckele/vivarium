@@ -18,7 +18,6 @@ import io.vivarium.net.messages.RequestResourceMessage;
 import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.JSONConverter;
-import io.vivarium.serialization.VivariumObject;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.SimpleFuture;
 import io.vivarium.util.UUID;
@@ -26,7 +25,7 @@ import io.vivarium.util.UUID;
 public class DownloadResourceTask extends Task
 {
     private final UUID _uuid;
-    private SimpleFuture<VivariumObject> _object;
+    private SimpleFuture<VivariumObjectCollection> _object;
 
     public DownloadResourceTask(UUID uuid)
     {
@@ -60,7 +59,6 @@ public class DownloadResourceTask extends Task
                 SendResourceMessage sendResource = (SendResourceMessage) untypedMessage;
                 String jsonDataString = sendResource.dataString;
                 VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonDataString);
-                _object.put(collection.getObject(_uuid));
             }
         }
         catch (IOException e)
@@ -80,7 +78,7 @@ public class DownloadResourceTask extends Task
     {
     }
 
-    public VivariumObject waitForResource() throws InterruptedException, ExecutionException
+    public VivariumObjectCollection waitForResource() throws InterruptedException, ExecutionException
     {
         return _object.get();
     }
