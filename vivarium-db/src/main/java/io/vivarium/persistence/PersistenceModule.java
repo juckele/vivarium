@@ -106,4 +106,17 @@ public class PersistenceModule
             throw new RuntimeException(e);
         }
     }
+
+    public void updateJobStatuses()
+    {
+        try
+        {
+            JobModel.updateJobStatuses(_databaseConnection);
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 }
