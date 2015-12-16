@@ -14,7 +14,7 @@ import com.google.common.base.Preconditions;
 
 import io.vivarium.util.UUID;
 
-public class ClientConnectionManager
+public class ClientConnectionManager implements StartableStoppable
 {
     public static final int DUPLICATE_CONNECTION = 2127;
     private Map<UUID, WebSocket> workerIDToConnection = new HashMap<UUID, WebSocket>();
@@ -41,6 +41,18 @@ public class ClientConnectionManager
             // Place a new connection into the maps
             internalRegisterWorker(workerID, workerSocket);
         }
+    }
+
+    @Override
+    public void start()
+    {
+        // TODO: IMPLEMENT
+    }
+
+    @Override
+    public void stop()
+    {
+        // TODO: IMPLEMENT
     }
 
     private void internalRegisterWorker(UUID workerID, WebSocket workerSocket)

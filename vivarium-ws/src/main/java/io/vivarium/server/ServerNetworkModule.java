@@ -10,7 +10,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
-public class ServerNetworkModule extends WebSocketServer
+public class ServerNetworkModule extends WebSocketServer implements StartableStoppable
 {
     private final MessageRouter _router;
 
@@ -18,6 +18,18 @@ public class ServerNetworkModule extends WebSocketServer
     {
         super(port);
         _router = router;
+    }
+
+    @Override
+    public void start()
+    {
+        // TODO: IMPLEMENT
+    }
+
+    @Override
+    public void stop()
+    {
+        // TODO: IMPLEMENT
     }
 
     @Override

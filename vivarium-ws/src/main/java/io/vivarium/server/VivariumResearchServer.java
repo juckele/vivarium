@@ -11,7 +11,7 @@ import io.vivarium.db.DatabaseUtils;
 import io.vivarium.net.Constants;
 import io.vivarium.persistence.PersistenceModule;
 
-public class VivariumResearchServer
+public class VivariumResearchServer implements StartableStoppable
 {
     private final ServerNetworkModule _networkModule;
     private boolean _running = false;
@@ -21,6 +21,7 @@ public class VivariumResearchServer
         _networkModule = networkModule;
     }
 
+    @Override
     public void start()
     {
         if (!_running)
@@ -33,6 +34,12 @@ public class VivariumResearchServer
         {
             throw new IllegalStateException("Server already running");
         }
+    }
+
+    @Override
+    public void stop()
+    {
+        // TODO: IMPLEMENT
     }
 
     public static void main(String[] args) throws Exception

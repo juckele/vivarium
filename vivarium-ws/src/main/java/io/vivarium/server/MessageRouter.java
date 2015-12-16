@@ -34,7 +34,7 @@ import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
-public class MessageRouter
+public class MessageRouter implements StartableStoppable
 {
     private final PersistenceModule _persistenceModule;
     private final ClientConnectionManager _connectionManager;
@@ -47,6 +47,18 @@ public class MessageRouter
         _persistenceModule = persistenceModule;
         _connectionManager = connectionManager;
         _enforcerScheduler = enforcerScheduler;
+    }
+
+    @Override
+    public void start()
+    {
+        // TODO: IMPLEMENT
+    }
+
+    @Override
+    public void stop()
+    {
+        // TODO: IMPLEMENT
     }
 
     public void onOpen(WebSocket conn, ClientHandshake handshake)
