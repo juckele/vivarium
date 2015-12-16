@@ -35,7 +35,5 @@ public abstract class Brain extends VivariumObject
     @Override
     public void finalizeSerialization()
     {
-        // TODO Auto-generated method stub
-
     }
 }

@@ -35,8 +35,6 @@ public abstract class AuditRecord extends VivariumObject
     @Override
     public void finalizeSerialization()
     {
-        // TODO Auto-generated method stub
-
     }
 
 }
