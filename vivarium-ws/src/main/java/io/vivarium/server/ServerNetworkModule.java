@@ -4,6 +4,7 @@
 
 package io.vivarium.server;
 
+import java.io.IOException;
 import java.net.InetSocketAddress;
 
 import org.java_websocket.WebSocket;
@@ -18,6 +19,20 @@ public class ServerNetworkModule extends WebSocketServer implements StartableSto
     {
         super(port);
         _router = router;
+    }
+
+    @Override
+    public void start()
+    {
+        super.start();
+        _router.start();
+    }
+
+    @Override
+    public void stop() throws IOException, InterruptedException
+    {
+        _router.stop();
+        super.stop();
     }
 
     @Override
