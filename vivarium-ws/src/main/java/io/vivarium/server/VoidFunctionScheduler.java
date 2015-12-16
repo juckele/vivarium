@@ -4,16 +4,16 @@
 
 package io.vivarium.server;
 
-import io.vivarium.persistence.PersistenceModule;
-
-public class WorkloadManager
+/**
+ * The VoidFunctionScheduler can be used to execute a VoidFunction (presumably with side effects) periodically, or when
+ * requested external input. External requests to execute the VoidFunction will cause the VoidFunction to immediately
+ * re-execute if they come in during the VoidFunction execution. Periodic re-runs will not exhibit this queue behavior
+ * by design.
+ */
+public class VoidFunctionScheduler
 {
-    // static configs
-    public final static long DEFAULT_ENFORCE_TIME_GAP_IN_MS = 60_000;
-
     // Dependencies
-    private final PersistenceModule _persistenceModule;
-    private final ClientConnectionManager _clientConnectionManager;
+    private final VoidFunction _enforcer;
     private final long _enforceTimeGapInMS;
 
     // State variables
@@ -24,17 +24,15 @@ public class WorkloadManager
     // Helper thread
     PeroidicEnforcer _helperThread;
 
-    public WorkloadManager(PersistenceModule persistenceModule, ClientConnectionManager clientConnectionManager,
-            long enforceTimeGapInMS)
+    public VoidFunctionScheduler(VoidFunction enforcer, long enforceTimeGapInMS)
     {
-        _persistenceModule = persistenceModule;
-        _clientConnectionManager = clientConnectionManager;
+        _enforcer = enforcer;
         _enforceTimeGapInMS = enforceTimeGapInMS;
         _helperThread = new PeroidicEnforcer();
     }
 
     /**
-     * Starts
+     * Starts the scheduler
      */
     public void start()
     {
@@ -98,11 +96,6 @@ public class WorkloadManager
         }
     }
 
-    private void internalEnforce()
-    {
-
-    }
-
     /**
      * Triggers enforcement periodically.
      */
@@ -135,7 +128,7 @@ public class WorkloadManager
         @Override
         public void run()
         {
-            internalEnforce();
+            _enforcer.execute();
             endEnforce();
         }
     }

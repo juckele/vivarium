@@ -43,9 +43,10 @@ public class VivariumResearchServer
         Connection databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
         PersistenceModule persistenceModule = new PersistenceModule(databaseConnection);
         ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
-        WorkloadManager workloadManager = new WorkloadManager(persistenceModule, clientConnectionManager,
-                WorkloadManager.DEFAULT_ENFORCE_TIME_GAP_IN_MS);
-        MessageRouter messageRouter = new MessageRouter(persistenceModule, clientConnectionManager, workloadManager);
+        WorkloadEnforcer workloadEnforcer = new WorkloadEnforcer(persistenceModule, clientConnectionManager);
+        VoidFunctionScheduler enforcerScheduler = new VoidFunctionScheduler(workloadEnforcer,
+                WorkloadEnforcer.DEFAULT_ENFORCE_TIME_GAP_IN_MS);
+        MessageRouter messageRouter = new MessageRouter(persistenceModule, clientConnectionManager, enforcerScheduler);
         InetSocketAddress port = new InetSocketAddress(Constants.DEFAULT_PORT);
         ServerNetworkModule networkModule = new ServerNetworkModule(port, messageRouter);
 

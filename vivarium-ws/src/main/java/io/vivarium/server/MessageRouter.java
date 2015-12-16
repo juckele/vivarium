@@ -38,15 +38,15 @@ public class MessageRouter
 {
     private final PersistenceModule _persistenceModule;
     private final ClientConnectionManager _connectionManager;
-    private final WorkloadManager _workloadManager;
+    private final VoidFunctionScheduler _enforcerScheduler;
     private final ObjectMapper mapper = new ObjectMapper();
 
     public MessageRouter(PersistenceModule persistenceModule, ClientConnectionManager connectionManager,
-            WorkloadManager workloadManager)
+            VoidFunctionScheduler enforcerScheduler)
     {
         _persistenceModule = persistenceModule;
         _connectionManager = connectionManager;
-        _workloadManager = workloadManager;
+        _enforcerScheduler = enforcerScheduler;
     }
 
     public void onOpen(WebSocket conn, ClientHandshake handshake)
