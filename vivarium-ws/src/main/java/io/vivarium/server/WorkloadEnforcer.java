@@ -20,8 +20,25 @@ public class WorkloadEnforcer implements VoidFunction
     @Override
     public void execute()
     {
-        // TODO: WRITE
-        return;
+        // Update the job statuses
+        _persistenceModule.updateJobStatuses();
+
+        // Get the top priority unblocked jobs, the currently assigned jobs, and the current worker models
+        // TODO: IMPLEMENT
+
+        // Determine optimal greedy allocation of jobs
+        // TODO: IMPLEMENT
+
+        // Build plan to assign jobs if doing so can improve greedy allocation score
+        // TODO: IMPLEMENT
+
+        // If reassigning jobs was not able to improve greedy allocation score, check to see if a single unassignment +
+        // reassignment can improve the score. This will fail to find complex rearrangements which might exist, but it
+        // is assumed that these would be marginal improvements at best.
+        // TODO: IMPLEMENT
+
+        // Send assignments and await acks from workers for assignments.
+        // TODO: IMPLEMENT
     }
 
 }
