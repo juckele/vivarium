@@ -4,102 +4,126 @@
 
 package io.vivarium.server;
 
+import com.google.common.base.Preconditions;
+
 /**
  * The VoidFunctionScheduler can be used to execute a VoidFunction (presumably with side effects) periodically, or when
  * requested external input. External requests to execute the VoidFunction will cause the VoidFunction to immediately
  * re-execute if they come in during the VoidFunction execution. Periodic re-runs will not exhibit this queue behavior
  * by design.
  */
-public class VoidFunctionScheduler
+public class VoidFunctionScheduler implements StartableStoppable
 {
     // Dependencies
-    private final VoidFunction _enforcer;
-    private final long _enforceTimeGapInMS;
+    private final VoidFunction _function;
+    private final long _repeatEveryInMS;
 
     // State variables
-    private boolean _running;
-    private boolean _enforceRunning;
-    private boolean _enforceQueued;
+    private boolean _running = false;
+    private boolean _stopped = false;
+    private boolean _functionExecuting;
+    private boolean _functionQueued;
 
     // Helper thread
-    PeroidicEnforcer _helperThread;
+    PeroidicFunctionExecutor _helperThread;
 
-    public VoidFunctionScheduler(VoidFunction enforcer, long enforceTimeGapInMS)
+    public VoidFunctionScheduler(VoidFunction function, long repeatEveryInMS)
     {
-        _enforcer = enforcer;
-        _enforceTimeGapInMS = enforceTimeGapInMS;
-        _helperThread = new PeroidicEnforcer();
+        _function = function;
+        _repeatEveryInMS = repeatEveryInMS;
+        _helperThread = new PeroidicFunctionExecutor();
     }
 
     /**
      * Starts the scheduler
      */
-    public void start()
+    @Override
+    public synchronized void start()
     {
+        Preconditions.checkNotNull(_stopped);
         _running = true;
-        _enforceRunning = false;
-        _enforceQueued = false;
+        _functionExecuting = false;
+        _functionQueued = false;
         _helperThread.start();
     }
 
     /**
-     * This method causes the object to immediately start enforcement, or queue enforcement to start as soon as the
-     * current pass is completed.
+     * Stops the scheduler
      */
-    public synchronized void enforce()
+    @Override
+    public synchronized void stop()
     {
-        startEnforce(true);
+        _running = false;
+        _stopped = true;
+        _functionExecuting = false;
+        _functionQueued = false;
     }
 
     /**
-     * This method causes the object to immediately start enforcement, or if enforcement is currently running,
-     * potentially queue another pass of enforcement.
+     * This method causes the object to immediately start the function, or queue the function to start as soon as the
+     * current execution is completed.
+     */
+    public synchronized void execute()
+    {
+        startFunctionExecute(true);
+    }
+
+    /**
+     * This method causes the object to immediately start the function, or if the function is currently executing,
+     * potentially queue another execution of the function.
      *
      * @param force
-     *            Whether enforcement should be forced to run. If this value is false, and the enforcement is currently
-     *            running, this method call will be ignore. If this value is true, and enforcement is currently running,
-     *            another enforcement pass will be queued up to run as soon as the current pass completes. If another
-     *            enforcement pass is already queued, this parameter has no effect and this method call will be ignored.
+     *            Whether the function should be forced to execute. If this value is false, and the function is
+     *            currently executing, this method call will be ignore. If this value is true, and function is currently
+     *            executing, another function execution will be queued up to execute as soon as the current execution
+     *            completes. If another function execution is already queued, this parameter has no effect and this
+     *            method call will be ignored.
      */
-    private synchronized void startEnforce(boolean force)
+    private synchronized void startFunctionExecute(boolean force)
     {
-        // If an external event has triggered this enforce, we want to redo the enforce as soon as the current one ends,
-        // so queue another enforce action.
-        if (force && _enforceRunning)
+        // If the scheduler is not running, exit immediately.
+        if (!_running)
         {
-            _enforceQueued = true;
+            return;
         }
 
-        // Start an enforce action if we don't have one running. We do this in a thread to keep the calling thread from
-        // blocking for the whole duration.
-        if (!_enforceRunning)
+        // If an external event has triggered this function execution, we want to redo the function execution as soon as
+        // the current one ends, so queue another function execution.
+        if (force && _functionExecuting)
         {
-            _enforceRunning = true;
-            new ReactiveEnforcer().start();
+            _functionQueued = true;
+        }
+
+        // Start an function execution if we don't have one executing already. We do this in a thread to keep the
+        // calling thread from blocking for the whole duration.
+        if (!_functionExecuting)
+        {
+            _functionExecuting = true;
+            new FunctionThread().start();
         }
     }
 
     /**
-     * Marks enforcement as no longer running, and consumes the enforcement queue, starting another enforcement pass if
-     * required.
+     * Marks the function as no longer executing, and consumes the function execution queue, starting another function
+     * execution if required.
      */
-    private synchronized void endEnforce()
+    private synchronized void endFunctionExecute()
     {
-        // We're done running the enforce.
-        _enforceRunning = false;
+        // We're done executing the function.
+        _functionExecuting = false;
 
-        // If an enforce has been queued while we were enforcing, immediately start a new enforce
-        if (_enforceQueued)
+        // If an function has been queued while we were executing, immediately start a new function execution.
+        if (_functionQueued)
         {
-            _enforceQueued = false;
-            startEnforce(false);
+            _functionQueued = false;
+            startFunctionExecute(false);
         }
     }
 
     /**
      * Triggers enforcement periodically.
      */
-    private class PeroidicEnforcer extends Thread
+    private class PeroidicFunctionExecutor extends Thread
     {
         @Override
         public void run()
@@ -108,8 +132,8 @@ public class VoidFunctionScheduler
             {
                 try
                 {
-                    startEnforce(false);
-                    Thread.sleep(_enforceTimeGapInMS);
+                    startFunctionExecute(false);
+                    Thread.sleep(_repeatEveryInMS);
                 }
                 catch (InterruptedException e)
                 {
@@ -123,13 +147,13 @@ public class VoidFunctionScheduler
      * Executes enforcement in a thread to allow other threads to not block. The startEnforce and endEnforce methods are
      * synchronized, so this class allows the startEnforce method to return and prevent the caller from blocking.
      */
-    private class ReactiveEnforcer extends Thread
+    private class FunctionThread extends Thread
     {
         @Override
         public void run()
         {
-            _enforcer.execute();
-            endEnforce();
+            _function.execute();
+            endFunctionExecute();
         }
     }
 }
