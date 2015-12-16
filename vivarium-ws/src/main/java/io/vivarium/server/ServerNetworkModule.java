@@ -21,18 +21,6 @@ public class ServerNetworkModule extends WebSocketServer implements StartableSto
     }
 
     @Override
-    public void start()
-    {
-        // TODO: IMPLEMENT
-    }
-
-    @Override
-    public void stop()
-    {
-        // TODO: IMPLEMENT
-    }
-
-    @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake)
     {
         _router.onOpen(conn, handshake);

@@ -2,7 +2,7 @@ package io.vivarium.server;
 
 public interface StartableStoppable
 {
-    void start();
+    void start() throws Exception;
 
-    void stop();
+    void stop() throws Exception;
 }
