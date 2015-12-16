@@ -23,7 +23,9 @@ public class WorkloadEnforcer implements VoidFunction
         // Update the job statuses
         _persistenceModule.updateJobStatuses();
 
-        // Get the top priority unblocked jobs, the currently assigned jobs, and the current worker models
+        // Get the current worker models
+
+        // Get the top priority unblocked jobs, the currently assigned jobs
         // TODO: IMPLEMENT
 
         // Determine optimal greedy allocation of jobs
