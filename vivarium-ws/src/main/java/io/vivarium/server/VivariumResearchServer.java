@@ -14,7 +14,6 @@ import io.vivarium.persistence.PersistenceModule;
 public class VivariumResearchServer implements StartableStoppable
 {
     private final ServerNetworkModule _networkModule;
-    private boolean _running = false;
 
     public VivariumResearchServer(ServerNetworkModule networkModule)
     {
@@ -22,24 +21,22 @@ public class VivariumResearchServer implements StartableStoppable
     }
 
     @Override
-    public void start()
+    public synchronized void start()
     {
-        if (!_running)
-        {
-            System.out.println("SERVER: Starting Network");
-            _networkModule.start();
-            System.out.println("SERVER: Network Ready");
-        }
-        else
-        {
-            throw new IllegalStateException("Server already running");
-        }
+        _networkModule.start();
     }
 
     @Override
-    public void stop()
+    public synchronized void stop()
     {
-        // TODO: IMPLEMENT
+        try
+        {
+            _networkModule.stop();
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static void main(String[] args) throws Exception
