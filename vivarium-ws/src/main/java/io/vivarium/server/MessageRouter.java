@@ -52,13 +52,15 @@ public class MessageRouter implements StartableStoppable
     @Override
     public void start()
     {
-        // TODO: IMPLEMENT
+        _connectionManager.start();
+        _enforcerScheduler.start();
     }
 
     @Override
     public void stop()
     {
-        // TODO: IMPLEMENT
+        _enforcerScheduler.stop();
+        _connectionManager.stop();
     }
 
     public void onOpen(WebSocket conn, ClientHandshake handshake)
