@@ -6,6 +6,7 @@ package io.vivarium.server;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Optional;
 
 import org.java_websocket.WebSocket;
@@ -17,6 +18,8 @@ import io.vivarium.util.UUID;
 public class ClientConnectionManager implements StartableStoppable
 {
     public static final int DUPLICATE_CONNECTION = 2127;
+    public static final int SERVER_SHUTDOWN = 2128;
+
     private Map<UUID, WebSocket> workerIDToConnection = new HashMap<UUID, WebSocket>();
     private Map<WebSocket, UUID> connectionToWorkerID = new HashMap<WebSocket, UUID>();
 
@@ -46,13 +49,20 @@ public class ClientConnectionManager implements StartableStoppable
     @Override
     public void start()
     {
-        // TODO: IMPLEMENT
+        // Nothing required to start
     }
 
     @Override
-    public void stop()
+    public synchronized void stop()
     {
-        // TODO: IMPLEMENT
+        for (Entry<UUID, WebSocket> entry : workerIDToConnection.entrySet())
+        {
+            UUID uuid = entry.getKey();
+            WebSocket socket = entry.getValue();
+            workerIDToConnection.remove(uuid);
+            connectionToWorkerID.remove(socket);
+            socket.close(SERVER_SHUTDOWN, "The server has been shut down.");
+        }
     }
 
     private void internalRegisterWorker(UUID workerID, WebSocket workerSocket)
