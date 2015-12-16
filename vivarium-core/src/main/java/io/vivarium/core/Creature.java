@@ -160,13 +160,6 @@ public class Creature extends VivariumObject
         this._food = _species.getMaximumFood();
         this._facing = Direction.NORTH;
         this._action = Action.REST;
-
-        // TODO MOVE ACTION PROFILE GENERATION
-        /*
-         * if (this._world.getWorldVariables().getKeepGenerationActionProfile()) { this._actionProfile = new
-         * ActionProfile(); this._generationGenderActionProfile = this._world.getActionProfileForGeneration((int)
-         * this._generation, this._gender); }
-         */
     }
 
     public void tick()
