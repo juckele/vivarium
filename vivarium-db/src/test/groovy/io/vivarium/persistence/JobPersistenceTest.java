@@ -15,5 +15,6 @@ public class JobPersistenceTest
     {
         Connection databaseConnection = DatabaseUtils.createDatabaseConnection(TestConstants.TEST_DATABASE_NAME,
                 TestConstants.TEST_DATABASE_USER, TestConstants.TEST_DATABASE_PASSWORD);
+        databaseConnection.close();
     }
 }
