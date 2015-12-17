@@ -103,9 +103,12 @@ project(':vivarium-serialization') {
 }
 
 project(':vivarium-db') {
+    apply plugin: 'groovy'
+
     dependencies {
         compile project(':vivarium-core')
         compile project(':vivarium-serialization')
+        compile 'org.codehaus.groovy:groovy-all:2.4.5'
         compile 'org.postgresql:postgresql:9.4-1201-jdbc41' 
     }
 }
