@@ -321,7 +321,7 @@ public abstract class JobModel extends PersistenceModel
 
     public static void updateJobStatuses(Connection connection) throws SQLException
     {
-        connection.createStatement().executeQuery(JobSQLStrings.updateStatusString);
+        connection.createStatement().execute(JobSQLStrings.updateStatusString);
         connection.commit();
     }
 }

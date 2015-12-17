@@ -2,7 +2,9 @@ package io.vivarium.persistence
 
 class JobSQLStrings {
     // This query updates the status of jobs based on a few conditions.
-    //
+    // - If the job is BLOCKED and doesn't have any pre-requisites which are not DONE,
+    // the job will be set to WAITING.
+    // - If the job is PROCESSING and the worker that has it checked out is no longer active, the job will be set to WAITING.
     static public final String updateStatusString = """
 UPDATE jobs
 SET    status = 'WAITING'
