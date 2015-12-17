@@ -1,0 +1,14 @@
+extension plpgsql:
+  description: PL/pgSQL procedural language
+  owner: postgres
+  schema: pg_catalog
+  version: '1.0'
+schema public:
+  description: standard public schema
+  owner: postgres
+  privileges:
+  - postgres:
+    - all
+  - PUBLIC:
+    - all
+
