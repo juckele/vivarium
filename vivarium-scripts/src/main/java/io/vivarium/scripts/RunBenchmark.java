@@ -49,7 +49,7 @@ public class RunBenchmark extends CommonsScript
         try
         {
             // System.out.println("Running benchmarks:");
-            System.out.println("threads,cts");
+            System.out.println("threads,cts,cts/thread,std.dev");
 
             // If we're running multi-threaded code, we need to use a multi-threaded random allocator
             Rand.setAllocator(new ThreadRandAllocator());
@@ -61,11 +61,26 @@ public class RunBenchmark extends CommonsScript
             // Now run the actual benchmarks now that the the Java VM is warmed up
             int iterations = 1000;
             int size = 40;
-            double result;
+            double[] results;
             for (int threadCount = 1; threadCount <= 16; threadCount++)
             {
-                result = threadTest(threadCount, iterations, size);
-                System.out.println(threadCount + "," + (int) result);
+                results = threadTest(threadCount, iterations, size);
+                int resultCount = threadCount * iterations;
+                double total = 0;
+                for (int i = 0; i < resultCount; i++)
+                {
+                    total += results[i];
+                }
+                double average = total / iterations;
+                double averagePerThread = total / resultCount;
+                double sumSquares = 0;
+                for (int i = 0; i < resultCount; i++)
+                {
+                    sumSquares += Math.pow(results[i] - averagePerThread, 2);
+                }
+                double standardDeviation = Math.sqrt(sumSquares / resultCount);
+                System.out.println(threadCount + "," + (int) average + "," + (int) averagePerThread + ","
+                        + (int) standardDeviation);
                 /*
                  * System.out.print(String.format("%sx%s (%s threads):%n Creature Ticks / Second: %4.3e%n%n ~ %s", size,
                  * size, threadCount, result, (int) result));
@@ -79,9 +94,10 @@ public class RunBenchmark extends CommonsScript
         }
     }
 
-    private static double threadTest(int threadPoolSize, int iterationsPerThread, int size) throws InterruptedException
+    private static double[] threadTest(int threadPoolSize, int iterationsPerThread, int size)
+            throws InterruptedException
     {
-        double total = 0;
+        double[] results = new double[threadPoolSize * iterationsPerThread];
         BenchmarkThread[] threads = new BenchmarkThread[threadPoolSize];
         for (int i = 0; i < threadPoolSize; i++)
         {
@@ -94,16 +110,20 @@ public class RunBenchmark extends CommonsScript
         for (int i = 0; i < threadPoolSize; i++)
         {
             threads[i].join();
-            total += threads[i].getResult();
+            double[] threadResults = threads[i].getResults();
+            for (int j = 0; j < iterationsPerThread; j++)
+            {
+                results[i * iterationsPerThread + j] = threadResults[j];
+            }
         }
-        return total;
+        return results;
     }
 
     private static class BenchmarkThread extends Thread
     {
         private final int _iterations;
         private final int _size;
-        private double result = 0;
+        private double[] results;
 
         public BenchmarkThread(int iterations, int size)
         {
@@ -111,34 +131,27 @@ public class RunBenchmark extends CommonsScript
             _size = size;
         }
 
-        public double getResult()
+        public double[] getResults()
         {
-            return result;
+            return results;
         }
 
         @Override
         public void run()
         {
-            result = iterateTest(_iterations, _size);
+            results = iterateTest(_iterations, _size);
         }
     }
 
-    private static double iterateTest(int iterations, int size)
+    private static double[] iterateTest(int iterations, int size)
     {
         // Tests, by size
-        double min = Double.MAX_VALUE;
-        double max = 0;
-        double total = 0;
+        double[] results = new double[iterations];
         for (int i = 0; i < iterations; i++)
         {
-            double testRun = inlineTest(size);
-            min = Math.min(min, testRun);
-            max = Math.max(max, testRun);
-            total += testRun;
-            // System.out.print(String.format("%4.3e ", testRun));
+            results[i] = inlineTest(size);
         }
-        double average = total / iterations;
-        return average;
+        return results;
     }
 
     private static double inlineTest(int size)
