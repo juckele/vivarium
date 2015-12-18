@@ -15,6 +15,8 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
 
+import javax.annotation.Generated;
+
 import com.google.common.base.Preconditions;
 
 import io.vivarium.db.DatabaseUtils;
@@ -32,7 +34,7 @@ public abstract class JobModel extends PersistenceModel
     protected static final String PRIORITY = "priority";
     protected static final String CHECKED_OUT_BY = "checked_out_by";
     protected static final String CHECKED_OUT_TIME = "checked_out_time";
-    protected static final String COMEPLTED_TIME = "completed_time";
+    protected static final String COMPLETED_TIME = "completed_time";
     // Junction table for dependencies
     private static final String DEPENDENCIES_TABLE_NAME = "job_dependencies";
     protected static final String DEPENDENCIES_FROM_ID = "job_id";
@@ -52,7 +54,7 @@ public abstract class JobModel extends PersistenceModel
     public final UUID jobID;
     public final JobType type;
     public final JobStatus status;
-    public final short priority;
+    public final int priority;
     public final Optional<UUID> checkedOutByWorkerID;
     public final Optional<Date> checkedOutTime;
     public final Optional<Date> completedTime;
@@ -60,7 +62,7 @@ public abstract class JobModel extends PersistenceModel
     public final Collection<UUID> outputResources;
     public final Collection<UUID> jobDependencies;
 
-    public JobModel(UUID jobID, JobType type, JobStatus status, short priority, UUID checkedOutByWorkerID,
+    public JobModel(UUID jobID, JobType type, JobStatus status, int priority, UUID checkedOutByWorkerID,
             Date checkedOutTime, Date completedTime, Collection<UUID> inputResources, Collection<UUID> outputResources,
             Collection<UUID> jobDependencies)
     {
@@ -97,10 +99,13 @@ public abstract class JobModel extends PersistenceModel
         this.jobID = UUID.fromString(relation.get(ID).toString());
         this.type = JobType.valueOf(relation.get(JOB_TYPE).toString());
         this.status = JobStatus.valueOf(relation.get(JOB_STATUS).toString());
-        this.priority = (Short) relation.get(PRIORITY);
-        this.checkedOutByWorkerID = null;
-        this.checkedOutTime = null;
-        this.completedTime = null;
+        this.priority = Integer.parseInt(relation.get(PRIORITY).toString());
+        this.checkedOutByWorkerID = relation.get(CHECKED_OUT_BY) != null
+                ? Optional.of((UUID) relation.get(CHECKED_OUT_BY)) : Optional.empty();
+        this.checkedOutTime = relation.get(CHECKED_OUT_TIME) != null
+                ? Optional.of((Date) relation.get(CHECKED_OUT_TIME)) : Optional.empty();
+        this.completedTime = relation.get(COMPLETED_TIME) != null ? Optional.of((Date) relation.get(COMPLETED_TIME))
+                : Optional.empty();
         this.inputResources = new LinkedList<>(inputResources);
         this.outputResources = new LinkedList<>(outputResources);
         this.jobDependencies = new LinkedList<>(jobDependencies);
@@ -142,7 +147,7 @@ public abstract class JobModel extends PersistenceModel
         relation.put(PRIORITY, priority);
         relation.put(CHECKED_OUT_BY, checkedOutByWorkerID);
         relation.put(CHECKED_OUT_TIME, checkedOutTime);
-        relation.put(COMEPLTED_TIME, completedTime);
+        relation.put(COMPLETED_TIME, completedTime);
         return relation;
     }
 
@@ -323,5 +328,133 @@ public abstract class JobModel extends PersistenceModel
     {
         connection.createStatement().execute(JobSQLStrings.updateStatusString);
         connection.commit();
+    }
+
+    @Override
+    @Generated(value = { "eclipse" })
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((checkedOutByWorkerID == null) ? 0 : checkedOutByWorkerID.hashCode());
+        result = prime * result + ((checkedOutTime == null) ? 0 : checkedOutTime.hashCode());
+        result = prime * result + ((completedTime == null) ? 0 : completedTime.hashCode());
+        result = prime * result + ((inputResources == null) ? 0 : inputResources.hashCode());
+        result = prime * result + ((jobDependencies == null) ? 0 : jobDependencies.hashCode());
+        result = prime * result + ((jobID == null) ? 0 : jobID.hashCode());
+        result = prime * result + ((outputResources == null) ? 0 : outputResources.hashCode());
+        result = prime * result + priority;
+        result = prime * result + ((status == null) ? 0 : status.hashCode());
+        result = prime * result + ((type == null) ? 0 : type.hashCode());
+        return result;
+    }
+
+    @Override
+    @Generated(value = { "eclipse" })
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        JobModel that = (JobModel) obj;
+        if (checkedOutByWorkerID == null)
+        {
+            if (that.checkedOutByWorkerID != null)
+            {
+                return false;
+            }
+        }
+        else if (!checkedOutByWorkerID.equals(that.checkedOutByWorkerID))
+        {
+            return false;
+        }
+        if (checkedOutTime == null)
+        {
+            if (that.checkedOutTime != null)
+            {
+                return false;
+            }
+        }
+        else if (!checkedOutTime.equals(that.checkedOutTime))
+        {
+            return false;
+        }
+        if (completedTime == null)
+        {
+            if (that.completedTime != null)
+            {
+                return false;
+            }
+        }
+        else if (!completedTime.equals(that.completedTime))
+        {
+            return false;
+        }
+        if (inputResources == null)
+        {
+            if (that.inputResources != null)
+            {
+                return false;
+            }
+        }
+        else if (!inputResources.equals(that.inputResources))
+        {
+            return false;
+        }
+        if (jobDependencies == null)
+        {
+            if (that.jobDependencies != null)
+            {
+                return false;
+            }
+        }
+        else if (!jobDependencies.equals(that.jobDependencies))
+        {
+            return false;
+        }
+        if (jobID == null)
+        {
+            if (that.jobID != null)
+            {
+                return false;
+            }
+        }
+        else if (!jobID.equals(that.jobID))
+        {
+            return false;
+        }
+        if (outputResources == null)
+        {
+            if (that.outputResources != null)
+            {
+                return false;
+            }
+        }
+        else if (!outputResources.equals(that.outputResources))
+        {
+            return false;
+        }
+        if (priority != that.priority)
+        {
+            return false;
+        }
+        if (status != that.status)
+        {
+            return false;
+        }
+        if (type != that.type)
+        {
+            return false;
+        }
+        return true;
     }
 }
