@@ -10,7 +10,7 @@ import com.johnuckele.vtest.Tester;
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.TestDatabase;
 
-public class JobPersistenceTest
+public class DatabaseConnectionTest
 {
     @Test
     public void testUpdateJobStatuses() throws SQLException
