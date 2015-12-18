@@ -50,7 +50,7 @@ public class TestDatabase
             Process updateSchema = Runtime.getRuntime().exec(updateSchemaCommand);
             updateSchema.getOutputStream().write((TEST_DATABASE_PASSWORD + "\n").getBytes());
             updateSchema.getOutputStream().flush();
-            exitCode = clearSchema.waitFor();
+            exitCode = updateSchema.waitFor();
             Tester.equal("Exit code should be 0: ", exitCode, 0);
         }
         catch (IOException e)
