@@ -13,7 +13,15 @@ import io.vivarium.db.TestDatabase;
 public class DatabaseConnectionTest
 {
     @Test
-    public void testUpdateJobStatuses() throws SQLException
+    public void testSchemaFile()
+    {
+        TestDatabase.initializeTestDatabase();
+        Tester.pass(
+                "The database has been successfully initialized, which means the schema.yaml file is well formatted.");
+    }
+
+    @Test
+    public void testConnect() throws SQLException
     {
         TestDatabase.initializeTestDatabase();
         try (Connection databaseConnection = DatabaseUtils.createDatabaseConnection(TestDatabase.TEST_DATABASE_NAME,
