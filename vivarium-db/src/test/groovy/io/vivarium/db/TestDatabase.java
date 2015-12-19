@@ -37,25 +37,11 @@ public class TestDatabase
         {
             // Sometimes the yamltodb tool can have a difficult time making certain changes, so we just clean the entire
             // schema by forcing it to match an empty schema
-            String clearSchemaCommand = "yamltodb -U " + TEST_DATABASE_USER + " -W " + TEST_DATABASE_NAME
-                    + "  src/main/resources/empty_schema.yaml -u";
-            System.out.println(clearSchemaCommand);
-            Process clearSchema = Runtime.getRuntime().exec(clearSchemaCommand);
-            clearSchema.getOutputStream().write((TEST_DATABASE_PASSWORD + "\n").getBytes());
-            clearSchema.getOutputStream().flush();
-            int exitCode = clearSchema.waitFor();
-            Tester.equal("Exit code should be 0: ", exitCode, 0);
+            runYamlToDB("src/main/resources/empty_schema.yaml");
 
             // Once the database schema has been cleaned out, we can make it match the schema.yaml file and run tests on
             // the new (empty) database.
-            String updateSchemaCommand = "yamltodb -U " + TEST_DATABASE_USER + " -W " + TEST_DATABASE_NAME
-                    + "  src/main/resources/schema.yaml -u";
-            System.out.println(clearSchemaCommand);
-            Process updateSchema = Runtime.getRuntime().exec(updateSchemaCommand);
-            updateSchema.getOutputStream().write((TEST_DATABASE_PASSWORD + "\n").getBytes());
-            updateSchema.getOutputStream().flush();
-            exitCode = updateSchema.waitFor();
-            Tester.equal("Exit code should be 0: ", exitCode, 0);
+            runYamlToDB("src/main/resources/schema.yaml");
         }
         catch (IOException e)
         {
@@ -70,5 +56,18 @@ public class TestDatabase
 
         // Mark the DB as now initialized
         initialized = true;
+    }
+
+    private static void runYamlToDB(String resourcePath) throws IOException, InterruptedException
+    {
+        String command = "yamltodb -U " + TEST_DATABASE_USER + " -W " + TEST_DATABASE_NAME + " " + resourcePath + " -u";
+        Process process = Runtime.getRuntime().exec(command);
+        // Pipe the password to the process
+        process.getOutputStream().write((TEST_DATABASE_PASSWORD + "\n").getBytes());
+        process.getOutputStream().flush();
+        // Wait for and test exit status
+        int exitCode = process.waitFor();
+        Tester.equal("Exit code should be 0: ", exitCode, 0);
+
     }
 }
