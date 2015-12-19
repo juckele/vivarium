@@ -59,8 +59,9 @@ subprojects {
     }
 
     dependencies {
-        testCompile group: 'com.johnuckele', name: 'vtest', version: '+'
-        testCompile group: 'junit', name: 'junit', version: '4.+'        
+        testCompile "com.johnuckele:vtest:+"
+        testCompile "junit:junit:4.+"
+        testCompile "org.mockito:mockito-core:1.+"
     }
 
     jacocoTestReport {
