@@ -55,10 +55,12 @@ public class TestDatabase
         }
         catch (IOException e)
         {
+            e.printStackTrace();
             Tester.fail("Unable to start yamltodb process");
         }
         catch (InterruptedException e)
         {
+            e.printStackTrace();
             throw new RuntimeException(e);
         }
 
