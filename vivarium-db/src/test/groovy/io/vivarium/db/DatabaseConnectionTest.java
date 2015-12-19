@@ -1,4 +1,4 @@
-package io.vivarium.persistence;
+package io.vivarium.db;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -8,7 +8,6 @@ import org.junit.Test;
 import com.johnuckele.vtest.Tester;
 
 import io.vivarium.db.DatabaseUtils;
-import io.vivarium.db.TestDatabase;
 
 public class DatabaseConnectionTest
 {
