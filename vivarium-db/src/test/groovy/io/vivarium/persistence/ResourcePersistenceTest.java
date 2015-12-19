@@ -2,7 +2,6 @@ package io.vivarium.persistence;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.LinkedList;
 
 import org.junit.Test;
 
@@ -10,9 +9,12 @@ import com.johnuckele.vtest.Tester;
 
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.TestDatabase;
+import io.vivarium.serialization.JSONConverter;
+import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
+import io.vivarium.util.Version;
 
-public class JobPersistenceTest
+public class ResourcePersistenceTest
 {
     @Test
     public void testPersistAndFetch() throws SQLException
@@ -22,11 +24,12 @@ public class JobPersistenceTest
                 TestDatabase.TEST_DATABASE_USER, TestDatabase.TEST_DATABASE_PASSWORD);)
         {
             UUID id = UUID.randomUUID();
-            JobModel initial = new RunSimulationJobModel(id, JobStatus.BLOCKED, 0, null, null, null, 0,
-                    new LinkedList<>(), new LinkedList<>(), new LinkedList<>());
+            VivariumObjectCollection collection = new VivariumObjectCollection();
+            ResourceModel initial = new ResourceModel(id, JSONConverter.serializerToJSONString(collection),
+                    Version.FILE_FORMAT_VERSION);
             initial.persistToDatabase(databaseConnection);
-            JobModel fetched = JobModel.getFromDatabase(databaseConnection, id).get();
-            Tester.isTrue("The resource we fetched should be the same as the job we started with: ",
+            ResourceModel fetched = ResourceModel.getFromDatabase(databaseConnection, id).get();
+            Tester.isTrue("The resource we fetched should be the same as the worker we started with: ",
                     fetched.equals(initial));
         }
     }

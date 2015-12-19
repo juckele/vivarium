@@ -22,14 +22,13 @@ public class WorkerPersistenceTest
         try (Connection databaseConnection = DatabaseUtils.createDatabaseConnection(TestDatabase.TEST_DATABASE_NAME,
                 TestDatabase.TEST_DATABASE_USER, TestDatabase.TEST_DATABASE_PASSWORD);)
         {
-            UUID workerUUID = UUID.randomUUID();
-            WorkerModel initialWorker = new WorkerModel(workerUUID, new long[] { 100, 150, 200, 210 }, true,
+            UUID id = UUID.randomUUID();
+            WorkerModel initial = new WorkerModel(id, new long[] { 100, 150, 200, 210 }, true,
                     new Timestamp(System.currentTimeMillis()), Version.FILE_FORMAT_VERSION, Version.CURRENT_VERSION);
-            initialWorker.persistToDatabase(databaseConnection);
-            WorkerModel fetchedWorker = WorkerModel.getFromDatabase(databaseConnection, workerUUID).get();
-            Tester.isTrue("The worker we fetched should be the same as the worker we didn't fetch",
-                    fetchedWorker.equals(initialWorker));
+            initial.persistToDatabase(databaseConnection);
+            WorkerModel fetched = WorkerModel.getFromDatabase(databaseConnection, id).get();
+            Tester.isTrue("The worker we fetched should be the same as the worker we started with: ",
+                    fetched.equals(initial));
         }
     }
-
 }
