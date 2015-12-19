@@ -4,8 +4,8 @@
 
 package io.vivarium.persistence;
 
+import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Date;
 import java.util.Map;
 
 import com.google.common.base.Preconditions;
@@ -19,7 +19,7 @@ public class RunSimulationJobModel extends JobModel
     private final Long endTick;
 
     public RunSimulationJobModel(UUID jobID, JobStatus status, int priority, UUID checkoutOutByWorkerID,
-            Date checkoutOutTime, Date completedTime, long endTick, Collection<UUID> inputResources,
+            Timestamp checkoutOutTime, Timestamp completedTime, long endTick, Collection<UUID> inputResources,
             Collection<UUID> outputResources, Collection<UUID> jobDependencies)
     {
         super(jobID, JobType.RUN_SIMULATION, status, priority, checkoutOutByWorkerID, checkoutOutTime, completedTime,

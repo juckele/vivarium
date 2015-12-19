@@ -24,12 +24,12 @@ import io.vivarium.util.UserFacingError;
 public class WorkerConfig
 {
     public static final String DEFAULT_PATH = "worker_config.json";
-    public static final int[] DEFAULT_THROUGHPUTS = { 20_000_000, 35_000_000, 50_000_000, 60_500_000, 70_000_000,
+    public static final long[] DEFAULT_THROUGHPUTS = { 20_000_000, 35_000_000, 50_000_000, 60_500_000, 70_000_000,
             80_000_000, 85_000_000, 86_000_000, 87_000_000, 88_000_000, 89_000_000, 90_000_000 };
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
     public final UUID workerID;
-    public final int[] throughputs;
+    public final long[] throughputs;
 
     private WorkerConfig()
     {
@@ -37,7 +37,7 @@ public class WorkerConfig
         throughputs = null;
     }
 
-    private WorkerConfig(UUID workerID, int[] throughputs)
+    private WorkerConfig(UUID workerID, long[] throughputs)
     {
         Preconditions.checkNotNull(workerID);
         Preconditions.checkNotNull(throughputs);

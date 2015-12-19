@@ -11,6 +11,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.Optional;
 import java.util.Properties;
 
 import com.google.common.base.Joiner;
+import com.google.common.primitives.Ints;
+import com.google.common.primitives.Longs;
 
 import io.vivarium.util.Reflection;
 import io.vivarium.util.UUID;
@@ -320,6 +323,26 @@ public class DatabaseUtils
                         Math.min(insertStringBuilder.toString().length(), 500)));
                 sqlStatement.execute(insertStringBuilder.toString());
             }
+        }
+    }
+
+    public static Object toPrimitiveArray(java.sql.Array array, Class<?> clazz) throws SQLException
+    {
+        if (clazz == long.class)
+        {
+            Long[] objectArray = (Long[]) array.getArray();
+            List<Long> list = Arrays.asList(objectArray);
+            return Longs.toArray(list);
+        }
+        else if (clazz == int.class)
+        {
+            Integer[] objectArray = (Integer[]) array.getArray();
+            List<Integer> list = Arrays.asList(objectArray);
+            return Ints.toArray(list);
+        }
+        else
+        {
+            throw new IllegalArgumentException("Unable to convert to " + clazz + " array");
         }
     }
 }

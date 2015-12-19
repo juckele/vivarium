@@ -24,19 +24,20 @@ public class WorkerPledgeMessage extends Message
     @JsonDeserialize(using = VersionDeserializer.class)
     public Version codeVersion = Version.CURRENT_VERSION;
     public int fileFormatVersion = Version.FILE_FORMAT_VERSION;
-    public int[] throughputs;
+    public long[] throughputs;
 
     @SuppressWarnings("unused") // Used by Jackson
     private WorkerPledgeMessage()
     {
     }
 
-    public WorkerPledgeMessage(UUID workerID, int[] throughputs)
+    public WorkerPledgeMessage(UUID workerID, long[] throughputs)
     {
         this(workerID, true, Version.CURRENT_VERSION, Version.FILE_FORMAT_VERSION, throughputs);
     }
 
-    public WorkerPledgeMessage(UUID workerID, boolean active, Version codeVersion, int fileFormatVersion, int[] throughputs)
+    public WorkerPledgeMessage(UUID workerID, boolean active, Version codeVersion, int fileFormatVersion,
+            long[] throughputs)
     {
         this.workerID = workerID;
         this.active = active;

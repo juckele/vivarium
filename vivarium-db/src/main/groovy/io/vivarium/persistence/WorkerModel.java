@@ -4,9 +4,11 @@
 
 package io.vivarium.persistence;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Date;
+import java.sql.Timestamp;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,16 +36,16 @@ public class WorkerModel extends PersistenceModel
 
     // relation data
     public final UUID workerID;
-    public final int[] throughputs;
+    public final long[] throughputs;
     public final boolean isActive;
-    public final Date lastActivity;
+    public final Timestamp lastActivity;
     public final int fileFormatVersion;
     public final Version codeVersion;
     // insert into workers (id, throughputs, is_active, last_activity, file_format_version, code_version) select
     // 'ec1bb1e7-d471-363e-7724-bf995021f543', '{100, 150, 200}', true, now(), 1, '{0,3,2}';
 
-    public WorkerModel(UUID workerID, int[] throughputs, boolean isActive, Date lastActivity, int fileFormatVersion,
-            Version codeVersion)
+    public WorkerModel(UUID workerID, long[] throughputs, boolean isActive, Timestamp lastActivity,
+            int fileFormatVersion, Version codeVersion)
     {
         Preconditions.checkNotNull(workerID, "workerID cannot be null");
         Preconditions.checkNotNull(throughputs, "throughputs cannot be null");
@@ -87,14 +89,15 @@ public class WorkerModel extends PersistenceModel
         }
     }
 
-    private static WorkerModel inflateFromMap(Map<String, Object> map)
+    private static WorkerModel inflateFromMap(Map<String, Object> map) throws SQLException
     {
         UUID id = UUID.fromString(map.get(ID).toString());
-        int[] throughputs = (int[]) map.get(THROUGHPUTS);
+        long[] throughputs = (long[]) DatabaseUtils.toPrimitiveArray((Array) map.get(THROUGHPUTS), long.class);
         boolean isActive = (Boolean) map.get(IS_ACTIVE);
-        Date lastActivity = (Date) map.get(LAST_ACTIVITY);
+        Timestamp lastActivity = (Timestamp) map.get(LAST_ACTIVITY);
         int fileFormatVersion = (Integer) map.get(FILE_FORMAT_VERSION);
-        Version codeVersion = new Version((int[]) map.get(CODE_VERSION));
+        int[] versionComponents = (int[]) DatabaseUtils.toPrimitiveArray((Array) map.get(CODE_VERSION), int.class);
+        Version codeVersion = new Version(versionComponents);
         WorkerModel model = new WorkerModel(id, throughputs, isActive, lastActivity, fileFormatVersion, codeVersion);
         return model;
     }
@@ -118,5 +121,83 @@ public class WorkerModel extends PersistenceModel
         List<String> primaryKeys = new LinkedList<String>();
         primaryKeys.add(ID);
         return primaryKeys;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((codeVersion == null) ? 0 : codeVersion.hashCode());
+        result = prime * result + fileFormatVersion;
+        result = prime * result + (isActive ? 1231 : 1237);
+        result = prime * result + ((lastActivity == null) ? 0 : lastActivity.hashCode());
+        result = prime * result + Arrays.hashCode(throughputs);
+        result = prime * result + ((workerID == null) ? 0 : workerID.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        WorkerModel other = (WorkerModel) obj;
+        if (codeVersion == null)
+        {
+            if (other.codeVersion != null)
+            {
+                return false;
+            }
+        }
+        else if (!codeVersion.equals(other.codeVersion))
+        {
+            return false;
+        }
+        if (fileFormatVersion != other.fileFormatVersion)
+        {
+            return false;
+        }
+        if (isActive != other.isActive)
+        {
+            return false;
+        }
+        if (lastActivity == null)
+        {
+            if (other.lastActivity != null)
+            {
+                return false;
+            }
+        }
+        else if (!lastActivity.equals(other.lastActivity))
+        {
+            return false;
+        }
+        if (!Arrays.equals(throughputs, other.throughputs))
+        {
+            return false;
+        }
+        if (workerID == null)
+        {
+            if (other.workerID != null)
+            {
+                return false;
+            }
+        }
+        else if (!workerID.equals(other.workerID))
+        {
+            return false;
+        }
+        return true;
     }
 }

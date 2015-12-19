@@ -6,16 +6,14 @@ package io.vivarium.persistence;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Optional;
-
-import javax.annotation.Generated;
 
 import com.google.common.base.Preconditions;
 
@@ -56,15 +54,15 @@ public abstract class JobModel extends PersistenceModel
     public final JobStatus status;
     public final int priority;
     public final Optional<UUID> checkedOutByWorkerID;
-    public final Optional<Date> checkedOutTime;
-    public final Optional<Date> completedTime;
+    public final Optional<Timestamp> checkedOutTime;
+    public final Optional<Timestamp> completedTime;
     public final Collection<UUID> inputResources;
     public final Collection<UUID> outputResources;
     public final Collection<UUID> jobDependencies;
 
     public JobModel(UUID jobID, JobType type, JobStatus status, int priority, UUID checkedOutByWorkerID,
-            Date checkedOutTime, Date completedTime, Collection<UUID> inputResources, Collection<UUID> outputResources,
-            Collection<UUID> jobDependencies)
+            Timestamp checkedOutTime, Timestamp completedTime, Collection<UUID> inputResources,
+            Collection<UUID> outputResources, Collection<UUID> jobDependencies)
     {
         Preconditions.checkNotNull(jobID);
         Preconditions.checkNotNull(type);
@@ -103,9 +101,9 @@ public abstract class JobModel extends PersistenceModel
         this.checkedOutByWorkerID = relation.get(CHECKED_OUT_BY) != null
                 ? Optional.of((UUID) relation.get(CHECKED_OUT_BY)) : Optional.empty();
         this.checkedOutTime = relation.get(CHECKED_OUT_TIME) != null
-                ? Optional.of((Date) relation.get(CHECKED_OUT_TIME)) : Optional.empty();
-        this.completedTime = relation.get(COMPLETED_TIME) != null ? Optional.of((Date) relation.get(COMPLETED_TIME))
-                : Optional.empty();
+                ? Optional.of((Timestamp) relation.get(CHECKED_OUT_TIME)) : Optional.empty();
+        this.completedTime = relation.get(COMPLETED_TIME) != null
+                ? Optional.of((Timestamp) relation.get(COMPLETED_TIME)) : Optional.empty();
         this.inputResources = new LinkedList<>(inputResources);
         this.outputResources = new LinkedList<>(outputResources);
         this.jobDependencies = new LinkedList<>(jobDependencies);
@@ -331,7 +329,6 @@ public abstract class JobModel extends PersistenceModel
     }
 
     @Override
-    @Generated(value = { "eclipse" })
     public int hashCode()
     {
         final int prime = 31;
@@ -350,7 +347,6 @@ public abstract class JobModel extends PersistenceModel
     }
 
     @Override
-    @Generated(value = { "eclipse" })
     public boolean equals(Object obj)
     {
         if (this == obj)
