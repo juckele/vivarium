@@ -77,7 +77,7 @@ public class VoidFunctionSchedulerTest
         int _executeCount = 0;
 
         @Override
-        public synchronized void execute()
+        public void execute()
         {
             _executeCount++;
         }
@@ -99,7 +99,7 @@ public class VoidFunctionSchedulerTest
         }
 
         @Override
-        public synchronized void execute()
+        public void execute()
         {
             try
             {
