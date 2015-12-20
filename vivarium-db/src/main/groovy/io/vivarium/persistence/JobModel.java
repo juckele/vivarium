@@ -49,16 +49,16 @@ public abstract class JobModel extends PersistenceModel
     protected static final String PROPERTY_VALUE = "property_value";
 
     // relation data
-    public final UUID jobID;
-    public final JobType type;
-    public final JobStatus status;
-    public final int priority;
-    public final Optional<UUID> checkedOutByWorkerID;
-    public final Optional<Timestamp> checkedOutTime;
-    public final Optional<Timestamp> completedTime;
-    public final Collection<UUID> inputResources;
-    public final Collection<UUID> outputResources;
-    public final Collection<UUID> jobDependencies;
+    private final UUID jobID;
+    private final JobType type;
+    private final JobStatus status;
+    private final int priority;
+    private final Optional<UUID> checkedOutByWorkerID;
+    private final Optional<Timestamp> checkedOutTime;
+    private final Optional<Timestamp> completedTime;
+    private final Collection<UUID> inputResources;
+    private final Collection<UUID> outputResources;
+    private final Collection<UUID> jobDependencies;
 
     public JobModel(UUID jobID, JobType type, JobStatus status, int priority, UUID checkedOutByWorkerID,
             Timestamp checkedOutTime, Timestamp completedTime, Collection<UUID> inputResources,
@@ -326,6 +326,56 @@ public abstract class JobModel extends PersistenceModel
     {
         connection.createStatement().execute(JobSQLStrings.updateStatusString);
         connection.commit();
+    }
+
+    public UUID getJobID()
+    {
+        return jobID;
+    }
+
+    public JobType getType()
+    {
+        return type;
+    }
+
+    public JobStatus getStatus()
+    {
+        return status;
+    }
+
+    public int getPriority()
+    {
+        return priority;
+    }
+
+    public Optional<UUID> getCheckedOutByWorkerID()
+    {
+        return checkedOutByWorkerID;
+    }
+
+    public Optional<Timestamp> getCheckedOutTime()
+    {
+        return checkedOutTime;
+    }
+
+    public Optional<Timestamp> getCompletedTime()
+    {
+        return completedTime;
+    }
+
+    public Collection<UUID> getInputResources()
+    {
+        return inputResources;
+    }
+
+    public Collection<UUID> getOutputResources()
+    {
+        return outputResources;
+    }
+
+    public Collection<UUID> getJobDependencies()
+    {
+        return jobDependencies;
     }
 
     @Override

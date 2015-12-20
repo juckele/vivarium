@@ -35,12 +35,12 @@ public class WorkerModel extends PersistenceModel
     private static final String FILE_FORMAT_VERSION = "file_format_version";
 
     // relation data
-    public final UUID workerID;
-    public final long[] throughputs;
-    public final boolean isActive;
-    public final Timestamp lastActivity;
-    public final int fileFormatVersion;
-    public final Version codeVersion;
+    private final UUID workerID;
+    private final long[] throughputs;
+    private final boolean isActive;
+    private final Timestamp lastActivity;
+    private final int fileFormatVersion;
+    private final Version codeVersion;
     // insert into workers (id, throughputs, is_active, last_activity, file_format_version, code_version) select
     // 'ec1bb1e7-d471-363e-7724-bf995021f543', '{100, 150, 200}', true, now(), 1, '{0,3,2}';
 
@@ -121,6 +121,36 @@ public class WorkerModel extends PersistenceModel
         List<String> primaryKeys = new LinkedList<String>();
         primaryKeys.add(ID);
         return primaryKeys;
+    }
+
+    public UUID getWorkerID()
+    {
+        return workerID;
+    }
+
+    public long[] getThroughputs()
+    {
+        return throughputs;
+    }
+
+    public boolean isActive()
+    {
+        return isActive;
+    }
+
+    public Timestamp getLastActivity()
+    {
+        return lastActivity;
+    }
+
+    public int getFileFormatVersion()
+    {
+        return fileFormatVersion;
+    }
+
+    public Version getCodeVersion()
+    {
+        return codeVersion;
     }
 
     @Override
