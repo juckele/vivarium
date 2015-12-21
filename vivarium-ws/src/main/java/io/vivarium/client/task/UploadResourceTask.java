@@ -53,7 +53,6 @@ public class UploadResourceTask extends Task
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -61,22 +60,19 @@ public class UploadResourceTask extends Task
     @Override
     public void onMessage(TaskClient client, String message)
     {
-        // TODO Auto-generated method stub
-
+        // No reply expected
+        // TODO: We should get an ack, and if we don't get the ack we should resend a UploadResource message
+        // periodically.
     }
 
     @Override
     public void onClose(TaskClient client, int code, String reason, boolean remote)
     {
-        // TODO Auto-generated method stub
-
     }
 
     @Override
     public void onError(TaskClient client, Exception ex)
     {
-        // TODO Auto-generated method stub
-
     }
 
     public UUID getResourceUUID()

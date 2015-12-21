@@ -33,7 +33,6 @@ public class CreateJobTask extends Task
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }

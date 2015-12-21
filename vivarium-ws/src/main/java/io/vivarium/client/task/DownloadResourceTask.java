@@ -43,7 +43,6 @@ public class DownloadResourceTask extends Task
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
@@ -64,7 +63,6 @@ public class DownloadResourceTask extends Task
         }
         catch (IOException e)
         {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
     }
