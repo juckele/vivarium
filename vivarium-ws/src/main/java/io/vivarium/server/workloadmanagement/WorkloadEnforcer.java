@@ -5,8 +5,6 @@
 package io.vivarium.server.workloadmanagement;
 
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +38,7 @@ public class WorkloadEnforcer implements VoidFunction
     }
 
     @Override
+    // @formatter:off (this method makes heavy use of lambdas, so auto-formatting is turned off for readability
     public void execute()
     {
         // Update the job statuses
@@ -47,11 +46,9 @@ public class WorkloadEnforcer implements VoidFunction
 
         // Get the current worker models
         List<WorkerModel> workers = _persistenceModule.fetchAllWorkers();
-        // @formatter:off
         List<WorkerModel> activeWorkers = workers.stream()
                 .filter(w -> w.isActive())
                 .collect(Collectors.toList());
-        // @formatter:on
 
         // Get the top priority unblocked jobs, the currently assigned jobs
         List<JobModel> waitingJobs = _persistenceModule.fetchJobsWithStatus(JobStatus.WAITING);
@@ -68,28 +65,21 @@ public class WorkloadEnforcer implements VoidFunction
         JobAssignments jobsAssignmentsToTake = JobAssignments.subtract(actualAssingments, idealAssingments);
 
         // Determine which jobs will be taken back
-        List<JobAssignmentOperation> takeJobOperations = buildListOfJobsToTake(jobsAssignmentsToTake, assignedJobs);
+        Map<Integer, List<JobModel>> assignedJobsByPriority = assignedJobs.stream()
+                .collect(Collectors.groupingBy(JobModel::getPriority));
+        List<JobAssignmentOperation> takeJobOperations = buildListOfJobsToTake(jobsAssignmentsToTake,
+                assignedJobsByPriority);
 
         // Determine which jobs are available (or will be available) for assignment
-        // @formatter:off
         Set<UUID> jobIDsToTake = takeJobOperations.stream()
-                .map(jao -> jao.getWorkerID())
+                .map(jobOperation -> jobOperation.getWorkerID())
                 .collect(Collectors.toSet());
         List<JobModel> jobsToTake = assignedJobs.stream()
-                .filter(j -> jobIDsToTake.contains(j.getJobID()))
+                .filter(job -> jobIDsToTake.contains(job.getJobID()))
                 .collect(Collectors.toList());
-        // @formatter:on
         List<JobModel> availableJobs = ListUtils.union(waitingJobs, jobsToTake);
-        Map<Integer, List<JobModel>> availableJobsByPriority = new HashMap<>();
-        for (JobModel job : availableJobs)
-        {
-            int priority = job.getPriority();
-            if (!availableJobsByPriority.containsKey(priority))
-            {
-                availableJobsByPriority.put(priority, new LinkedList<>());
-            }
-            availableJobsByPriority.get(priority).add(job);
-        }
+        Map<Integer, List<JobModel>> availableJobsByPriority = availableJobs.stream()
+                .collect(Collectors.groupingBy(JobModel::getPriority));
 
         // Determine which jobs will be given out
         List<JobAssignmentOperation> giveJobOperations = buildListOfJobsToGive(jobsAssignmentsToGive,
@@ -102,8 +92,13 @@ public class WorkloadEnforcer implements VoidFunction
         // network will need to wait for will only get fulfilled when the worker who currently has that job has returned
         // it.
         List<JobAssignmentOperation> allJobOperations = ListUtils.union(takeJobOperations, giveJobOperations);
-        // TODO: IMPLEMENT
+        List<JobAssignmentThread> jobAssignmentThreads = allJobOperations.stream()
+                .map(jobOperation -> new JobAssignmentThread(jobOperation))
+                .collect(Collectors.toList());
+        jobAssignmentThreads.stream().forEach(jobThread -> jobThread.start());
+        jobAssignmentThreads.stream().forEach(jobThread -> jobThread.join());
     }
+    // @formatter:on
 
     private JobAssignments buildDesiredJobAssingments(Collection<WorkerModel> workers,
             List<JobModel> prioritySortedJobs)
@@ -147,7 +142,7 @@ public class WorkloadEnforcer implements VoidFunction
     }
 
     private List<JobAssignmentOperation> buildListOfJobsToTake(JobAssignments jobsAssignmentsToTake,
-            List<JobModel> assignedJobs)
+            Map<Integer, List<JobModel>> assignedJobsByPriority)
     {
         // TODO Auto-generated method stub
         return null;
