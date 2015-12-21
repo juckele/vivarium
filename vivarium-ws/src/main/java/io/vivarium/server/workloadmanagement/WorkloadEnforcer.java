@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.server;
+package io.vivarium.server.workloadmanagement;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +18,7 @@ import io.vivarium.persistence.JobModel;
 import io.vivarium.persistence.JobStatus;
 import io.vivarium.persistence.PersistenceModule;
 import io.vivarium.persistence.WorkerModel;
+import io.vivarium.server.ClientConnectionManager;
 import io.vivarium.util.UUID;
 import io.vivarium.util.concurrency.VoidFunction;
 

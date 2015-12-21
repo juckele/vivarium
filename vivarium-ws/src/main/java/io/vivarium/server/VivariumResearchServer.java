@@ -10,6 +10,7 @@ import java.sql.Connection;
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.net.Constants;
 import io.vivarium.persistence.PersistenceModule;
+import io.vivarium.server.workloadmanagement.WorkloadEnforcer;
 import io.vivarium.util.concurrency.StartableStoppable;
 import io.vivarium.util.concurrency.VoidFunctionScheduler;
 
