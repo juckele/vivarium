@@ -125,7 +125,8 @@ project(':vivarium-ws') {
     dependencies {
         compile project(':vivarium-db')
         compile project(':vivarium-net')
-	compile 'net.java.dev.jna:jna-platform:4.0.0'
+        compile 'net.java.dev.jna:jna-platform:4.0.0'
+        compile 'org.apache.commons:commons-collections4:4.1'
         compile 'org.jppf:jppf-node:5.1.1'
     }
 }

@@ -16,6 +16,7 @@ Apache License 2.0 libraries:
 - commons-cli:commons-cli:1.3.1
 - de.richsource.gradle.plugins:gwt-gradle-plugin:0.6
 - net.java.dev.jna:jna-platform:4.0.0
+- org.apache.commons:commons-collections4:4.1
 - org.javatuples:javatuples:1.2
 - org.jppf:jppf-node:5.1.1
 - org.realityforge.gwt.websockets:gwt-websockets:1.1.2
@@ -24,6 +25,7 @@ The MIT License libraries:
 - com.johnuckele:vtest:0.9.3
 - com.googlecode.gwt-streamer:gwt-streamer:2.0.0
 - org.java-websocket:Java-WebSocket:1.3.0
+- org.mockito:mockito-core:1.+
 
 Eclipse Public License 1.0 libraries:
 - junit
