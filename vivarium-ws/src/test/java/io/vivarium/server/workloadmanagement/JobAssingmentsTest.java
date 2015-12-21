@@ -253,7 +253,7 @@ public class JobAssingmentsTest
             JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
 
             // This will fail because the JobAssignments objects don't share the same workers
-            JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+            JobAssignments.subtract(jobAssignments1, jobAssignments2);
             Tester.fail("The above code should have failed.");
         }
         catch (IllegalArgumentException e)
@@ -269,7 +269,7 @@ public class JobAssingmentsTest
             JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker2, worker3));
 
             // This will fail because the JobAssignments objects don't share the same workers
-            JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+            JobAssignments.subtract(jobAssignments1, jobAssignments2);
             Tester.fail("The above code should have failed.");
         }
         catch (IllegalArgumentException e)
@@ -285,7 +285,7 @@ public class JobAssingmentsTest
             JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
 
             // This will fail because the JobAssignments objects don't share the same workers
-            JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+            JobAssignments.subtract(jobAssignments1, jobAssignments2);
             Tester.pass(
                     "If the subtrahend and minued have the same set, the code will not throw regardless of ordering");
         }
@@ -301,7 +301,7 @@ public class JobAssingmentsTest
             JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker1, worker3));
 
             // This will fail because the JobAssignments objects don't share the same workers
-            JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+            JobAssignments.subtract(jobAssignments1, jobAssignments2);
             Tester.fail("The above code should have failed.");
         }
         catch (IllegalArgumentException e)
