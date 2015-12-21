@@ -145,22 +145,23 @@ public class MessageRouter implements StartableStoppable
     private void acceptJob(WebSocket conn, CreateJobMessage createJobMessage)
     {
         JobModel job;
-        if (createJobMessage.job instanceof SimulationJob)
+        if (createJobMessage.getJob() instanceof SimulationJob)
         {
-            SimulationJob simulationJob = (SimulationJob) createJobMessage.job;
+            SimulationJob simulationJob = (SimulationJob) createJobMessage.getJob();
             job = new RunSimulationJobModel(simulationJob.jobID, JobStatus.BLOCKED, (short) 0, null, null, null,
                     simulationJob.endTick, simulationJob.inputResources, simulationJob.outputResources,
                     simulationJob.dependencies);
         }
-        else if (createJobMessage.job instanceof CreateWorldJob)
+        else if (createJobMessage.getJob() instanceof CreateWorldJob)
         {
-            CreateWorldJob createWorldJob = (CreateWorldJob) createJobMessage.job;
+            CreateWorldJob createWorldJob = (CreateWorldJob) createJobMessage.getJob();
             job = new CreateWorldJobModel(createWorldJob.jobID, JobStatus.BLOCKED, (short) 0, null, null, null,
                     createWorldJob.inputResources, createWorldJob.outputResources, createWorldJob.dependencies);
         }
         else
         {
-            throw new IllegalStateException("Unexpected job type " + createJobMessage.job.getClass().getSimpleName());
+            throw new IllegalStateException(
+                    "Unexpected job type " + createJobMessage.getJob().getClass().getSimpleName());
         }
         _persistenceModule.persist(job);
         _enforcerScheduler.execute();
