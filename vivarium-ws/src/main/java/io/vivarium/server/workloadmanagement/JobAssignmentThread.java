@@ -1,5 +1,9 @@
 package io.vivarium.server.workloadmanagement;
 
+import java.util.Optional;
+
+import org.java_websocket.WebSocket;
+
 import io.vivarium.server.ClientConnectionManager;
 
 public class JobAssignmentThread
@@ -34,6 +38,14 @@ public class JobAssignmentThread
 
     private class ThreadHelper extends Thread
     {
+        @Override
+        public void run()
+        {
+            Optional<WebSocket> workerSocket = _clientConnectionManager
+                    .getSocketForWorker(_jobAssingmentOperation.getWorkerID());
+            // TODO Auto-generated method stub
+
+        }
 
     }
 }
