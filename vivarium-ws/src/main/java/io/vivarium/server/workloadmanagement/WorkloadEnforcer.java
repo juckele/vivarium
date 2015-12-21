@@ -5,6 +5,7 @@
 package io.vivarium.server.workloadmanagement;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -145,15 +146,40 @@ public class WorkloadEnforcer implements VoidFunction
     private List<JobAssignmentOperation> buildListOfJobsToTake(JobAssignments jobsAssignmentsToTake,
             Map<Integer, List<JobModel>> assignedJobsByPriority)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return convertJobAssignmentsIntoJobAssignmentOperations(JobAssignmentAction.TAKE, jobsAssignmentsToTake,
+                assignedJobsByPriority);
     }
 
     private List<JobAssignmentOperation> buildListOfJobsToGive(JobAssignments jobsAssignmentsToGive,
             Map<Integer, List<JobModel>> availableJobsByPriority)
     {
-        // TODO Auto-generated method stub
-        return null;
+        return convertJobAssignmentsIntoJobAssignmentOperations(JobAssignmentAction.GIVE, jobsAssignmentsToGive,
+                availableJobsByPriority);
+    }
+
+    private List<JobAssignmentOperation> convertJobAssignmentsIntoJobAssignmentOperations(JobAssignmentAction action,
+            JobAssignments jobsAssignments, Map<Integer, List<JobModel>> jobsByPriority)
+    {
+        List<JobAssignmentOperation> operations = new LinkedList<>();
+        Set<WorkerModel> workers = jobsAssignments.getWorkers();
+        for (WorkerModel worker : workers)
+        {
+            Map<Integer, Integer> priorityCounts = jobsAssignments.getJobPriorityCounts(worker);
+            for (int priority : priorityCounts.keySet())
+            {
+                while (priorityCounts.get(priority) > 0)
+                {
+                    JobModel job = jobsByPriority.get(priority).remove(0);
+
+                    JobAssignmentOperation jobOperation = new JobAssignmentOperation(action, worker.getWorkerID(),
+                            job.getJobID());
+                    operations.add(jobOperation);
+
+                    priorityCounts.put(priority, priorityCounts.get(priority) - 1);
+                }
+            }
+        }
+        return operations;
     }
 
 }

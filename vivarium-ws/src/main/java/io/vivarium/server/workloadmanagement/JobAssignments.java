@@ -114,6 +114,11 @@ public class JobAssignments
         return jobCount == jobSlots;
     }
 
+    public Set<WorkerModel> getWorkers()
+    {
+        return Sets.newHashSet(_workerJobCounts.keySet());
+    }
+
     public Map<Integer, Integer> getJobPriorityCounts(WorkerModel workerModel)
     {
         Map<Integer, Integer> copyOfJobPriorityCounts = new HashMap<>(_workerJobPriorityCounts.get(workerModel));
