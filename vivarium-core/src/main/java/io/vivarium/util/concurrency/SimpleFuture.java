@@ -15,7 +15,7 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package io.vivarium.util;
+package io.vivarium.util.concurrency;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;

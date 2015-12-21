@@ -19,8 +19,8 @@ import io.vivarium.net.messages.ResourceFormat;
 import io.vivarium.net.messages.SendResourceMessage;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
-import io.vivarium.util.SimpleFuture;
 import io.vivarium.util.UUID;
+import io.vivarium.util.concurrency.SimpleFuture;
 
 public class DownloadResourceTask extends Task
 {

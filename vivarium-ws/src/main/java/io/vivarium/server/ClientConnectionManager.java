@@ -14,6 +14,7 @@ import org.java_websocket.WebSocket;
 import com.google.common.base.Preconditions;
 
 import io.vivarium.util.UUID;
+import io.vivarium.util.concurrency.StartableStoppable;
 
 public class ClientConnectionManager implements StartableStoppable
 {

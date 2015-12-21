@@ -19,6 +19,7 @@ import io.vivarium.persistence.JobStatus;
 import io.vivarium.persistence.PersistenceModule;
 import io.vivarium.persistence.WorkerModel;
 import io.vivarium.util.UUID;
+import io.vivarium.util.concurrency.VoidFunction;
 
 public class WorkloadEnforcer implements VoidFunction
 {

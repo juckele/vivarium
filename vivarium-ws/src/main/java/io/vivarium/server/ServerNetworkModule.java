@@ -11,6 +11,8 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import io.vivarium.util.concurrency.StartableStoppable;
+
 public class ServerNetworkModule extends WebSocketServer implements StartableStoppable
 {
     private final MessageRouter _router;

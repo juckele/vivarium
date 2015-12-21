@@ -15,7 +15,10 @@
  * OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-package io.vivarium.util;
+package io.vivarium.util.concurrency;
+
+import io.vivarium.util.Rand;
+import io.vivarium.util.RandAllocator;
 
 public class ThreadRandAllocator implements RandAllocator
 {

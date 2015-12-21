@@ -15,7 +15,7 @@ import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.core.simulation.Simulation;
 import io.vivarium.util.Rand;
-import io.vivarium.util.ThreadRandAllocator;
+import io.vivarium.util.concurrency.ThreadRandAllocator;
 
 public class RunBenchmark extends CommonsScript
 {
