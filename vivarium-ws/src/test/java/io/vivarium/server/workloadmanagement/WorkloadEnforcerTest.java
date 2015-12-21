@@ -21,7 +21,6 @@ import com.johnuckele.vtest.Tester;
 import io.vivarium.persistence.JobModel;
 import io.vivarium.persistence.PersistenceModule;
 import io.vivarium.persistence.WorkerModel;
-import io.vivarium.server.ClientConnectionManager;
 import io.vivarium.util.UUID;
 
 public class WorkloadEnforcerTest
@@ -32,7 +31,7 @@ public class WorkloadEnforcerTest
     {
         // Build enforcer and get an accessible handle to the buildDesiredJobAssingments method.
         WorkloadEnforcer enforcer = new WorkloadEnforcer(mock(PersistenceModule.class),
-                mock(ClientConnectionManager.class));
+                mock(JobAssignmentThreadFactory.class));
         Method buildDesiredJobAssingments = WorkloadEnforcer.class.getDeclaredMethod("buildDesiredJobAssingments",
                 Collection.class, List.class);
         buildDesiredJobAssingments.setAccessible(true);
@@ -73,7 +72,7 @@ public class WorkloadEnforcerTest
     {
         // Build enforcer and get an accessible handle to the buildDesiredJobAssingments method.
         WorkloadEnforcer enforcer = new WorkloadEnforcer(mock(PersistenceModule.class),
-                mock(ClientConnectionManager.class));
+                mock(JobAssignmentThreadFactory.class));
         Method buildDesiredJobAssingments = WorkloadEnforcer.class.getDeclaredMethod("buildDesiredJobAssingments",
                 Collection.class, List.class);
         buildDesiredJobAssingments.setAccessible(true);

@@ -1,12 +1,17 @@
 package io.vivarium.server.workloadmanagement;
 
+import io.vivarium.server.ClientConnectionManager;
+
 public class JobAssignmentThread
 {
+    private final ClientConnectionManager _clientConnectionManager;
     private final JobAssignmentOperation _jobAssingmentOperation;
     private final ThreadHelper _helper = new ThreadHelper();
 
-    public JobAssignmentThread(JobAssignmentOperation jobAssingmentOperation)
+    public JobAssignmentThread(ClientConnectionManager clientConnectionManager,
+            JobAssignmentOperation jobAssingmentOperation)
     {
+        _clientConnectionManager = clientConnectionManager;
         _jobAssingmentOperation = jobAssingmentOperation;
     }
 

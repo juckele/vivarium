@@ -18,7 +18,6 @@ import io.vivarium.persistence.JobModel;
 import io.vivarium.persistence.JobStatus;
 import io.vivarium.persistence.PersistenceModule;
 import io.vivarium.persistence.WorkerModel;
-import io.vivarium.server.ClientConnectionManager;
 import io.vivarium.util.UUID;
 import io.vivarium.util.concurrency.VoidFunction;
 
@@ -29,12 +28,14 @@ public class WorkloadEnforcer implements VoidFunction
 
     // Dependencies
     private final PersistenceModule _persistenceModule;
-    private final ClientConnectionManager _clientConnectionManager;
+    private final JobAssignmentThreadFactory _jobAssignmentThreadFactory;
 
-    public WorkloadEnforcer(PersistenceModule persistenceModule, ClientConnectionManager clientConnectionManager)
+    private List<JobAssignmentThread> _jobAssignmentThreads;
+
+    public WorkloadEnforcer(PersistenceModule persistenceModule, JobAssignmentThreadFactory jobAssignmentThreadFactory)
     {
         _persistenceModule = persistenceModule;
-        _clientConnectionManager = clientConnectionManager;
+        _jobAssignmentThreadFactory = jobAssignmentThreadFactory;
     }
 
     @Override
@@ -92,11 +93,11 @@ public class WorkloadEnforcer implements VoidFunction
         // network will need to wait for will only get fulfilled when the worker who currently has that job has returned
         // it.
         List<JobAssignmentOperation> allJobOperations = ListUtils.union(takeJobOperations, giveJobOperations);
-        List<JobAssignmentThread> jobAssignmentThreads = allJobOperations.stream()
-                .map(jobOperation -> new JobAssignmentThread(jobOperation))
+        _jobAssignmentThreads = allJobOperations.stream()
+                .map(jobOperation -> _jobAssignmentThreadFactory.make(jobOperation))
                 .collect(Collectors.toList());
-        jobAssignmentThreads.stream().forEach(jobThread -> jobThread.start());
-        jobAssignmentThreads.stream().forEach(jobThread -> jobThread.join());
+        _jobAssignmentThreads.stream().forEach(jobThread -> jobThread.start());
+        _jobAssignmentThreads.stream().forEach(jobThread -> jobThread.join());
     }
     // @formatter:on
 

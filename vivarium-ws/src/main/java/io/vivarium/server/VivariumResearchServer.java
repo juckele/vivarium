@@ -10,6 +10,7 @@ import java.sql.Connection;
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.net.Constants;
 import io.vivarium.persistence.PersistenceModule;
+import io.vivarium.server.workloadmanagement.JobAssignmentThreadFactory;
 import io.vivarium.server.workloadmanagement.WorkloadEnforcer;
 import io.vivarium.util.concurrency.StartableStoppable;
 import io.vivarium.util.concurrency.VoidFunctionScheduler;
@@ -50,7 +51,8 @@ public class VivariumResearchServer implements StartableStoppable
         Connection databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
         PersistenceModule persistenceModule = new PersistenceModule(databaseConnection);
         ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
-        WorkloadEnforcer workloadEnforcer = new WorkloadEnforcer(persistenceModule, clientConnectionManager);
+        JobAssignmentThreadFactory jobAssignmentThreadFactory = new JobAssignmentThreadFactory(clientConnectionManager);
+        WorkloadEnforcer workloadEnforcer = new WorkloadEnforcer(persistenceModule, jobAssignmentThreadFactory);
         VoidFunctionScheduler enforcerScheduler = new VoidFunctionScheduler(workloadEnforcer,
                 WorkloadEnforcer.DEFAULT_ENFORCE_TIME_GAP_IN_MS);
         MessageRouter messageRouter = new MessageRouter(persistenceModule, clientConnectionManager, enforcerScheduler);
