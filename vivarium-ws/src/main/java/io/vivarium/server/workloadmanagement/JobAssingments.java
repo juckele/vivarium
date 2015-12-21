@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.google.common.base.Preconditions;
+
 import io.vivarium.persistence.WorkerModel;
 
 public class JobAssingments
@@ -28,9 +30,12 @@ public class JobAssingments
 
     public long getScoreChangeForJob(WorkerModel workerModel, int priority)
     {
+        Preconditions.checkArgument(_workerJobCounts.containsKey(workerModel));
+
         // Figure out the current job count for this worker
         int workerJobCount = _workerJobCounts.get(workerModel);
         int proposedWorkerJobCount = workerJobCount + 1;
+
         // Figure out the new score
         long newScore = determineWorkerScore(workerModel, proposedWorkerJobCount);
         long throughput = workerModel.getThroughputs()[proposedWorkerJobCount - 1];
@@ -44,16 +49,14 @@ public class JobAssingments
 
     public void addWorkerJob(WorkerModel workerModel, int priority)
     {
+        Preconditions.checkArgument(_workerJobCounts.containsKey(workerModel));
+
         // Update the job count for this worker
         int workerJobCount = _workerJobCounts.get(workerModel);
         workerJobCount++;
         _workerJobCounts.put(workerModel, workerJobCount);
 
         // Update the job count for this worker and priority
-        if (!_workerJobPriorityCounts.containsKey(workerModel))
-        {
-            _workerJobPriorityCounts.put(workerModel, new HashMap<>());
-        }
         int workerPriorityJobCount = _workerJobPriorityCounts.get(workerModel).getOrDefault(priority, 0);
         workerPriorityJobCount++;
         _workerJobPriorityCounts.get(workerModel).put(priority, workerPriorityJobCount);
