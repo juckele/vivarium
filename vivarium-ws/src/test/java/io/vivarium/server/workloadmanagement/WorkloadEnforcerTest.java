@@ -30,7 +30,7 @@ public class WorkloadEnforcerTest
     public void testBuildDesiredJobAssingmentsWithInfiniteJobs() throws NoSuchMethodException, SecurityException,
             IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {
-        // Build enforcer and get an accesible handle to the buildDesiredJobAssingments method.
+        // Build enforcer and get an accessible handle to the buildDesiredJobAssingments method.
         WorkloadEnforcer enforcer = new WorkloadEnforcer(mock(PersistenceModule.class),
                 mock(ClientConnectionManager.class));
         Method buildDesiredJobAssingments = WorkloadEnforcer.class.getDeclaredMethod("buildDesiredJobAssingments",
@@ -71,7 +71,7 @@ public class WorkloadEnforcerTest
     public void testBuildDesiredJobAssingmentsWithLimitedHighPriorityJobs() throws NoSuchMethodException,
             SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {
-        // Build enforcer and get an accesible handle to the buildDesiredJobAssingments method.
+        // Build enforcer and get an accessible handle to the buildDesiredJobAssingments method.
         WorkloadEnforcer enforcer = new WorkloadEnforcer(mock(PersistenceModule.class),
                 mock(ClientConnectionManager.class));
         Method buildDesiredJobAssingments = WorkloadEnforcer.class.getDeclaredMethod("buildDesiredJobAssingments",
