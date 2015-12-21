@@ -60,15 +60,15 @@ public class WorkloadEnforcer implements VoidFunction
         JobAssignments idealAssingments = buildDesiredJobAssingments(activeWorkers, prioritySortedJobs);
         JobAssignments actualAssingments = buildActualJobAssingments(activeWorkers, assignedJobs);
 
-        // Build plan to assign jobs (only) if doing so can improve the allocation score
+        // Determine how many jobs of each priority need to be added/dropped from each worker.
         // TODO: IMPLEMENT
 
-        // If reassigning jobs was not able to improve greedy allocation score, check to see if a single unassignment +
-        // reassignment can improve the score. This will fail to find complex rearrangements which might exist, but it
-        // is assumed that these would be marginal improvements at best.
-        // TODO: IMPLEMENT
-
-        // Send assignments and await acks from workers for assignments.
+        // Because we have to wait for worker acknowledgments before we can finish taking a job back that we want to
+        // re-assign, we want to create a thread for every individual assign and take operation. Each assign operation
+        // will have an job future. As soon as the job future is available, we can talk to that worker and give it the
+        // job. Jobs which are already unassigned will get their future fulfilled immediately, but any jobs that the
+        // network will need to wait for will only get fulfilled when the worker who currently has that job has returned
+        // it.
         // TODO: IMPLEMENT
     }
 
@@ -76,7 +76,6 @@ public class WorkloadEnforcer implements VoidFunction
             List<JobModel> prioritySortedJobs)
     {
         JobAssignments desiredAssingments = new JobAssignments(workers);
-        Map<UUID, WorkerModel> workersByID = Maps.uniqueIndex(workers, WorkerModel::getWorkerID);
         for (JobModel job : prioritySortedJobs)
         {
             long maxScoreImprovement = 0;
