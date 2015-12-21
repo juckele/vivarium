@@ -158,4 +158,157 @@ public class JobAssingmentsTest
         }
         Tester.fail("The above code should have failed.");
     }
+
+    @Test
+    public void testSubtractForEmptyJobAssignments()
+    {
+        // Mock a worker
+        WorkerModel worker1 = mock(WorkerModel.class);
+        when(worker1.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+        WorkerModel worker2 = mock(WorkerModel.class);
+        when(worker2.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+        WorkerModel worker3 = mock(WorkerModel.class);
+        when(worker3.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+
+        // Build the job assignments objects
+        JobAssignments jobAssignments1 = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
+        JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
+
+        JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+        Tester.isNotNull("Subtracted job assignments should exist", difference);
+        long score = difference.getScore();
+        Tester.equal("Score should be zero", score, 0);
+    }
+
+    @Test
+    public void testSubtractForJobAssignments()
+    {
+        // Mock a worker
+        WorkerModel worker1 = mock(WorkerModel.class);
+        when(worker1.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+        WorkerModel worker2 = mock(WorkerModel.class);
+        when(worker2.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+        WorkerModel worker3 = mock(WorkerModel.class);
+        when(worker3.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+
+        // Build the job assignments objects
+        JobAssignments oldAssignments = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
+        JobAssignments newAssignments = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
+
+        // Assign jobs on the first assignment object
+        oldAssignments.addWorkerJob(worker1, 1);
+        oldAssignments.addWorkerJob(worker1, 1);
+        oldAssignments.addWorkerJob(worker1, 3);
+        oldAssignments.addWorkerJob(worker2, 2);
+        oldAssignments.addWorkerJob(worker2, 2);
+
+        // Assign jobs on the second assignment object
+        newAssignments.addWorkerJob(worker1, 3);
+        newAssignments.addWorkerJob(worker1, 3);
+        newAssignments.addWorkerJob(worker3, 1);
+        newAssignments.addWorkerJob(worker3, 2);
+        newAssignments.addWorkerJob(worker3, 2);
+
+        // Compute both differences
+        JobAssignments removedDifference = JobAssignments.subtract(oldAssignments, newAssignments);
+        JobAssignments addedDifference = JobAssignments.subtract(newAssignments, oldAssignments);
+
+        // Validate that all the differences are correct
+        int worker1Priority1JobsRemoved = removedDifference.getJobPriorityCounts(worker1).get(1);
+        int worker1Priority1JobsAdded = addedDifference.getJobPriorityCounts(worker1).get(1);
+        Tester.equal("Worker 1 should have 2 removed priority 1 jobs", worker1Priority1JobsRemoved, 2);
+        Tester.equal("Worker 1 should have 0 added priority 1 jobs", worker1Priority1JobsAdded, 0);
+
+        int worker1Priority3JobsRemoved = removedDifference.getJobPriorityCounts(worker1).get(3);
+        int worker1Priority3JobsAdded = addedDifference.getJobPriorityCounts(worker1).get(3);
+        Tester.equal("Worker 1 should have 0 removed priority 3 jobs", worker1Priority3JobsRemoved, 0);
+        Tester.equal("Worker 1 should have 1 added priority 3 jobs", worker1Priority3JobsAdded, 1);
+
+        int worker2Priority2JobsRemoved = removedDifference.getJobPriorityCounts(worker2).get(2);
+        int worker2Priority2JobsAdded = addedDifference.getJobPriorityCounts(worker2).get(2);
+        Tester.equal("Worker 2 should have 2 removed priority 2 jobs", worker2Priority2JobsRemoved, 2);
+        Tester.equal("Worker 2 should have 0 added priority 2 jobs", worker2Priority2JobsAdded, 0);
+
+        int worker3Priority2JobsRemoved = removedDifference.getJobPriorityCounts(worker3).get(2);
+        int worker3Priority2JobsAdded = addedDifference.getJobPriorityCounts(worker3).get(2);
+        Tester.equal("Worker 3 should have 0 removed priority 2 jobs", worker3Priority2JobsRemoved, 0);
+        Tester.equal("Worker 3 should have 2 added priority 2 jobs", worker3Priority2JobsAdded, 2);
+    }
+
+    @Test
+    public void testSubtractWorkerSetValidation()
+    {
+        // Mock a worker
+        WorkerModel worker1 = mock(WorkerModel.class);
+        when(worker1.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+        WorkerModel worker2 = mock(WorkerModel.class);
+        when(worker2.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+        WorkerModel worker3 = mock(WorkerModel.class);
+        when(worker3.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
+
+        try
+        {
+            // Build the job assignments objects
+            JobAssignments jobAssignments1 = new JobAssignments(Lists.newArrayList(worker1, worker2));
+            JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
+
+            // This will fail because the JobAssignments objects don't share the same workers
+            JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+            Tester.fail("The above code should have failed.");
+        }
+        catch (IllegalArgumentException e)
+        {
+            Tester.pass(
+                    "If the minued has an incomplete subset of workers that the subtrahend has, subtract throws an IllegalArgumentException");
+        }
+
+        try
+        {
+            // Build the job assignments objects
+            JobAssignments jobAssignments1 = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
+            JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker2, worker3));
+
+            // This will fail because the JobAssignments objects don't share the same workers
+            JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+            Tester.fail("The above code should have failed.");
+        }
+        catch (IllegalArgumentException e)
+        {
+            Tester.pass(
+                    "If the subtrahend has an incomplete subset of workers that the minued has, subtract throws an IllegalArgumentException");
+        }
+
+        try
+        {
+            // Build the job assignments objects
+            JobAssignments jobAssignments1 = new JobAssignments(Lists.newArrayList(worker3, worker1, worker2));
+            JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
+
+            // This will fail because the JobAssignments objects don't share the same workers
+            JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+            Tester.pass(
+                    "If the subtrahend and minued have the same set, the code will not throw regardless of ordering");
+        }
+        catch (IllegalArgumentException e)
+        {
+            Tester.fail("The above code should not have failed.");
+        }
+
+        try
+        {
+            // Build the job assignments objects
+            JobAssignments jobAssignments1 = new JobAssignments(Lists.newArrayList(worker3, worker2));
+            JobAssignments jobAssignments2 = new JobAssignments(Lists.newArrayList(worker1, worker3));
+
+            // This will fail because the JobAssignments objects don't share the same workers
+            JobAssignments difference = JobAssignments.subtract(jobAssignments1, jobAssignments2);
+            Tester.fail("The above code should have failed.");
+        }
+        catch (IllegalArgumentException e)
+        {
+            Tester.pass(
+                    "If the minued and subtrahend have worker sets of the same size but with different membership, subtract throws an IllegalArgumentException");
+        }
+    }
+
 }
