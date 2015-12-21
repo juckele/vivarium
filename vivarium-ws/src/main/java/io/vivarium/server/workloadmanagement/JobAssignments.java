@@ -96,4 +96,16 @@ public class JobAssignments
         int jobSlots = workerModel.getThroughputs().length;
         return jobCount == jobSlots;
     }
+
+    public Map<Integer, Integer> getJobPriorityCounts(WorkerModel workerModel)
+    {
+        Map<Integer, Integer> copyOfJobPriorityCounts = new HashMap<>(_workerJobPriorityCounts.get(workerModel));
+        return copyOfJobPriorityCounts;
+    }
+
+    public static JobAssignments subtract(JobAssignments idealAssingments, JobAssignments actualAssingments)
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

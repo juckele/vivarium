@@ -61,7 +61,8 @@ public class WorkloadEnforcer implements VoidFunction
         JobAssignments actualAssingments = buildActualJobAssingments(activeWorkers, assignedJobs);
 
         // Determine how many jobs of each priority need to be added/dropped from each worker.
-        // TODO: IMPLEMENT
+        JobAssignments jobsAssignmentsToAdd = JobAssignments.subtract(idealAssingments, actualAssingments);
+        JobAssignments jobsAssignmentsToRemove = JobAssignments.subtract(actualAssingments, idealAssingments);
 
         // Because we have to wait for worker acknowledgments before we can finish taking a job back that we want to
         // re-assign, we want to create a thread for every individual assign and take operation. Each assign operation
