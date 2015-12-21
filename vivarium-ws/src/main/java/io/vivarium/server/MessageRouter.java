@@ -117,6 +117,7 @@ public class MessageRouter implements StartableStoppable
                 new Timestamp(System.currentTimeMillis()), pledge.fileFormatVersion, pledge.codeVersion);
         _persistenceModule.persist(worker);
         _connectionManager.registerWorker(pledge.workerID, webSocket);
+        _enforcerScheduler.execute();
     }
 
     private void acceptResource(WebSocket webSocket, SendResourceMessage sendResourceMessage)
@@ -162,6 +163,7 @@ public class MessageRouter implements StartableStoppable
             throw new IllegalStateException("Unexpected job type " + createJobMessage.job.getClass().getSimpleName());
         }
         _persistenceModule.persist(job);
+        _enforcerScheduler.execute();
     }
 
     private void handleRequestForResource(WebSocket webSocket, RequestResourceMessage requestResourceMessage)
