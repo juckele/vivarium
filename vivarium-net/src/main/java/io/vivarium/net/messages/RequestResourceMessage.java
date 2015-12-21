@@ -35,6 +35,7 @@ public class RequestResourceMessage extends Message
         this._resourceFormat = resourceFormat;
     }
 
+    @JsonSerialize(using = UUIDSerializer.class)
     public UUID getResourceID()
     {
         return _resourceID;
