@@ -24,7 +24,7 @@ public class JobAssingmentsTest
         when(worker1.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
 
         // Build the job assignments object
-        JobAssingments jobAssingments = new JobAssingments(Lists.newArrayList(worker1));
+        JobAssignments jobAssignments = new JobAssignments(Lists.newArrayList(worker1));
 
         long score;
         long scoreImprovement;
@@ -32,36 +32,36 @@ public class JobAssingmentsTest
         // Test scores & add jobs
 
         // Should start with a score of zero
-        score = jobAssingments.getScore();
+        score = jobAssignments.getScore();
         Tester.equal("Initial score should be zero", score, 0);
 
         // Adding a priority 3 job should increase the score 45 (with a new value of 45).
         // 45 = 15 (the first slot) * 3 (the priority)
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker1, 3);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker1, 3);
         Tester.equal("Adding a priority 3 job should improve the score by 45", scoreImprovement, 45);
-        jobAssingments.addWorkerJob(worker1, 3);
-        score = jobAssingments.getScore();
+        jobAssignments.addWorkerJob(worker1, 3);
+        score = jobAssignments.getScore();
         Tester.equal("Total score should now be 45", score, 45);
 
         // Explore adding a 1 priority job. This would give a total score of around 50, but due to rounding will
         // actually be 48, (25/2 = 12, 12 * 3 + 12 * 1 = 48).
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker1, 1);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker1, 1);
         Tester.equal("Adding a priority 1 job should improve the score by 3", scoreImprovement, 3);
 
         // Seems uncompelling to add a priority one job, but maybe a priort 3 job just came in...
         // 25 / 2 * 2 * 3 = 72, so we would count a priority 3 job as a +27 improvement to score
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker1, 3);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker1, 3);
         Tester.equal("Adding a priority 3 job should improve the score by 27", scoreImprovement, 27);
-        jobAssingments.addWorkerJob(worker1, 3);
-        score = jobAssingments.getScore();
+        jobAssignments.addWorkerJob(worker1, 3);
+        score = jobAssignments.getScore();
         Tester.equal("Total score should now be 72", score, 72);
 
         // What if we thought about adding that priority one job now?
         // 30 / 3 = 10, 10 * 2 * 3 = 60, 10 * 1 * 1 = 10. 60 + 10 = 70. Actually decreases score!
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker1, 1);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker1, 1);
         Tester.equal("Adding a priority 1 job should decrease the score by 2", scoreImprovement, -2);
-        jobAssingments.addWorkerJob(worker1, 1);
-        score = jobAssingments.getScore();
+        jobAssignments.addWorkerJob(worker1, 1);
+        score = jobAssignments.getScore();
         Tester.equal("Total score should now be 70", score, 70);
     }
 
@@ -77,7 +77,7 @@ public class JobAssingmentsTest
         when(worker3.getThroughputs()).thenReturn(new long[] { 20, 22, 23, 24, 25 });
 
         // Build the job assignments object
-        JobAssingments jobAssingments = new JobAssingments(Lists.newArrayList(worker1, worker2, worker3));
+        JobAssignments jobAssignments = new JobAssignments(Lists.newArrayList(worker1, worker2, worker3));
 
         long score;
         long scoreImprovement;
@@ -85,42 +85,42 @@ public class JobAssingmentsTest
         // Test scores & add jobs
 
         // Should start with a score of zero
-        score = jobAssingments.getScore();
+        score = jobAssignments.getScore();
         Tester.equal("Initial score should be zero", score, 0);
 
         // Add priority 1 jobs to each worker
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker1, 1);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker1, 1);
         Tester.equal("Adding a priority 1 job  to worker 1 should improve the score by 15", scoreImprovement, 15);
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker2, 1);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker2, 1);
         Tester.equal("Adding a priority 1 job  to worker 2 should improve the score by 15", scoreImprovement, 50);
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker3, 1);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker3, 1);
         Tester.equal("Adding a priority 1 job  to worker 3 should improve the score by 15", scoreImprovement, 20);
 
         // Adding a job to a worker doesn't matter which order they occur in, so we can test every worker and then add
         // and see the same improvements.
-        jobAssingments.addWorkerJob(worker1, 1);
-        score = jobAssingments.getScore();
+        jobAssignments.addWorkerJob(worker1, 1);
+        score = jobAssignments.getScore();
         Tester.equal("Total score should now be 15", score, 15);
-        jobAssingments.addWorkerJob(worker2, 1);
-        score = jobAssingments.getScore();
+        jobAssignments.addWorkerJob(worker2, 1);
+        score = jobAssignments.getScore();
         Tester.equal("Total score should now be 15", score, 65);
-        jobAssingments.addWorkerJob(worker3, 1);
-        score = jobAssingments.getScore();
+        jobAssignments.addWorkerJob(worker3, 1);
+        score = jobAssignments.getScore();
         Tester.equal("Total score should now be 15", score, 85);
 
         // Show that a late high priority addition can significantly improve score
-        jobAssingments.addWorkerJob(worker3, 1);
-        jobAssingments.addWorkerJob(worker3, 1);
-        jobAssingments.addWorkerJob(worker3, 1);
+        jobAssignments.addWorkerJob(worker3, 1);
+        jobAssignments.addWorkerJob(worker3, 1);
+        jobAssignments.addWorkerJob(worker3, 1);
         // Total score for worker 3 should now be 24, so total for the group should be 89
-        score = jobAssingments.getScore();
+        score = jobAssignments.getScore();
         Tester.equal("Total score should now be 89", score, 89);
         // Adding one more priority 1 job to worker 3 would be a score improvement of 1
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker3, 1);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker3, 1);
         Tester.equal("Adding a final priority 1 job to worker 3 should improve the score by 1", scoreImprovement, 1);
         // However, adding a priority 10 job (25 / 5 = 5, 5 * 4 * 1 = 20, 5 * 1 * 10 = 10, 20 + 10 = 30), should improve
         // the score by 6.
-        scoreImprovement = jobAssingments.getScoreChangeForJob(worker3, 2);
+        scoreImprovement = jobAssignments.getScoreChangeForJob(worker3, 2);
         Tester.equal("Adding a priority 10 job to worker 3 should improve the score by 6", scoreImprovement, 6);
     }
 
@@ -134,10 +134,10 @@ public class JobAssingmentsTest
         when(worker2.getThroughputs()).thenReturn(new long[] { 50, 60, 70 });
 
         // Build the job assignments object
-        JobAssingments jobAssingments = new JobAssingments(Lists.newArrayList(worker1));
+        JobAssignments jobAssignments = new JobAssignments(Lists.newArrayList(worker1));
 
-        // Add a Worker job with a worker we did not give to the JobAssingments object
-        jobAssingments.addWorkerJob(worker2, 1);
+        // Add a Worker job with a worker we did not give to the JobAssignments object
+        jobAssignments.addWorkerJob(worker2, 1);
         Tester.fail("The above code should have failed.");
     }
 
@@ -149,12 +149,12 @@ public class JobAssingmentsTest
         when(worker1.getThroughputs()).thenReturn(new long[] { 15, 25, 30, 34, 37, 39, 40 });
 
         // Build the job assignments object
-        JobAssingments jobAssingments = new JobAssingments(Lists.newArrayList(worker1));
+        JobAssignments jobAssignments = new JobAssignments(Lists.newArrayList(worker1));
 
         // Add a too many jobs
         for (int i = 0; i < 100; i++)
         {
-            jobAssingments.addWorkerJob(worker1, 3);
+            jobAssignments.addWorkerJob(worker1, 3);
         }
         Tester.fail("The above code should have failed.");
     }

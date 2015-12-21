@@ -57,8 +57,8 @@ public class WorkloadEnforcer implements VoidFunction
         prioritySortedJobs.sort(new JobPriorityComparator());
 
         // Determine optimal greedy allocation of jobs and the current real allocation
-        JobAssingments idealAssingments = buildDesiredJobAssingments(activeWorkers, prioritySortedJobs);
-        JobAssingments actualAssingments = buildActualJobAssingments(activeWorkers, assignedJobs);
+        JobAssignments idealAssingments = buildDesiredJobAssingments(activeWorkers, prioritySortedJobs);
+        JobAssignments actualAssingments = buildActualJobAssingments(activeWorkers, assignedJobs);
 
         // Build plan to assign jobs (only) if doing so can improve the allocation score
         // TODO: IMPLEMENT
@@ -72,10 +72,10 @@ public class WorkloadEnforcer implements VoidFunction
         // TODO: IMPLEMENT
     }
 
-    private JobAssingments buildDesiredJobAssingments(Collection<WorkerModel> workers,
+    private JobAssignments buildDesiredJobAssingments(Collection<WorkerModel> workers,
             List<JobModel> prioritySortedJobs)
     {
-        JobAssingments desiredAssingments = new JobAssingments(workers);
+        JobAssignments desiredAssingments = new JobAssignments(workers);
         Map<UUID, WorkerModel> workersByID = Maps.uniqueIndex(workers, WorkerModel::getWorkerID);
         for (JobModel job : prioritySortedJobs)
         {
@@ -98,9 +98,9 @@ public class WorkloadEnforcer implements VoidFunction
         return desiredAssingments;
     }
 
-    private JobAssingments buildActualJobAssingments(Collection<WorkerModel> workers, List<JobModel> assignedJobs)
+    private JobAssignments buildActualJobAssingments(Collection<WorkerModel> workers, List<JobModel> assignedJobs)
     {
-        JobAssingments actualAssingments = new JobAssingments(workers);
+        JobAssignments actualAssingments = new JobAssignments(workers);
         Map<UUID, WorkerModel> workersByID = Maps.uniqueIndex(workers, WorkerModel::getWorkerID);
         for (JobModel job : assignedJobs)
         {

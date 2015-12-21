@@ -12,13 +12,13 @@ import com.google.common.base.Preconditions;
 
 import io.vivarium.persistence.WorkerModel;
 
-public class JobAssingments
+public class JobAssignments
 {
     private Map<WorkerModel, Integer> _workerJobCounts = new HashMap<>();
     private Map<WorkerModel, Map<Integer, Integer>> _workerJobPriorityCounts = new HashMap<>();
     private Map<WorkerModel, Long> _workerScores = new HashMap<>();
 
-    public JobAssingments(Collection<WorkerModel> workers)
+    public JobAssignments(Collection<WorkerModel> workers)
     {
         for (WorkerModel worker : workers)
         {
