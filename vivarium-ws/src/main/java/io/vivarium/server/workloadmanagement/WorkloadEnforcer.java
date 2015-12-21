@@ -6,8 +6,6 @@ package io.vivarium.server.workloadmanagement;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -110,99 +108,5 @@ public class WorkloadEnforcer implements VoidFunction
             actualAssingments.addWorkerJob(workersByID.get(workerID), job.getPriority());
         }
         return actualAssingments;
-    }
-
-    private static class JobAssingments
-    {
-        private Map<WorkerModel, Integer> _workerJobCounts = new HashMap<>();
-        private Map<WorkerModel, Map<Integer, Integer>> _workerJobPriorityCounts = new HashMap<>();
-        private Map<WorkerModel, Long> _workerScores = new HashMap<>();
-
-        public JobAssingments(Collection<WorkerModel> workers)
-        {
-            for (WorkerModel worker : workers)
-            {
-                _workerJobCounts.put(worker, 0);
-                _workerJobPriorityCounts.put(worker, new HashMap<>());
-                _workerScores.put(worker, 0L);
-            }
-        }
-
-        public long getScoreChangeForJob(WorkerModel workerModel, int priority)
-        {
-            // Figure out the current job count for this worker
-            int workerJobCount = _workerJobCounts.get(workerModel);
-
-            // Figure out the new score
-            long newScore = determineWorkerScore(workerModel, workerJobCount + 1);
-            long throughput = workerModel.getThroughputs()[workerJobCount];
-            long throughputPerJob = throughput / workerJobCount;
-            newScore += throughputPerJob * priority;
-
-            // Determine how the score has changed
-            long scoreChange = newScore - _workerScores.get(workerModel);
-            return scoreChange;
-        }
-
-        public void addWorkerJob(WorkerModel workerModel, int priority)
-        {
-            // Update the job count for this worker
-            int workerJobCount = _workerJobCounts.get(workerModel);
-            workerJobCount++;
-            _workerJobCounts.put(workerModel, workerJobCount);
-
-            // Update the job count for this worker and priority
-            int workerPriorityJobCount = _workerJobPriorityCounts.get(workerModel).get(priority);
-            workerPriorityJobCount++;
-            _workerJobPriorityCounts.get(workerModel).put(priority, workerPriorityJobCount);
-
-            // Update the score
-            long newScore = determineWorkerScore(workerModel, workerJobCount);
-            _workerScores.put(workerModel, newScore);
-        }
-
-        private long determineWorkerScore(WorkerModel workerModel, int workerJobCount)
-        {
-            long throughput = workerModel.getThroughputs()[workerJobCount - 1];
-            long throughputPerJob = throughput / workerJobCount;
-            long workerScore = 0;
-            Map<Integer, Integer> jobPriorityCounts = _workerJobPriorityCounts.get(workerModel);
-            for (int priorityLevel : jobPriorityCounts.keySet())
-            {
-                workerScore += jobPriorityCounts.get(priorityLevel) * throughputPerJob * priorityLevel;
-            }
-
-            return workerScore;
-        }
-
-        public long getScore()
-        {
-            long totalScore = 0;
-            for (long workerScore : _workerScores.values())
-            {
-                totalScore += workerScore;
-            }
-            return totalScore;
-        }
-    }
-
-    private static class JobPriorityComparator implements Comparator<JobModel>
-    {
-        @Override
-        public int compare(JobModel o1, JobModel o2)
-        {
-            if (o1.getPriority() < o2.getPriority())
-            {
-                return 1;
-            }
-            else if (o1.getPriority() > o2.getPriority())
-            {
-                return -1;
-            }
-            else
-            {
-                return 0;
-            }
-        }
     }
 }
