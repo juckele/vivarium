@@ -30,11 +30,11 @@ public class JobAssingments
     {
         // Figure out the current job count for this worker
         int workerJobCount = _workerJobCounts.get(workerModel);
-
+        int proposedWorkerJobCount = workerJobCount + 1;
         // Figure out the new score
-        long newScore = determineWorkerScore(workerModel, workerJobCount + 1);
-        long throughput = workerModel.getThroughputs()[workerJobCount];
-        long throughputPerJob = throughput / workerJobCount;
+        long newScore = determineWorkerScore(workerModel, proposedWorkerJobCount);
+        long throughput = workerModel.getThroughputs()[proposedWorkerJobCount - 1];
+        long throughputPerJob = throughput / proposedWorkerJobCount;
         newScore += throughputPerJob * priority;
 
         // Determine how the score has changed
@@ -50,7 +50,11 @@ public class JobAssingments
         _workerJobCounts.put(workerModel, workerJobCount);
 
         // Update the job count for this worker and priority
-        int workerPriorityJobCount = _workerJobPriorityCounts.get(workerModel).get(priority);
+        if (!_workerJobPriorityCounts.containsKey(workerModel))
+        {
+            _workerJobPriorityCounts.put(workerModel, new HashMap<>());
+        }
+        int workerPriorityJobCount = _workerJobPriorityCounts.get(workerModel).getOrDefault(priority, 0);
         workerPriorityJobCount++;
         _workerJobPriorityCounts.get(workerModel).put(priority, workerPriorityJobCount);
 
