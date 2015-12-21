@@ -17,21 +17,31 @@ public class RequestResourceMessage extends Message
 {
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
-    public UUID resourceID;
-    public ResourceFormat resourceFormat;
+    final private UUID _resourceID;
+    final private ResourceFormat _resourceFormat;
 
     @SuppressWarnings("unused") // Used for Jackson deserialization
     private RequestResourceMessage()
     {
-        resourceID = null;
-        resourceFormat = null;
+        _resourceID = null;
+        _resourceFormat = null;
     }
 
     @JsonCreator
     public RequestResourceMessage(@JsonProperty("resourceID") UUID resourceID,
             @JsonProperty("resourceFormat") ResourceFormat resourceFormat)
     {
-        this.resourceID = resourceID;
-        this.resourceFormat = resourceFormat;
+        this._resourceID = resourceID;
+        this._resourceFormat = resourceFormat;
+    }
+
+    public UUID getResourceID()
+    {
+        return _resourceID;
+    }
+
+    public ResourceFormat getResourceFormat()
+    {
+        return _resourceFormat;
     }
 }

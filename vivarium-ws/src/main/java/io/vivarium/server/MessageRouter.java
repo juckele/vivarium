@@ -122,22 +122,22 @@ public class MessageRouter implements StartableStoppable
 
     private void acceptResource(WebSocket webSocket, SendResourceMessage sendResourceMessage)
     {
-        String dataString = sendResourceMessage.dataString;
+        String dataString = sendResourceMessage.getDataString();
         String jsonString;
-        if (sendResourceMessage.resourceFormat == ResourceFormat.JSON)
+        if (sendResourceMessage.getResourceFormat() == ResourceFormat.JSON)
         {
-            jsonString = sendResourceMessage.dataString;
+            jsonString = sendResourceMessage.getDataString();
         }
-        else if (sendResourceMessage.resourceFormat == ResourceFormat.GWT_STREAM)
+        else if (sendResourceMessage.getResourceFormat() == ResourceFormat.GWT_STREAM)
         {
             VivariumObjectCollection collection = (VivariumObjectCollection) Streamer.get().fromString(dataString);
             jsonString = JSONConverter.serializerToJSONString(collection);
         }
         else
         {
-            throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.resourceFormat);
+            throw new IllegalStateException("Unexpected resource format " + sendResourceMessage.getResourceFormat());
         }
-        ResourceModel resource = new ResourceModel(sendResourceMessage.resourceID, jsonString,
+        ResourceModel resource = new ResourceModel(sendResourceMessage.getResourceID(), jsonString,
                 Version.FILE_FORMAT_VERSION);
         _persistenceModule.persist(resource);
     }
@@ -169,11 +169,11 @@ public class MessageRouter implements StartableStoppable
     private void handleRequestForResource(WebSocket webSocket, RequestResourceMessage requestResourceMessage)
             throws IOException
     {
-        UUID resourceID = requestResourceMessage.resourceID;
+        UUID resourceID = requestResourceMessage.getResourceID();
         Optional<ResourceModel> resource = _persistenceModule.fetch(resourceID, ResourceModel.class);
         if (resource.isPresent() && resource.get().jsonData.isPresent())
         {
-            ResourceFormat resourceFormat = requestResourceMessage.resourceFormat;
+            ResourceFormat resourceFormat = requestResourceMessage.getResourceFormat();
             String jsonString = resource.get().jsonData.get();
             String dataString = null;
             if (resourceFormat == ResourceFormat.JSON)
@@ -189,7 +189,7 @@ public class MessageRouter implements StartableStoppable
             {
                 throw new IllegalStateException("Unexpected resource format " + resourceFormat);
             }
-            SendResourceMessage response = new SendResourceMessage(requestResourceMessage.resourceID, dataString,
+            SendResourceMessage response = new SendResourceMessage(requestResourceMessage.getResourceID(), dataString,
                     resourceFormat);
             webSocket.send(mapper.writeValueAsString(response));
         }

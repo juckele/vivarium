@@ -57,7 +57,7 @@ public class DownloadResourceTask extends Task
             if (untypedMessage instanceof SendResourceMessage)
             {
                 SendResourceMessage sendResource = (SendResourceMessage) untypedMessage;
-                String jsonDataString = sendResource.dataString;
+                String jsonDataString = sendResource.getDataString();
                 VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonDataString);
                 _objects.put(collection);
             }

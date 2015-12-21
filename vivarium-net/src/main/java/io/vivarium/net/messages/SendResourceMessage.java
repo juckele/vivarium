@@ -17,23 +17,23 @@ public class SendResourceMessage extends Message
 {
     @JsonSerialize(using = UUIDSerializer.class)
     @JsonDeserialize(using = UUIDDeserializer.class)
-    public UUID resourceID;
-    public String dataString;
-    public ResourceFormat resourceFormat;
+    final private UUID _resourceID;
+    final private String _dataString;
+    final private ResourceFormat _resourceFormat;
 
     @SuppressWarnings("unused") // Used for Jackson deserialization
     private SendResourceMessage()
     {
-        this.resourceID = null;
-        this.resourceFormat = null;
-        this.dataString = null;
+        this._resourceID = null;
+        this._resourceFormat = null;
+        this._dataString = null;
     }
 
     public SendResourceMessage(UUID resourceID, String dataString, ResourceFormat resourceFormat)
     {
-        this.resourceID = resourceID;
-        this.resourceFormat = resourceFormat;
-        this.dataString = dataString;
+        this._resourceID = resourceID;
+        this._resourceFormat = resourceFormat;
+        this._dataString = dataString;
     }
 
     @JsonCreator
@@ -41,8 +41,23 @@ public class SendResourceMessage extends Message
             @JsonProperty("resourceFormat") ResourceFormat resourceFormat,
             @JsonProperty("dataString") String dataString)
     {
-        this.resourceID = resourceID;
-        this.resourceFormat = resourceFormat;
-        this.dataString = dataString;
+        this._resourceID = resourceID;
+        this._resourceFormat = resourceFormat;
+        this._dataString = dataString;
+    }
+
+    public UUID getResourceID()
+    {
+        return _resourceID;
+    }
+
+    public String getDataString()
+    {
+        return _dataString;
+    }
+
+    public ResourceFormat getResourceFormat()
+    {
+        return _resourceFormat;
     }
 }
