@@ -113,10 +113,10 @@ public class MessageRouter implements StartableStoppable
 
     private synchronized void acceptPledge(WebSocket webSocket, WorkerPledgeMessage pledge)
     {
-        WorkerModel worker = new WorkerModel(pledge.workerID, pledge.throughputs, pledge.active,
-                new Timestamp(System.currentTimeMillis()), pledge.fileFormatVersion, pledge.codeVersion);
+        WorkerModel worker = new WorkerModel(pledge.getWorkerID(), pledge.getThroughputs(), pledge.isActive(),
+                new Timestamp(System.currentTimeMillis()), pledge.getFileFormatVersion(), pledge.getCodeVersion());
         _persistenceModule.persist(worker);
-        _connectionManager.registerWorker(pledge.workerID, webSocket);
+        _connectionManager.registerWorker(pledge.getWorkerID(), webSocket);
         _enforcerScheduler.execute();
     }
 

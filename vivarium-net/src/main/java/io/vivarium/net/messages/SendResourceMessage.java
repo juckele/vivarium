@@ -17,14 +17,6 @@ public class SendResourceMessage extends Message
     final private String _dataString;
     final private ResourceFormat _resourceFormat;
 
-    @SuppressWarnings("unused") // Used for Jackson deserialization
-    private SendResourceMessage()
-    {
-        this._resourceID = null;
-        this._resourceFormat = null;
-        this._dataString = null;
-    }
-
     @JsonCreator
     public SendResourceMessage(@JsonProperty("resourceID") @JsonSerialize(using = UUIDSerializer.class) UUID resourceID,
             @JsonProperty("dataString") String dataString,

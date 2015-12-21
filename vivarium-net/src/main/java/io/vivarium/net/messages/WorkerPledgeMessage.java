@@ -4,6 +4,8 @@
 
 package io.vivarium.net.messages;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -16,33 +18,54 @@ import io.vivarium.util.Version;
 
 public class WorkerPledgeMessage extends Message
 {
-    @JsonSerialize(using = UUIDSerializer.class)
-    @JsonDeserialize(using = UUIDDeserializer.class)
-    public UUID workerID;
-    public boolean active;
-    @JsonSerialize(using = VersionSerializer.class)
-    @JsonDeserialize(using = VersionDeserializer.class)
-    public Version codeVersion = Version.CURRENT_VERSION;
-    public int fileFormatVersion = Version.FILE_FORMAT_VERSION;
-    public long[] throughputs;
-
-    @SuppressWarnings("unused") // Used by Jackson
-    private WorkerPledgeMessage()
-    {
-    }
+    private final UUID workerID;
+    private final boolean active;
+    private final Version codeVersion;
+    private final int fileFormatVersion;
+    private final long[] throughputs;
 
     public WorkerPledgeMessage(UUID workerID, long[] throughputs)
     {
         this(workerID, true, Version.CURRENT_VERSION, Version.FILE_FORMAT_VERSION, throughputs);
     }
 
-    public WorkerPledgeMessage(UUID workerID, boolean active, Version codeVersion, int fileFormatVersion,
-            long[] throughputs)
+    @JsonCreator
+    public WorkerPledgeMessage(@JsonProperty("workerID") @JsonSerialize(using = UUIDSerializer.class) UUID workerID,
+            @JsonProperty("active") boolean active,
+            @JsonProperty("codeVersion") @JsonSerialize(using = VersionSerializer.class) Version codeVersion,
+            @JsonProperty("fileFormatVersion") int fileFormatVersion, @JsonProperty("throughputs") long[] throughputs)
     {
         this.workerID = workerID;
         this.active = active;
         this.codeVersion = codeVersion;
         this.fileFormatVersion = fileFormatVersion;
         this.throughputs = throughputs;
+    }
+
+    @JsonDeserialize(using = UUIDDeserializer.class)
+    public UUID getWorkerID()
+    {
+        return workerID;
+    }
+
+    public boolean isActive()
+    {
+        return active;
+    }
+
+    @JsonDeserialize(using = VersionDeserializer.class)
+    public Version getCodeVersion()
+    {
+        return codeVersion;
+    }
+
+    public int getFileFormatVersion()
+    {
+        return fileFormatVersion;
+    }
+
+    public long[] getThroughputs()
+    {
+        return throughputs;
     }
 }
