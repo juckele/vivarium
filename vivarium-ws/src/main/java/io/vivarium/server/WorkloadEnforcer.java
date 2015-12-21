@@ -75,14 +75,33 @@ public class WorkloadEnforcer implements VoidFunction
     private JobAssingments buildDesiredJobAssingments(Collection<WorkerModel> workers,
             List<JobModel> prioritySortedJobs)
     {
-        // TODO: IMPLEMENT
-        return null;
+        JobAssingments desiredAssingments = new JobAssingments(workers);
+        Map<UUID, WorkerModel> workersByID = Maps.uniqueIndex(workers, WorkerModel::getWorkerID);
+        for (JobModel job : prioritySortedJobs)
+        {
+            long maxScoreImprovement = 0;
+            WorkerModel assignToWorker = null;
+            for (WorkerModel worker : workers)
+            {
+                long workerScoreImprovment = desiredAssingments.getScoreChangeForJob(worker, job.getPriority());
+                if (workerScoreImprovment > maxScoreImprovement)
+                {
+                    maxScoreImprovement = workerScoreImprovment;
+                    assignToWorker = worker;
+                }
+            }
+            if (assignToWorker != null)
+            {
+                desiredAssingments.addWorkerJob(assignToWorker, job.getPriority());
+            }
+        }
+        return desiredAssingments;
     }
 
     private JobAssingments buildActualJobAssingments(Collection<WorkerModel> workers, List<JobModel> assignedJobs)
     {
-        Map<UUID, WorkerModel> workersByID = Maps.uniqueIndex(workers, WorkerModel::getWorkerID);
         JobAssingments actualAssingments = new JobAssingments(workers);
+        Map<UUID, WorkerModel> workersByID = Maps.uniqueIndex(workers, WorkerModel::getWorkerID);
         for (JobModel job : assignedJobs)
         {
             UUID workerID = job.getCheckedOutByWorkerID().get();
@@ -107,6 +126,22 @@ public class WorkloadEnforcer implements VoidFunction
             }
         }
 
+        public long getScoreChangeForJob(WorkerModel workerModel, int priority)
+        {
+            // Figure out the current job count for this worker
+            int workerJobCount = _workerJobCounts.get(workerModel);
+
+            // Figure out the new score
+            long newScore = determineWorkerScore(workerModel, workerJobCount + 1);
+            long throughput = workerModel.getThroughputs()[workerJobCount];
+            long throughputPerJob = throughput / workerJobCount;
+            newScore += throughputPerJob * priority;
+
+            // Determine how the score has changed
+            long scoreChange = newScore - _workerScores.get(workerModel);
+            return scoreChange;
+        }
+
         public void addWorkerJob(WorkerModel workerModel, int priority)
         {
             // Update the job count for this worker
@@ -120,15 +155,22 @@ public class WorkloadEnforcer implements VoidFunction
             _workerJobPriorityCounts.get(workerModel).put(priority, workerPriorityJobCount);
 
             // Update the score
+            long newScore = determineWorkerScore(workerModel, workerJobCount);
+            _workerScores.put(workerModel, newScore);
+        }
+
+        private long determineWorkerScore(WorkerModel workerModel, int workerJobCount)
+        {
             long throughput = workerModel.getThroughputs()[workerJobCount - 1];
             long throughputPerJob = throughput / workerJobCount;
-            long newScore = 0;
+            long workerScore = 0;
             Map<Integer, Integer> jobPriorityCounts = _workerJobPriorityCounts.get(workerModel);
             for (int priorityLevel : jobPriorityCounts.keySet())
             {
-                newScore += jobPriorityCounts.get(priorityLevel) * throughputPerJob * priorityLevel;
+                workerScore += jobPriorityCounts.get(priorityLevel) * throughputPerJob * priorityLevel;
             }
-            _workerScores.put(workerModel, newScore);
+
+            return workerScore;
         }
 
         public long getScore()
