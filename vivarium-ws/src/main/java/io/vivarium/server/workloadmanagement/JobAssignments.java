@@ -89,4 +89,11 @@ public class JobAssignments
         }
         return totalScore;
     }
+
+    public boolean isWorkerFull(WorkerModel workerModel)
+    {
+        int jobCount = _workerJobCounts.get(workerModel);
+        int jobSlots = workerModel.getThroughputs().length;
+        return jobCount == jobSlots;
+    }
 }

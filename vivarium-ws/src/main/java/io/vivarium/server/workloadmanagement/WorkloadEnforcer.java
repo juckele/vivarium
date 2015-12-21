@@ -83,6 +83,10 @@ public class WorkloadEnforcer implements VoidFunction
             WorkerModel assignToWorker = null;
             for (WorkerModel worker : workers)
             {
+                if (desiredAssingments.isWorkerFull(worker))
+                {
+                    continue;
+                }
                 long workerScoreImprovment = desiredAssingments.getScoreChangeForJob(worker, job.getPriority());
                 if (workerScoreImprovment > maxScoreImprovement)
                 {
