@@ -11,6 +11,7 @@ import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.server.WebSocketServer;
 
+import io.vivarium.client.VivariumResearchClient;
 import io.vivarium.util.concurrency.StartableStoppable;
 
 public class ServerNetworkModule extends WebSocketServer implements StartableStoppable
@@ -40,9 +41,9 @@ public class ServerNetworkModule extends WebSocketServer implements StartableSto
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake)
     {
-        if (handshake.hasFieldValue("clientID"))
+        if (handshake.hasFieldValue(VivariumResearchClient.CLIENT_ID_HEADER))
         {
-            System.out.println(handshake.getFieldValue("clientID"));
+            System.out.println(handshake.getFieldValue(VivariumResearchClient.CLIENT_ID_HEADER));
         }
         else
         {

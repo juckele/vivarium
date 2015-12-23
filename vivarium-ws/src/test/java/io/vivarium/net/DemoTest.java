@@ -4,10 +4,12 @@
 
 package io.vivarium.net;
 
+import java.io.File;
 import java.util.concurrent.ExecutionException;
 
 import io.vivarium.client.TaskClient;
 import io.vivarium.client.WorkerClient;
+import io.vivarium.client.WorkerConfig;
 import io.vivarium.client.task.DownloadResourceTask;
 import io.vivarium.client.task.UploadResourceTask;
 import io.vivarium.core.Blueprint;
@@ -42,7 +44,7 @@ public class DemoTest
 
         Thread.sleep(100);
 
-        WorkerClient w = new WorkerClient();
+        WorkerClient w = new WorkerClient(WorkerConfig.loadWorkerConfig(new File(WorkerConfig.DEFAULT_PATH), true));
         w.connect();
 
         Thread.sleep(100);

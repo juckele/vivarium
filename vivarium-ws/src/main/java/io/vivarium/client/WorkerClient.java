@@ -9,7 +9,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.nio.channels.NotYetConnectedException;
 
-import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -19,15 +18,15 @@ import io.vivarium.net.Constants;
 import io.vivarium.net.messages.WorkerPledgeMessage;
 import io.vivarium.server.ClientConnectionManager;
 
-public class WorkerClient extends WebSocketClient
+public class WorkerClient extends VivariumResearchClient
 {
-    private final WorkerConfig config;
+    private final WorkerConfig _config;
     private final ObjectMapper mapper = new ObjectMapper();
 
-    public WorkerClient() throws URISyntaxException
+    public WorkerClient(WorkerConfig config) throws URISyntaxException
     {
-        super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null));
-        config = WorkerConfig.loadWorkerConfig(new File(WorkerConfig.DEFAULT_PATH), true);
+        super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null), config.workerID);
+        _config = config;
     }
 
     @Override
@@ -36,7 +35,7 @@ public class WorkerClient extends WebSocketClient
         System.out.println("WORKER: connection opened with client " + handshakedata);
         try
         {
-            this.send(mapper.writeValueAsString(new WorkerPledgeMessage(config.workerID, config.throughputs)));
+            this.send(mapper.writeValueAsString(new WorkerPledgeMessage(_config.workerID, _config.throughputs)));
         }
         catch (NotYetConnectedException | JsonProcessingException e)
         {
@@ -75,7 +74,8 @@ public class WorkerClient extends WebSocketClient
     {
         try
         {
-            WorkerClient worker = new WorkerClient();
+            WorkerClient worker = new WorkerClient(
+                    WorkerConfig.loadWorkerConfig(new File(WorkerConfig.DEFAULT_PATH), true));
             worker.connect();
 
         }

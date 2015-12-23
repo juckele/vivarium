@@ -6,11 +6,7 @@ package io.vivarium.client;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
-import java.util.Map;
 
-import org.java_websocket.client.WebSocketClient;
-import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.handshake.ServerHandshake;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -20,23 +16,15 @@ import io.vivarium.client.task.Task;
 import io.vivarium.net.Constants;
 import io.vivarium.util.UUID;
 
-public class TaskClient extends WebSocketClient
+public class TaskClient extends VivariumResearchClient
 {
     private ObjectMapper _mapper = new ObjectMapper();
     private Task _task;
 
     public TaskClient(Task task) throws URISyntaxException
     {
-        super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null), new Draft_10(),
-                uuidMap(UUID.randomUUID()), 0);
+        super(new URI("ws", null, "localhost", Constants.DEFAULT_PORT, "/", null, null), UUID.randomUUID());
         this._task = task;
-    }
-
-    private static Map<String, String> uuidMap(UUID clientID)
-    {
-        Map<String, String> map = new HashMap<>();
-        map.put("clientID", clientID.toString());
-        return map;
     }
 
     @Override
