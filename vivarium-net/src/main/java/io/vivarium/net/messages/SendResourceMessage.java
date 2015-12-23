@@ -17,11 +17,19 @@ public class SendResourceMessage extends Message
     final private String _dataString;
     final private ResourceFormat _resourceFormat;
 
+    public SendResourceMessage(UUID resourceID,  String dataString, ResourceFormat resourceFormat)
+    {
+        this(UUID.randomUUID(), resourceID, dataString, resourceFormat);
+    }
+
     @JsonCreator
-    public SendResourceMessage(@JsonProperty("resourceID") @JsonSerialize(using = UUIDSerializer.class) UUID resourceID,
+    public SendResourceMessage(@JsonProperty("messageID") @JsonSerialize(using = UUIDSerializer.class) UUID messageID,
+            @JsonProperty("resourceID") @JsonSerialize(using = UUIDSerializer.class) UUID resourceID,
             @JsonProperty("dataString") String dataString,
             @JsonProperty("resourceFormat") ResourceFormat resourceFormat)
     {
+        super(messageID);
+
         this._resourceID = resourceID;
         this._dataString = dataString;
         this._resourceFormat = resourceFormat;

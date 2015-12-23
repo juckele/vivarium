@@ -26,15 +26,16 @@ public class WorkerPledgeMessage extends Message
 
     public WorkerPledgeMessage(UUID workerID, long[] throughputs)
     {
-        this(workerID, true, Version.CURRENT_VERSION, Version.FILE_FORMAT_VERSION, throughputs);
+        this(UUID.randomUUID(), workerID, true, Version.CURRENT_VERSION, Version.FILE_FORMAT_VERSION, throughputs);
     }
 
     @JsonCreator
-    public WorkerPledgeMessage(@JsonProperty("workerID") @JsonSerialize(using = UUIDSerializer.class) UUID workerID,
+    public WorkerPledgeMessage(@JsonProperty("messageID") @JsonSerialize(using = UUIDSerializer.class) UUID messageID,@JsonProperty("workerID") @JsonSerialize(using = UUIDSerializer.class) UUID workerID,
             @JsonProperty("active") boolean active,
             @JsonProperty("codeVersion") @JsonSerialize(using = VersionSerializer.class) Version codeVersion,
             @JsonProperty("fileFormatVersion") int fileFormatVersion, @JsonProperty("throughputs") long[] throughputs)
-    {
+    {        super(messageID);
+
         this.workerID = workerID;
         this.active = active;
         this.codeVersion = codeVersion;
