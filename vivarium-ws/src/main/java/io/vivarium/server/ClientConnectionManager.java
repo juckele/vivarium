@@ -21,18 +21,18 @@ public class ClientConnectionManager implements StartableStoppable
     public static final int DUPLICATE_CONNECTION = 2127;
     public static final int SERVER_SHUTDOWN = 2128;
 
-    private Map<UUID, WebSocket> workerIDToConnection = new HashMap<UUID, WebSocket>();
-    private Map<WebSocket, UUID> connectionToWorkerID = new HashMap<WebSocket, UUID>();
+    private Map<UUID, WebSocket> _workerIDToWebSocket = new HashMap<>();
+    private Map<WebSocket, UUID> _webSocketToWorkerID = new HashMap<>();
 
     public synchronized void registerWorker(UUID workerID, WebSocket workerSocket)
     {
         Preconditions.checkNotNull(workerID);
         Preconditions.checkNotNull(workerSocket);
-        if (workerIDToConnection.containsKey(workerID))
+        if (_workerIDToWebSocket.containsKey(workerID))
         {
             // Remove the existing connection from the maps
-            WebSocket existingConnection = workerIDToConnection.remove(workerID);
-            connectionToWorkerID.remove(existingConnection);
+            WebSocket existingConnection = _workerIDToWebSocket.remove(workerID);
+            _webSocketToWorkerID.remove(existingConnection);
 
             // Place a new connection into the maps
             internalRegisterWorker(workerID, workerSocket);
@@ -56,29 +56,29 @@ public class ClientConnectionManager implements StartableStoppable
     @Override
     public synchronized void stop()
     {
-        for (Entry<UUID, WebSocket> entry : workerIDToConnection.entrySet())
+        for (Entry<UUID, WebSocket> entry : _workerIDToWebSocket.entrySet())
         {
             UUID uuid = entry.getKey();
             WebSocket socket = entry.getValue();
-            workerIDToConnection.remove(uuid);
-            connectionToWorkerID.remove(socket);
+            _workerIDToWebSocket.remove(uuid);
+            _webSocketToWorkerID.remove(socket);
             socket.close(SERVER_SHUTDOWN, "The server has been shut down.");
         }
     }
 
     private void internalRegisterWorker(UUID workerID, WebSocket workerSocket)
     {
-        workerIDToConnection.put(workerID, workerSocket);
-        connectionToWorkerID.put(workerSocket, workerID);
+        _workerIDToWebSocket.put(workerID, workerSocket);
+        _webSocketToWorkerID.put(workerSocket, workerID);
     }
 
     public synchronized Optional<UUID> socketClosed(WebSocket closedSocket)
     {
         Preconditions.checkNotNull(closedSocket);
-        if (connectionToWorkerID.containsKey(closedSocket))
+        if (_webSocketToWorkerID.containsKey(closedSocket))
         {
-            UUID workerID = connectionToWorkerID.remove(closedSocket);
-            workerIDToConnection.remove(workerID);
+            UUID workerID = _webSocketToWorkerID.remove(closedSocket);
+            _workerIDToWebSocket.remove(workerID);
             return Optional.of(workerID);
         }
         else
@@ -90,9 +90,9 @@ public class ClientConnectionManager implements StartableStoppable
     public synchronized Optional<WebSocket> getSocketForWorker(UUID workerID)
     {
         Preconditions.checkNotNull(workerID);
-        if (workerIDToConnection.containsKey(workerID))
+        if (_workerIDToWebSocket.containsKey(workerID))
         {
-            return Optional.of(workerIDToConnection.get(workerID));
+            return Optional.of(_workerIDToWebSocket.get(workerID));
         }
         else
         {
