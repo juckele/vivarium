@@ -21,30 +21,41 @@ public class ClientConnectionManager implements StartableStoppable
     public static final int DUPLICATE_CONNECTION = 2127;
     public static final int SERVER_SHUTDOWN = 2128;
 
+    // Dependencies
+    private final ClientConnectionFactory _clientConnectionFactory;
+
+    // Internal state
     private Map<UUID, WebSocket> _workerIDToWebSocket = new HashMap<>();
     private Map<WebSocket, UUID> _webSocketToWorkerID = new HashMap<>();
+    private Map<UUID, ClientConnection> _workerIDToConnection = new HashMap<>();
 
-    public synchronized void registerWorker(UUID workerID, WebSocket workerSocket)
+    public ClientConnectionManager(ClientConnectionFactory clientConnectionFactory)
+    {
+        this._clientConnectionFactory = clientConnectionFactory;
+    }
+
+    public synchronized ClientConnection registerWorker(UUID workerID, WebSocket workerSocket)
     {
         Preconditions.checkNotNull(workerID);
         Preconditions.checkNotNull(workerSocket);
-        if (_workerIDToWebSocket.containsKey(workerID))
+        if (_workerIDToConnection.containsKey(workerID))
         {
-            // Remove the existing connection from the maps
-            WebSocket existingConnection = _workerIDToWebSocket.remove(workerID);
-            _webSocketToWorkerID.remove(existingConnection);
+            ClientConnection connection = _workerIDToConnection.get(workerID);
+            connection.setWebSocket(workerSocket);
 
-            // Place a new connection into the maps
+            // Update the uuid <-> socket maps
+            internalDeregisterWorker(workerID, workerSocket);
             internalRegisterWorker(workerID, workerSocket);
-
-            // Close the existing connection
-            existingConnection.close(DUPLICATE_CONNECTION, "Duplicate connection opened by client [" + workerID + "]");
         }
         else
         {
-            // Place a new connection into the maps
+            ClientConnection connection = _clientConnectionFactory.make(workerID, workerSocket);
+            _workerIDToConnection.put(workerID, connection);
+
+            // Update the uuid <-> socket maps
             internalRegisterWorker(workerID, workerSocket);
         }
+        return _workerIDToConnection.get(workerID);
     }
 
     @Override
@@ -62,8 +73,14 @@ public class ClientConnectionManager implements StartableStoppable
             WebSocket socket = entry.getValue();
             _workerIDToWebSocket.remove(uuid);
             _webSocketToWorkerID.remove(socket);
-            socket.close(SERVER_SHUTDOWN, "The server has been shut down.");
+            _workerIDToConnection.remove(uuid).stop();
         }
+    }
+
+    private void internalDeregisterWorker(UUID workerID, WebSocket workerSocket)
+    {
+        WebSocket existingConnection = _workerIDToWebSocket.remove(workerID);
+        _webSocketToWorkerID.remove(existingConnection);
     }
 
     private void internalRegisterWorker(UUID workerID, WebSocket workerSocket)

@@ -50,7 +50,8 @@ public class VivariumResearchServer implements StartableStoppable
         // Build server dependencies
         Connection databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
         PersistenceModule persistenceModule = new PersistenceModule(databaseConnection);
-        ClientConnectionManager clientConnectionManager = new ClientConnectionManager();
+        ClientConnectionFactory clientConnectionFactory = new ClientConnectionFactory();
+        ClientConnectionManager clientConnectionManager = new ClientConnectionManager(clientConnectionFactory);
         JobAssignmentThreadFactory jobAssignmentThreadFactory = new JobAssignmentThreadFactory(clientConnectionManager);
         WorkloadEnforcer workloadEnforcer = new WorkloadEnforcer(persistenceModule, jobAssignmentThreadFactory);
         VoidFunctionScheduler enforcerScheduler = new VoidFunctionScheduler(workloadEnforcer,

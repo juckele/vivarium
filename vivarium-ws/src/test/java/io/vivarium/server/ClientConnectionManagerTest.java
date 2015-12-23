@@ -19,7 +19,7 @@ public class ClientConnectionManagerTest
     public void testRegisterWorker()
     {
         // Create CCM
-        ClientConnectionManager manager = new ClientConnectionManager();
+        ClientConnectionManager manager = new ClientConnectionManager(mock(ClientConnectionFactory.class));
 
         // Register a worker
         UUID workerID = UUID.randomUUID();
