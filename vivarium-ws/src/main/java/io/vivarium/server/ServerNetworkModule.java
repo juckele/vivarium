@@ -40,6 +40,14 @@ public class ServerNetworkModule extends WebSocketServer implements StartableSto
     @Override
     public void onOpen(WebSocket conn, ClientHandshake handshake)
     {
+        if (handshake.hasFieldValue("clientID"))
+        {
+            System.out.println(handshake.getFieldValue("clientID"));
+        }
+        else
+        {
+            System.out.println("CLIENT DOESN'T HAVE ID");
+        }
         _router.onOpen(conn, handshake);
     }
 
