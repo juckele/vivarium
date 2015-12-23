@@ -16,7 +16,6 @@ import com.github.nmorel.gwtjackson.client.stream.JsonWriter;
 
 public class UUIDSerializer extends JsonSerializer<UUID>
 {
-
     private static final UUIDSerializer INSTANCE = new UUIDSerializer();
 
     /**
