@@ -40,21 +40,10 @@ public class SimpleFuture<T> implements Future<T>
         return _value;
     }
 
-    private synchronized void setValue(T value)
-    {
-        _value = value;
-    }
-
-    private synchronized boolean getDone()
-    {
-        return _done;
-    }
-
-    private synchronized void setDone(boolean done)
-    {
-        _done = done;
-    }
-
+    /**
+     * GenericFuture objects cannot be cancelled. Calling this method returns false, because the future will not be
+     * cancelled.
+     */
     @Override
     public boolean cancel(boolean mayInterruptIfRunning)
     {
@@ -62,6 +51,10 @@ public class SimpleFuture<T> implements Future<T>
         return false;
     }
 
+    /**
+     * GenericFuture objects cannot be cancelled. Calling this method returns false, because the future is not
+     * cancelled.
+     */
     @Override
     public boolean isCancelled()
     {
@@ -70,21 +63,28 @@ public class SimpleFuture<T> implements Future<T>
     }
 
     @Override
-    public boolean isDone()
+    public synchronized boolean isDone()
     {
-        return getDone();
+        return _done;
     }
 
-    public void put(T value)
+    /**
+     * The SimpleFuture is an externally controlled future. The SimpleFuture is completed by calling put, thus providing
+     * the value to any other waiting threads.
+     *
+     * @param value
+     *            The value to set the future to.
+     */
+    public synchronized void put(T value)
     {
-        setValue(value);
-        setDone(true);
+        _value = value;
+        _done = true;
     }
 
     @Override
     public T get() throws InterruptedException, ExecutionException
     {
-        while (!getDone())
+        while (!isDone())
         {
             Thread.sleep(0);
         }
@@ -96,11 +96,11 @@ public class SimpleFuture<T> implements Future<T>
     {
         long timeoutInMS = unit.toMillis(timeout);
         long startWaitTime = System.currentTimeMillis();
-        while (!getDone() && startWaitTime + timeoutInMS < System.currentTimeMillis())
+        while (!isDone() && startWaitTime + timeoutInMS < System.currentTimeMillis())
         {
             Thread.sleep(0);
         }
-        if (getDone())
+        if (isDone())
         {
             return getValue();
         }
