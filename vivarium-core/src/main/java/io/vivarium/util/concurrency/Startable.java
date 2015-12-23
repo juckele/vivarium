@@ -17,6 +17,7 @@
 
 package io.vivarium.util.concurrency;
 
-public interface StartableStoppable extends Startable, Stoppable
+public interface Startable
 {
+    void start() throws Exception;
 }
