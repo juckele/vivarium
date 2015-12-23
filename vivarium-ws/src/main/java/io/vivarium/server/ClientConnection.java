@@ -4,7 +4,11 @@
 
 package io.vivarium.server;
 
+import java.util.Optional;
+
 import org.java_websocket.WebSocket;
+
+import com.google.common.base.Preconditions;
 
 import io.vivarium.util.UUID;
 import io.vivarium.util.concurrency.Stoppable;
@@ -12,29 +16,47 @@ import io.vivarium.util.concurrency.Stoppable;
 public class ClientConnection implements Stoppable
 {
     private final UUID _workerID;
-    private WebSocket _webSocket;
+    private Optional<WebSocket> _webSocket;
 
     public ClientConnection(UUID workerID, WebSocket webSocket)
     {
-        super();
         this._workerID = workerID;
-        this._webSocket = webSocket;
+        this._webSocket = Optional.of(webSocket);
     }
 
     public synchronized void setWebSocket(WebSocket webSocket)
     {
         // Close the existing connection
-        if (_webSocket != null)
+        if (_webSocket.isPresent())
         {
-            _webSocket.close(ClientConnectionManager.DUPLICATE_CONNECTION,
+            _webSocket.get().close(ClientConnectionManager.DUPLICATE_CONNECTION,
                     "Duplicate connection opened by client [" + _workerID + "]");
         }
-        _webSocket = webSocket;
+        _webSocket = Optional.of(webSocket);
     }
 
     @Override
-    public void stop()
+    public synchronized void stop()
     {
-        _webSocket.close(ClientConnectionManager.SERVER_SHUTDOWN, "The server has been shut down.");
+        if (_webSocket.isPresent())
+        {
+            _webSocket.get().close(ClientConnectionManager.SERVER_SHUTDOWN, "The server has been shut down.");
+        }
+    }
+
+    public synchronized void socketClosed(WebSocket closedSocket)
+    {
+        Preconditions.checkArgument(_webSocket.get() == closedSocket);
+        _webSocket = Optional.empty();
+    }
+
+    public UUID get_workerID()
+    {
+        return _workerID;
+    }
+
+    public synchronized Optional<WebSocket> getWebSocket()
+    {
+        return _webSocket;
     }
 }

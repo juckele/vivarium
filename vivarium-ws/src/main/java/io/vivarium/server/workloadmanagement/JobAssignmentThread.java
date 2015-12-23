@@ -1,9 +1,6 @@
 package io.vivarium.server.workloadmanagement;
 
-import java.util.Optional;
-
-import org.java_websocket.WebSocket;
-
+import io.vivarium.server.ClientConnection;
 import io.vivarium.server.ClientConnectionManager;
 
 public class JobAssignmentThread
@@ -41,10 +38,9 @@ public class JobAssignmentThread
         @Override
         public void run()
         {
-            Optional<WebSocket> workerSocket = _clientConnectionManager
-                    .getSocketForWorker(_jobAssingmentOperation.getWorkerID());
+            ClientConnection connection = _clientConnectionManager
+                    .getConnectionForWorker(_jobAssingmentOperation.getWorkerID());
             // TODO Auto-generated method stub
-
         }
 
     }

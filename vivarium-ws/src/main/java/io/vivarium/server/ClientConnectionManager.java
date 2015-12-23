@@ -6,8 +6,6 @@ package io.vivarium.server;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Optional;
 
 import org.java_websocket.WebSocket;
 
@@ -25,7 +23,6 @@ public class ClientConnectionManager implements StartableStoppable
     private final ClientConnectionFactory _clientConnectionFactory;
 
     // Internal state
-    private Map<UUID, WebSocket> _workerIDToWebSocket = new HashMap<>();
     private Map<WebSocket, UUID> _webSocketToWorkerID = new HashMap<>();
     private Map<UUID, ClientConnection> _workerIDToConnection = new HashMap<>();
 
@@ -67,53 +64,43 @@ public class ClientConnectionManager implements StartableStoppable
     @Override
     public synchronized void stop()
     {
-        for (Entry<UUID, WebSocket> entry : _workerIDToWebSocket.entrySet())
+        _webSocketToWorkerID.clear();
+        for (UUID uuid : _workerIDToConnection.keySet())
         {
-            UUID uuid = entry.getKey();
-            WebSocket socket = entry.getValue();
-            _workerIDToWebSocket.remove(uuid);
-            _webSocketToWorkerID.remove(socket);
             _workerIDToConnection.remove(uuid).stop();
         }
     }
 
     private void internalDeregisterWorker(UUID workerID, WebSocket workerSocket)
     {
-        WebSocket existingConnection = _workerIDToWebSocket.remove(workerID);
-        _webSocketToWorkerID.remove(existingConnection);
+        _webSocketToWorkerID.remove(workerSocket);
     }
 
     private void internalRegisterWorker(UUID workerID, WebSocket workerSocket)
     {
-        _workerIDToWebSocket.put(workerID, workerSocket);
         _webSocketToWorkerID.put(workerSocket, workerID);
     }
 
-    public synchronized Optional<UUID> socketClosed(WebSocket closedSocket)
+    public synchronized void socketClosed(WebSocket closedSocket)
     {
         Preconditions.checkNotNull(closedSocket);
         if (_webSocketToWorkerID.containsKey(closedSocket))
         {
             UUID workerID = _webSocketToWorkerID.remove(closedSocket);
-            _workerIDToWebSocket.remove(workerID);
-            return Optional.of(workerID);
-        }
-        else
-        {
-            return Optional.empty();
+            _workerIDToConnection.get(workerID).socketClosed(closedSocket);
         }
     }
 
-    public synchronized Optional<WebSocket> getSocketForWorker(UUID workerID)
+    public synchronized ClientConnection getConnectionForWorker(UUID workerID)
     {
         Preconditions.checkNotNull(workerID);
-        if (_workerIDToWebSocket.containsKey(workerID))
+        if (_workerIDToConnection.containsKey(workerID))
         {
-            return Optional.of(_workerIDToWebSocket.get(workerID));
+            return _workerIDToConnection.get(workerID);
         }
         else
         {
-            return Optional.empty();
+            throw new IllegalStateException("Worker " + workerID + " is not known.");
         }
     }
 }

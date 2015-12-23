@@ -19,7 +19,8 @@ public class ClientConnectionManagerTest
     public void testRegisterWorker()
     {
         // Create CCM
-        ClientConnectionManager manager = new ClientConnectionManager(mock(ClientConnectionFactory.class));
+        ClientConnectionFactory factory = new ClientConnectionFactory();
+        ClientConnectionManager manager = new ClientConnectionManager(factory);
 
         // Register a worker
         UUID workerID = UUID.randomUUID();
@@ -27,9 +28,10 @@ public class ClientConnectionManagerTest
         manager.registerWorker(workerID, workerSocket);
 
         // Get the worker socket
-        WebSocket fetchedWorkerSocket = manager.getSocketForWorker(workerID).get();
+        ClientConnection fetchedConnection = manager.getConnectionForWorker(workerID);
 
-        Tester.isTrue("original socket and fetched socket are the same", workerSocket == fetchedWorkerSocket);
+        Tester.isTrue("original socket and fetched socket are the same",
+                workerSocket == fetchedConnection.getWebSocket().get());
 
         // Register a second worker
         UUID workerID2 = UUID.randomUUID();
@@ -37,9 +39,9 @@ public class ClientConnectionManagerTest
         manager.registerWorker(workerID2, workerSocket2);
 
         // Get the second worker socket
-        WebSocket fetchedWorkerSocket2 = manager.getSocketForWorker(workerID2).get();
+        ClientConnection fetchedConnection2 = manager.getConnectionForWorker(workerID2);
         Tester.isFalse("Fetched sockets from different workers are not the same",
-                fetchedWorkerSocket == fetchedWorkerSocket2);
+                fetchedConnection.getWebSocket().get() == fetchedConnection2.getWebSocket().get());
     }
 
 }
