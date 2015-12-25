@@ -21,6 +21,7 @@ public class InboundNetworkListener
     public void onOpen(OutboundNetworkConnection outboundNetworkConnection, Handshakedata handshake)
     {
         Preconditions.checkState(_networkModule != null);
+        _networkModule.onOpen(outboundNetworkConnection, handshake);
     }
 
     public void onClose(OutboundNetworkConnection outboundNetworkConnection, int code, String reason, boolean remote)
