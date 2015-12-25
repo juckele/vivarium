@@ -29,22 +29,19 @@ public class ServerWebSocketManager extends WebSocketServer
     @Override
     public void onClose(WebSocket webSocket, int code, String reason, boolean remote)
     {
-        // TODO Auto-generated method stub
-
+        _inboundListener.onClose(new ServerWebSocket(webSocket), code, reason, remote);
     }
 
     @Override
     public void onMessage(WebSocket webSocket, String message)
     {
-        // TODO Auto-generated method stub
-
+        _inboundListener.onMessage(new ServerWebSocket(webSocket), message);
     }
 
     @Override
     public void onError(WebSocket webSocket, Exception ex)
     {
-        // TODO Auto-generated method stub
-
+        _inboundListener.onError(new ServerWebSocket(webSocket), ex);
     }
 
 }
