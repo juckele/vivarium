@@ -6,6 +6,9 @@ package io.vivarium.net;
 
 import org.java_websocket.WebSocket;
 
+/**
+ * Wraps a WebSocket so that is can be treated as an OutboundNetworkConnection.
+ */
 public class ServerWebSocket implements OutboundNetworkConnection
 {
     private final WebSocket _webSocket;

@@ -6,9 +6,9 @@ package io.vivarium.net;
 
 import io.vivarium.net.messages.Message;
 
-public class NetworkModule
+public class ClientNetworkModule extends NetworkModule
 {
-    public <T extends Message> void addMessageListener(MessageListener<T> listener, Class<T> messageClazz)
+    public void sendMessage(Message message)
     {
     }
 }
