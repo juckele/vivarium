@@ -10,14 +10,16 @@ import io.vivarium.net.messages.Message;
 
 public class ClientNetworkModule extends NetworkModule
 {
-    public void sendMessage(Message message)
+    private OutboundNetworkConnection _outboundConnection = null;
+
+    synchronized public void sendMessage(Message message)
     {
+        super.sendMessage(_outboundConnection, message);
     }
 
     @Override
-    void onOpen(OutboundNetworkConnection outboundNetworkConnection, Handshakedata handshake)
+    synchronized void onOpen(OutboundNetworkConnection outboundNetworkConnection, Handshakedata handshake)
     {
-        // TODO Auto-generated method stub
-
+        _outboundConnection = outboundNetworkConnection;
     }
 }
