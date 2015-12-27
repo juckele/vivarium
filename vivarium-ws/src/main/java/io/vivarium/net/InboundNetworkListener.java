@@ -27,15 +27,18 @@ public class InboundNetworkListener
     public void onClose(OutboundNetworkConnection outboundNetworkConnection, int code, String reason, boolean remote)
     {
         Preconditions.checkState(_networkModule != null);
+        _networkModule.onClose(outboundNetworkConnection, code, reason, remote);
     }
 
     public void onMessage(OutboundNetworkConnection outboundNetworkConnection, String message)
     {
         Preconditions.checkState(_networkModule != null);
+        _networkModule.onMessage(outboundNetworkConnection, message);
     }
 
     public void onError(OutboundNetworkConnection outboundNetworkConnection, Exception ex)
     {
         Preconditions.checkState(_networkModule != null);
+        _networkModule.onError(outboundNetworkConnection, ex);
     }
 }

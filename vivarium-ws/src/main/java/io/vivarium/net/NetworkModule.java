@@ -11,7 +11,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import io.vivarium.net.messages.Message;
 
-public class NetworkModule
+public abstract class NetworkModule
 {
     ObjectMapper _jsonMessageMapper = new ObjectMapper();
 
@@ -33,7 +33,23 @@ public class NetworkModule
         }
     }
 
-    void onOpen(OutboundNetworkConnection outboundNetworkConnection, Handshakedata handshake)
+    abstract void onOpen(OutboundNetworkConnection outboundNetworkConnection, Handshakedata handshake);
+
+    public void onClose(OutboundNetworkConnection outboundNetworkConnection, int code, String reason, boolean remote)
     {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void onMessage(OutboundNetworkConnection outboundNetworkConnection, String message)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    public void onError(OutboundNetworkConnection outboundNetworkConnection, Exception ex)
+    {
+        // TODO Auto-generated method stub
+
     }
 }
