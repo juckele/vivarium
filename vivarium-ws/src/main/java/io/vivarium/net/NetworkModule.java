@@ -13,7 +13,14 @@ import io.vivarium.net.messages.Message;
 
 public abstract class NetworkModule
 {
-    ObjectMapper _jsonMessageMapper = new ObjectMapper();
+    private ObjectMapper _messageMapper = new ObjectMapper();
+    private InboundNetworkListener _inboundListener;
+
+    public NetworkModule(InboundNetworkListener inboundListener, ObjectMapper _messageMapper)
+    {
+        _inboundListener = inboundListener;
+        _inboundListener.setNetworkModule(this);
+    }
 
     public <T extends Message> void addMessageListener(MessageListener<T> listener, Class<T> messageClazz)
     {
@@ -23,7 +30,7 @@ public abstract class NetworkModule
     {
         try
         {
-            String dataString = _jsonMessageMapper.writeValueAsString(message);
+            String dataString = _messageMapper.writeValueAsString(message);
             outboundConnection.send(dataString);
         }
         catch (JsonProcessingException e)
