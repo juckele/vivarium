@@ -21,6 +21,5 @@ public class ServerNetworkModuleTest
         Tester.isNotNull("NetworkModule can be built", networkModule);
 
         networkModule.sendMessage(UUID.randomUUID(), mock(Message.class));
-        Tester.fail("The previous line should have failed.");
     }
 }
