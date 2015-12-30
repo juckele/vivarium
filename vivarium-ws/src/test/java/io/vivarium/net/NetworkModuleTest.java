@@ -30,11 +30,11 @@ public class NetworkModuleTest
         NetworkModule networkModule = new ServerNetworkModule(inboundNetworkListener, objectMapper);
 
         // Build and set up the message listener
-        Message message = new TestMessage(UUID.randomUUID());
         MessageListener<TestMessage> listener = mock(MessageListener.class);
         networkModule.addMessageListener(listener, TestMessage.class);
 
         // Send the message to the network module
+        Message message = new TestMessage(UUID.randomUUID());
         networkModule.onMessage(null, objectMapper.writeValueAsString(message));
 
         // Verify that the listener was called
@@ -56,7 +56,6 @@ public class NetworkModuleTest
         NetworkModule networkModule = new ServerNetworkModule(inboundNetworkListener, objectMapper);
 
         // Build and set up the message listener
-        Message message = new TestMessage(UUID.randomUUID());
         MessageListener<TestMessage> listener = mock(MessageListener.class);
         networkModule.addMessageListener(listener, TestMessage.class);
 
@@ -64,6 +63,7 @@ public class NetworkModuleTest
         networkModule.removeMessageListener(listener, TestMessage.class);
 
         // Send the message to the network module
+        Message message = new TestMessage(UUID.randomUUID());
         networkModule.onMessage(null, objectMapper.writeValueAsString(message));
 
         // Verify that the listener was not called
@@ -83,13 +83,13 @@ public class NetworkModuleTest
         NetworkModule networkModule = new ServerNetworkModule(inboundNetworkListener, objectMapper);
 
         // Build the message listener
-        Message message = new TestMessage(UUID.randomUUID());
         MessageListener<TestMessage> listener = mock(MessageListener.class);
 
         // Remove the message listener without adding it
         networkModule.removeMessageListener(listener, TestMessage.class);
 
         // Send the message to the network module
+        Message message = new TestMessage(UUID.randomUUID());
         networkModule.onMessage(null, objectMapper.writeValueAsString(message));
 
         // Verify that the listener was not called
