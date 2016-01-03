@@ -8,6 +8,7 @@ import com.johnuckele.vtest.Tester;
 import io.vivarium.net.messages.Message;
 import io.vivarium.net.messages.WorkerPledgeMessage;
 import io.vivarium.util.UUID;
+import io.vivarium.util.Version;
 
 public class WorkerPledgeMessageTest
 {
@@ -27,9 +28,12 @@ public class WorkerPledgeMessageTest
         WorkerPledgeMessage pledge1;
         Message pledge2;
 
-        UUID commonUUID = UUID.randomUUID();
-        pledge1 = new WorkerPledgeMessage(commonUUID, new long[] { 10, 15, 20 });
-        pledge2 = new WorkerPledgeMessage(commonUUID, new long[] { 10, 15, 20 });
+        UUID messageID = UUID.randomUUID();
+        UUID workerID = UUID.randomUUID();
+        pledge1 = new WorkerPledgeMessage(messageID, workerID, true, Version.CURRENT_VERSION,
+                Version.FILE_FORMAT_VERSION, new long[] { 10, 15, 20 });
+        pledge2 = new WorkerPledgeMessage(messageID, workerID, true, Version.CURRENT_VERSION,
+                Version.FILE_FORMAT_VERSION, new long[] { 10, 15, 20 });
         Tester.equal("Two messages that are the same are equal", pledge1, pledge2);
 
         pledge1 = new WorkerPledgeMessage(UUID.randomUUID(), new long[] { 10, 15, 20 });
