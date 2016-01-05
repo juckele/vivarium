@@ -148,15 +148,16 @@ public class MessageRouter implements StartableStoppable
         if (createJobMessage.getJob() instanceof SimulationJob)
         {
             SimulationJob simulationJob = (SimulationJob) createJobMessage.getJob();
-            job = new RunSimulationJobModel(simulationJob.jobID, JobStatus.BLOCKED, (short) 0, null, null, null,
-                    simulationJob.endTick, simulationJob.inputResources, simulationJob.outputResources,
-                    simulationJob.dependencies);
+            job = new RunSimulationJobModel(simulationJob.getJobID(), JobStatus.BLOCKED, (short) 0, null, null, null,
+                    simulationJob.getEndTick(), simulationJob.getInputResources(), simulationJob.getOutputResources(),
+                    simulationJob.getDependencies());
         }
         else if (createJobMessage.getJob() instanceof CreateWorldJob)
         {
             CreateWorldJob createWorldJob = (CreateWorldJob) createJobMessage.getJob();
-            job = new CreateWorldJobModel(createWorldJob.jobID, JobStatus.BLOCKED, (short) 0, null, null, null,
-                    createWorldJob.inputResources, createWorldJob.outputResources, createWorldJob.dependencies);
+            job = new CreateWorldJobModel(createWorldJob.getJobID(), JobStatus.BLOCKED, (short) 0, null, null, null,
+                    createWorldJob.getInputResources(), createWorldJob.getOutputResources(),
+                    createWorldJob.getDependencies());
         }
         else
         {

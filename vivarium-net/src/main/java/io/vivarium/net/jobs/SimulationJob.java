@@ -6,29 +6,70 @@ package io.vivarium.net.jobs;
 
 import java.util.Collection;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.google.common.base.Preconditions;
+
+import io.vivarium.net.UUIDSerializer;
 import io.vivarium.util.UUID;
 
 public class SimulationJob extends Job
 {
-    public long endTick;
+    private final long _endTick;
 
-    @SuppressWarnings("unused") // Used for Jackson deserialization
-    private SimulationJob()
+    @JsonCreator
+    public SimulationJob(@JsonProperty("type") JobType jobType,
+            @JsonProperty("jobID") @JsonSerialize(using = UUIDSerializer.class) UUID jobID,
+            @JsonProperty("messageID") Collection<UUID> inputResources,
+            @JsonProperty("messageID") Collection<UUID> outputResources,
+            @JsonProperty("messageID") Collection<UUID> dependencies, @JsonProperty("messageID") long endTick)
     {
-        super();
-        this.endTick = 0;
+        super(jobType, jobID, inputResources, outputResources, dependencies);
+        Preconditions.checkArgument(jobType == JobType.RUN_SIMULATION);
+        this._endTick = endTick;
     }
 
     public SimulationJob(Collection<UUID> inputResources, Collection<UUID> outputResources,
             Collection<UUID> dependencies, long endTick)
     {
-        super(inputResources, outputResources, dependencies);
-        this.endTick = endTick;
+        this(JobType.RUN_SIMULATION, UUID.randomUUID(), inputResources, outputResources, dependencies, endTick);
+    }
+
+    public long getEndTick()
+    {
+        return _endTick;
     }
 
     @Override
-    protected JobType getType()
+    public int hashCode()
     {
-        return JobType.RUN_SIMULATION;
+        final int prime = 31;
+        int result = super.hashCode();
+        result = prime * result + (int) (_endTick ^ (_endTick >>> 32));
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (!super.equals(obj))
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        SimulationJob other = (SimulationJob) obj;
+        if (_endTick != other._endTick)
+        {
+            return false;
+        }
+        return true;
     }
 }

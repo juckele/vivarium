@@ -100,8 +100,8 @@ public class NormalizationConvergence
             carelessSleep(100);
 
             long endTick = ticksPerSnapshot;
-            UUID defaultJobDependency = createDefaultWorldJob.jobID;
-            UUID normalizingJobDependency = createNormalizingWorldJob.jobID;
+            UUID defaultJobDependency = createDefaultWorldJob.getJobID();
+            UUID normalizingJobDependency = createNormalizingWorldJob.getJobID();
             UUID defaultInputResource = defaultBlueprint.getUUID();
             UUID normalizingInputResource = normalizingBlueprint.getUUID();
             // Create simulation jobs
@@ -121,8 +121,8 @@ public class NormalizationConvergence
                 carelessSleep(100);
 
                 // Update dependencies for next pass
-                defaultJobDependency = defaultSimulateJob.jobID;
-                normalizingJobDependency = normalizingSimulateJob.jobID;
+                defaultJobDependency = defaultSimulateJob.getJobID();
+                normalizingJobDependency = normalizingSimulateJob.getJobID();
                 defaultInputResource = defaultWorldSnapshots[j];
                 normalizingInputResource = normalizingWorldSnapshots[j];
 
