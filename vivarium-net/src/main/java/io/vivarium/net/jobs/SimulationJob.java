@@ -21,9 +21,9 @@ public class SimulationJob extends Job
     @JsonCreator
     public SimulationJob(@JsonProperty("type") JobType jobType,
             @JsonProperty("jobID") @JsonSerialize(using = UUIDSerializer.class) UUID jobID,
-            @JsonProperty("messageID") Collection<UUID> inputResources,
-            @JsonProperty("messageID") Collection<UUID> outputResources,
-            @JsonProperty("messageID") Collection<UUID> dependencies, @JsonProperty("messageID") long endTick)
+            @JsonProperty("inputResources") Collection<UUID> inputResources,
+            @JsonProperty("outputResources") Collection<UUID> outputResources,
+            @JsonProperty("dependencies") Collection<UUID> dependencies, @JsonProperty("endTick") long endTick)
     {
         super(jobType, jobID, inputResources, outputResources, dependencies);
         Preconditions.checkArgument(jobType == JobType.RUN_SIMULATION);

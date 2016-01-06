@@ -19,9 +19,9 @@ public class CreateWorldJob extends Job
     @JsonCreator
     public CreateWorldJob(@JsonProperty("type") JobType jobType,
             @JsonProperty("jobID") @JsonSerialize(using = UUIDSerializer.class) UUID jobID,
-            @JsonProperty("messageID") Collection<UUID> inputResources,
-            @JsonProperty("messageID") Collection<UUID> outputResources,
-            @JsonProperty("messageID") Collection<UUID> dependencies)
+            @JsonProperty("inputResources") Collection<UUID> inputResources,
+            @JsonProperty("outputResources") Collection<UUID> outputResources,
+            @JsonProperty("dependencies") Collection<UUID> dependencies)
     {
         super(jobType, jobID, inputResources, outputResources, dependencies);
         Preconditions.checkArgument(jobType == JobType.CREATE_WORLD);
