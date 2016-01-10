@@ -14,10 +14,9 @@ public class ClientNetworkModule extends NetworkModule
 {
     private OutboundNetworkConnection _outboundConnection = null;
 
-    public ClientNetworkModule(InboundNetworkListener inboundListener, ObjectMapper _messageMapper)
+    public ClientNetworkModule(InboundNetworkListener inboundListener, ObjectMapper messageMapper)
     {
-        super(inboundListener, _messageMapper);
-        // TODO Auto-generated constructor stub
+        super(inboundListener, messageMapper);
     }
 
     synchronized public void sendMessage(Message message)

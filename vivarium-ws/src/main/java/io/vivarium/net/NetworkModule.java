@@ -59,7 +59,6 @@ public abstract class NetworkModule
         }
         catch (JsonProcessingException e)
         {
-            // TODO: Start using better logging.
             e.printStackTrace();
         }
     }
