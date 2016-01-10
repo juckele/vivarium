@@ -1,4 +1,4 @@
-package io.vivarium;
+package io.vivarium.net.messages;
 
 import org.junit.Test;
 
