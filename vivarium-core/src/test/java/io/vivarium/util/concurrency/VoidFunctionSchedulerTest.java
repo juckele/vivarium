@@ -8,9 +8,6 @@ import org.junit.Test;
 
 import com.johnuckele.vtest.Tester;
 
-import io.vivarium.util.concurrency.VoidFunction;
-import io.vivarium.util.concurrency.VoidFunctionScheduler;
-
 public class VoidFunctionSchedulerTest
 {
     @Test
