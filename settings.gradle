@@ -6,5 +6,6 @@ include 'vivarium-core',
 	'vivarium-scripts',
 	'vivarium-serialization',
 	'vivarium-swing',
+	'vivarium-visualization',
 	'vivarium-web',
 	'vivarium-ws'

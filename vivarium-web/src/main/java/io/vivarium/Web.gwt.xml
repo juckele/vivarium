@@ -30,8 +30,9 @@
   <extend-configuration-property name="gwtjackson.configuration.extension" value="io.vivarium.web.Configuration" />
 
   <!-- Vivarium cross project modules                             -->
-  <inherits name='io.vivarium.Net' />
   <inherits name='io.vivarium.Core' />
+  <inherits name='io.vivarium.Net' />
+  <inherits name='io.vivarium.Visualization' />
 
   <!-- Specify the app entry point class.                         -->
   <entry-point class='io.vivarium.web.client.VivariumWeb'/>

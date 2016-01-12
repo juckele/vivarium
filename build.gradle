@@ -253,9 +253,16 @@ project(':vivarium-scripts') {
     }
 }
 
+project(':vivarium-visualization') {
+    dependencies {
+        compile project(':vivarium-core')
+    }
+}
+
 project(':vivarium-swing') {
     dependencies {
         compile project(':vivarium-core')
+        compile project(':vivarium-visualization')
         compile project(':vivarium-scripts')
         compile 'net.java.dev.jna:jna-platform:4.0.0'
     }
@@ -271,11 +278,13 @@ project(':vivarium-web') {
         modules 'io.vivarium.Web'
 
         src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
+        src += files(project(':vivarium-visualization').sourceSets.main.allJava.srcDirs)
         src += files(project(':vivarium-net').sourceSets.main.allJava.srcDirs)
     }
 
     dependencies {
         compile project(':vivarium-core')
+        compile project(':vivarium-visualization')
         compile project(':vivarium-net')
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.guava:guava-gwt:19.0'
