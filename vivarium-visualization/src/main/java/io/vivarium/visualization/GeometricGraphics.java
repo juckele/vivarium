@@ -14,6 +14,11 @@ public abstract class GeometricGraphics
         _controller = controller;
     }
 
+    public void executeRender()
+    {
+        _controller.onRender(this);
+    }
+
     public abstract void drawRectangle(int x, int y, int w, int h);
 
     public abstract void requestRender();
