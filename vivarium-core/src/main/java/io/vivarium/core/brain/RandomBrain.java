@@ -22,7 +22,7 @@ public class RandomBrain extends Brain
         this._outputs = new double[species.getTotalBrainOutputCount()];
     }
 
-    private RandomBrain(int totalBrainOutputCount)
+    public RandomBrain(int totalBrainOutputCount)
     {
         this._outputs = new double[totalBrainOutputCount];
     }
