@@ -1,19 +1,18 @@
 package io.vivarium.server.workloadmanagement;
 
-import io.vivarium.server.ClientConnection;
 import io.vivarium.server.ClientConnectionManager;
 
 public class JobAssignmentThread
 {
-    private final ClientConnectionManager _clientConnectionManager;
-    private final JobAssignmentOperation _jobAssingmentOperation;
+    // private final ClientConnectionManager _clientConnectionManager;
+    // private final JobAssignmentOperation _jobAssingmentOperation;
     private final ThreadHelper _helper = new ThreadHelper();
 
     public JobAssignmentThread(ClientConnectionManager clientConnectionManager,
             JobAssignmentOperation jobAssingmentOperation)
     {
-        _clientConnectionManager = clientConnectionManager;
-        _jobAssingmentOperation = jobAssingmentOperation;
+        // _clientConnectionManager = clientConnectionManager;
+        // _jobAssingmentOperation = jobAssingmentOperation;
     }
 
     public void start()
@@ -38,8 +37,8 @@ public class JobAssignmentThread
         @Override
         public void run()
         {
-            ClientConnection connection = _clientConnectionManager
-                    .getConnectionForWorker(_jobAssingmentOperation.getWorkerID());
+            // ClientConnection connection = _clientConnectionManager
+            // .getConnectionForWorker(_jobAssingmentOperation.getWorkerID());
             // TODO Auto-generated method stub
         }
 
