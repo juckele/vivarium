@@ -13,8 +13,6 @@ import javax.swing.WindowConstants;
 
 import io.vivarium.core.brain.Brain;
 import io.vivarium.core.brain.RandomBrain;
-import io.vivarium.visualization.animation.ThreadScheduler;
-import io.vivarium.visualization.animation.Visualizer;
 
 public class BrainViewerDemo extends JPanel implements GraphicalController
 {
@@ -22,22 +20,12 @@ public class BrainViewerDemo extends JPanel implements GraphicalController
 
     private static final long serialVersionUID = -3105685457075818705L;
 
-    // Simulation variables
-    private Visualizer _visualizer;
-
     // Animation variables
     private SwingGeometricGraphics _swingGraphics;
-    private ThreadScheduler _threadScheduler;
-
-    // UI variables
-    private long _lastMouseEvent = System.currentTimeMillis();
-    private boolean _cursorHidden = false;
 
     public BrainViewerDemo(Brain brain)
     {
         _swingGraphics = new SwingGeometricGraphics(this, this);
-        _threadScheduler = new ThreadScheduler();
-        // _visualizer = new Visualizer(brain, _swingGraphics, _threadScheduler);
     }
 
     @Override
