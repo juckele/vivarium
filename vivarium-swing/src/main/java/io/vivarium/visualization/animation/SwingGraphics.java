@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 
 import io.vivarium.core.Direction;
 
-public class SwingGraphics extends GraphicalDelegate
+public class SwingGraphics extends WorldGraphics
 {
     private static ImageIcon IMAGE_ICON = new ImageIcon("src/main/resources/sprites.png");
     private static Image IMAGE = IMAGE_ICON.getImage();

@@ -9,9 +9,9 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.dom.client.ImageElement;
 
 import io.vivarium.core.Direction;
-import io.vivarium.visualization.animation.GraphicalDelegate;
+import io.vivarium.visualization.animation.WorldGraphics;
 
-public class GWTGraphics extends GraphicalDelegate
+public class GWTGraphics extends WorldGraphics
 {
     private Context2d _context;
     private ImageElement _imageElement;

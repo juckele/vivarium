@@ -7,7 +7,7 @@ package io.vivarium.visualization.animation;
 import io.vivarium.core.Direction;
 import io.vivarium.core.World;
 
-public abstract class GraphicalDelegate
+public abstract class WorldGraphics
 {
     protected World _renderWorld;
     int _selectedCreatureID;

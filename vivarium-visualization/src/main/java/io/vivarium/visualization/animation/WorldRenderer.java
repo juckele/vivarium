@@ -12,14 +12,14 @@ public abstract class WorldRenderer
 {
     private static final int DEFAULT_COLOR = 0;
 
-    public static void renderWorld(GraphicalDelegate graphicalSystem, World w1, World w2, double interpolation,
+    public static void renderWorld(WorldGraphics graphicalSystem, World w1, World w2, double interpolation,
             int selectedCreatureID)
     {
         terrainRender(graphicalSystem, w1);
         actorRender(graphicalSystem, w1, (int) (System.currentTimeMillis() % 1000), selectedCreatureID);
     }
 
-    private static void terrainRender(GraphicalDelegate graphicalSystem, World w)
+    private static void terrainRender(WorldGraphics graphicalSystem, World w)
     {
         // Draw the exterior walls
         for (int i = 0; i < w.getWorldWidth(); i++)
@@ -51,7 +51,7 @@ public abstract class WorldRenderer
         }
     }
 
-    private static void actorRender(GraphicalDelegate graphicalSystem, World w, int milliseconds,
+    private static void actorRender(WorldGraphics graphicalSystem, World w, int milliseconds,
             int selectedCreatureID)
     {
         // Draw creatures and food

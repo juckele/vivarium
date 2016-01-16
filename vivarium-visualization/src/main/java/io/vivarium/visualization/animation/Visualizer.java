@@ -12,12 +12,12 @@ public class Visualizer
     private World _world;
 
     // Delegates
-    private GraphicalDelegate _graphicalSystem;
+    private WorldGraphics _graphicalSystem;
     private SchedulingDelegate _schedulingSystem;
 
     private int _selectedCreatureID = 42;
 
-    public Visualizer(World world, GraphicalDelegate graphicalSystem, SchedulingDelegate schedulingSystem)
+    public Visualizer(World world, WorldGraphics graphicalSystem, SchedulingDelegate schedulingSystem)
     {
         _world = world;
         _graphicalSystem = graphicalSystem;
