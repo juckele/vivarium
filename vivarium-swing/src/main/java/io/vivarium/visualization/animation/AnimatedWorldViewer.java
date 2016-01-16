@@ -33,7 +33,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
     private Visualizer _visualizer;
 
     // Animation variables
-    private SwingGraphics _swingGraphics;
+    private SwingWorldGraphics _swingGraphics;
     private ThreadScheduler _threadScheduler;
 
     // UI variables
@@ -68,7 +68,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
 
     public AnimatedWorldViewer(World w)
     {
-        _swingGraphics = new SwingGraphics(this);
+        _swingGraphics = new SwingWorldGraphics(this);
         _threadScheduler = new ThreadScheduler();
         _visualizer = new Visualizer(w, _swingGraphics, _threadScheduler);
         _uiThread = new UIThread();

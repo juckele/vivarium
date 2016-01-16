@@ -11,14 +11,14 @@ import com.google.gwt.dom.client.ImageElement;
 import io.vivarium.core.Direction;
 import io.vivarium.visualization.animation.WorldGraphics;
 
-public class GWTGraphics extends WorldGraphics
+public class GWTWorldGraphics extends WorldGraphics
 {
     private Context2d _context;
     private ImageElement _imageElement;
     private VivariumWeb _webApp;
     private long _lastFrameTime = System.currentTimeMillis();
 
-    public GWTGraphics(VivariumWeb webApp)
+    public GWTWorldGraphics(VivariumWeb webApp)
     {
         _webApp = webApp;
     }

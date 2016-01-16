@@ -49,7 +49,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private Canvas _tempCanvas2;
     private World world;
     private VivariumObjectCollection _collection;
-    private GWTGraphics gwtGraphics;
+    private GWTWorldGraphics gwtGraphics;
     private GWTScheduler gwtScheduler;
     private Visualizer visualizer;
     private Image baseImage;
@@ -146,7 +146,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private void setUpGraphics()
     {
         // Set up the visualizer graphics
-        gwtGraphics = new GWTGraphics(this);
+        gwtGraphics = new GWTWorldGraphics(this);
         gwtScheduler = new GWTScheduler(this, _tickEveryFrame, _ticksPerStep);
         visualizer = new Visualizer(world, gwtGraphics, gwtScheduler);
     }
