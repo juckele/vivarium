@@ -10,6 +10,7 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import io.vivarium.core.brain.Brain;
@@ -49,7 +50,7 @@ public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler, Gr
     public void execute(double timestamp)
     {
         // Render a frame
-        // gwtGraphics.renderFrame();
+        gwtGraphics.drawRectangle(100, 100, 100, 100);
 
         // Schedule the next frame
         // gwtScheduler.execute(timestamp);
@@ -58,6 +59,7 @@ public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler, Gr
     @Override
     public void onRender(GeometricGraphics graphics)
     {
+        Window.alert("Graphics object " + graphics);
         graphics.drawRectangle(100, 100, 100, 100);
     }
 

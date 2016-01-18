@@ -26,12 +26,7 @@ public class GWTGeometricGraphics extends GeometricGraphics
     @Override
     public void drawRectangle(int x, int y, int w, int h)
     {
-        _context.beginPath();
-        _context.rect(x, y, x + w, y + h);
-        _context.setFillStyle("white");
-        _context.fill();
-        _context.setLineWidth(7);
-        _context.setStrokeStyle("black");
+        _context.rect(x, y, w, h);
         _context.stroke();
     }
 
