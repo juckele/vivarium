@@ -10,20 +10,19 @@ import com.google.gwt.canvas.dom.client.Context2d;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.RootPanel;
 
 import io.vivarium.core.brain.Brain;
 import io.vivarium.core.brain.RandomBrain;
-import io.vivarium.visualization.GeometricGraphics;
-import io.vivarium.visualization.GraphicalController;
+import io.vivarium.visualization.BrainRenderer;
 
-public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler, GraphicalController
+public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler
 {
     public static final int PIXEL_BLOCK_SIZE = 32;
 
     private Canvas _canvas;
     private Brain _brain;
+    private BrainRenderer _brainRenderer;
     private GWTGeometricGraphics gwtGraphics;
 
     @Override
@@ -31,6 +30,7 @@ public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler, Gr
     {
         // Build brain
         _brain = new RandomBrain(6);
+        _brainRenderer = new BrainRenderer(_brain);
 
         // Make canvas
         _canvas = Canvas.createIfSupported();
@@ -39,7 +39,7 @@ public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler, Gr
         RootPanel.get().add(_canvas);
 
         // Draw stuff?
-        gwtGraphics = new GWTGeometricGraphics(this, this);
+        gwtGraphics = new GWTGeometricGraphics(_brainRenderer, this);
 
         Context2d context = _canvas.getContext2d();
         gwtGraphics.setResources(context);
@@ -49,18 +49,7 @@ public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler, Gr
     @Override
     public void execute(double timestamp)
     {
-        // Render a frame
-        gwtGraphics.drawRectangle(100, 100, 100, 100);
-
-        // Schedule the next frame
-        // gwtScheduler.execute(timestamp);
-    }
-
-    @Override
-    public void onRender(GeometricGraphics graphics)
-    {
-        Window.alert("Graphics object " + graphics);
-        graphics.drawRectangle(100, 100, 100, 100);
+        _brainRenderer.onRender(gwtGraphics);
     }
 
     @Override

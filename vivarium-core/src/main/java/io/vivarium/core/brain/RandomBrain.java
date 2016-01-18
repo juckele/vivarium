@@ -78,4 +78,16 @@ public class RandomBrain extends Brain
         RandomBrain brain = new RandomBrain(species, parentBrain1, parentBrain2);
         return brain;
     }
+
+    @Override
+    public int getOutputCount()
+    {
+        return _outputs.length;
+    }
+
+    @Override
+    public int getInputCount()
+    {
+        return 0;
+    }
 }

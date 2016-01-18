@@ -14,7 +14,7 @@ import javax.swing.WindowConstants;
 import io.vivarium.core.brain.Brain;
 import io.vivarium.core.brain.RandomBrain;
 
-public class BrainViewerDemo extends JPanel implements GraphicalController
+public class BrainViewerDemo extends JPanel
 {
     private static JFrame _window;
 
@@ -22,10 +22,12 @@ public class BrainViewerDemo extends JPanel implements GraphicalController
 
     // Animation variables
     private SwingGeometricGraphics _swingGraphics;
+    private BrainRenderer _brainRenderer;
 
     public BrainViewerDemo(Brain brain)
     {
-        _swingGraphics = new SwingGeometricGraphics(this, this);
+        _brainRenderer = new BrainRenderer(brain);
+        _swingGraphics = new SwingGeometricGraphics(_brainRenderer, this);
     }
 
     @Override
@@ -55,11 +57,5 @@ public class BrainViewerDemo extends JPanel implements GraphicalController
         // Set everything to be visible
         _window.setSize(100, 100);
         _window.setVisible(true);
-    }
-
-    @Override
-    public void onRender(GeometricGraphics graphics)
-    {
-        graphics.drawRectangle(10, 10, 30, 30);
     }
 }

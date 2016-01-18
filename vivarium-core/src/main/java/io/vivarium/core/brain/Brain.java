@@ -25,6 +25,10 @@ public abstract class Brain extends VivariumObject
      */
     public abstract double[] outputs(double[] inputs);
 
+    public abstract int getInputCount();
+
+    public abstract int getOutputCount();
+
     /**
      * Applies a brain defined normalization procedure to a brain.
      */

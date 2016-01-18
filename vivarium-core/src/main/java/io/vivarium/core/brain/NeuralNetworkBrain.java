@@ -181,11 +181,13 @@ public class NeuralNetworkBrain extends Brain
         return (this._weights);
     }
 
+    @Override
     public int getInputCount()
     {
         return _weights[0][0].length - BIAS_UNIT_COUNT;
     }
 
+    @Override
     public int getOutputCount()
     {
         return _weights[0].length;
