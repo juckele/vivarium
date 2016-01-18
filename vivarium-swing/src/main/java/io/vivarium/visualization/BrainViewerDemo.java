@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
 import io.vivarium.core.brain.Brain;
-import io.vivarium.core.brain.RandomBrain;
+import io.vivarium.core.brain.NeuralNetworkBrain;
 
 public class BrainViewerDemo extends JPanel
 {
@@ -45,7 +45,7 @@ public class BrainViewerDemo extends JPanel
 
     public static void main(String[] args)
     {
-        Brain brain = new RandomBrain(4);
+        Brain brain = new NeuralNetworkBrain(4, 4, true, false);
 
         // Create and show the window
         BrainViewerDemo bv = new BrainViewerDemo(brain);
