@@ -31,6 +31,20 @@ public class GWTGeometricGraphics extends GeometricGraphics
     }
 
     @Override
+    public void drawCircle(int x, int y, int w, int h)
+    {
+        _context.rect(x, y, w, h);
+        _context.stroke();
+        // TODO: Make this into an actual circle
+    }
+
+    @Override
+    public void setFillColor(float r, float g, float b)
+    {
+        // TODO: DO THIS
+    }
+
+    @Override
     public void requestRender()
     {
         AnimationScheduler.get().requestAnimationFrame(_animationCallback);

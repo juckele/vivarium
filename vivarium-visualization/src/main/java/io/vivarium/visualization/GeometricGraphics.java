@@ -21,5 +21,10 @@ public abstract class GeometricGraphics
 
     public abstract void drawRectangle(int x, int y, int w, int h);
 
+    public abstract void drawCircle(int x, int y, int w, int h);
+
+    public abstract void setFillColor(float r, float g, float b);
+
     public abstract void requestRender();
+
 }
