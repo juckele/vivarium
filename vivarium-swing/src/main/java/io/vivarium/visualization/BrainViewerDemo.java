@@ -55,7 +55,7 @@ public class BrainViewerDemo extends JPanel
         _window.validate();
 
         // Set everything to be visible
-        _window.setSize(100, 100);
+        _window.setSize(500, 800);
         _window.setVisible(true);
     }
 }

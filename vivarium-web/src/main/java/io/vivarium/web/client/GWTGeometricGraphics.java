@@ -24,6 +24,13 @@ public class GWTGeometricGraphics extends GeometricGraphics
     }
 
     @Override
+    public void drawWideLine(int x1, int y1, int x2, int y2, int width)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
     public void drawRectangle(int x, int y, int w, int h)
     {
         _context.rect(x, y, w, h);
@@ -49,4 +56,5 @@ public class GWTGeometricGraphics extends GeometricGraphics
     {
         AnimationScheduler.get().requestAnimationFrame(_animationCallback);
     }
+
 }

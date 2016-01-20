@@ -19,9 +19,11 @@ public abstract class GeometricGraphics
         _controller.onRender(this);
     }
 
-    public abstract void drawRectangle(int x, int y, int w, int h);
+    public abstract void drawWideLine(int x1, int y1, int x2, int y2, int width);
 
     public abstract void drawCircle(int x, int y, int w, int h);
+
+    public abstract void drawRectangle(int x, int y, int w, int h);
 
     public abstract void setFillColor(float r, float g, float b);
 
