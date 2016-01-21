@@ -48,7 +48,7 @@ public class VivariumResearchServer implements StartableStoppable
         System.out.println("SERVER: Initializing Vivarium Research Server.");
 
         // Build server dependencies
-        Connection databaseConnection = DatabaseUtils.createDatabaseConnection("vivarium", "vivarium", "lifetest");
+        Connection databaseConnection = DatabaseUtils.createDatabaseConnection("test", "test", "test");
         PersistenceModule persistenceModule = new PersistenceModule(databaseConnection);
         ClientConnectionFactory clientConnectionFactory = new ClientConnectionFactory();
         ClientConnectionManager clientConnectionManager = new ClientConnectionManager(clientConnectionFactory);
