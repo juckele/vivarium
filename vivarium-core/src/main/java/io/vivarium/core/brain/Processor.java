@@ -8,9 +8,9 @@ import io.vivarium.serialization.VivariumObject;
 import io.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public abstract class Brain extends VivariumObject
+public abstract class Processor extends VivariumObject
 {
-    public abstract BrainType getBrainType();
+    public abstract ProcessorType getBrainType();
 
     /**
      * Given a double of inputs to a brain, computes a set out outputs. This call returns a probabilistic solution, and

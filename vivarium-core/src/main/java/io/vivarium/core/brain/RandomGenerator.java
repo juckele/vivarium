@@ -10,24 +10,24 @@ import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class RandomBrain extends Brain
+public class RandomGenerator extends Processor
 {
     @SerializedParameter
     private double[] _outputs;
 
-    private RandomBrain(Species species, RandomBrain parentBrain1, RandomBrain parentBrain2)
+    private RandomGenerator(Species species, RandomGenerator parentBrain1, RandomGenerator parentBrain2)
     {
         // Random brain has no state, it's literally random output. This brain
         // does not evolve.
         this._outputs = new double[species.getTotalBrainOutputCount()];
     }
 
-    public RandomBrain(int totalBrainOutputCount)
+    public RandomGenerator(int totalBrainOutputCount)
     {
         this._outputs = new double[totalBrainOutputCount];
     }
 
-    private RandomBrain()
+    private RandomGenerator()
     {
     }
 
@@ -38,9 +38,9 @@ public class RandomBrain extends Brain
     }
 
     @Override
-    public BrainType getBrainType()
+    public ProcessorType getBrainType()
     {
-        return BrainType.RANDOM;
+        return ProcessorType.RANDOM;
     }
 
     @Override
@@ -59,23 +59,23 @@ public class RandomBrain extends Brain
         return "Hand coded brain: no render available";
     }
 
-    public static Brain makeUninitialized()
+    public static Processor makeUninitialized()
     {
-        return new RandomBrain();
+        return new RandomGenerator();
     }
 
-    public static RandomBrain makeWithSpecies(Species species)
+    public static RandomGenerator makeWithSpecies(Species species)
     {
-        RandomBrain brain = new RandomBrain(species.getTotalBrainOutputCount());
+        RandomGenerator brain = new RandomGenerator(species.getTotalBrainOutputCount());
         return brain;
     }
 
-    public static Brain makeWithParents(Species species, RandomBrain untypedParentBrain1,
-            RandomBrain untypedParentBrain2)
+    public static Processor makeWithParents(Species species, RandomGenerator untypedParentBrain1,
+            RandomGenerator untypedParentBrain2)
     {
-        RandomBrain parentBrain1 = untypedParentBrain1;
-        RandomBrain parentBrain2 = untypedParentBrain2;
-        RandomBrain brain = new RandomBrain(species, parentBrain1, parentBrain2);
+        RandomGenerator parentBrain1 = untypedParentBrain1;
+        RandomGenerator parentBrain2 = untypedParentBrain2;
+        RandomGenerator brain = new RandomGenerator(species, parentBrain1, parentBrain2);
         return brain;
     }
 

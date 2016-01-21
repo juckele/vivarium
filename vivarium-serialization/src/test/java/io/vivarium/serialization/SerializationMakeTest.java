@@ -12,8 +12,8 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.core.brain.Brain;
-import io.vivarium.core.brain.BrainType;
+import io.vivarium.core.brain.Processor;
+import io.vivarium.core.brain.ProcessorType;
 
 public class SerializationMakeTest
 {
@@ -50,11 +50,11 @@ public class SerializationMakeTest
     @Test
     public void testBrainMakeWithSpecies() throws Exception
     {
-        for (BrainType brainType : BrainType.values())
+        for (ProcessorType brainType : ProcessorType.values())
         {
             Species species = Species.makeDefault();
             species.setBrainType(brainType);
-            Brain brain = BrainType.makeWithSpecies(brainType, species);
+            Processor brain = ProcessorType.makeWithSpecies(brainType, species);
             Tester.isNotNull("Brain of type " + brainType + " should exist", brain);
         }
     }
@@ -62,12 +62,12 @@ public class SerializationMakeTest
     @Test
     public void testBrainMakeCopy() throws Exception
     {
-        for (BrainType brainType : BrainType.values())
+        for (ProcessorType brainType : ProcessorType.values())
         {
             Species species = Species.makeDefault();
             species.setBrainType(brainType);
-            Brain brain = BrainType.makeWithSpecies(brainType, species);
-            Brain copy = (Brain) new SerializationEngine().makeCopy(brain);
+            Processor brain = ProcessorType.makeWithSpecies(brainType, species);
+            Processor copy = (Processor) new SerializationEngine().makeCopy(brain);
             Tester.isNotNull("Brain copy of type " + brainType + "should exist", copy);
         }
     }

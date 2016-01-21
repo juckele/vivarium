@@ -27,8 +27,8 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.core.brain.NeuralNetworkBrain;
-import io.vivarium.core.brain.RandomBrain;
+import io.vivarium.core.brain.NeuralNetwork;
+import io.vivarium.core.brain.RandomGenerator;
 import io.vivarium.util.UUID;
 
 public class SerializationEngine
@@ -96,13 +96,13 @@ public class SerializationEngine
             {
                 constructor = Blueprint.class.getDeclaredConstructor();
             }
-            else if (clazzName.equals(RandomBrain.class.getSimpleName()))
+            else if (clazzName.equals(RandomGenerator.class.getSimpleName()))
             {
-                constructor = RandomBrain.class.getDeclaredConstructor();
+                constructor = RandomGenerator.class.getDeclaredConstructor();
             }
-            else if (clazzName.equals(NeuralNetworkBrain.class.getSimpleName()))
+            else if (clazzName.equals(NeuralNetwork.class.getSimpleName()))
             {
-                constructor = NeuralNetworkBrain.class.getDeclaredConstructor();
+                constructor = NeuralNetwork.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(Creature.class.getSimpleName()))
             {

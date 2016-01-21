@@ -11,8 +11,8 @@ import java.util.LinkedList;
 
 import io.vivarium.audit.AuditFunction;
 import io.vivarium.audit.AuditRecord;
-import io.vivarium.core.brain.Brain;
-import io.vivarium.core.brain.BrainType;
+import io.vivarium.core.brain.Processor;
+import io.vivarium.core.brain.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Rand;
@@ -650,7 +650,7 @@ public class World extends VivariumObject
     {
         // Draw average brain
         // Draw creature readouts
-        LinkedList<Brain> brains = new LinkedList<Brain>();
+        LinkedList<Processor> brains = new LinkedList<Processor>();
         for (int r = 0; r < this._height; r++)
         {
             for (int c = 0; c < this._width; c++)
@@ -663,7 +663,7 @@ public class World extends VivariumObject
         }
         if (brains.size() > 0)
         {
-            return BrainType.render(brains.getFirst().getBrainType(), brains);
+            return ProcessorType.render(brains.getFirst().getBrainType(), brains);
         }
         return "";
     }

@@ -4,7 +4,7 @@
 
 package io.vivarium.core;
 
-import io.vivarium.core.brain.BrainType;
+import io.vivarium.core.brain.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 
@@ -41,7 +41,7 @@ public class Species extends VivariumObject
 
     // Neurology
     @SerializedParameter
-    private BrainType _brainType = BrainType.NEURAL_NETWORK;
+    private ProcessorType _brainType = ProcessorType.NEURAL_NETWORK;
     @SerializedParameter
     private int _hardBrainInputs = 5;
     @SerializedParameter
@@ -178,12 +178,12 @@ public class Species extends VivariumObject
         this._initialGenerationProbability = probability;
     }
 
-    public BrainType getBrainType()
+    public ProcessorType getBrainType()
     {
         return this._brainType;
     }
 
-    public void setBrainType(BrainType type)
+    public void setBrainType(ProcessorType type)
     {
         this._brainType = type;
     }

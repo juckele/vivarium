@@ -18,7 +18,7 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.core.brain.Brain;
+import io.vivarium.core.brain.Processor;
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.Relation;
 import io.vivarium.serialization.JSONConverter;
@@ -92,7 +92,7 @@ public class ResourceModel extends PersistenceModel
             resourceRelation.put(BLUEPRINT_COUNT, collection.getAll(Blueprint.class).size());
             resourceRelation.put(SPECIES_COUNT, collection.getAll(Species.class).size());
             resourceRelation.put(CREATURE_COUNT, collection.getAll(Creature.class).size());
-            resourceRelation.put(BRAIN_COUNT, collection.getAll(Brain.class).size());
+            resourceRelation.put(BRAIN_COUNT, collection.getAll(Processor.class).size());
         }
         DatabaseUtils.upsert(connection, TABLE_NAME, resourceRelation, getPrimaryKeys());
         connection.commit();

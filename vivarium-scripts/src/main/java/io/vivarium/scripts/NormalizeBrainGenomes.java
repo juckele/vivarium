@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.brain.Brain;
+import io.vivarium.core.brain.Processor;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.VivariumObjectCollection;
@@ -45,8 +45,8 @@ public class NormalizeBrainGenomes extends CommonsScript
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
 
         VivariumObjectCollection collection = FileIO.loadObjectCollection(inputFile, Format.JSON);
-        List<Brain> brains = collection.getAll(Brain.class);
-        for (Brain brain : brains)
+        List<Processor> brains = collection.getAll(Processor.class);
+        for (Processor brain : brains)
         {
             brain.normalizeWeights();
         }

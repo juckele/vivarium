@@ -4,8 +4,8 @@
 
 package io.vivarium.core;
 
-import io.vivarium.core.brain.Brain;
-import io.vivarium.core.brain.BrainType;
+import io.vivarium.core.brain.Processor;
+import io.vivarium.core.brain.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Functions;
@@ -25,7 +25,7 @@ public class Creature extends VivariumObject
 
     // Brain
     @SerializedParameter
-    private Brain _brain;
+    private Processor _brain;
     @SerializedParameter
     private double[] _inputs;
     @SerializedParameter
@@ -110,13 +110,13 @@ public class Creature extends VivariumObject
             if (parent2 != null)
             {
                 // Brain combined from genetic legacy
-                this._brain = BrainType.makeWithParents(_species.getBrainType(), _species, parent1._brain,
+                this._brain = ProcessorType.makeWithParents(_species.getBrainType(), _species, parent1._brain,
                         parent2._brain);
             }
             else
             {
                 // Brain from single parent (might still mutate)
-                this._brain = BrainType.makeWithParents(_species.getBrainType(), _species, parent1._brain,
+                this._brain = ProcessorType.makeWithParents(_species.getBrainType(), _species, parent1._brain,
                         parent1._brain);
             }
         }
@@ -130,7 +130,7 @@ public class Creature extends VivariumObject
             else
             {
                 // Create a new default brain
-                this._brain = BrainType.makeWithSpecies(_species.getBrainType(), _species);
+                this._brain = ProcessorType.makeWithSpecies(_species.getBrainType(), _species);
             }
         }
         _inputs = new double[_species.getTotalBrainInputCount()];
@@ -295,7 +295,7 @@ public class Creature extends VivariumObject
         return (_fetus);
     }
 
-    public Brain getBrain()
+    public Processor getBrain()
     {
         return (_brain);
     }
@@ -526,7 +526,7 @@ public class Creature extends VivariumObject
         this._fetus = fetus;
     }
 
-    public void setBrain(Brain brain)
+    public void setBrain(Processor brain)
     {
         this._brain = brain;
     }

@@ -12,8 +12,8 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import io.vivarium.core.brain.Brain;
-import io.vivarium.core.brain.RandomBrain;
+import io.vivarium.core.brain.Processor;
+import io.vivarium.core.brain.RandomGenerator;
 import io.vivarium.visualization.BrainRenderer;
 
 public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler
@@ -21,7 +21,7 @@ public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler
     public static final int PIXEL_BLOCK_SIZE = 32;
 
     private Canvas _canvas;
-    private Brain _brain;
+    private Processor _brain;
     private BrainRenderer _brainRenderer;
     private GWTGeometricGraphics gwtGraphics;
 
@@ -29,7 +29,7 @@ public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler
     public void onModuleLoad()
     {
         // Build brain
-        _brain = new RandomBrain(6);
+        _brain = new RandomGenerator(6);
         _brainRenderer = new BrainRenderer(_brain);
 
         // Make canvas

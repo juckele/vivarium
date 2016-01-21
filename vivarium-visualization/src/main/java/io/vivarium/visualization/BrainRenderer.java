@@ -1,7 +1,7 @@
 package io.vivarium.visualization;
 
-import io.vivarium.core.brain.Brain;
-import io.vivarium.core.brain.NeuralNetworkBrain;
+import io.vivarium.core.brain.Processor;
+import io.vivarium.core.brain.NeuralNetwork;
 
 public class BrainRenderer implements GraphicalController
 {
@@ -9,9 +9,9 @@ public class BrainRenderer implements GraphicalController
     public static final int NODE_SPREAD = 200;
     public static final int LAYER_SPREAD = 200;
     public static final int MAX_LINE_WIDTH = 20;
-    private Brain _brain;
+    private Processor _brain;
 
-    public BrainRenderer(Brain brain)
+    public BrainRenderer(Processor brain)
     {
         this._brain = brain;
     }
@@ -29,7 +29,7 @@ public class BrainRenderer implements GraphicalController
         // graphics.drawRectangle(NODE_SIZE, NODE_SIZE, LAYER_SPREAD, Math.max(inputCount, outputCount) * NODE_SPREAD);
 
         // Connections
-        NeuralNetworkBrain nnBrain = (NeuralNetworkBrain) _brain;
+        NeuralNetwork nnBrain = (NeuralNetwork) _brain;
         double[][][] weights = nnBrain.getWeights();
         for (int inputIndex = 0; inputIndex < inputCount; inputIndex++)
         {
