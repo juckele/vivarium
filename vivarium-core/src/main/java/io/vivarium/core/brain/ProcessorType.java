@@ -15,42 +15,43 @@ public enum ProcessorType
 {
     NEURAL_NETWORK, RANDOM;
 
-    public static String render(ProcessorType type, Collection<Processor> untypedBrains)
+    public static String render(ProcessorType type, Collection<Processor> untypedProcessors)
     {
-        StringBuilder brainOutput = new StringBuilder();
+        StringBuilder processorOutput = new StringBuilder();
         switch (type)
         {
             case NEURAL_NETWORK:
-                List<NeuralNetwork> brains = new LinkedList<NeuralNetwork>();
-                for (Processor untypedBrain : untypedBrains)
+                List<NeuralNetwork> processors = new LinkedList<NeuralNetwork>();
+                for (Processor untypedProcessor : untypedProcessors)
                 {
-                    brains.add((NeuralNetwork) untypedBrain);
+                    processors.add((NeuralNetwork) untypedProcessor);
                 }
-                NeuralNetwork medianBrain = NeuralNetwork.medianBrain(brains);
-                NeuralNetwork standardDeviationBrain = NeuralNetwork.standardDeviationBrain(brains,
-                        medianBrain);
-                brainOutput.append("Average creature NN:\n");
-                brainOutput.append(medianBrain.render(RenderCode.BRAIN_WEIGHTS));
-                brainOutput.append("Std. Deviation on creature NNs:\n");
-                brainOutput.append(standardDeviationBrain.render(RenderCode.BRAIN_WEIGHTS));
+                NeuralNetwork medianProcessor = NeuralNetwork.medianProcessor(processors);
+                NeuralNetwork standardDeviationProcessor = NeuralNetwork.standardDeviationProcessor(processors,
+                        medianProcessor);
+                processorOutput.append("Average creature NN:\n");
+                processorOutput.append(medianProcessor.render(RenderCode.BRAIN_WEIGHTS));
+                processorOutput.append("Std. Deviation on creature NNs:\n");
+                processorOutput.append(standardDeviationProcessor.render(RenderCode.BRAIN_WEIGHTS));
                 /*
-                 * Brain minBrain = Brain.minBrain(brains); brainOutput.append("Min creature NN:\n");
-                 * brainOutput.append(minBrain.toString()); Brain maxBrain = Brain.maxBrain(brains); brainOutput.append(
-                 * "Max creature NN:\n"); brainOutput.append(maxBrain.toString());
+                 * Processor minProcessor = Processor.minProcessor(processors); processorOutput.append(
+                 * "Min creature NN:\n"); processorOutput.append(minProcessor.toString()); Processor maxProcessor =
+                 * Processor.maxProcessor(processors); processorOutput.append( "Max creature NN:\n");
+                 * processorOutput.append(maxProcessor.toString());
                  */
                 /*
-                 * brainOutput.append("Oldest creature NN:\n"); brainOutput.append(brains.get(0).toString());
-                 * brainOutput.append("Random creature NN:\n"); brainOutput.append(brains
-                 * .get(Rand.getRandomInt(brains.size())).toString());
+                 * processorOutput.append("Oldest creature NN:\n");
+                 * processorOutput.append(processors.get(0).toString()); processorOutput.append("Random creature NN:\n"
+                 * ); processorOutput.append(processors .get(Rand.getRandomInt(processors.size())).toString());
                  */
                 break;
             case RANDOM:
-                brainOutput.append("Random action brain: no model render available");
+                processorOutput.append("Random action processor: no model render available");
                 break;
             default:
-                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
+                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
         }
-        return brainOutput.toString();
+        return processorOutput.toString();
     }
 
     public static Processor makeUninitialized(ProcessorType type)
@@ -62,7 +63,7 @@ public enum ProcessorType
             case RANDOM:
                 return RandomGenerator.makeUninitialized();
             default:
-                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
+                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
         }
     }
 
@@ -75,27 +76,27 @@ public enum ProcessorType
             case RANDOM:
                 return RandomGenerator.makeWithSpecies(species);
             default:
-                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
+                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
         }
     }
 
-    public static Processor makeWithParents(ProcessorType type, Species species, Processor untypedParentBrain1,
-            Processor untypedParentBrain2)
+    public static Processor makeWithParents(ProcessorType type, Species species, Processor untypedParentProcessor1,
+            Processor untypedParentProcessor2)
     {
         switch (type)
         {
             case NEURAL_NETWORK:
-                return NeuralNetwork.makeWithParents(species, (NeuralNetwork) untypedParentBrain1,
-                        (NeuralNetwork) untypedParentBrain2);
+                return NeuralNetwork.makeWithParents(species, (NeuralNetwork) untypedParentProcessor1,
+                        (NeuralNetwork) untypedParentProcessor2);
             case RANDOM:
-                return RandomGenerator.makeWithParents(species, (RandomGenerator) untypedParentBrain1,
-                        (RandomGenerator) untypedParentBrain2);
+                return RandomGenerator.makeWithParents(species, (RandomGenerator) untypedParentProcessor1,
+                        (RandomGenerator) untypedParentProcessor2);
             default:
-                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
+                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
         }
     }
 
-    public static Class<?> getBrainClass(ProcessorType type)
+    public static Class<?> getProcessorClass(ProcessorType type)
     {
         switch (type)
         {
@@ -104,7 +105,7 @@ public enum ProcessorType
             case RANDOM:
                 return RandomGenerator.class;
             default:
-                throw new IllegalArgumentException("BrainType " + type + " not fully implemented");
+                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
         }
     }
 }

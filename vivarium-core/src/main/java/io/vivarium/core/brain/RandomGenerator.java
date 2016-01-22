@@ -15,16 +15,16 @@ public class RandomGenerator extends Processor
     @SerializedParameter
     private double[] _outputs;
 
-    private RandomGenerator(Species species, RandomGenerator parentBrain1, RandomGenerator parentBrain2)
+    private RandomGenerator(Species species, RandomGenerator parentProcessor1, RandomGenerator parentProcessor2)
     {
-        // Random brain has no state, it's literally random output. This brain
+        // Random processor has no state, it's literally random output. This processor
         // does not evolve.
         this._outputs = new double[species.getTotalBrainOutputCount()];
     }
 
-    public RandomGenerator(int totalBrainOutputCount)
+    public RandomGenerator(int totalProcessorOutputCount)
     {
-        this._outputs = new double[totalBrainOutputCount];
+        this._outputs = new double[totalProcessorOutputCount];
     }
 
     private RandomGenerator()
@@ -38,7 +38,7 @@ public class RandomGenerator extends Processor
     }
 
     @Override
-    public ProcessorType getBrainType()
+    public ProcessorType getProcessorType()
     {
         return ProcessorType.RANDOM;
     }
@@ -56,7 +56,7 @@ public class RandomGenerator extends Processor
     @Override
     public String render(RenderCode code)
     {
-        return "Hand coded brain: no render available";
+        return "Hand coded processor: no render available";
     }
 
     public static Processor makeUninitialized()
@@ -66,17 +66,17 @@ public class RandomGenerator extends Processor
 
     public static RandomGenerator makeWithSpecies(Species species)
     {
-        RandomGenerator brain = new RandomGenerator(species.getTotalBrainOutputCount());
-        return brain;
+        RandomGenerator processor = new RandomGenerator(species.getTotalBrainOutputCount());
+        return processor;
     }
 
-    public static Processor makeWithParents(Species species, RandomGenerator untypedParentBrain1,
-            RandomGenerator untypedParentBrain2)
+    public static Processor makeWithParents(Species species, RandomGenerator untypedParentProcessor1,
+            RandomGenerator untypedParentProcessor2)
     {
-        RandomGenerator parentBrain1 = untypedParentBrain1;
-        RandomGenerator parentBrain2 = untypedParentBrain2;
-        RandomGenerator brain = new RandomGenerator(species, parentBrain1, parentBrain2);
-        return brain;
+        RandomGenerator parentProcessor1 = untypedParentProcessor1;
+        RandomGenerator parentProcessor2 = untypedParentProcessor2;
+        RandomGenerator processor = new RandomGenerator(species, parentProcessor1, parentProcessor2);
+        return processor;
     }
 
     @Override

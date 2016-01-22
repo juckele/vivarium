@@ -663,7 +663,7 @@ public class World extends VivariumObject
         }
         if (brains.size() > 0)
         {
-            return ProcessorType.render(brains.getFirst().getBrainType(), brains);
+            return ProcessorType.render(brains.getFirst().getProcessorType(), brains);
         }
         return "";
     }

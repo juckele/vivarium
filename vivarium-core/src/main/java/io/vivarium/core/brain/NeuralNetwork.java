@@ -61,11 +61,11 @@ public class NeuralNetwork extends Processor
         }
     }
 
-    public NeuralNetwork(Species species, NeuralNetwork brain1, NeuralNetwork brain2)
+    public NeuralNetwork(Species species, NeuralNetwork processor1, NeuralNetwork processor2)
     {
         // Construct the weight layer and store variables with the int based
         // constructor
-        this(brain1.getInputCount(), brain1.getOutputCount(), false, species.getNormalizeAfterMutation());
+        this(processor1.getInputCount(), processor1.getOutputCount(), false, species.getNormalizeAfterMutation());
 
         // Set all the weights with
         for (int i = 0; i < _weights.length; i++)
@@ -88,8 +88,8 @@ public class NeuralNetwork extends Processor
                         // lower than
                         // either parent, which is by design.
                         double gaussianRandomValue = Rand.getInstance().getRandomGaussian() / 2 + 0.5;
-                        double weightDifference = brain2._weights[i][j][k] - brain1._weights[i][j][k];
-                        _weights[i][j][k] = brain1._weights[i][j][k] + gaussianRandomValue * weightDifference;
+                        double weightDifference = processor2._weights[i][j][k] - processor1._weights[i][j][k];
+                        _weights[i][j][k] = processor1._weights[i][j][k] + gaussianRandomValue * weightDifference;
                     }
                     // Otherwise pick one value
                     else
@@ -97,11 +97,11 @@ public class NeuralNetwork extends Processor
                         randomValue = Rand.getInstance().getRandomPositiveDouble();
                         if (randomValue < 0.5)
                         {
-                            _weights[i][j] = brain1._weights[i][j];
+                            _weights[i][j] = processor1._weights[i][j];
                         }
                         else
                         {
-                            _weights[i][j] = brain2._weights[i][j];
+                            _weights[i][j] = processor2._weights[i][j];
                         }
                     }
 
@@ -238,7 +238,7 @@ public class NeuralNetwork extends Processor
     {
         if (code == RenderCode.BRAIN_WEIGHTS)
         {
-            return this.renderBrainWeights();
+            return this.renderProcessorWeights();
         }
         else
         {
@@ -246,7 +246,7 @@ public class NeuralNetwork extends Processor
         }
     }
 
-    private String renderBrainWeights()
+    private String renderProcessorWeights()
     {
         StringBuffer output = new StringBuffer();
 
@@ -307,156 +307,158 @@ public class NeuralNetwork extends Processor
 
     public static void main(String[] args)
     {
-        NeuralNetwork brain = new NeuralNetwork(3, 10, false, false);
-        System.out.println("Creating Brain...");
-        System.out.println(brain);
-        System.out.println("Brain Outputs for inputs");
+        NeuralNetwork processor = new NeuralNetwork(3, 10, false, false);
+        System.out.println("Creating Processor...");
+        System.out.println(processor);
+        System.out.println("Processor Outputs for inputs");
         double[] inputs = { 0.0, 0.0 };
-        System.out.println("" + Arrays.toString(inputs) + " -> " + Arrays.toString(brain.outputs(inputs)));
-        System.out.println("Maximum output " + Arrays.toString(brain.outputs(inputs)));
+        System.out.println("" + Arrays.toString(inputs) + " -> " + Arrays.toString(processor.outputs(inputs)));
+        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs)));
         double[] inputs2 = { -1.0, 0.0 };
-        System.out.println("" + Arrays.toString(inputs2) + " -> " + Arrays.toString(brain.outputs(inputs2)));
-        System.out.println("Maximum output " + Arrays.toString(brain.outputs(inputs2)));
+        System.out.println("" + Arrays.toString(inputs2) + " -> " + Arrays.toString(processor.outputs(inputs2)));
+        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs2)));
         double[] inputs3 = { 1.0, 0.0 };
-        System.out.println("" + Arrays.toString(inputs3) + " -> " + Arrays.toString(brain.outputs(inputs3)));
-        System.out.println("Maximum output " + Arrays.toString(brain.outputs(inputs3)));
+        System.out.println("" + Arrays.toString(inputs3) + " -> " + Arrays.toString(processor.outputs(inputs3)));
+        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs3)));
         double[] inputs4 = { 0.5, 0.5 };
-        System.out.println("" + Arrays.toString(inputs4) + " -> " + Arrays.toString(brain.outputs(inputs4)));
-        System.out.println("Maximum output " + Arrays.toString(brain.outputs(inputs4)));
+        System.out.println("" + Arrays.toString(inputs4) + " -> " + Arrays.toString(processor.outputs(inputs4)));
+        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs4)));
 
     }
 
-    public static NeuralNetwork minBrain(List<NeuralNetwork> brains)
+    public static NeuralNetwork minProcessor(List<NeuralNetwork> processors)
     {
-        NeuralNetwork minBrain = new NeuralNetwork(brains.get(0).getInputCount(),
-                brains.get(0).getOutputCount(), false, false);
+        NeuralNetwork minProcessor = new NeuralNetwork(processors.get(0).getInputCount(),
+                processors.get(0).getOutputCount(), false, false);
         // Set all the weights with
-        for (NeuralNetwork brain : brains)
+        for (NeuralNetwork processor : processors)
         {
-            for (int i = 0; i < minBrain._weights.length; i++)
+            for (int i = 0; i < minProcessor._weights.length; i++)
             {
-                for (int j = 0; j < minBrain._weights[i].length; j++)
+                for (int j = 0; j < minProcessor._weights[i].length; j++)
                 {
-                    for (int k = 0; k < minBrain._weights[i][j].length; k++)
+                    for (int k = 0; k < minProcessor._weights[i][j].length; k++)
                     {
-                        minBrain._weights[i][j][k] = Math.min(brain._weights[i][j][k], minBrain._weights[i][j][k]);
+                        minProcessor._weights[i][j][k] = Math.min(processor._weights[i][j][k],
+                                minProcessor._weights[i][j][k]);
                     }
                 }
             }
         }
-        return minBrain;
+        return minProcessor;
 
     }
 
-    public static NeuralNetwork maxBrain(List<NeuralNetwork> brains)
+    public static NeuralNetwork maxProcessor(List<NeuralNetwork> processors)
     {
-        NeuralNetwork maxBrain = new NeuralNetwork(brains.get(0).getInputCount(),
-                brains.get(0).getOutputCount(), false, false);
+        NeuralNetwork maxProcessor = new NeuralNetwork(processors.get(0).getInputCount(),
+                processors.get(0).getOutputCount(), false, false);
         // Set all the weights with
-        for (NeuralNetwork brain : brains)
+        for (NeuralNetwork processor : processors)
         {
-            for (int i = 0; i < maxBrain._weights.length; i++)
+            for (int i = 0; i < maxProcessor._weights.length; i++)
             {
-                for (int j = 0; j < maxBrain._weights[i].length; j++)
+                for (int j = 0; j < maxProcessor._weights[i].length; j++)
                 {
-                    for (int k = 0; k < maxBrain._weights[i][j].length; k++)
+                    for (int k = 0; k < maxProcessor._weights[i][j].length; k++)
                     {
-                        maxBrain._weights[i][j][k] = Math.max(brain._weights[i][j][k], maxBrain._weights[i][j][k]);
+                        maxProcessor._weights[i][j][k] = Math.max(processor._weights[i][j][k],
+                                maxProcessor._weights[i][j][k]);
                     }
                 }
             }
         }
-        return maxBrain;
+        return maxProcessor;
     }
 
-    public static NeuralNetwork medianBrain(List<NeuralNetwork> brains)
+    public static NeuralNetwork medianProcessor(List<NeuralNetwork> processors)
     {
-        NeuralNetwork medianBrain = new NeuralNetwork(brains.get(0).getInputCount(),
-                brains.get(0).getOutputCount(), false, false);
+        NeuralNetwork medianProcessor = new NeuralNetwork(processors.get(0).getInputCount(),
+                processors.get(0).getOutputCount(), false, false);
         // Set all the weights with
-        for (int i = 0; i < medianBrain._weights.length; i++)
+        for (int i = 0; i < medianProcessor._weights.length; i++)
         {
-            for (int j = 0; j < medianBrain._weights[i].length; j++)
+            for (int j = 0; j < medianProcessor._weights[i].length; j++)
             {
-                for (int k = 0; k < medianBrain._weights[i][j].length; k++)
+                for (int k = 0; k < medianProcessor._weights[i][j].length; k++)
                 {
-                    medianBrain._weights[i][j][k] = 0;
+                    medianProcessor._weights[i][j][k] = 0;
                 }
             }
         }
-        int brainsAveraged = brains.size();
-        for (NeuralNetwork brain : brains)
+        int processorsAveraged = processors.size();
+        for (NeuralNetwork processor : processors)
         {
-            for (int i = 0; i < medianBrain._weights.length; i++)
+            for (int i = 0; i < medianProcessor._weights.length; i++)
             {
-                for (int j = 0; j < medianBrain._weights[i].length; j++)
+                for (int j = 0; j < medianProcessor._weights[i].length; j++)
                 {
-                    for (int k = 0; k < medianBrain._weights[i][j].length; k++)
+                    for (int k = 0; k < medianProcessor._weights[i][j].length; k++)
                     {
-                        medianBrain._weights[i][j][k] += brain._weights[i][j][k];
+                        medianProcessor._weights[i][j][k] += processor._weights[i][j][k];
                     }
                 }
             }
         }
-        for (int i = 0; i < medianBrain._weights.length; i++)
+        for (int i = 0; i < medianProcessor._weights.length; i++)
         {
-            for (int j = 0; j < medianBrain._weights[i].length; j++)
+            for (int j = 0; j < medianProcessor._weights[i].length; j++)
             {
-                for (int k = 0; k < medianBrain._weights[i][j].length; k++)
+                for (int k = 0; k < medianProcessor._weights[i][j].length; k++)
                 {
-                    medianBrain._weights[i][j][k] /= brainsAveraged;
+                    medianProcessor._weights[i][j][k] /= processorsAveraged;
                 }
             }
         }
-        return medianBrain;
+        return medianProcessor;
     }
 
-    public static NeuralNetwork standardDeviationBrain(List<NeuralNetwork> brains,
-            NeuralNetwork medianBrain)
+    public static NeuralNetwork standardDeviationProcessor(List<NeuralNetwork> processors,
+            NeuralNetwork medianProcessor)
     {
-        NeuralNetwork standardDeviationBrain = new NeuralNetwork(medianBrain.getInputCount(),
-                medianBrain.getOutputCount(), false, false);
-        for (int i = 0; i < standardDeviationBrain._weights.length; i++)
+        NeuralNetwork standardDeviationProcessor = new NeuralNetwork(medianProcessor.getInputCount(),
+                medianProcessor.getOutputCount(), false, false);
+        for (int i = 0; i < standardDeviationProcessor._weights.length; i++)
         {
-            for (int j = 0; j < standardDeviationBrain._weights[i].length; j++)
+            for (int j = 0; j < standardDeviationProcessor._weights[i].length; j++)
             {
-                for (int k = 0; k < standardDeviationBrain._weights[i][j].length; k++)
+                for (int k = 0; k < standardDeviationProcessor._weights[i][j].length; k++)
                 {
-                    standardDeviationBrain._weights[i][j][k] = 0;
+                    standardDeviationProcessor._weights[i][j][k] = 0;
                 }
             }
         }
-        int brainsAveraged = brains.size();
+        int processorsAveraged = processors.size();
         double error;
-        for (NeuralNetwork brain : brains)
+        for (NeuralNetwork processor : processors)
         {
-            for (int i = 0; i < standardDeviationBrain._weights.length; i++)
+            for (int i = 0; i < standardDeviationProcessor._weights.length; i++)
             {
-                for (int j = 0; j < standardDeviationBrain._weights[i].length; j++)
+                for (int j = 0; j < standardDeviationProcessor._weights[i].length; j++)
                 {
-                    for (int k = 0; k < standardDeviationBrain._weights[i][j].length; k++)
+                    for (int k = 0; k < standardDeviationProcessor._weights[i][j].length; k++)
                     {
-                        error = brain._weights[i][j][k] - medianBrain._weights[i][j][k];
-                        standardDeviationBrain._weights[i][j][k] += error * error;
+                        error = processor._weights[i][j][k] - medianProcessor._weights[i][j][k];
+                        standardDeviationProcessor._weights[i][j][k] += error * error;
                     }
                 }
             }
         }
-        for (int i = 0; i < standardDeviationBrain._weights.length; i++)
+        for (int i = 0; i < standardDeviationProcessor._weights.length; i++)
         {
-            for (int j = 0; j < standardDeviationBrain._weights[i].length; j++)
+            for (int j = 0; j < standardDeviationProcessor._weights[i].length; j++)
             {
-                for (int k = 0; k < standardDeviationBrain._weights[i][j].length; k++)
+                for (int k = 0; k < standardDeviationProcessor._weights[i][j].length; k++)
                 {
-                    standardDeviationBrain._weights[i][j][k] /= brainsAveraged;
+                    standardDeviationProcessor._weights[i][j][k] /= processorsAveraged;
                 }
             }
         }
-        return standardDeviationBrain;
+        return standardDeviationProcessor;
     }
 
     @Override
-    public ProcessorType getBrainType()
+    public ProcessorType getProcessorType()
     {
         return ProcessorType.NEURAL_NETWORK;
     }
@@ -472,9 +474,9 @@ public class NeuralNetwork extends Processor
                 species.getRandomInitialization(), species.getNormalizeAfterMutation());
     }
 
-    public static NeuralNetwork makeWithParents(Species species, NeuralNetwork parentBrain1,
-            NeuralNetwork parentBrain2)
+    public static NeuralNetwork makeWithParents(Species species, NeuralNetwork parentProcessor1,
+            NeuralNetwork parentProcessor2)
     {
-        return new NeuralNetwork(species, parentBrain1, parentBrain2);
+        return new NeuralNetwork(species, parentProcessor1, parentProcessor2);
     }
 }
