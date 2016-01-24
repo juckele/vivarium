@@ -1,7 +1,7 @@
 package io.vivarium.visualization;
 
-import io.vivarium.core.brain.Processor;
-import io.vivarium.core.brain.NeuralNetwork;
+import io.vivarium.core.processor.NeuralNetwork;
+import io.vivarium.core.processor.Processor;
 
 public class BrainRenderer implements GraphicalController
 {

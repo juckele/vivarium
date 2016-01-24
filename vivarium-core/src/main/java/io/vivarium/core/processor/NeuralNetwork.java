@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.core.brain;
+package io.vivarium.core.processor;
 
 import java.util.Arrays;
 import java.util.List;

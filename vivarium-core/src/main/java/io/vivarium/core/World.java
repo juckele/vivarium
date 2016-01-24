@@ -11,8 +11,8 @@ import java.util.LinkedList;
 
 import io.vivarium.audit.AuditFunction;
 import io.vivarium.audit.AuditRecord;
-import io.vivarium.core.brain.Processor;
-import io.vivarium.core.brain.ProcessorType;
+import io.vivarium.core.processor.Processor;
+import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Rand;

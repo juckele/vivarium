@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.brain.Processor;
+import io.vivarium.core.processor.Processor;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.VivariumObjectCollection;

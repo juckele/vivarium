@@ -5,7 +5,7 @@
 package io.vivarium.ga;
 
 import io.vivarium.core.Creature;
-import io.vivarium.core.brain.NeuralNetwork;
+import io.vivarium.core.processor.NeuralNetwork;
 
 public class GenomeWeightFF extends FitnessFunction
 {

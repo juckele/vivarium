@@ -12,8 +12,8 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.core.brain.Processor;
-import io.vivarium.core.brain.ProcessorType;
+import io.vivarium.core.processor.Processor;
+import io.vivarium.core.processor.ProcessorType;
 
 public class SerializationMakeTest
 {

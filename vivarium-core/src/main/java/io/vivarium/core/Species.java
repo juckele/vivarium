@@ -4,7 +4,7 @@
 
 package io.vivarium.core;
 
-import io.vivarium.core.brain.ProcessorType;
+import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 

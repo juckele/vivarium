@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.core.brain;
+package io.vivarium.core.processor;
 
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.visualization.RenderCode;

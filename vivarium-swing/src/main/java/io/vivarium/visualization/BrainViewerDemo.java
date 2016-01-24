@@ -11,8 +11,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import io.vivarium.core.brain.Processor;
-import io.vivarium.core.brain.NeuralNetwork;
+import io.vivarium.core.processor.NeuralNetwork;
+import io.vivarium.core.processor.Processor;
 
 public class BrainViewerDemo extends JPanel
 {

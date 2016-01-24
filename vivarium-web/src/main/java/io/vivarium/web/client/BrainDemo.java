@@ -12,8 +12,8 @@ import com.google.gwt.event.dom.client.LoadEvent;
 import com.google.gwt.event.dom.client.LoadHandler;
 import com.google.gwt.user.client.ui.RootPanel;
 
-import io.vivarium.core.brain.Processor;
-import io.vivarium.core.brain.RandomGenerator;
+import io.vivarium.core.processor.Processor;
+import io.vivarium.core.processor.RandomGenerator;
 import io.vivarium.visualization.BrainRenderer;
 
 public class BrainDemo implements AnimationCallback, EntryPoint, LoadHandler

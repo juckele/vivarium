@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import com.johnuckele.vtest.Tester;
 
-import io.vivarium.core.brain.NeuralNetwork;
+import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.util.Functions;
 
 public class BrainTest

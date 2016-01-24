@@ -27,8 +27,8 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.core.brain.NeuralNetwork;
-import io.vivarium.core.brain.RandomGenerator;
+import io.vivarium.core.processor.NeuralNetwork;
+import io.vivarium.core.processor.RandomGenerator;
 import io.vivarium.util.UUID;
 
 public class SerializationEngine
