@@ -171,7 +171,7 @@ schema public:
         type: integer
     - creature_count:
         type: integer
-    - brain_count:
+    - processor_count:
         type: integer
     owner: vivarium
     primary_key:

@@ -15,12 +15,12 @@ import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.VivariumObjectCollection;
 
-public class NormalizeBrainGenomes extends CommonsScript
+public class NormalizeProcessorGenomes extends CommonsScript
 {
     private static final String INPUT_FILE = "input";
     private static final String OUTPUT_FILE = "output";
 
-    public NormalizeBrainGenomes(String[] args)
+    public NormalizeProcessorGenomes(String[] args)
     {
         super(args);
     }
@@ -45,10 +45,10 @@ public class NormalizeBrainGenomes extends CommonsScript
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
 
         VivariumObjectCollection collection = FileIO.loadObjectCollection(inputFile, Format.JSON);
-        List<Processor> brains = collection.getAll(Processor.class);
-        for (Processor brain : brains)
+        List<Processor> processors = collection.getAll(Processor.class);
+        for (Processor processor : processors)
         {
-            brain.normalizeWeights();
+            processor.normalizeWeights();
         }
 
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
@@ -58,7 +58,7 @@ public class NormalizeBrainGenomes extends CommonsScript
     @Override
     protected String getUsageHeader()
     {
-        return "Normalize all brains in the loaded file";
+        return "Normalize all processors in the loaded file";
     }
 
     @Override
@@ -69,7 +69,7 @@ public class NormalizeBrainGenomes extends CommonsScript
 
     public static void main(String[] args)
     {
-        new NormalizeBrainGenomes(args);
+        new NormalizeProcessorGenomes(args);
     }
 
 }

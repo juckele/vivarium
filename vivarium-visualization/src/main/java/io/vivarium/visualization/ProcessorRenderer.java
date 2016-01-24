@@ -3,34 +3,34 @@ package io.vivarium.visualization;
 import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.core.processor.Processor;
 
-public class BrainRenderer implements GraphicalController
+public class ProcessorRenderer implements GraphicalController
 {
     public static final int NODE_SIZE = 60;
     public static final int NODE_SPREAD = 200;
     public static final int LAYER_SPREAD = 200;
     public static final int MAX_LINE_WIDTH = 20;
-    private Processor _brain;
+    private Processor _processor;
 
-    public BrainRenderer(Processor brain)
+    public ProcessorRenderer(Processor processor)
     {
-        this._brain = brain;
+        this._processor = processor;
     }
 
     @Override
     public void onRender(GeometricGraphics graphics)
     {
-        int inputCount = _brain.getInputCount();
-        int outputCount = _brain.getOutputCount();
+        int inputCount = _processor.getInputCount();
+        int outputCount = _processor.getOutputCount();
         double[] inputs = new double[inputCount];
-        double[] outputs = _brain.outputs(inputs);
+        double[] outputs = _processor.outputs(inputs);
 
         // Layer
         // graphics.setFillColor(0.5f, 0.5f, 0.5f);
         // graphics.drawRectangle(NODE_SIZE, NODE_SIZE, LAYER_SPREAD, Math.max(inputCount, outputCount) * NODE_SPREAD);
 
         // Connections
-        NeuralNetwork nnBrain = (NeuralNetwork) _brain;
-        double[][][] weights = nnBrain.getWeights();
+        NeuralNetwork nnProcesser = (NeuralNetwork) _processor;
+        double[][][] weights = nnProcesser.getWeights();
         for (int inputIndex = 0; inputIndex < inputCount; inputIndex++)
         {
             for (int outputIndex = 0; outputIndex < outputCount; outputIndex++)

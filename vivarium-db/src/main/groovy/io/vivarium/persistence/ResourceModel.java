@@ -37,7 +37,7 @@ public class ResourceModel extends PersistenceModel
     private static final String BLUEPRINT_COUNT = "blueprint_count";
     private static final String SPECIES_COUNT = "species_count";
     private static final String CREATURE_COUNT = "creature_count";
-    private static final String BRAIN_COUNT = "brain_count";
+    private static final String PROCESSOR_COUNT = "processor_count";
 
     // relation data
     public final UUID resourceID;
@@ -84,7 +84,7 @@ public class ResourceModel extends PersistenceModel
         resourceRelation.put(BLUEPRINT_COUNT, null);
         resourceRelation.put(SPECIES_COUNT, null);
         resourceRelation.put(CREATURE_COUNT, null);
-        resourceRelation.put(BRAIN_COUNT, null);
+        resourceRelation.put(PROCESSOR_COUNT, null);
         if (jsonData.isPresent())
         {
             VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonData.get());
@@ -92,7 +92,7 @@ public class ResourceModel extends PersistenceModel
             resourceRelation.put(BLUEPRINT_COUNT, collection.getAll(Blueprint.class).size());
             resourceRelation.put(SPECIES_COUNT, collection.getAll(Species.class).size());
             resourceRelation.put(CREATURE_COUNT, collection.getAll(Creature.class).size());
-            resourceRelation.put(BRAIN_COUNT, collection.getAll(Processor.class).size());
+            resourceRelation.put(PROCESSOR_COUNT, collection.getAll(Processor.class).size());
         }
         DatabaseUtils.upsert(connection, TABLE_NAME, resourceRelation, getPrimaryKeys());
         connection.commit();

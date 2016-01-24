@@ -14,7 +14,7 @@ import javax.swing.WindowConstants;
 import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.core.processor.Processor;
 
-public class BrainViewerDemo extends JPanel
+public class ProcessorViewerDemo extends JPanel
 {
     private static JFrame _window;
 
@@ -22,12 +22,12 @@ public class BrainViewerDemo extends JPanel
 
     // Animation variables
     private SwingGeometricGraphics _swingGraphics;
-    private BrainRenderer _brainRenderer;
+    private ProcessorRenderer _processorRenderer;
 
-    public BrainViewerDemo(Processor brain)
+    public ProcessorViewerDemo(Processor processor)
     {
-        _brainRenderer = new BrainRenderer(brain);
-        _swingGraphics = new SwingGeometricGraphics(_brainRenderer, this);
+        _processorRenderer = new ProcessorRenderer(processor);
+        _swingGraphics = new SwingGeometricGraphics(_processorRenderer, this);
     }
 
     @Override
@@ -45,10 +45,10 @@ public class BrainViewerDemo extends JPanel
 
     public static void main(String[] args)
     {
-        Processor brain = new NeuralNetwork(4, 4, true, false);
+        Processor processor = new NeuralNetwork(4, 4, true, false);
 
         // Create and show the window
-        BrainViewerDemo bv = new BrainViewerDemo(brain);
+        ProcessorViewerDemo bv = new ProcessorViewerDemo(processor);
         _window = new JFrame();
         _window.add(bv);
         _window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);

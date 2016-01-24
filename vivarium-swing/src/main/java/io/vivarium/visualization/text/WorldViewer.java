@@ -112,7 +112,7 @@ public class WorldViewer extends JFrame
 
         // Build another
         // Species species2 = Species.makeDefault();
-        // species2.setBrainType(BrainType.RANDOM);
+        // species2.setProcessorType(ProcessorType.RANDOM);
         // species.add(species2);
 
         // Construct the world proper
