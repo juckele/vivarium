@@ -53,7 +53,7 @@ public class SerializationMakeTest
         for (ProcessorType brainType : ProcessorType.values())
         {
             Species species = Species.makeDefault();
-            species.setBrainType(brainType);
+            species.setProcessorType(brainType);
             Processor brain = ProcessorType.makeWithSpecies(brainType, species);
             Tester.isNotNull("Brain of type " + brainType + " should exist", brain);
         }
@@ -65,7 +65,7 @@ public class SerializationMakeTest
         for (ProcessorType brainType : ProcessorType.values())
         {
             Species species = Species.makeDefault();
-            species.setBrainType(brainType);
+            species.setProcessorType(brainType);
             Processor brain = ProcessorType.makeWithSpecies(brainType, species);
             Processor copy = (Processor) new SerializationEngine().makeCopy(brain);
             Tester.isNotNull("Brain copy of type " + brainType + "should exist", copy);

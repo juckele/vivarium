@@ -19,7 +19,7 @@ public class RandomGenerator extends Processor
     {
         // Random processor has no state, it's literally random output. This processor
         // does not evolve.
-        this._outputs = new double[species.getTotalBrainOutputCount()];
+        this._outputs = new double[species.getTotalProcessorOutputCount()];
     }
 
     public RandomGenerator(int totalProcessorOutputCount)
@@ -66,7 +66,7 @@ public class RandomGenerator extends Processor
 
     public static RandomGenerator makeWithSpecies(Species species)
     {
-        RandomGenerator processor = new RandomGenerator(species.getTotalBrainOutputCount());
+        RandomGenerator processor = new RandomGenerator(species.getTotalProcessorOutputCount());
         return processor;
     }
 

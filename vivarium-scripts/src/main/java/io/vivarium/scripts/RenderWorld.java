@@ -37,7 +37,7 @@ public class RenderWorld extends Script
     {
         World w = FileIO.loadObjectCollection(args[0], Format.JSON).getFirst(World.class);
         System.out.println(w.render(RenderCode.WORLD_MAP));
-        System.out.println(w.render(RenderCode.BRAIN_WEIGHTS));
+        System.out.println(w.render(RenderCode.PROCESSOR_WEIGHTS));
     }
 
     public static void main(String[] args)

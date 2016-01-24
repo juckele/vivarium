@@ -23,9 +23,9 @@ public class Creature extends VivariumObject
     @SerializedParameter
     private double _generation;
 
-    // Brain
+    // Processor
     @SerializedParameter
-    private Processor _brain;
+    private Processor _processor;
     @SerializedParameter
     private double[] _inputs;
     @SerializedParameter
@@ -104,20 +104,20 @@ public class Creature extends VivariumObject
             this._generation = 1;
         }
 
-        // Create brain to control the Creature
+        // Create processor to control the Creature
         if (parent1 != null)
         {
             if (parent2 != null)
             {
-                // Brain combined from genetic legacy
-                this._brain = ProcessorType.makeWithParents(_species.getBrainType(), _species, parent1._brain,
-                        parent2._brain);
+                // Processor combined from genetic legacy
+                this._processor = ProcessorType.makeWithParents(_species.getProcessorType(), _species,
+                        parent1._processor, parent2._processor);
             }
             else
             {
-                // Brain from single parent (might still mutate)
-                this._brain = ProcessorType.makeWithParents(_species.getBrainType(), _species, parent1._brain,
-                        parent1._brain);
+                // Processor from single parent (might still mutate)
+                this._processor = ProcessorType.makeWithParents(_species.getProcessorType(), _species,
+                        parent1._processor, parent1._processor);
             }
         }
         else
@@ -129,11 +129,11 @@ public class Creature extends VivariumObject
             }
             else
             {
-                // Create a new default brain
-                this._brain = ProcessorType.makeWithSpecies(_species.getBrainType(), _species);
+                // Create a new default processor
+                this._processor = ProcessorType.makeWithSpecies(_species.getProcessorType(), _species);
             }
         }
-        _inputs = new double[_species.getTotalBrainInputCount()];
+        _inputs = new double[_species.getTotalProcessorInputCount()];
         _memoryUnits = new double[_species.getMemoryUnitCount()];
         _soundInputs = new double[_species.getSoundChannelCount()];
         _soundOutputs = new double[_species.getSoundChannelCount()];
@@ -218,29 +218,29 @@ public class Creature extends VivariumObject
             // Read memory units
             for (int i = 0; i < this._memoryUnits.length; i++)
             {
-                _inputs[_species.getHardBrainInputs() - 1 + i] = _memoryUnits[i];
+                _inputs[_species.getHardProcessorInputs() - 1 + i] = _memoryUnits[i];
             }
             // Read sound inputs
             for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {
-                _inputs[_species.getHardBrainInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
+                _inputs[_species.getHardProcessorInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
             }
-            // Main brain computation
-            double[] outputs = this._brain.outputs(_inputs);
+            // Main processor computation
+            double[] outputs = this._processor.outputs(_inputs);
             // Save memory units
             for (int i = 0; i < this._memoryUnits.length; i++)
             {
-                _memoryUnits[i] = outputs[_species.getHardBrainOutputs() + i - 1];
+                _memoryUnits[i] = outputs[_species.getHardProcessorOutputs() + i - 1];
             }
             // Clear the sound inputs and set the sound outputs
             for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {
                 this._soundInputs[i] = 0;
-                this._soundOutputs[i] = outputs[_species.getHardBrainOutputs() - 1 + this._memoryUnits.length + i];
+                this._soundOutputs[i] = outputs[_species.getHardProcessorOutputs() - 1 + this._memoryUnits.length + i];
             }
             // Hard coded outputs (actionable outputs)
             int maxActionOutput = 0;
-            for (int i = 1; i < _species.getHardBrainOutputs(); i++)
+            for (int i = 1; i < _species.getHardProcessorOutputs(); i++)
             {
                 if (outputs[i] > outputs[maxActionOutput])
                 {
@@ -295,9 +295,9 @@ public class Creature extends VivariumObject
         return (_fetus);
     }
 
-    public Processor getBrain()
+    public Processor getProcessor()
     {
-        return (_brain);
+        return (_processor);
     }
 
     public void executeAction(Action action)
@@ -526,9 +526,9 @@ public class Creature extends VivariumObject
         this._fetus = fetus;
     }
 
-    public void setBrain(Processor brain)
+    public void setProcessor(Processor processor)
     {
-        this._brain = brain;
+        this._processor = processor;
     }
 
     /*

@@ -33,7 +33,7 @@ public class WorldViewer extends JFrame
     public WorldViewer(World w)
     {
         _w = w;
-        _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.BRAIN_WEIGHTS));
+        _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.PROCESSOR_WEIGHTS));
         _ratListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
 
         _overviewRender = new JTextArea(_overviewRenders.get(_renderIndex));
@@ -68,7 +68,7 @@ public class WorldViewer extends JFrame
             _w.tick();
             if (tick % renderEvery == 0)
             {
-                _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.BRAIN_WEIGHTS));
+                _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.PROCESSOR_WEIGHTS));
                 _ratListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
                 System.out.println("Population " + _w.getCount(EntityType.CREATURE));
             }

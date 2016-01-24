@@ -30,9 +30,9 @@ public enum ProcessorType
                 NeuralNetwork standardDeviationProcessor = NeuralNetwork.standardDeviationProcessor(processors,
                         medianProcessor);
                 processorOutput.append("Average creature NN:\n");
-                processorOutput.append(medianProcessor.render(RenderCode.BRAIN_WEIGHTS));
+                processorOutput.append(medianProcessor.render(RenderCode.PROCESSOR_WEIGHTS));
                 processorOutput.append("Std. Deviation on creature NNs:\n");
-                processorOutput.append(standardDeviationProcessor.render(RenderCode.BRAIN_WEIGHTS));
+                processorOutput.append(standardDeviationProcessor.render(RenderCode.PROCESSOR_WEIGHTS));
                 /*
                  * Processor minProcessor = Processor.minProcessor(processors); processorOutput.append(
                  * "Min creature NN:\n"); processorOutput.append(minProcessor.toString()); Processor maxProcessor =

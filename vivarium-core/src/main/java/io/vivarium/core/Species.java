@@ -41,11 +41,11 @@ public class Species extends VivariumObject
 
     // Neurology
     @SerializedParameter
-    private ProcessorType _brainType = ProcessorType.NEURAL_NETWORK;
+    private ProcessorType _processorType = ProcessorType.NEURAL_NETWORK;
     @SerializedParameter
-    private int _hardBrainInputs = 5;
+    private int _hardProcessorInputs = 5;
     @SerializedParameter
-    private int _hardBrainOutputs = 6;
+    private int _hardProcessorOutputs = 6;
     @SerializedParameter
     private int _memoryUnitCount = 0;
     @SerializedParameter
@@ -72,14 +72,14 @@ public class Species extends VivariumObject
     {
     }
 
-    public int getHardBrainInputs()
+    public int getHardProcessorInputs()
     {
-        return _hardBrainInputs;
+        return _hardProcessorInputs;
     }
 
-    public int getHardBrainOutputs()
+    public int getHardProcessorOutputs()
     {
-        return _hardBrainOutputs;
+        return _hardProcessorOutputs;
     }
 
     public double getFemaleThreshold()
@@ -178,24 +178,24 @@ public class Species extends VivariumObject
         this._initialGenerationProbability = probability;
     }
 
-    public ProcessorType getBrainType()
+    public ProcessorType getProcessorType()
     {
-        return this._brainType;
+        return this._processorType;
     }
 
-    public void setBrainType(ProcessorType type)
+    public void setProcessorType(ProcessorType type)
     {
-        this._brainType = type;
+        this._processorType = type;
     }
 
-    public int getTotalBrainInputCount()
+    public int getTotalProcessorInputCount()
     {
-        return this._hardBrainInputs + this._memoryUnitCount + this._soundChannelCount;
+        return this._hardProcessorInputs + this._memoryUnitCount + this._soundChannelCount;
     }
 
-    public int getTotalBrainOutputCount()
+    public int getTotalProcessorOutputCount()
     {
-        return this._hardBrainOutputs + this._memoryUnitCount + this._soundChannelCount;
+        return this._hardProcessorOutputs + this._memoryUnitCount + this._soundChannelCount;
     }
 
     public int getHiddenLayerCount()

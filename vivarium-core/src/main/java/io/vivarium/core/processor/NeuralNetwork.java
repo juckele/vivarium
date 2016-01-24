@@ -236,7 +236,7 @@ public class NeuralNetwork extends Processor
     @Override
     public String render(RenderCode code)
     {
-        if (code == RenderCode.BRAIN_WEIGHTS)
+        if (code == RenderCode.PROCESSOR_WEIGHTS)
         {
             return this.renderProcessorWeights();
         }
@@ -470,7 +470,7 @@ public class NeuralNetwork extends Processor
 
     public static NeuralNetwork makeWithSpecies(Species species)
     {
-        return new NeuralNetwork(species.getTotalBrainInputCount(), species.getTotalBrainOutputCount(),
+        return new NeuralNetwork(species.getTotalProcessorInputCount(), species.getTotalProcessorOutputCount(),
                 species.getRandomInitialization(), species.getNormalizeAfterMutation());
     }
 

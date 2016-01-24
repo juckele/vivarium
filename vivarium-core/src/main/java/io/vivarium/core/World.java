@@ -567,9 +567,9 @@ public class World extends VivariumObject
         {
             return (renderMap());
         }
-        else if (code == RenderCode.BRAIN_WEIGHTS)
+        else if (code == RenderCode.PROCESSOR_WEIGHTS)
         {
-            return (renderBrainWeights());
+            return (renderProcessorWeights());
         }
         else if (code == RenderCode.LIVE_CREATURE_LIST)
         {
@@ -636,34 +636,34 @@ public class World extends VivariumObject
         return (worldOutput.toString());
     }
 
-    private String renderBrainWeights()
+    private String renderProcessorWeights()
     {
         StringBuilder multiSpeciesOutput = new StringBuilder();
         for (Species species : this._blueprint.getSpecies())
         {
-            multiSpeciesOutput.append(this.renderBrainWeights(species));
+            multiSpeciesOutput.append(this.renderProcessorWeights(species));
         }
         return multiSpeciesOutput.toString();
     }
 
-    private String renderBrainWeights(Species s)
+    private String renderProcessorWeights(Species s)
     {
-        // Draw average brain
+        // Draw average processor
         // Draw creature readouts
-        LinkedList<Processor> brains = new LinkedList<Processor>();
+        LinkedList<Processor> processors = new LinkedList<Processor>();
         for (int r = 0; r < this._height; r++)
         {
             for (int c = 0; c < this._width; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE && _creatureGrid[r][c].getSpecies().equals(s))
                 {
-                    brains.add(_creatureGrid[r][c].getBrain());
+                    processors.add(_creatureGrid[r][c].getProcessor());
                 }
             }
         }
-        if (brains.size() > 0)
+        if (processors.size() > 0)
         {
-            return ProcessorType.render(brains.getFirst().getProcessorType(), brains);
+            return ProcessorType.render(processors.getFirst().getProcessorType(), processors);
         }
         return "";
     }
