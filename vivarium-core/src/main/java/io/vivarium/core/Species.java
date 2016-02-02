@@ -53,7 +53,7 @@ public class Species extends VivariumObject
     @SerializedParameter
     private boolean _randomInitialization = false;
     @SerializedParameter
-    private boolean _normalizeAfterMutation = false;
+    private double _normalizeAfterMutation = 0;
 
     // Mutation
     @SerializedParameter
@@ -102,12 +102,12 @@ public class Species extends VivariumObject
         return _maximumGestation;
     }
 
-    public boolean getNormalizeAfterMutation()
+    public double getNormalizeAfterMutation()
     {
         return this._normalizeAfterMutation;
     }
 
-    public void setNormalizeAfterMutation(boolean normalizeAfterMutation)
+    public void setNormalizeAfterMutation(double normalizeAfterMutation)
     {
         _normalizeAfterMutation = normalizeAfterMutation;
     }

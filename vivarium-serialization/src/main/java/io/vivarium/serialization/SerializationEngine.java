@@ -407,7 +407,20 @@ public class SerializationEngine
             for (Object element : (List<Object>) object)
             {
                 Object deserializedElement = deserializeObject(element, clazz.getComponentType());
-                Array.set(array, i, deserializedElement);
+                try
+                {
+                    Array.set(array, i, deserializedElement);
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                    System.out.println("size: " + size);
+                    System.out.println("array: " + array);
+                    System.out.println("deserializedElement: " + deserializedElement);
+                    System.out.println("clazz: " + clazz);
+                    System.out.println("clazz.getComponentType(): " + clazz.getComponentType());
+                    System.out.println("element: " + element);
+                }
                 i++;
             }
             return array;

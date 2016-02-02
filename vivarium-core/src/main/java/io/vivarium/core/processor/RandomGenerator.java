@@ -32,7 +32,7 @@ public class RandomGenerator extends Processor
     }
 
     @Override
-    public void normalizeWeights()
+    public void normalizeWeights(double normalizedLength)
     {
         // No weights, nothing to normalize
     }

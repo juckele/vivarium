@@ -32,7 +32,7 @@ public abstract class Processor extends VivariumObject
     /**
      * Applies a processor defined normalization procedure to a processor.
      */
-    public abstract void normalizeWeights();
+    public abstract void normalizeWeights(double normalizedLength);
 
     public abstract String render(RenderCode code);
 

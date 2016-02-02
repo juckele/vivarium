@@ -45,7 +45,7 @@ public class ProcessorViewerDemo extends JPanel
 
     public static void main(String[] args)
     {
-        Processor processor = new NeuralNetwork(4, 4, true, false);
+        Processor processor = new NeuralNetwork(4, 4, true, 0);
 
         // Create and show the window
         ProcessorViewerDemo bv = new ProcessorViewerDemo(processor);

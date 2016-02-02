@@ -61,7 +61,7 @@ public class NormalizationConvergence
         normalizingBlueprint.setSize(50);
         ArrayList<Species> normalizingSpeciesList = new ArrayList<Species>();
         Species normalizingSpecies = Species.makeDefault();
-        normalizingSpecies.setNormalizeAfterMutation(true);
+        normalizingSpecies.setNormalizeAfterMutation(1);
         normalizingSpeciesList.add(normalizingSpecies);
         normalizingBlueprint.setSpecies(normalizingSpeciesList);
 

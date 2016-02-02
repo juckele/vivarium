@@ -48,7 +48,7 @@ public class NormalizeProcessorGenomes extends CommonsScript
         List<Processor> processors = collection.getAll(Processor.class);
         for (Processor processor : processors)
         {
-            processor.normalizeWeights();
+            processor.normalizeWeights(1);
         }
 
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
