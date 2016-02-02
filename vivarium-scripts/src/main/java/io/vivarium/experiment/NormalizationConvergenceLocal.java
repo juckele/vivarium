@@ -85,9 +85,9 @@ public class NormalizationConvergenceLocal
             for (int threadIndex = 0; threadIndex < THREADS_PER_BATCH; threadIndex++)
             {
                 int threadNumber = THREADS_PER_BATCH * batchIndex + threadIndex + 1;
-                defaultThreads[threadIndex] = new WorldRunnerThread("default", threadNumber, 20, 10);
-                normalizingThreads[threadIndex] = new WorldRunnerThread("normalizing", threadNumber, 20, 10);
-                longNormalizingThreads[threadIndex] = new WorldRunnerThread("long", threadNumber, 20, 10);
+                defaultThreads[threadIndex] = new WorldRunnerThread("default", threadNumber, 50, 2_000_000);
+                normalizingThreads[threadIndex] = new WorldRunnerThread("normalizing", threadNumber, 50, 2_000_000);
+                longNormalizingThreads[threadIndex] = new WorldRunnerThread("long", threadNumber, 50, 2_000_000);
                 defaultThreads[threadIndex].start();
                 normalizingThreads[threadIndex].start();
                 longNormalizingThreads[threadIndex].start();
