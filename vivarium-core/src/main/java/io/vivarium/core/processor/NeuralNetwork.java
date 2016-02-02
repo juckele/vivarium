@@ -170,7 +170,7 @@ public class NeuralNetwork extends Processor
             {
                 for (int k = 0; k < _weights[i][j].length; k++)
                 {
-                    _weights[i][j][k] /= vectorLength * normalizedLength;
+                    _weights[i][j][k] = normalizedLength * _weights[i][j][k] / vectorLength;
                 }
             }
         }

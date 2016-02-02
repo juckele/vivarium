@@ -107,7 +107,7 @@ public class WorldViewer extends JFrame
         species1.setMutationRateExponent(-9);
         species1.setCreatureMemoryUnitCount(1);
         species1.setCreatureSoundChannelCount(1);
-        species1.setNormalizeAfterMutation(1);
+        species1.setNormalizeAfterMutation(Math.sqrt(9 * 8));
         species.add(species1);
 
         // Build another
