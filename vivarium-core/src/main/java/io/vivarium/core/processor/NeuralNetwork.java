@@ -152,6 +152,22 @@ public class NeuralNetwork extends Processor
     @Override
     public void normalizeWeights(double normalizedLength)
     {
+        double vectorLength = getGenomeLength();
+        for (int i = 0; i < _weights.length; i++)
+        {
+            for (int j = 0; j < _weights[i].length; j++)
+            {
+                for (int k = 0; k < _weights[i][j].length; k++)
+                {
+                    _weights[i][j][k] = normalizedLength * _weights[i][j][k] / vectorLength;
+                }
+            }
+        }
+    }
+
+    @Override
+    public double getGenomeLength()
+    {
         double sumOfSquares = 0;
         for (int i = 0; i < _weights.length; i++)
         {
@@ -163,17 +179,7 @@ public class NeuralNetwork extends Processor
                 }
             }
         }
-        double vectorLength = Math.sqrt(sumOfSquares);
-        for (int i = 0; i < _weights.length; i++)
-        {
-            for (int j = 0; j < _weights[i].length; j++)
-            {
-                for (int k = 0; k < _weights[i][j].length; k++)
-                {
-                    _weights[i][j][k] = normalizedLength * _weights[i][j][k] / vectorLength;
-                }
-            }
-        }
+        return Math.sqrt(sumOfSquares);
     }
 
     public double[][][] getWeights()

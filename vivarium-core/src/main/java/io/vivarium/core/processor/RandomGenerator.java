@@ -38,6 +38,13 @@ public class RandomGenerator extends Processor
     }
 
     @Override
+    public double getGenomeLength()
+    {
+        // No values, no length
+        return 0;
+    }
+
+    @Override
     public ProcessorType getProcessorType()
     {
         return ProcessorType.RANDOM;

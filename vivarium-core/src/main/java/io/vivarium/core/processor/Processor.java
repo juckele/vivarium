@@ -34,6 +34,11 @@ public abstract class Processor extends VivariumObject
      */
     public abstract void normalizeWeights(double normalizedLength);
 
+    /**
+     * Returns the length of the genome if measured as a high dimensional vector
+     */
+    public abstract double getGenomeLength();
+
     public abstract String render(RenderCode code);
 
     @Override

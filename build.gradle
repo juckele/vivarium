@@ -204,9 +204,16 @@ project(':vivarium-scripts') {
             from sharedManifest
         }
     }
-    task jarNormalizeBrainGenomes( type: OneJar ) {
-        archiveName = 'normalize-brain-genomes'+'-'+version+'.jar'
-        mainClass = 'io.vivarium.scripts.NormalizeBrainGenomes'
+    task jarMeasureProcessorGenomeLengths( type: OneJar ) {
+        archiveName = 'measure-processor-genome-lengths'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.MeasureProcessorGenomeLengths'
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
+    task jarNormalizeProcessorGenomes( type: OneJar ) {
+        archiveName = 'normalize-processor-genomes'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.NormalizeProcessorGenomes'
         manifest = project.manifest {
             from sharedManifest
         }
@@ -243,7 +250,8 @@ project(':vivarium-scripts') {
     jarCollection.dependsOn jarCreateSpecies
     jarCollection.dependsOn jarCreateWorld
     jarCollection.dependsOn jarExtractCreatureFromWorld
-    jarCollection.dependsOn jarNormalizeBrainGenomes
+    jarCollection.dependsOn jarMeasureProcessorGenomeLengths
+    jarCollection.dependsOn jarNormalizeProcessorGenomes
     jarCollection.dependsOn jarRunSimulation
     jarCollection.dependsOn jarRunBenchmark
     jarCollection.dependsOn jarUpdateSchema
