@@ -2,7 +2,7 @@
  * Copyright © 2015 John H Uckele. All rights reserved.
  */
 
-package io.vivarium.core;
+package io.vivarium.core.processor;
 
 import org.junit.Test;
 
@@ -11,7 +11,7 @@ import com.johnuckele.vtest.Tester;
 import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.util.Functions;
 
-public class ProcessorTest
+public class NeuralNetworkTest
 {
     @Test
     public void testComputeLayerInPlaceConstantBias()
