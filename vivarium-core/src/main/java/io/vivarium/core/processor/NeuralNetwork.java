@@ -97,11 +97,11 @@ public class NeuralNetwork extends Processor
                         randomValue = Rand.getInstance().getRandomPositiveDouble();
                         if (randomValue < 0.5)
                         {
-                            _weights[i][j] = processor1._weights[i][j];
+                            _weights[i][j][k] = processor1._weights[i][j][k];
                         }
                         else
                         {
-                            _weights[i][j] = processor2._weights[i][j];
+                            _weights[i][j][k] = processor2._weights[i][j][k];
                         }
                     }
 
