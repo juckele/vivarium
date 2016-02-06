@@ -8,11 +8,23 @@ import org.junit.Test;
 
 import com.johnuckele.vtest.Tester;
 
-import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.util.Functions;
 
 public class NeuralNetworkTest
 {
+    @Test
+    public void testNormalizeWeights()
+    {
+        double length = Math.sqrt(7 * 6);
+        NeuralNetwork nn = new NeuralNetwork(7, 6, true, length);
+        Tester.equal("Random initialized network should match the initial target length", nn.getGenomeLength(), length,
+                0.01);
+        nn.normalizeWeights(1);
+        Tester.equal("Normalized network should match the new target length", nn.getGenomeLength(), 1, 0.01);
+        nn.normalizeWeights(length);
+        Tester.equal("Normalized network should match the new target length", nn.getGenomeLength(), length, 0.01);
+    }
+
     @Test
     public void testComputeLayerInPlaceConstantBias()
     {
