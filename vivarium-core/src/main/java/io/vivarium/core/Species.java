@@ -281,4 +281,164 @@ public class Species extends VivariumObject
         // update mutation rate
         _mutationRate = Math.pow(2, _mutationRateExponent);
     }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + _baseFoodRate;
+        result = prime * result + _breedingFoodRate;
+        result = prime * result + _eatingFoodRate;
+        long temp;
+        temp = Double.doubleToLongBits(_femaleProportion);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + _hardProcessorInputs;
+        result = prime * result + _hardProcessorOutputs;
+        temp = Double.doubleToLongBits(_inheritanceGaussianMixRate);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(_initialGenerationProbability);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + _maximumAge;
+        result = prime * result + _maximumFood;
+        result = prime * result + _maximumGestation;
+        result = prime * result + _memoryUnitCount;
+        result = prime * result + _movingFoodRate;
+        temp = Double.doubleToLongBits(_mutationRate);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(_mutationRateExponent);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(_mutationTypeFlipRate);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(_mutationTypeRandomRate);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(_mutationTypeSmallScaleRate);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        temp = Double.doubleToLongBits(_normalizeAfterMutation);
+        result = prime * result + (int) (temp ^ (temp >>> 32));
+        result = prime * result + _pregnantFoodRate;
+        result = prime * result + ((_processorType == null) ? 0 : _processorType.hashCode());
+        result = prime * result + (_randomInitialization ? 1231 : 1237);
+        result = prime * result + _soundChannelCount;
+        result = prime * result + _turningFoodRate;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        Species other = (Species) obj;
+        if (_baseFoodRate != other._baseFoodRate)
+        {
+            return false;
+        }
+        if (_breedingFoodRate != other._breedingFoodRate)
+        {
+            return false;
+        }
+        if (_eatingFoodRate != other._eatingFoodRate)
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_femaleProportion) != Double.doubleToLongBits(other._femaleProportion))
+        {
+            return false;
+        }
+        if (_hardProcessorInputs != other._hardProcessorInputs)
+        {
+            return false;
+        }
+        if (_hardProcessorOutputs != other._hardProcessorOutputs)
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_inheritanceGaussianMixRate) != Double
+                .doubleToLongBits(other._inheritanceGaussianMixRate))
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_initialGenerationProbability) != Double
+                .doubleToLongBits(other._initialGenerationProbability))
+        {
+            return false;
+        }
+        if (_maximumAge != other._maximumAge)
+        {
+            return false;
+        }
+        if (_maximumFood != other._maximumFood)
+        {
+            return false;
+        }
+        if (_maximumGestation != other._maximumGestation)
+        {
+            return false;
+        }
+        if (_memoryUnitCount != other._memoryUnitCount)
+        {
+            return false;
+        }
+        if (_movingFoodRate != other._movingFoodRate)
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_mutationRate) != Double.doubleToLongBits(other._mutationRate))
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_mutationRateExponent) != Double.doubleToLongBits(other._mutationRateExponent))
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_mutationTypeFlipRate) != Double.doubleToLongBits(other._mutationTypeFlipRate))
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_mutationTypeRandomRate) != Double.doubleToLongBits(other._mutationTypeRandomRate))
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_mutationTypeSmallScaleRate) != Double
+                .doubleToLongBits(other._mutationTypeSmallScaleRate))
+        {
+            return false;
+        }
+        if (Double.doubleToLongBits(_normalizeAfterMutation) != Double.doubleToLongBits(other._normalizeAfterMutation))
+        {
+            return false;
+        }
+        if (_pregnantFoodRate != other._pregnantFoodRate)
+        {
+            return false;
+        }
+        if (_processorType != other._processorType)
+        {
+            return false;
+        }
+        if (_randomInitialization != other._randomInitialization)
+        {
+            return false;
+        }
+        if (_soundChannelCount != other._soundChannelCount)
+        {
+            return false;
+        }
+        if (_turningFoodRate != other._turningFoodRate)
+        {
+            return false;
+        }
+        return true;
+    }
 }

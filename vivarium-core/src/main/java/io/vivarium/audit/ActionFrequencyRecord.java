@@ -4,6 +4,8 @@
 
 package io.vivarium.audit;
 
+import java.util.Arrays;
+
 import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
@@ -78,5 +80,37 @@ public class ActionFrequencyRecord extends AuditRecord
             }
         }
         _tally = newTally;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.deepHashCode(_tally);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        ActionFrequencyRecord other = (ActionFrequencyRecord) obj;
+        if (!Arrays.deepEquals(_tally, other._tally))
+        {
+            return false;
+        }
+        return true;
     }
 }

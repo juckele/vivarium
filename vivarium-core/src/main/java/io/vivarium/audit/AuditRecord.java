@@ -37,4 +37,43 @@ public abstract class AuditRecord extends VivariumObject
     {
     }
 
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((_trackedSpecies == null) ? 0 : _trackedSpecies.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        AuditRecord other = (AuditRecord) obj;
+        if (_trackedSpecies == null)
+        {
+            if (other._trackedSpecies != null)
+            {
+                return false;
+            }
+        }
+        else if (!_trackedSpecies.equals(other._trackedSpecies))
+        {
+            return false;
+        }
+        return true;
+    }
+
 }

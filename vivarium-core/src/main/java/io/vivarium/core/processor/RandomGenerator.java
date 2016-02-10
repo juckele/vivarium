@@ -4,6 +4,8 @@
 
 package io.vivarium.core.processor;
 
+import java.util.Arrays;
+
 import io.vivarium.core.Species;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Rand;
@@ -96,5 +98,37 @@ public class RandomGenerator extends Processor
     public int getInputCount()
     {
         return 0;
+    }
+
+    @Override
+    public int hashCode()
+    {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + Arrays.hashCode(_outputs);
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (this == obj)
+        {
+            return true;
+        }
+        if (obj == null)
+        {
+            return false;
+        }
+        if (getClass() != obj.getClass())
+        {
+            return false;
+        }
+        RandomGenerator other = (RandomGenerator) obj;
+        if (!Arrays.equals(_outputs, other._outputs))
+        {
+            return false;
+        }
+        return true;
     }
 }
