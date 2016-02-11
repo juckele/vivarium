@@ -17,6 +17,8 @@
 
 package io.vivarium.util;
 
+import com.google.common.base.Preconditions;
+
 public class Functions
 {
     /**
@@ -46,4 +48,59 @@ public class Functions
         double expandedDifference = Math.exp(difference);
         return Math.log((expandedDifference + 1) / 2) + Math.min(logA, logB);
     }
+
+    /**
+     * computes an ordered array such that each element in the array is as far as possible from all previous elements.
+     * In a grid search style application, this allows results to be generated at a low granularity, and over time to
+     * generate additional higher granularity data points.
+     *
+     * For example, the inputs of min = 1, max = 10, and steps = 10 will produce the output {1.0, 10.0, 5.0, 3.0, 7.0,
+     * 2.0, 4.0, 6.0, 8.0, 9.0}
+     *
+     * @param min
+     *            The minimum value in the dither array. This will always be returned as the first element.
+     * @param max
+     *            The maximum value in the dither array. This will always be returned as the second element.
+     * @param steps
+     *            The total number of elements in the dither array. This value must be at least 2.
+     * @return The dither array.
+     */
+    public static double[] generateDitherArray(double min, double max, int steps)
+    {
+        Preconditions.checkArgument(steps >= 2);
+        Preconditions.checkArgument(min < max);
+
+        double[] ditherArray = new double[steps];
+        double stepSize = (max - min) / (steps - 1);
+
+        ditherArray[0] = min;
+        ditherArray[1] = max;
+        for (int outerIndex = 2; outerIndex < ditherArray.length; outerIndex++)
+        {
+            double targetValue = 0;
+            double maximumDifference = Double.MIN_VALUE;
+            for (int trialStep = 1; trialStep < steps; trialStep++)
+            {
+                double trialValue = min + trialStep * stepSize;
+                double minimumDifference = Double.MAX_VALUE;
+                for (int innerIndex = 0; innerIndex < outerIndex; innerIndex++)
+                {
+                    double difference = Math.abs(ditherArray[innerIndex] - trialValue);
+                    if (difference < minimumDifference)
+                    {
+                        minimumDifference = difference;
+                    }
+                }
+                if (minimumDifference > maximumDifference)
+                {
+                    targetValue = trialValue;
+                    maximumDifference = minimumDifference;
+                }
+            }
+            ditherArray[outerIndex] = targetValue;
+        }
+
+        return ditherArray;
+    }
+
 }
