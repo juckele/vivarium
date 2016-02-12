@@ -139,6 +139,5 @@ public class NormalizationConvergenceLocal
                 RunSimulation.main(args);
             }
         }
-
     }
 }
