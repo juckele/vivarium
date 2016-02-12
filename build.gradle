@@ -162,6 +162,13 @@ project(':vivarium-scripts') {
             from sharedManifest
         }
     }
+    task jarMutationRateLocal( type: OneJar ) {
+        archiveName = 'mutation-rate-local'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.experiment.MutationRateLocal'
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
     task jarConvertFileFormat( type: OneJar ) {
         archiveName = 'convert-file-format'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.ConvertFileFormat'
@@ -244,6 +251,7 @@ project(':vivarium-scripts') {
         description = "Creates a complete set of stand-alone jars for scripts in this project."
     }
     jarCollection.dependsOn jarNormalizationConvergenceLocal
+    jarCollection.dependsOn jarMutationRateLocal
     jarCollection.dependsOn jarConvertFileFormat
     jarCollection.dependsOn jarCreateAuditFunction
     jarCollection.dependsOn jarCreateBlueprint
