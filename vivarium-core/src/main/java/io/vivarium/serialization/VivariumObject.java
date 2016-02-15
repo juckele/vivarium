@@ -1,7 +1,3 @@
-/*
- * Copyright © 2015 John H Uckele. All rights reserved.
- */
-
 package io.vivarium.serialization;
 
 import com.googlecode.gwtstreamer.client.Streamable;

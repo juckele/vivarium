@@ -1,7 +1,3 @@
-/*
- * a * Copyright © 2015 John H Uckele. All rights reserved.
- */
-
 package io.vivarium.experiment;
 
 import java.net.URISyntaxException;

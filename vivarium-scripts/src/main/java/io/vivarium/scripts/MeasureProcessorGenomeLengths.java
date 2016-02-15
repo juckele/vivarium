@@ -1,7 +1,3 @@
-/*
- * Copyright © 2016 John H Uckele. All rights reserved.
- */
-
 package io.vivarium.scripts;
 
 import java.util.Arrays;
