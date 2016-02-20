@@ -64,6 +64,22 @@ subprojects {
         testCompile "org.mockito:mockito-core:1.+"
     }
 
+    task dbTest(type: Test) {
+        useJUnit {
+            includeCategories 'io.vivarium.test.DatabaseTest'
+        }
+    }
+    task fastTest(type: Test) {
+        useJUnit {
+            includeCategories 'io.vivarium.test.FastTest'
+        }
+    }
+    task slowTest(type: Test) {
+        useJUnit {
+            includeCategories 'io.vivarium.test.SlowTest'
+        }
+    }
+
     jacocoTestReport {
         additionalSourceDirs = files(sourceSets.main.allSource.srcDirs)
         sourceDirectories = files(sourceSets.main.allSource.srcDirs)
