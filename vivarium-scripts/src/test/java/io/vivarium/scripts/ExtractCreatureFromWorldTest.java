@@ -10,11 +10,14 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 
 import io.vivarium.core.Creature;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.SystemTest;
 
 public class ExtractCreatureFromWorldTest
 {
@@ -29,6 +32,7 @@ public class ExtractCreatureFromWorldTest
     }
 
     @Test
+    @Category({ FastTest.class, SystemTest.class })
     public void test()
     {
         int worldSize = 10;

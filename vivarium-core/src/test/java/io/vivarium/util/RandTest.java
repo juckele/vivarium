@@ -1,12 +1,17 @@
 package io.vivarium.util;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
+
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 
 public class RandTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testRandSeedForLCGMethods()
     {
         // Test with LCG based java.util.Random generated numbers
@@ -46,6 +51,7 @@ public class RandTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testRandSeedForXorshiftMethods()
     {
         // Test with Xorshift based
@@ -82,6 +88,7 @@ public class RandTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testGetRandomPositiveDouble()
     {
         // Statistical distribution tests, all statistical tests are 4 sigma
@@ -105,6 +112,7 @@ public class RandTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testGetRandomLong()
     {
         // Statistical distribution tests, all statistical tests are 4 sigma

@@ -4,14 +4,18 @@ import static org.mockito.Mockito.mock;
 
 import org.java_websocket.WebSocket;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 import io.vivarium.util.UUID;
 
 public class ClientConnectionManagerTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testRegisterWorker()
     {
         // Create CCM

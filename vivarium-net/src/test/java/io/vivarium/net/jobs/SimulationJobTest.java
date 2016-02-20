@@ -3,15 +3,19 @@ package io.vivarium.net.jobs;
 import java.util.LinkedList;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.johnuckele.vtest.Tester;
 
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 import io.vivarium.util.UUID;
 
 public class SimulationJobTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testSerializeDeserialize() throws Exception
     {
         ObjectMapper mapper = new ObjectMapper();
@@ -22,6 +26,7 @@ public class SimulationJobTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testEqualsAndHashCode()
     {
         SimulationJob job1;

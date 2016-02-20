@@ -1,14 +1,18 @@
 package io.vivarium.core.processor;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 import io.vivarium.util.Functions;
 
 public class NeuralNetworkTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testNormalizeWeights()
     {
         double length = Math.sqrt(7 * 6);
@@ -22,6 +26,7 @@ public class NeuralNetworkTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testComputeLayerInPlaceConstantBias()
     {
         double[] inputs = {};
@@ -33,6 +38,7 @@ public class NeuralNetworkTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testComputeLayerInPlaceWithoutBias()
     {
         double[] inputs = { 1.0, 0.5, 0.0 };
@@ -47,6 +53,7 @@ public class NeuralNetworkTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testComputeLayerInPlaceWithRandomBias()
     {
         double[] inputs = {};
@@ -60,6 +67,7 @@ public class NeuralNetworkTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testComplexComputeLayerInPlace()
     {
         double[] inputs = { 1.0, 0.5, 0.75, 1.0 };

@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
@@ -11,12 +12,14 @@ import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.TestDatabase;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
+import io.vivarium.test.DatabaseTest;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
 
 public class ResourcePersistenceTest
 {
     @Test
+    @Category(DatabaseTest.class)
     public void testPersistAndFetch() throws SQLException
     {
         TestDatabase.initializeTestDatabase();

@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.google.common.collect.Lists;
 import com.johnuckele.vtest.Tester;
@@ -17,11 +18,14 @@ import com.johnuckele.vtest.Tester;
 import io.vivarium.persistence.JobModel;
 import io.vivarium.persistence.PersistenceModule;
 import io.vivarium.persistence.WorkerModel;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 import io.vivarium.util.UUID;
 
 public class WorkloadEnforcerTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testBuildDesiredJobAssingmentsWithInfiniteJobs() throws NoSuchMethodException, SecurityException,
             IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {
@@ -63,6 +67,7 @@ public class WorkloadEnforcerTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testBuildDesiredJobAssingmentsWithLimitedHighPriorityJobs() throws NoSuchMethodException,
             SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException
     {

@@ -6,7 +6,11 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
+
+import io.vivarium.test.FastTest;
+import io.vivarium.test.SystemTest;
 
 public class CreateSpeciesTest
 {
@@ -21,6 +25,7 @@ public class CreateSpeciesTest
     }
 
     @Test
+    @Category({ FastTest.class, SystemTest.class })
     public void testDefault()
     {
         {

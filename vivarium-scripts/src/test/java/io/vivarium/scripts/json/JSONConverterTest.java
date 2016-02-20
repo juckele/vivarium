@@ -1,6 +1,7 @@
 package io.vivarium.scripts.json;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
@@ -8,10 +9,13 @@ import io.vivarium.core.Blueprint;
 import io.vivarium.core.World;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.IntegrationTest;
 
 public class JSONConverterTest
 {
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testSaveLoadSaveWorld()
     {
         Blueprint blueprint = Blueprint.makeDefault();

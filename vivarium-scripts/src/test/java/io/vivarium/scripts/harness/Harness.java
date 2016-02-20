@@ -1,6 +1,7 @@
 package io.vivarium.scripts.harness;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import io.vivarium.scripts.CreateAuditFunction;
 import io.vivarium.scripts.CreateBlueprint;
@@ -8,10 +9,13 @@ import io.vivarium.scripts.CreateSpecies;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RenderWorld;
 import io.vivarium.scripts.RunSimulation;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.SystemTest;
 
 public class Harness
 {
     @Test
+    @Category({ FastTest.class, SystemTest.class })
     public void testWorldBuildWorkflow()
     {
         {

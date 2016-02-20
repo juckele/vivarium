@@ -3,6 +3,7 @@ package io.vivarium.core.audit;
 import java.util.ArrayList;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
@@ -12,10 +13,13 @@ import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.IntegrationTest;
 
 public class CensusTest
 {
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testCensus()
     {
         Blueprint blueprint = Blueprint.makeDefault();

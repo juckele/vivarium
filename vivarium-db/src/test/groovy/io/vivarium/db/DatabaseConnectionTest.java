@@ -4,12 +4,16 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
+
+import io.vivarium.test.DatabaseTest;
 
 public class DatabaseConnectionTest
 {
     @Test
+    @Category(DatabaseTest.class)
     public void testSchemaFile()
     {
         TestDatabase.initializeTestDatabase();
@@ -18,6 +22,7 @@ public class DatabaseConnectionTest
     }
 
     @Test
+    @Category(DatabaseTest.class)
     public void testConnect() throws SQLException
     {
         TestDatabase.initializeTestDatabase();

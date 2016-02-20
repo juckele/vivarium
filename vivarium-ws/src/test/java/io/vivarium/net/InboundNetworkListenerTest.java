@@ -5,10 +5,15 @@ import static org.mockito.Mockito.verify;
 
 import org.java_websocket.handshake.Handshakedata;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
+
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 
 public class InboundNetworkListenerTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testOpen()
     {
         NetworkModule networkModule = mock(NetworkModule.class);
@@ -21,6 +26,7 @@ public class InboundNetworkListenerTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testMessage()
     {
         NetworkModule networkModule = mock(NetworkModule.class);
@@ -33,6 +39,7 @@ public class InboundNetworkListenerTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testClose()
     {
         NetworkModule networkModule = mock(NetworkModule.class);
@@ -47,6 +54,7 @@ public class InboundNetworkListenerTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testError()
     {
         NetworkModule networkModule = mock(NetworkModule.class);

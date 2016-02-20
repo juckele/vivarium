@@ -1,12 +1,17 @@
 package io.vivarium.util;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
+
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 
 public class FunctionsTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testSigmoid()
     {
         Tester.equal("sigmoid(-1) = 0.2689", 0.2689, Functions.sigmoid(-1), 0.0001);
@@ -21,6 +26,7 @@ public class FunctionsTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testLogarithmicAverage()
     {
         double a, b, c;

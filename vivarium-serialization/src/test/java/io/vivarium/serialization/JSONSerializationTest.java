@@ -3,16 +3,20 @@ package io.vivarium.serialization;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.google.common.collect.Lists;
 
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.IntegrationTest;
 
 public class JSONSerializationTest
 {
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldSerializeAndDeserialize()
     {
         // Build a world with creatures

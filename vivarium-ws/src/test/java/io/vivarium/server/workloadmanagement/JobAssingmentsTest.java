@@ -4,15 +4,19 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.google.common.collect.Lists;
 import com.johnuckele.vtest.Tester;
 
 import io.vivarium.persistence.WorkerModel;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 
 public class JobAssingmentsTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testScoreCalculationsForSingleWorker()
     {
         // Mock a worker
@@ -62,6 +66,7 @@ public class JobAssingmentsTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testScoreCalculationsForMultiWorker()
     {
         // Mock a few workers
@@ -121,6 +126,7 @@ public class JobAssingmentsTest
     }
 
     @Test(expected = IllegalArgumentException.class)
+    @Category({ FastTest.class, UnitTest.class })
     public void testAddingJobsToNonExistantWorker()
     {
         // Mock a couple of workers
@@ -138,6 +144,7 @@ public class JobAssingmentsTest
     }
 
     @Test(expected = ArrayIndexOutOfBoundsException.class)
+    @Category({ FastTest.class, UnitTest.class })
     public void testOverloadingWorkerWithJobs()
     {
         // Mock a worker
@@ -156,6 +163,7 @@ public class JobAssingmentsTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testSubtractForEmptyJobAssignments()
     {
         // Mock a worker
@@ -177,6 +185,7 @@ public class JobAssingmentsTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testSubtractForJobAssignments()
     {
         // Mock a worker
@@ -232,6 +241,7 @@ public class JobAssingmentsTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testSubtractWorkerSetValidation()
     {
         // Mock a worker

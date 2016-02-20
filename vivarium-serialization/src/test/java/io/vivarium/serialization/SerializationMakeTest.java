@@ -1,6 +1,7 @@
 package io.vivarium.serialization;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
@@ -10,10 +11,13 @@ import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.core.processor.Processor;
 import io.vivarium.core.processor.ProcessorType;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.IntegrationTest;
 
 public class SerializationMakeTest
 {
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldBlueprintMakeDefault() throws Exception
     {
         Blueprint blueprint = Blueprint.makeDefault();
@@ -21,6 +25,7 @@ public class SerializationMakeTest
     }
 
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldBlueprintMakeCopy() throws Exception
     {
         Blueprint blueprint = Blueprint.makeDefault();
@@ -29,6 +34,7 @@ public class SerializationMakeTest
     }
 
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testSpeciesMakeDefault() throws Exception
     {
         Species species = Species.makeDefault();
@@ -36,6 +42,7 @@ public class SerializationMakeTest
     }
 
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testSpeciesMakeCopy() throws Exception
     {
         Species species = Species.makeDefault();
@@ -44,6 +51,7 @@ public class SerializationMakeTest
     }
 
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testProcessorMakeWithSpecies() throws Exception
     {
         for (ProcessorType processorType : ProcessorType.values())
@@ -56,6 +64,7 @@ public class SerializationMakeTest
     }
 
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testProcessorMakeCopy() throws Exception
     {
         for (ProcessorType processorType : ProcessorType.values())
@@ -69,6 +78,7 @@ public class SerializationMakeTest
     }
 
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testCreatureMakeCopy() throws Exception
     {
         Species species = Species.makeDefault();
@@ -78,6 +88,7 @@ public class SerializationMakeTest
     }
 
     @Test
+    @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldMakeCopy() throws Exception
     {
         Blueprint blueprint = Blueprint.makeDefault();

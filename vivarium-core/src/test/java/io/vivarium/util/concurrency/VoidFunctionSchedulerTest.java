@@ -1,12 +1,17 @@
 package io.vivarium.util.concurrency;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
+
+import io.vivarium.test.SlowTest;
+import io.vivarium.test.UnitTest;
 
 public class VoidFunctionSchedulerTest
 {
     @Test
+    @Category({ SlowTest.class, UnitTest.class })
     public void testManualExecute() throws InterruptedException
     {
         Incrementer function = new Incrementer();
@@ -26,6 +31,7 @@ public class VoidFunctionSchedulerTest
     }
 
     @Test
+    @Category({ SlowTest.class, UnitTest.class })
     public void testManualExecuteQueue() throws InterruptedException
     {
         SlowIncrementer function = new SlowIncrementer(4);
@@ -54,6 +60,7 @@ public class VoidFunctionSchedulerTest
     }
 
     @Test
+    @Category({ SlowTest.class, UnitTest.class })
     public void testAutomaticExecution() throws InterruptedException
     {
         Incrementer function = new Incrementer();

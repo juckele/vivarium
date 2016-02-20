@@ -7,6 +7,7 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.mockito.ArgumentCaptor;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
@@ -16,11 +17,14 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.johnuckele.vtest.Tester;
 
 import io.vivarium.net.messages.Message;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.UnitTest;
 import io.vivarium.util.UUID;
 
 public class NetworkModuleTest
 {
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     @SuppressWarnings("unchecked")
     public void testAddMessageListener() throws Exception
     {
@@ -47,6 +51,7 @@ public class NetworkModuleTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     @SuppressWarnings("unchecked")
     public void testAddRemoveMessageListener() throws Exception
     {
@@ -74,6 +79,7 @@ public class NetworkModuleTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     @SuppressWarnings("unchecked")
     public void testRemoveMessageListener() throws Exception
     {
@@ -100,6 +106,7 @@ public class NetworkModuleTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     @SuppressWarnings("unchecked")
     public void testSubclassListenerDoesNotGetCalled() throws Exception
     {
@@ -124,6 +131,7 @@ public class NetworkModuleTest
     }
 
     @Test
+    @Category({ FastTest.class, UnitTest.class })
     @SuppressWarnings("unchecked")
     public void testSuperclassListenerDoesGetCalled() throws Exception
     {

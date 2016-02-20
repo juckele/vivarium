@@ -6,11 +6,14 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.rules.TemporaryFolder;
 
 import com.johnuckele.vtest.Tester;
 
 import io.vivarium.serialization.FileIO;
+import io.vivarium.test.FastTest;
+import io.vivarium.test.SystemTest;
 import io.vivarium.util.UserFacingError;
 
 public class WorkerConfigTest
@@ -28,12 +31,14 @@ public class WorkerConfigTest
     }
 
     @Test(expected = UserFacingError.class)
+    @Category({ FastTest.class, SystemTest.class })
     public void testMissingFile()
     {
         WorkerConfig.loadWorkerConfig(new File(path + "missing_file.json"), false);
     }
 
     @Test
+    @Category({ FastTest.class, SystemTest.class })
     public void testCreateOnMissing()
     {
         File configFile = new File(defaultConfigFile);
@@ -46,6 +51,7 @@ public class WorkerConfigTest
     }
 
     @Test
+    @Category({ FastTest.class, SystemTest.class })
     public void testCreateAndReload()
     {
         File configFile = new File(defaultConfigFile);
@@ -57,6 +63,7 @@ public class WorkerConfigTest
     }
 
     @Test(expected = UserFacingError.class)
+    @Category({ FastTest.class, SystemTest.class })
     public void testBadInput()
     {
         FileIO.saveStringToFile("malformed config file", defaultConfigFile);

@@ -5,16 +5,19 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.TestDatabase;
+import io.vivarium.test.DatabaseTest;
 import io.vivarium.util.UUID;
 
 public class JobPersistenceTest
 {
     @Test
+    @Category(DatabaseTest.class)
     public void testPersistAndFetch() throws SQLException
     {
         TestDatabase.initializeTestDatabase();
