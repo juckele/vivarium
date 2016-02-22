@@ -158,6 +158,7 @@ project(':vivarium-ga') {
 project(':vivarium-graph') {
     dependencies {
         compile project(':vivarium-core')
+        compile project(':vivarium-serialization')
         compile 'jfree:jfreechart:1.0.9'
     }
 }

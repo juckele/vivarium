@@ -56,6 +56,38 @@ public class ActionFrequencyRecord extends AuditRecord
                 .convertActionToInteger(action)][wasSuccessful ? 1 : 0]++;
     }
 
+    public int getMaximumGeneration()
+    {
+        int maximumGeneration = 0;
+        generation: for (int i = 0; i < _tally.length; i++)
+        {
+            for (int j = 0; j < 2; j++)
+            {
+                for (int k = 0; k < 2; k++)
+                {
+                    for (int l = 0; l < Action.values().length; l++)
+                    {
+                        for (int m = 0; m < 2; m++)
+                        {
+                            if (_tally[i][j][k][l][m] > 0)
+                            {
+                                maximumGeneration = i;
+                                continue generation;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return maximumGeneration + 1;
+    }
+
+    public int getRecord(int generation, boolean isFemale, boolean isPregnant, Action action, boolean wasSuccessful)
+    {
+        return _tally[generation - 1][isFemale ? 1 : 0][isPregnant ? 1 : 0][Action
+                .convertActionToInteger(action)][wasSuccessful ? 1 : 0];
+    }
+
     private void resizeTally()
     {
         int[][][][][] newTally = new int[_tally.length * 2][2][2][Action.values().length][2];
