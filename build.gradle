@@ -109,6 +109,7 @@ project(':vivarium-core') {
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.guava:guava-gwt:19.0'
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
+        compile 'org.projectlombok:lombok:1.16.6'
     }
 }
 

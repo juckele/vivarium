@@ -3,6 +3,10 @@
 Vivarium uses various third party libraries. A reference to each of these 
 licenses is included at the boottom of this file.
 
+The vivarium project is thankful to all organizations, communities, and
+individuals who have contributed to the strong open source ecosystem of
+modern Java development.
+
 Apache License 2.0 libraries:
 - com.fasterxml.jackson.core:jackson-core:2.6.3
 - com.fasterxml.jackson.core:jackson-databind:2.6.3
@@ -26,6 +30,7 @@ The MIT License libraries:
 - com.googlecode.gwt-streamer:gwt-streamer:2.0.0
 - org.java-websocket:Java-WebSocket:1.3.0
 - org.mockito:mockito-core:1.+
+- org.projectlombok:lombok:1.16.6
 
 Eclipse Public License 1.0 libraries:
 - junit
