@@ -2,6 +2,8 @@ package io.vivarium.core;
 
 import java.util.Arrays;
 
+import lombok.EqualsAndHashCode;
+
 import io.vivarium.core.processor.Processor;
 import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
@@ -10,6 +12,7 @@ import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
 
+@EqualsAndHashCode(callSuper=true)
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class Creature extends VivariumObject
 {
@@ -553,146 +556,5 @@ public class Creature extends VivariumObject
     public void finalizeSerialization()
     {
         // Do nothing
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_action == null) ? 0 : _action.hashCode());
-        result = prime * result + _age;
-        result = prime * result + ((_facing == null) ? 0 : _facing.hashCode());
-        result = prime * result + ((_fetus == null) ? 0 : _fetus.hashCode());
-        result = prime * result + _food;
-        result = prime * result + ((_gender == null) ? 0 : _gender.hashCode());
-        long temp;
-        temp = Double.doubleToLongBits(_generation);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + _gestation;
-        result = prime * result + (_hasActed ? 1231 : 1237);
-        result = prime * result + _id;
-        result = prime * result + Arrays.hashCode(_inputs);
-        result = prime * result + Arrays.hashCode(_memoryUnits);
-        result = prime * result + ((_processor == null) ? 0 : _processor.hashCode());
-        temp = Double.doubleToLongBits(_randomSeed);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + Arrays.hashCode(_soundInputs);
-        result = prime * result + Arrays.hashCode(_soundOutputs);
-        result = prime * result + ((_species == null) ? 0 : _species.hashCode());
-        result = prime * result + (_wasSuccessful ? 1231 : 1237);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        Creature other = (Creature) obj;
-        if (_action != other._action)
-        {
-            return false;
-        }
-        if (_age != other._age)
-        {
-            return false;
-        }
-        if (_facing != other._facing)
-        {
-            return false;
-        }
-        if (_fetus == null)
-        {
-            if (other._fetus != null)
-            {
-                return false;
-            }
-        }
-        else if (!_fetus.equals(other._fetus))
-        {
-            return false;
-        }
-        if (_food != other._food)
-        {
-            return false;
-        }
-        if (_gender != other._gender)
-        {
-            return false;
-        }
-        if (Double.doubleToLongBits(_generation) != Double.doubleToLongBits(other._generation))
-        {
-            return false;
-        }
-        if (_gestation != other._gestation)
-        {
-            return false;
-        }
-        if (_hasActed != other._hasActed)
-        {
-            return false;
-        }
-        if (_id != other._id)
-        {
-            return false;
-        }
-        if (!Arrays.equals(_inputs, other._inputs))
-        {
-            return false;
-        }
-        if (!Arrays.equals(_memoryUnits, other._memoryUnits))
-        {
-            return false;
-        }
-        if (_processor == null)
-        {
-            if (other._processor != null)
-            {
-                return false;
-            }
-        }
-        else if (!_processor.equals(other._processor))
-        {
-            return false;
-        }
-        if (Double.doubleToLongBits(_randomSeed) != Double.doubleToLongBits(other._randomSeed))
-        {
-            return false;
-        }
-        if (!Arrays.equals(_soundInputs, other._soundInputs))
-        {
-            return false;
-        }
-        if (!Arrays.equals(_soundOutputs, other._soundOutputs))
-        {
-            return false;
-        }
-        if (_species == null)
-        {
-            if (other._species != null)
-            {
-                return false;
-            }
-        }
-        else if (!_species.equals(other._species))
-        {
-            return false;
-        }
-        if (_wasSuccessful != other._wasSuccessful)
-        {
-            return false;
-        }
-        return true;
     }
 }
