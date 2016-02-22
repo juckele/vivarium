@@ -35,7 +35,7 @@
   <inherits name='io.vivarium.Visualization' />
 
   <!-- Specify the app entry point class.                         -->
-  <entry-point class='io.vivarium.web.client.ProcessorDemo'/>
+  <entry-point class='io.vivarium.web.client.ProcesserDemo'/>
 
   <!-- Specify the paths for translatable code                    -->
   <source path='web'/>
