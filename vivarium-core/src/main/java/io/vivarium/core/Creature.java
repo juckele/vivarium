@@ -306,6 +306,7 @@ public class Creature extends VivariumObject
 
     public void executeAction(Action action, Creature breedingTarget)
     {
+        _wasSuccessful = true;
         switch (action)
         {
             case BIRTH:
@@ -349,6 +350,7 @@ public class Creature extends VivariumObject
 
     public void failAction(Action action)
     {
+        _wasSuccessful = false;
         switch (action)
         {
             case BIRTH:
