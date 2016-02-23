@@ -8,6 +8,7 @@ buildscript {
     dependencies {
         classpath 'com.github.rholder:gradle-one-jar:1.0.4'
         classpath 'de.richsource.gradle.plugins:gwt-gradle-plugin:0.6'
+        classpath 'net.ltgt.gradle:gradle-apt-plugin:0.5'
     }
 }
 
@@ -38,6 +39,7 @@ subprojects {
     apply plugin: 'java'
     apply plugin: 'eclipse'
     apply plugin: 'findbugs'
+    apply plugin: 'net.ltgt.apt'
 
     version = '0.3.2'
 
@@ -48,6 +50,8 @@ subprojects {
     eclipseSetup.dependsOn eclipseProject
     eclipseSetup.dependsOn cleanEclipseClasspath
     eclipseSetup.dependsOn eclipseClasspath
+    eclipseSetup.dependsOn cleanEclipseFactorypath
+    eclipseSetup.dependsOn eclipseFactorypath
 
     buildscript {
         repositories {
@@ -109,6 +113,7 @@ project(':vivarium-core') {
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.guava:guava-gwt:19.0'
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
+	apt 'org.projectlombok:lombok:1.16.6'
         compile 'org.projectlombok:lombok:1.16.6'
     }
 }
