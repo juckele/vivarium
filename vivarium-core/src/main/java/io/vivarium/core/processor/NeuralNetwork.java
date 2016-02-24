@@ -255,7 +255,7 @@ public class NeuralNetwork extends Processor
 
     private String renderProcessorWeights()
     {
-        StringBuffer output = new StringBuffer();
+        StringBuilder output = new StringBuilder();
 
         String[] baseLineEndLabel = { "_", "M", "L", "R", "E", "B" };
         String[] lineEndLabel = new String[this.getOutputCount()];
