@@ -8,7 +8,11 @@ import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class NeuralNetwork extends Processor
 {
@@ -481,42 +485,5 @@ public class NeuralNetwork extends Processor
             NeuralNetwork parentProcessor2)
     {
         return new NeuralNetwork(species, parentProcessor1, parentProcessor2);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Arrays.hashCode(_outputs);
-        result = prime * result + Arrays.deepHashCode(_weights);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        NeuralNetwork other = (NeuralNetwork) obj;
-        if (!Arrays.equals(_outputs, other._outputs))
-        {
-            return false;
-        }
-        if (!Arrays.deepEquals(_weights, other._weights))
-        {
-            return false;
-        }
-        return true;
     }
 }

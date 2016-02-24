@@ -1,13 +1,15 @@
 package io.vivarium.audit;
 
-import java.util.Arrays;
-
 import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.serialization.SerializedParameter;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class ActionFrequencyRecord extends AuditRecord
 {
@@ -108,37 +110,5 @@ public class ActionFrequencyRecord extends AuditRecord
             }
         }
         _tally = newTally;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Arrays.deepHashCode(_tally);
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        ActionFrequencyRecord other = (ActionFrequencyRecord) obj;
-        if (!Arrays.deepEquals(_tally, other._tally))
-        {
-            return false;
-        }
-        return true;
     }
 }

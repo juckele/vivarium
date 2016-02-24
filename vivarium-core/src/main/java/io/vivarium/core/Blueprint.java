@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import io.vivarium.audit.AuditFunction;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class Blueprint extends VivariumObject
 {
@@ -146,91 +150,8 @@ public class Blueprint extends VivariumObject
         // Do nothing
     }
 
-    @Override
-    public int hashCode()
+    public static void main(String[] args)
     {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_auditFunctions == null) ? 0 : _auditFunctions.hashCode());
-        long temp;
-        temp = Double.doubleToLongBits(_foodGenerationProbability);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + _height;
-        temp = Double.doubleToLongBits(_initialFoodGenerationProbability);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        temp = Double.doubleToLongBits(_initialWallGenerationProbability);
-        result = prime * result + (int) (temp ^ (temp >>> 32));
-        result = prime * result + (_soundEnabled ? 1231 : 1237);
-        result = prime * result + ((_species == null) ? 0 : _species.hashCode());
-        result = prime * result + _width;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        Blueprint other = (Blueprint) obj;
-        if (_auditFunctions == null)
-        {
-            if (other._auditFunctions != null)
-            {
-                return false;
-            }
-        }
-        else if (!_auditFunctions.equals(other._auditFunctions))
-        {
-            return false;
-        }
-        if (Double.doubleToLongBits(_foodGenerationProbability) != Double
-                .doubleToLongBits(other._foodGenerationProbability))
-        {
-            return false;
-        }
-        if (_height != other._height)
-        {
-            return false;
-        }
-        if (Double.doubleToLongBits(_initialFoodGenerationProbability) != Double
-                .doubleToLongBits(other._initialFoodGenerationProbability))
-        {
-            return false;
-        }
-        if (Double.doubleToLongBits(_initialWallGenerationProbability) != Double
-                .doubleToLongBits(other._initialWallGenerationProbability))
-        {
-            return false;
-        }
-        if (_soundEnabled != other._soundEnabled)
-        {
-            return false;
-        }
-        if (_species == null)
-        {
-            if (other._species != null)
-            {
-                return false;
-            }
-        }
-        else if (!_species.equals(other._species))
-        {
-            return false;
-        }
-        if (_width != other._width)
-        {
-            return false;
-        }
-        return true;
+        System.out.println("" + Blueprint.makeDefault().hashCode() + ":" + Blueprint.makeDefault().toString());
     }
 }

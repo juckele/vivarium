@@ -1,11 +1,5 @@
 package io.vivarium.core;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
-
 import io.vivarium.audit.AuditFunction;
 import io.vivarium.audit.AuditRecord;
 import io.vivarium.core.processor.Processor;
@@ -14,7 +8,16 @@ import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+
+@EqualsAndHashCode(callSuper = true)
+@ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class World extends VivariumObject
 {
@@ -669,79 +672,5 @@ public class World extends VivariumObject
     public void finalizeSerialization()
     {
         // Do nothing
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + Arrays.hashCode(_auditRecords);
-        result = prime * result + ((_blueprint == null) ? 0 : _blueprint.hashCode());
-        result = prime * result + Arrays.deepHashCode(_creatureGrid);
-        result = prime * result + Arrays.deepHashCode(_entityGrid);
-        result = prime * result + _height;
-        result = prime * result + _maximumCreatureID;
-        result = prime * result + _tick;
-        result = prime * result + _width;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        World other = (World) obj;
-        if (!Arrays.equals(_auditRecords, other._auditRecords))
-        {
-            return false;
-        }
-        if (_blueprint == null)
-        {
-            if (other._blueprint != null)
-            {
-                return false;
-            }
-        }
-        else if (!_blueprint.equals(other._blueprint))
-        {
-            return false;
-        }
-        if (!Arrays.deepEquals(_creatureGrid, other._creatureGrid))
-        {
-            return false;
-        }
-        if (!Arrays.deepEquals(_entityGrid, other._entityGrid))
-        {
-            return false;
-        }
-        if (_height != other._height)
-        {
-            return false;
-        }
-        if (_maximumCreatureID != other._maximumCreatureID)
-        {
-            return false;
-        }
-        if (_tick != other._tick)
-        {
-            return false;
-        }
-        if (_width != other._width)
-        {
-            return false;
-        }
-        return true;
     }
 }

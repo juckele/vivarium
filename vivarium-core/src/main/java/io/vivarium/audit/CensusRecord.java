@@ -5,7 +5,11 @@ import java.util.ArrayList;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.serialization.SerializedParameter;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class CensusRecord extends AuditRecord
 {
@@ -68,68 +72,5 @@ public class CensusRecord extends AuditRecord
     public static CensusRecord makeWithSpecies(CensusFunction function, Species species)
     {
         return new CensusRecord(function, species);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((_auditFunction == null) ? 0 : _auditFunction.hashCode());
-        result = prime * result + ((_creaturePopulation == null) ? 0 : _creaturePopulation.hashCode());
-        result = prime * result + ((_recordTicks == null) ? 0 : _recordTicks.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (!super.equals(obj))
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        CensusRecord other = (CensusRecord) obj;
-        if (_auditFunction == null)
-        {
-            if (other._auditFunction != null)
-            {
-                return false;
-            }
-        }
-        else if (!_auditFunction.equals(other._auditFunction))
-        {
-            return false;
-        }
-        if (_creaturePopulation == null)
-        {
-            if (other._creaturePopulation != null)
-            {
-                return false;
-            }
-        }
-        else if (!_creaturePopulation.equals(other._creaturePopulation))
-        {
-            return false;
-        }
-        if (_recordTicks == null)
-        {
-            if (other._recordTicks != null)
-            {
-                return false;
-            }
-        }
-        else if (!_recordTicks.equals(other._recordTicks))
-        {
-            return false;
-        }
-        return true;
     }
 }

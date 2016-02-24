@@ -2,7 +2,11 @@ package io.vivarium.core.processor;
 
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.visualization.RenderCode;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public abstract class Processor extends VivariumObject
 {

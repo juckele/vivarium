@@ -1,9 +1,5 @@
 package io.vivarium.core;
 
-import java.util.Arrays;
-
-import lombok.EqualsAndHashCode;
-
 import io.vivarium.core.processor.Processor;
 import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
@@ -11,8 +7,11 @@ import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
-@EqualsAndHashCode(callSuper=true)
+@EqualsAndHashCode(callSuper = true)
+@ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class Creature extends VivariumObject
 {
