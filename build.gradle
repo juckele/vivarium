@@ -350,7 +350,7 @@ project(':vivarium-web') {
     }
 }
 
-task coverageReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
+task coverageReport(type: JacocoReport) {
     dependsOn = subprojects.test
     additionalSourceDirs = files(subprojects.sourceSets.main.allSource.srcDirs)
     sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
