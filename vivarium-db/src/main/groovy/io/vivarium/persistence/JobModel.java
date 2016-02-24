@@ -127,7 +127,7 @@ public abstract class JobModel extends PersistenceModel
 
     private List<String> getPrimaryKeys()
     {
-        List<String> primaryKeys = new LinkedList<String>();
+        List<String> primaryKeys = new LinkedList<>();
         primaryKeys.add(ID);
         return primaryKeys;
     }
@@ -202,7 +202,7 @@ public abstract class JobModel extends PersistenceModel
 
     protected Map<String, String> buildProperties()
     {
-        return new HashMap<String, String>();
+        return new HashMap<>();
     }
 
     static List<JobModel> getFromDatabase(Connection connection, JobStatus status) throws SQLException

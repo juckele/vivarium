@@ -48,7 +48,7 @@ public class PopulationGraph extends BaseGraph
     {
         Blueprint b = Blueprint.makeDefault();
 
-        ArrayList<AuditFunction> auditFunctions = new ArrayList<AuditFunction>();
+        ArrayList<AuditFunction> auditFunctions = new ArrayList<>();
         CensusFunction census = new CensusFunction();
         auditFunctions.add(census);
         b.setAuditFunctions(auditFunctions);

@@ -101,7 +101,7 @@ public class WorkerModel extends PersistenceModel
     @Override
     protected void persistToDatabase(Connection connection) throws SQLException
     {
-        Map<String, Object> resourceRelation = new HashMap<String, Object>();
+        Map<String, Object> resourceRelation = new HashMap<>();
         resourceRelation.put(ID, workerID);
         resourceRelation.put(THROUGHPUTS, throughputs);
         resourceRelation.put(IS_ACTIVE, isActive);
@@ -114,7 +114,7 @@ public class WorkerModel extends PersistenceModel
 
     private List<String> getPrimaryKeys()
     {
-        List<String> primaryKeys = new LinkedList<String>();
+        List<String> primaryKeys = new LinkedList<>();
         primaryKeys.add(ID);
         return primaryKeys;
     }

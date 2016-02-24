@@ -10,7 +10,7 @@ public class MapCollection implements Iterable<HashMap<String, Object>>
 
     public MapCollection()
     {
-        _data = new LinkedList<HashMap<String, Object>>();
+        _data = new LinkedList<>();
     }
 
     public void addObject(HashMap<String, Object> obj)

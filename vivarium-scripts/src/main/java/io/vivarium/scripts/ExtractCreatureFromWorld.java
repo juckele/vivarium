@@ -26,7 +26,7 @@ public class ExtractCreatureFromWorld extends CommonsScript
     @Override
     protected List<Option> getScriptSpecificOptions()
     {
-        LinkedList<Option> options = new LinkedList<Option>();
+        LinkedList<Option> options = new LinkedList<>();
         options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to save to creature to").build());
         options.add(Option.builder("w").required(true).longOpt(WORLD_INPUT_FILE).hasArg(true).argName("FILE")

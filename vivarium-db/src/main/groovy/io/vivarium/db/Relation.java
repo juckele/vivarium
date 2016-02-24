@@ -15,7 +15,7 @@ public class Relation<T> implements WhereCondition
 
     public static <T> Relation<T> equalTo(String columnName, T value)
     {
-        return new Relation<T>(RelationType.EQUALS, columnName, value);
+        return new Relation<>(RelationType.EQUALS, columnName, value);
     }
 
     @Override

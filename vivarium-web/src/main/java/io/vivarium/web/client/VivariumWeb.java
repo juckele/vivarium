@@ -131,7 +131,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
         // Build the world
         Blueprint blueprint = Blueprint.makeDefault();
         Species s = Species.makeDefault();
-        ArrayList<Species> species = new ArrayList<Species>();
+        ArrayList<Species> species = new ArrayList<>();
         species.add(s);
         blueprint.setSpecies(species);
         blueprint.setSize(30);

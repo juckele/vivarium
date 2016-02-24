@@ -27,7 +27,7 @@ public class CreateAuditFunction extends CommonsScript
     @Override
     protected List<Option> getScriptSpecificOptions()
     {
-        LinkedList<Option> options = new LinkedList<Option>();
+        LinkedList<Option> options = new LinkedList<>();
         options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to save to audit function to").build());
         options.add(Option.builder("t").required(true).longOpt(AUDIT_TYPE).hasArg(true).argName("TYPE")

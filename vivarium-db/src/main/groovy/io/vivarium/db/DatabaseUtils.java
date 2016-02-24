@@ -41,7 +41,7 @@ public class DatabaseUtils
     public static List<Map<String, Object>> select(Connection connection, String tableName,
             Optional<WhereCondition> condition) throws SQLException
     {
-        List<Map<String, Object>> results = new LinkedList<Map<String, Object>>();
+        List<Map<String, Object>> results = new LinkedList<>();
 
         try (Statement queryStatement = connection.createStatement())
         {
@@ -61,7 +61,7 @@ public class DatabaseUtils
                 // Build column list
                 ResultSetMetaData resultMetaData = resultSet.getMetaData();
                 int columnCount = resultMetaData.getColumnCount();
-                LinkedList<String> columnNames = new LinkedList<String>();
+                LinkedList<String> columnNames = new LinkedList<>();
                 for (int i = 1; i <= columnCount; i++)
                 {
                     columnNames.add(resultMetaData.getColumnName(i));
@@ -70,7 +70,7 @@ public class DatabaseUtils
                 // Build relation objects
                 while (resultSet.next())
                 {
-                    Map<String, Object> relation = new HashMap<String, Object>();
+                    Map<String, Object> relation = new HashMap<>();
                     for (String columnName : columnNames)
                     {
                         relation.put(columnName, resultSet.getObject(columnName));
@@ -89,9 +89,9 @@ public class DatabaseUtils
         try (Statement sqlStatement = connection.createStatement();)
         {
             // Build lists for all columns and non-key columns for streaming over while we build the the SQL statements.
-            List<String> allColumns = new LinkedList<String>();
+            List<String> allColumns = new LinkedList<>();
             allColumns.addAll(relation.keySet());
-            List<String> nonKeyColumns = new LinkedList<String>();
+            List<String> nonKeyColumns = new LinkedList<>();
             for (String columnName : relation.keySet())
             {
                 if (!keyColumns.contains(columnName))
@@ -102,7 +102,7 @@ public class DatabaseUtils
 
             // The values to actually use in the SQL. SQL null is fine for null values, and we can call toString() on
             // primitives directly, but String based values need to be wrapped with single quotes for sql.
-            Map<String, String> sqlStrings = new HashMap<String, String>();
+            Map<String, String> sqlStrings = new HashMap<>();
             for (String columnName : allColumns)
             {
                 sqlStrings.put(columnName, toSqlString(relation.get(columnName)));
@@ -188,7 +188,7 @@ public class DatabaseUtils
         {
             StringBuilder arrayString = new StringBuilder();
             arrayString.append("'{");
-            List<String> elements = new LinkedList<String>();
+            List<String> elements = new LinkedList<>();
             for (int i = 0; i < Array.getLength(object); i++)
             {
                 elements.add(toSqlString(Array.get(object, i)));
@@ -237,8 +237,8 @@ public class DatabaseUtils
     {
         boolean deleteOnly = false;
         // Build lists for all columns and non-key columns for streaming over while we build the the SQL statements.
-        List<String> allColumns = new LinkedList<String>();
-        List<String> nonKeyColumns = new LinkedList<String>();
+        List<String> allColumns = new LinkedList<>();
+        List<String> nonKeyColumns = new LinkedList<>();
         if (relations.size() == 0)
         {
             deleteOnly = true;

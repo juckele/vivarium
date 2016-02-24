@@ -409,7 +409,7 @@ public class World extends VivariumObject
 
     public LinkedList<AuditRecord> getAuditRecords()
     {
-        LinkedList<AuditRecord> auditRecords = new LinkedList<AuditRecord>();
+        LinkedList<AuditRecord> auditRecords = new LinkedList<>();
         for (int i = 0; i < this._auditRecords.length; i++)
         {
             auditRecords.add(_auditRecords[i]);
@@ -419,7 +419,7 @@ public class World extends VivariumObject
 
     public LinkedList<Creature> getCreatures()
     {
-        LinkedList<Creature> allCreatures = new LinkedList<Creature>();
+        LinkedList<Creature> allCreatures = new LinkedList<>();
         for (int r = 0; r < this._height; r++)
         {
             for (int c = 0; c < this._width; c++)
@@ -600,7 +600,7 @@ public class World extends VivariumObject
         StringBuilder worldOutput = new StringBuilder();
         worldOutput.append("Walls: ");
         worldOutput.append(this.getCount(EntityType.WALL));
-        HashMap<Species, String> speciesToGlyphMap = new HashMap<Species, String>();
+        HashMap<Species, String> speciesToGlyphMap = new HashMap<>();
         for (Species s : this._blueprint.getSpecies())
         {
             speciesToGlyphMap.put(s, glyphs[speciesToGlyphMap.size()]);
@@ -650,7 +650,7 @@ public class World extends VivariumObject
     {
         // Draw average processor
         // Draw creature readouts
-        LinkedList<Processor> processors = new LinkedList<Processor>();
+        LinkedList<Processor> processors = new LinkedList<>();
         for (int r = 0; r < this._height; r++)
         {
             for (int c = 0; c < this._width; c++)

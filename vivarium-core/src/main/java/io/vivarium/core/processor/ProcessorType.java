@@ -17,7 +17,7 @@ public enum ProcessorType
         switch (type)
         {
             case NEURAL_NETWORK:
-                List<NeuralNetwork> processors = new LinkedList<NeuralNetwork>();
+                List<NeuralNetwork> processors = new LinkedList<>();
                 for (Processor untypedProcessor : untypedProcessors)
                 {
                     processors.add((NeuralNetwork) untypedProcessor);

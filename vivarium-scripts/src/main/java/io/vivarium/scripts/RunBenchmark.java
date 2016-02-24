@@ -23,7 +23,7 @@ public class RunBenchmark extends CommonsScript
     @Override
     protected List<Option> getScriptSpecificOptions()
     {
-        LinkedList<Option> options = new LinkedList<Option>();
+        LinkedList<Option> options = new LinkedList<>();
         return options;
     }
 

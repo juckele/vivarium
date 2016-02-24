@@ -42,7 +42,7 @@ public class NormalizationConvergence
         // Make the blueprint with the default behavior
         Blueprint defaultBlueprint = Blueprint.makeDefault();
         defaultBlueprint.setSize(worldSize);
-        ArrayList<Species> defaultSpeciesList = new ArrayList<Species>();
+        ArrayList<Species> defaultSpeciesList = new ArrayList<>();
         Species defaultSpecies = Species.makeDefault();
         defaultSpeciesList.add(defaultSpecies);
         defaultBlueprint.setSpecies(defaultSpeciesList);
@@ -55,7 +55,7 @@ public class NormalizationConvergence
         // Make the blueprint with the normalizing behavior
         Blueprint normalizingBlueprint = Blueprint.makeDefault();
         normalizingBlueprint.setSize(50);
-        ArrayList<Species> normalizingSpeciesList = new ArrayList<Species>();
+        ArrayList<Species> normalizingSpeciesList = new ArrayList<>();
         Species normalizingSpecies = Species.makeDefault();
         normalizingSpecies.setNormalizeAfterMutation(1);
         normalizingSpeciesList.add(normalizingSpecies);

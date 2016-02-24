@@ -32,11 +32,11 @@ public class SerializationEngine
     public static final String ID_KEY = "uuid";
     public static final String CLASS_KEY = "+class";
     public static final Map<String, Object> EMPTY_OBJECT_MAP = Collections
-            .unmodifiableMap(new HashMap<String, Object>());
+            .unmodifiableMap(new HashMap<>());
     public static final Map<VivariumObject, UUID> EMPTY_REFERENCE_MAP = Collections
-            .unmodifiableMap(new HashMap<VivariumObject, UUID>());
+            .unmodifiableMap(new HashMap<>());
     public static final Map<UUID, VivariumObject> EMPTY_DEREFERENCE_MAP = Collections
-            .unmodifiableMap(new HashMap<UUID, VivariumObject>());
+            .unmodifiableMap(new HashMap<>());
 
     private MapCollection _collection;
     private HashMap<VivariumObject, UUID> _referenceMap;
@@ -45,8 +45,8 @@ public class SerializationEngine
     public SerializationEngine()
     {
         _collection = new MapCollection();
-        _referenceMap = new HashMap<VivariumObject, UUID>();
-        _dereferenceMap = new HashMap<UUID, VivariumObject>();
+        _referenceMap = new HashMap<>();
+        _dereferenceMap = new HashMap<>();
     }
 
     public void preDeserializeMap(HashMap<String, Object> map)
@@ -222,7 +222,7 @@ public class SerializationEngine
         if (clazz.isArray())
         {
             // Do array crap here
-            LinkedList<Object> list = new LinkedList<Object>();
+            LinkedList<Object> list = new LinkedList<>();
             for (int i = 0; i < Array.getLength(object); i++)
             {
                 Object arrayElement = Array.get(object, i);
@@ -234,7 +234,7 @@ public class SerializationEngine
         else if (List.class.isAssignableFrom(clazz))
         {
             // Do list crap here
-            LinkedList<Object> list = new LinkedList<Object>();
+            LinkedList<Object> list = new LinkedList<>();
             for (Object element : (List<Object>) object)
             {
                 list.add(serializeObject(element));
@@ -269,7 +269,7 @@ public class SerializationEngine
 
     private HashMap<String, Object> serializeMapSerializer(VivariumObject object) throws IllegalAccessException
     {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         map.put(CLASS_KEY, "" + object.getClass().getSimpleName());
         try
         {
@@ -305,7 +305,7 @@ public class SerializationEngine
 
     private Set<Field> getSerializedParameters(VivariumObject object)
     {
-        HashSet<Field> annotatedFields = new HashSet<Field>();
+        HashSet<Field> annotatedFields = new HashSet<>();
         Class<?> clazz = object.getClass();
         while (clazz != null)
         {

@@ -140,7 +140,7 @@ public class GenerationalActionGraph extends BaseGraph
     {
         Blueprint b = Blueprint.makeDefault();
 
-        ArrayList<AuditFunction> auditFunctions = new ArrayList<AuditFunction>();
+        ArrayList<AuditFunction> auditFunctions = new ArrayList<>();
         ActionFrequencyFunction actionFrequencies = new ActionFrequencyFunction();
         auditFunctions.add(actionFrequencies);
         b.setAuditFunctions(auditFunctions);

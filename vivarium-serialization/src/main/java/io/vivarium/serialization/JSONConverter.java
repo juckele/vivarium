@@ -65,7 +65,7 @@ public class JSONConverter
 
     private static HashMap<String, Object> innerConvertFromJSONObject(JSONObject jsonObject)
     {
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         for (Object key : jsonObject.keySet())
         {
             String keyString = key.toString();
@@ -78,7 +78,7 @@ public class JSONConverter
 
     private static List<Object> innerConvertFromJSONArray(JSONArray jsonArray)
     {
-        LinkedList<Object> list = new LinkedList<Object>();
+        LinkedList<Object> list = new LinkedList<>();
         for (int i = 0; i < jsonArray.length(); i++)
         {
             Object value = jsonArray.get(i);

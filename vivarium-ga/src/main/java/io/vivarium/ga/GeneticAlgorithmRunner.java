@@ -21,7 +21,7 @@ public class GeneticAlgorithmRunner
     int _currentGeneration = 1;
     int _generations = 100;
     int _populationSize = 100;
-    ArrayList<Pair<Double, Creature>> _population = new ArrayList<Pair<Double, Creature>>(_populationSize);
+    ArrayList<Pair<Double, Creature>> _population = new ArrayList<>(_populationSize);
     private FitnessFunction _fitnessFunction;
 
     public GeneticAlgorithmRunner(Species species, FitnessFunction fitnessFunction)
@@ -39,7 +39,7 @@ public class GeneticAlgorithmRunner
         {
             Creature c = new Creature(_species);
             System.out.println(c.getProcessor().render(RenderCode.PROCESSOR_WEIGHTS));
-            _population.add(new Pair<Double, Creature>(0.0, c));
+            _population.add(new Pair<>(0.0, c));
         }
     }
 
@@ -67,7 +67,7 @@ public class GeneticAlgorithmRunner
         Pair<Double, Creature> populationMember = _population.get(i);
         Creature c = populationMember.getValue1();
         double fitness = _fitnessFunction.evaluate(c);
-        Pair<Double, Creature> updatedPopulationMember = new Pair<Double, Creature>(fitness, c);
+        Pair<Double, Creature> updatedPopulationMember = new Pair<>(fitness, c);
         _population.set(i, updatedPopulationMember);
     }
 
@@ -83,7 +83,7 @@ public class GeneticAlgorithmRunner
         System.out.println("1st Best member " + _population.get(_population.size() - 1).getValue0());
         System.out.println("1st Best member\n"
                 + _population.get(_population.size() - 1).getValue1().getProcessor().render(RenderCode.PROCESSOR_WEIGHTS));
-        ArrayList<Pair<Double, Creature>> newPopulation = new ArrayList<Pair<Double, Creature>>(_populationSize);
+        ArrayList<Pair<Double, Creature>> newPopulation = new ArrayList<>(_populationSize);
         double fitnessSum = 0;
         for (int i = 0; i < _populationSize; i++)
         {
@@ -99,7 +99,7 @@ public class GeneticAlgorithmRunner
             Creature parent1 = _population.get(parent1Index).getValue1();
             Creature parent2 = _population.get(parent2Index).getValue1();
             Creature child = new Creature(parent1, parent2);
-            newPopulation.add(new Pair<Double, Creature>(0.0, child));
+            newPopulation.add(new Pair<>(0.0, child));
         }
         _population = newPopulation;
         System.out.println("random new member\n"
@@ -116,7 +116,7 @@ public class GeneticAlgorithmRunner
 
         Blueprint blueprint = Blueprint.makeDefault();
         blueprint.setSize(30);
-        ArrayList<Species> speciesList = new ArrayList<Species>();
+        ArrayList<Species> speciesList = new ArrayList<>();
         blueprint.setSpecies(speciesList);
         blueprint.setInitialFoodGenerationProbability(0);
 

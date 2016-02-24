@@ -66,7 +66,7 @@ public abstract class CommonsScript
     protected Map<String, Object> extraArgsAsMap(CommandLine commandLine)
     {
         String[] args = commandLine.getArgs();
-        HashMap<String, Object> map = new HashMap<String, Object>();
+        HashMap<String, Object> map = new HashMap<>();
         for (int i = 0; i + 1 < args.length; i += 2)
         {
             map.put(args[i], args[i + 1]);
@@ -112,7 +112,7 @@ public abstract class CommonsScript
 
     protected List<Option> getCommonOptions()
     {
-        LinkedList<Option> commonOptions = new LinkedList<Option>();
+        LinkedList<Option> commonOptions = new LinkedList<>();
         commonOptions.add(Option.builder("h").required(false).longOpt("help").hasArg(false)
                 .desc("display this help and exit").build());
         return commonOptions;

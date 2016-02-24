@@ -14,7 +14,7 @@ public class VivariumObjectCollection implements Streamable
 
     public VivariumObjectCollection()
     {
-        _data = new LinkedList<VivariumObject>();
+        _data = new LinkedList<>();
     }
 
     public void add(VivariumObject object)
@@ -25,7 +25,7 @@ public class VivariumObjectCollection implements Streamable
     @SuppressWarnings("unchecked") // Not actually unchecked...
     public <T extends VivariumObject> List<T> getAll(Class<T> clazz)
     {
-        List<T> result = new LinkedList<T>();
+        List<T> result = new LinkedList<>();
 
         for (VivariumObject object : _data)
         {

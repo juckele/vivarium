@@ -32,9 +32,9 @@ public abstract class Job
     {
         _type = jobType;
         _jobID = jobID;
-        this._inputResources = new ArrayList<UUID>(inputResources);
-        this._outputResources = new ArrayList<UUID>(outputResources);
-        this._dependencies = new ArrayList<UUID>(dependencies);
+        this._inputResources = new ArrayList<>(inputResources);
+        this._outputResources = new ArrayList<>(outputResources);
+        this._dependencies = new ArrayList<>(dependencies);
     }
 
     public JobType getType()

@@ -138,9 +138,9 @@ public class Blueprint extends VivariumObject
     {
         Blueprint wb = new Blueprint();
         wb.finalizeSerialization();
-        wb._species = new ArrayList<Species>();
+        wb._species = new ArrayList<>();
         wb._species.add(Species.makeDefault());
-        wb._auditFunctions = new ArrayList<AuditFunction>();
+        wb._auditFunctions = new ArrayList<>();
         return wb;
     }
 

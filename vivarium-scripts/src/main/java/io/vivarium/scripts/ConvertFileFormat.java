@@ -25,7 +25,7 @@ public class ConvertFileFormat extends CommonsScript
     @Override
     protected List<Option> getScriptSpecificOptions()
     {
-        LinkedList<Option> options = new LinkedList<Option>();
+        LinkedList<Option> options = new LinkedList<>();
         options.add(Option.builder("i").required(true).longOpt(INPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to load").build());
         options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")

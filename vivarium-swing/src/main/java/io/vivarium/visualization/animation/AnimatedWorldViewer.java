@@ -94,7 +94,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         // Set up
         int worldDimensions = 34;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        ArrayList<Species> species = new ArrayList<Species>();
+        ArrayList<Species> species = new ArrayList<>();
 
         // Build 1 species
         Species species1 = Species.makeDefault();

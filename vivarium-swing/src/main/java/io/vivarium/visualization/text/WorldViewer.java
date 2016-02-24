@@ -18,8 +18,8 @@ public class WorldViewer extends JFrame
     public static final int RAT_LIST_ONLY = 2;
 
     private World _w;
-    private ArrayList<String> _overviewRenders = new ArrayList<String>(50000);
-    private ArrayList<String> _ratListRenders = new ArrayList<String>(50000);
+    private ArrayList<String> _overviewRenders = new ArrayList<>(50000);
+    private ArrayList<String> _ratListRenders = new ArrayList<>(50000);
     private int _renderIndex = 0;
 
     private JTextArea _overviewRender;
@@ -96,7 +96,7 @@ public class WorldViewer extends JFrame
         // Set up
         int worldDimensions = 25;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        ArrayList<Species> species = new ArrayList<Species>();
+        ArrayList<Species> species = new ArrayList<>();
 
         // Build 1 species
         Species species1 = Species.makeDefault();

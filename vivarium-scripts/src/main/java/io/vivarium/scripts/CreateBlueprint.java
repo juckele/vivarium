@@ -29,7 +29,7 @@ public class CreateBlueprint extends CommonsScript
     @Override
     protected List<Option> getScriptSpecificOptions()
     {
-        LinkedList<Option> options = new LinkedList<Option>();
+        LinkedList<Option> options = new LinkedList<>();
         options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to save to blueprint to").build());
         options.add(Option.builder("a").required(false).longOpt(AUDIT_INPUT_FILE).hasArg(true).argName("FILE")
@@ -44,8 +44,8 @@ public class CreateBlueprint extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        LinkedList<AuditFunction> auditFunctions = new LinkedList<AuditFunction>();
-        LinkedList<Species> species = new LinkedList<Species>();
+        LinkedList<AuditFunction> auditFunctions = new LinkedList<>();
+        LinkedList<Species> species = new LinkedList<>();
         if (commandLine.hasOption(AUDIT_INPUT_FILE))
         {
             String auditFile = null;
@@ -98,11 +98,11 @@ public class CreateBlueprint extends CommonsScript
         new SerializationEngine().deserialize(blueprint, extraOptions);
         if (!species.isEmpty())
         {
-            blueprint.setSpecies(new ArrayList<Species>(species));
+            blueprint.setSpecies(new ArrayList<>(species));
         }
         if (!auditFunctions.isEmpty())
         {
-            blueprint.setAuditFunctions(new ArrayList<AuditFunction>(auditFunctions));
+            blueprint.setAuditFunctions(new ArrayList<>(auditFunctions));
         }
 
         // Save the blueprint

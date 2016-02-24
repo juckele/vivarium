@@ -41,7 +41,7 @@ public class RunSimulation extends CommonsScript
     @Override
     protected List<Option> getScriptSpecificOptions()
     {
-        LinkedList<Option> options = new LinkedList<Option>();
+        LinkedList<Option> options = new LinkedList<>();
         options.add(Option.builder("i").required(true).longOpt(INPUT_FILE).hasArg(true).argName("FILE")
                 .desc("file to load, can be either a world or simulation. At least one limit, either for ticks or time, must be provided if the input is a world.")
                 .build());

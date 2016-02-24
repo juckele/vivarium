@@ -72,7 +72,7 @@ public class ResourceModel extends PersistenceModel
     @Override
     public void persistToDatabase(Connection connection) throws SQLException
     {
-        Map<String, Object> resourceRelation = new HashMap<String, Object>();
+        Map<String, Object> resourceRelation = new HashMap<>();
         resourceRelation.put(ID, resourceID);
         resourceRelation.put(DATA, jsonData.isPresent() ? jsonData.get() : null);
         resourceRelation.put(FILE_FORMAT_VERSION, fileFormatVersion.isPresent() ? fileFormatVersion.get() : null);
@@ -96,7 +96,7 @@ public class ResourceModel extends PersistenceModel
 
     private List<String> getPrimaryKeys()
     {
-        List<String> primaryKeys = new LinkedList<String>();
+        List<String> primaryKeys = new LinkedList<>();
         primaryKeys.add(ID);
         return primaryKeys;
     }

@@ -31,7 +31,7 @@ public abstract class NetworkModule
     {
         if (!_messageListeners.containsKey(messageClazz))
         {
-            _messageListeners.put(messageClazz, new LinkedList<MessageListener<? extends Message>>());
+            _messageListeners.put(messageClazz, new LinkedList<>());
         }
         List<MessageListener<? extends Message>> listeners = _messageListeners.get(messageClazz);
         listeners.add(listener);
