@@ -216,10 +216,7 @@ public class Creature extends VivariumObject
             _inputs[3] = facingObject == EntityType.WALL ? 1 : 0;
             _inputs[4] = ((double) this._food) / _species.getMaximumFood();
             // Read memory units
-            for (int i = 0; i < this._memoryUnits.length; i++)
-            {
-                _inputs[_species.getHardProcessorInputs() - 1 + i] = _memoryUnits[i];
-            }
+            System.arraycopy(_memoryUnits, 0, _inputs, _species.getHardProcessorInputs() - 1, this._memoryUnits.length);
             // Read sound inputs
             for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {
@@ -228,10 +225,7 @@ public class Creature extends VivariumObject
             // Main processor computation
             double[] outputs = this._processor.outputs(_inputs);
             // Save memory units
-            for (int i = 0; i < this._memoryUnits.length; i++)
-            {
-                _memoryUnits[i] = outputs[_species.getHardProcessorOutputs() + i - 1];
-            }
+            System.arraycopy(outputs, _species.getHardProcessorOutputs() - 1, _memoryUnits, 0, this._memoryUnits.length);
             // Clear the sound inputs and set the sound outputs
             for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {

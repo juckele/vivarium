@@ -107,10 +107,7 @@ public class RunBenchmark extends CommonsScript
         {
             threads[i].join();
             double[] threadResults = threads[i].getResults();
-            for (int j = 0; j < iterationsPerThread; j++)
-            {
-                results[i * iterationsPerThread + j] = threadResults[j];
-            }
+            System.arraycopy(threadResults, 0, results, i * iterationsPerThread, iterationsPerThread);
         }
         return results;
     }
