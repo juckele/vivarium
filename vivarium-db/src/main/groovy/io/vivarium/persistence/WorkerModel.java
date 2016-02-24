@@ -17,7 +17,11 @@ import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.Relation;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public class WorkerModel extends PersistenceModel
 {
     // Table name
@@ -147,83 +151,5 @@ public class WorkerModel extends PersistenceModel
     public Version getCodeVersion()
     {
         return codeVersion;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((codeVersion == null) ? 0 : codeVersion.hashCode());
-        result = prime * result + fileFormatVersion;
-        result = prime * result + (isActive ? 1231 : 1237);
-        result = prime * result + ((lastActivity == null) ? 0 : lastActivity.hashCode());
-        result = prime * result + Arrays.hashCode(throughputs);
-        result = prime * result + ((workerID == null) ? 0 : workerID.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        WorkerModel other = (WorkerModel) obj;
-        if (codeVersion == null)
-        {
-            if (other.codeVersion != null)
-            {
-                return false;
-            }
-        }
-        else if (!codeVersion.equals(other.codeVersion))
-        {
-            return false;
-        }
-        if (fileFormatVersion != other.fileFormatVersion)
-        {
-            return false;
-        }
-        if (isActive != other.isActive)
-        {
-            return false;
-        }
-        if (lastActivity == null)
-        {
-            if (other.lastActivity != null)
-            {
-                return false;
-            }
-        }
-        else if (!lastActivity.equals(other.lastActivity))
-        {
-            return false;
-        }
-        if (!Arrays.equals(throughputs, other.throughputs))
-        {
-            return false;
-        }
-        if (workerID == null)
-        {
-            if (other.workerID != null)
-            {
-                return false;
-            }
-        }
-        else if (!workerID.equals(other.workerID))
-        {
-            return false;
-        }
-        return true;
     }
 }

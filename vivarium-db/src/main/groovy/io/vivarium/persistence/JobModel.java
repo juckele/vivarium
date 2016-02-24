@@ -16,7 +16,11 @@ import com.google.common.base.Preconditions;
 import io.vivarium.db.DatabaseUtils;
 import io.vivarium.db.Relation;
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public abstract class JobModel extends PersistenceModel
 {
     // Table name
@@ -372,131 +376,5 @@ public abstract class JobModel extends PersistenceModel
     public Collection<UUID> getJobDependencies()
     {
         return jobDependencies;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((checkedOutByWorkerID == null) ? 0 : checkedOutByWorkerID.hashCode());
-        result = prime * result + ((checkedOutTime == null) ? 0 : checkedOutTime.hashCode());
-        result = prime * result + ((completedTime == null) ? 0 : completedTime.hashCode());
-        result = prime * result + ((inputResources == null) ? 0 : inputResources.hashCode());
-        result = prime * result + ((jobDependencies == null) ? 0 : jobDependencies.hashCode());
-        result = prime * result + ((jobID == null) ? 0 : jobID.hashCode());
-        result = prime * result + ((outputResources == null) ? 0 : outputResources.hashCode());
-        result = prime * result + priority;
-        result = prime * result + ((status == null) ? 0 : status.hashCode());
-        result = prime * result + ((type == null) ? 0 : type.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        JobModel that = (JobModel) obj;
-        if (checkedOutByWorkerID == null)
-        {
-            if (that.checkedOutByWorkerID != null)
-            {
-                return false;
-            }
-        }
-        else if (!checkedOutByWorkerID.equals(that.checkedOutByWorkerID))
-        {
-            return false;
-        }
-        if (checkedOutTime == null)
-        {
-            if (that.checkedOutTime != null)
-            {
-                return false;
-            }
-        }
-        else if (!checkedOutTime.equals(that.checkedOutTime))
-        {
-            return false;
-        }
-        if (completedTime == null)
-        {
-            if (that.completedTime != null)
-            {
-                return false;
-            }
-        }
-        else if (!completedTime.equals(that.completedTime))
-        {
-            return false;
-        }
-        if (inputResources == null)
-        {
-            if (that.inputResources != null)
-            {
-                return false;
-            }
-        }
-        else if (!inputResources.equals(that.inputResources))
-        {
-            return false;
-        }
-        if (jobDependencies == null)
-        {
-            if (that.jobDependencies != null)
-            {
-                return false;
-            }
-        }
-        else if (!jobDependencies.equals(that.jobDependencies))
-        {
-            return false;
-        }
-        if (jobID == null)
-        {
-            if (that.jobID != null)
-            {
-                return false;
-            }
-        }
-        else if (!jobID.equals(that.jobID))
-        {
-            return false;
-        }
-        if (outputResources == null)
-        {
-            if (that.outputResources != null)
-            {
-                return false;
-            }
-        }
-        else if (!outputResources.equals(that.outputResources))
-        {
-            return false;
-        }
-        if (priority != that.priority)
-        {
-            return false;
-        }
-        if (status != that.status)
-        {
-            return false;
-        }
-        if (type != that.type)
-        {
-            return false;
-        }
-        return true;
     }
 }

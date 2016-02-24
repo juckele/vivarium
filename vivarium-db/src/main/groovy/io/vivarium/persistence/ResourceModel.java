@@ -20,7 +20,11 @@ import io.vivarium.db.Relation;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public class ResourceModel extends PersistenceModel
 {
     // Table name
@@ -99,68 +103,5 @@ public class ResourceModel extends PersistenceModel
         List<String> primaryKeys = new LinkedList<>();
         primaryKeys.add(ID);
         return primaryKeys;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((fileFormatVersion == null) ? 0 : fileFormatVersion.hashCode());
-        result = prime * result + ((jsonData == null) ? 0 : jsonData.hashCode());
-        result = prime * result + ((resourceID == null) ? 0 : resourceID.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        ResourceModel other = (ResourceModel) obj;
-        if (fileFormatVersion == null)
-        {
-            if (other.fileFormatVersion != null)
-            {
-                return false;
-            }
-        }
-        else if (!fileFormatVersion.equals(other.fileFormatVersion))
-        {
-            return false;
-        }
-        if (jsonData == null)
-        {
-            if (other.jsonData != null)
-            {
-                return false;
-            }
-        }
-        else if (!jsonData.equals(other.jsonData))
-        {
-            return false;
-        }
-        if (resourceID == null)
-        {
-            if (other.resourceID != null)
-            {
-                return false;
-            }
-        }
-        else if (!resourceID.equals(other.resourceID))
-        {
-            return false;
-        }
-        return true;
     }
 }

@@ -7,7 +7,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.vivarium.net.UUIDSerializer;
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = false)
+@ToString
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class Message
 {
@@ -24,44 +28,4 @@ public abstract class Message
     {
         return _messageID;
     }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_messageID == null) ? 0 : _messageID.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        Message other = (Message) obj;
-        if (_messageID == null)
-        {
-            if (other._messageID != null)
-            {
-                return false;
-            }
-        }
-        else if (!_messageID.equals(other._messageID))
-        {
-            return false;
-        }
-        return true;
-    }
-
 }

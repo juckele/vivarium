@@ -7,7 +7,11 @@ import java.util.Map;
 import com.google.common.base.Preconditions;
 
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public class RunSimulationJobModel extends JobModel
 {
     // Column names
@@ -37,44 +41,5 @@ public class RunSimulationJobModel extends JobModel
         Map<String, String> properties = super.buildProperties();
         properties.put(END_TICK_PROPERTY, endTick.toString());
         return properties;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((endTick == null) ? 0 : endTick.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (!super.equals(obj))
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        RunSimulationJobModel other = (RunSimulationJobModel) obj;
-        if (endTick == null)
-        {
-            if (other.endTick != null)
-            {
-                return false;
-            }
-        }
-        else if (!endTick.equals(other.endTick))
-        {
-            return false;
-        }
-        return true;
     }
 }

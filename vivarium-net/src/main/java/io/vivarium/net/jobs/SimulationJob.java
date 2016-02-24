@@ -9,7 +9,11 @@ import com.google.common.base.Preconditions;
 
 import io.vivarium.net.UUIDSerializer;
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public class SimulationJob extends Job
 {
     private final long _endTick;
@@ -35,37 +39,5 @@ public class SimulationJob extends Job
     public long getEndTick()
     {
         return _endTick;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + (int) (_endTick ^ (_endTick >>> 32));
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (!super.equals(obj))
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        SimulationJob other = (SimulationJob) obj;
-        if (_endTick != other._endTick)
-        {
-            return false;
-        }
-        return true;
     }
 }

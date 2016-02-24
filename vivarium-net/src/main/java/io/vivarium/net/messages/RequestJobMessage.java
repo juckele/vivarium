@@ -6,7 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import io.vivarium.net.UUIDSerializer;
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public class RequestJobMessage extends Message
 {
     @JsonCreator

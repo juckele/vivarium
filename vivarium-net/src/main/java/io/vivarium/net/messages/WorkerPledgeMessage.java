@@ -13,7 +13,11 @@ import io.vivarium.net.VersionDeserializer;
 import io.vivarium.net.VersionSerializer;
 import io.vivarium.util.UUID;
 import io.vivarium.util.Version;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public class WorkerPledgeMessage extends Message
 {
     private final UUID workerID;
@@ -68,71 +72,5 @@ public class WorkerPledgeMessage extends Message
     public long[] getThroughputs()
     {
         return throughputs;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + (active ? 1231 : 1237);
-        result = prime * result + ((codeVersion == null) ? 0 : codeVersion.hashCode());
-        result = prime * result + fileFormatVersion;
-        result = prime * result + Arrays.hashCode(throughputs);
-        result = prime * result + ((workerID == null) ? 0 : workerID.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (!super.equals(obj))
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        WorkerPledgeMessage other = (WorkerPledgeMessage) obj;
-        if (active != other.active)
-        {
-            return false;
-        }
-        if (codeVersion == null)
-        {
-            if (other.codeVersion != null)
-            {
-                return false;
-            }
-        }
-        else if (!codeVersion.equals(other.codeVersion))
-        {
-            return false;
-        }
-        if (fileFormatVersion != other.fileFormatVersion)
-        {
-            return false;
-        }
-        if (!Arrays.equals(throughputs, other.throughputs))
-        {
-            return false;
-        }
-        if (workerID == null)
-        {
-            if (other.workerID != null)
-            {
-                return false;
-            }
-        }
-        else if (!workerID.equals(other.workerID))
-        {
-            return false;
-        }
-        return true;
     }
 }

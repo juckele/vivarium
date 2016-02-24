@@ -7,7 +7,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.vivarium.net.UUIDSerializer;
 import io.vivarium.net.jobs.Job;
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = true)
+@ToString
 public class CreateJobMessage extends Message
 {
     private final Job _job;
@@ -28,44 +32,5 @@ public class CreateJobMessage extends Message
     public Job getJob()
     {
         return _job;
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = super.hashCode();
-        result = prime * result + ((_job == null) ? 0 : _job.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (!super.equals(obj))
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        CreateJobMessage other = (CreateJobMessage) obj;
-        if (_job == null)
-        {
-            if (other._job != null)
-            {
-                return false;
-            }
-        }
-        else if (!_job.equals(other._job))
-        {
-            return false;
-        }
-        return true;
     }
 }

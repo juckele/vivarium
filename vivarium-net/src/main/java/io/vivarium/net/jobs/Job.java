@@ -12,7 +12,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import io.vivarium.net.UUIDDeserializer;
 import io.vivarium.net.UUIDSerializer;
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode(callSuper = false)
+@ToString
 @JsonTypeInfo(use = JsonTypeInfo.Id.CLASS, include = JsonTypeInfo.As.PROPERTY, property = "@class")
 public abstract class Job
 {
@@ -65,85 +69,4 @@ public abstract class Job
     {
         return _dependencies;
     }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_dependencies == null) ? 0 : _dependencies.hashCode());
-        result = prime * result + ((_inputResources == null) ? 0 : _inputResources.hashCode());
-        result = prime * result + ((_jobID == null) ? 0 : _jobID.hashCode());
-        result = prime * result + ((_outputResources == null) ? 0 : _outputResources.hashCode());
-        result = prime * result + ((_type == null) ? 0 : _type.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        Job other = (Job) obj;
-        if (_dependencies == null)
-        {
-            if (other._dependencies != null)
-            {
-                return false;
-            }
-        }
-        else if (!_dependencies.equals(other._dependencies))
-        {
-            return false;
-        }
-        if (_inputResources == null)
-        {
-            if (other._inputResources != null)
-            {
-                return false;
-            }
-        }
-        else if (!_inputResources.equals(other._inputResources))
-        {
-            return false;
-        }
-        if (_jobID == null)
-        {
-            if (other._jobID != null)
-            {
-                return false;
-            }
-        }
-        else if (!_jobID.equals(other._jobID))
-        {
-            return false;
-        }
-        if (_outputResources == null)
-        {
-            if (other._outputResources != null)
-            {
-                return false;
-            }
-        }
-        else if (!_outputResources.equals(other._outputResources))
-        {
-            return false;
-        }
-        if (_type != other._type)
-        {
-            return false;
-        }
-        return true;
-    }
-
 }

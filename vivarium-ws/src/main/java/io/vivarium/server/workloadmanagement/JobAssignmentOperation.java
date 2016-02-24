@@ -1,7 +1,11 @@
 package io.vivarium.server.workloadmanagement;
 
 import io.vivarium.util.UUID;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
+@EqualsAndHashCode
+@ToString
 public class JobAssignmentOperation
 {
     private final JobAssignmentAction _action;
@@ -30,67 +34,4 @@ public class JobAssignmentOperation
     {
         return _jobID;
     }
-
-    @Override
-    public String toString()
-    {
-        return "JobAssignmentOperation [_action=" + _action + ", _workerID=" + _workerID + ", _jobID=" + _jobID + "]";
-    }
-
-    @Override
-    public int hashCode()
-    {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((_action == null) ? 0 : _action.hashCode());
-        result = prime * result + ((_jobID == null) ? 0 : _jobID.hashCode());
-        result = prime * result + ((_workerID == null) ? 0 : _workerID.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj)
-    {
-        if (this == obj)
-        {
-            return true;
-        }
-        if (obj == null)
-        {
-            return false;
-        }
-        if (getClass() != obj.getClass())
-        {
-            return false;
-        }
-        JobAssignmentOperation other = (JobAssignmentOperation) obj;
-        if (_action != other._action)
-        {
-            return false;
-        }
-        if (_jobID == null)
-        {
-            if (other._jobID != null)
-            {
-                return false;
-            }
-        }
-        else if (!_jobID.equals(other._jobID))
-        {
-            return false;
-        }
-        if (_workerID == null)
-        {
-            if (other._workerID != null)
-            {
-                return false;
-            }
-        }
-        else if (!_workerID.equals(other._workerID))
-        {
-            return false;
-        }
-        return true;
-    }
-
 }
