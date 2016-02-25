@@ -68,7 +68,6 @@ public class GenerationalActionGraph extends BaseGraph
             Map<Action, Double> failedActionCounts = new EnumMap<>(Action.class);
             for (Action action : commonActions)
             {
-                // System.out.println(successfulActionCounts);
                 successfulActionCounts.put(action, 0.0);
                 failedActionCounts.put(action, 0.0);
                 if (includeMales)
@@ -112,8 +111,6 @@ public class GenerationalActionGraph extends BaseGraph
             }
             for (Action action : commonActions)
             {
-                // System.out.println("Generation: " + generation + ", Action: " + action + ", Count: " +
-                // successfulActionCounts.get(action) + "/" + failedActionCounts.get(action));
                 successfulActionSeries.get(action).add(generation,
                         successfulActionCounts.get(action) / totalActionCount);
                 if (failableActions.contains(action))
@@ -148,8 +145,6 @@ public class GenerationalActionGraph extends BaseGraph
         {
             w.tick();
         }
-
-        // System.out.println(JSONConverter.serializerToJSONString(w.getAuditRecords().get(0)));
 
         BaseGraph graph = new GenerationalActionGraph((ActionFrequencyRecord) w.getAuditRecords().get(0));
 
