@@ -1,7 +1,5 @@
 package io.vivarium.graphing;
 
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,7 +9,6 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
@@ -162,9 +159,7 @@ public class GenerationalActionGraph extends BaseGraph
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         frame.setVisible(true);
 
-        BufferedImage buff = graph._chart.createBufferedImage(800, 800);
-        File outputfile = new File("/tmp/graph.png");
-        ImageIO.write(buff, "png", outputfile);
+        graph.saveImage("/tmp/graph.png", "png", 800, 800);
     }
 
 }

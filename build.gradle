@@ -241,6 +241,13 @@ project(':vivarium-scripts') {
             from sharedManifest
         }
     }
+    task jarGraphGenerationalActionGraph( type: OneJar ) {
+        archiveName = 'graph-generational-action-graph'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.GraphGenerationalActionGraph'
+        manifest = project.manifest {
+            from sharedManifest
+        }
+    }
     task jarMeasureProcessorGenomeLengths( type: OneJar ) {
         archiveName = 'measure-processor-genome-lengths'+'-'+version+'.jar'
         mainClass = 'io.vivarium.scripts.MeasureProcessorGenomeLengths'
@@ -288,6 +295,7 @@ project(':vivarium-scripts') {
     jarCollection.dependsOn jarCreateSpecies
     jarCollection.dependsOn jarCreateWorld
     jarCollection.dependsOn jarExtractCreatureFromWorld
+    jarCollection.dependsOn jarGraphGenerationalActionGraph
     jarCollection.dependsOn jarMeasureProcessorGenomeLengths
     jarCollection.dependsOn jarNormalizeProcessorGenomes
     jarCollection.dependsOn jarRunSimulation
