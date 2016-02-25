@@ -14,6 +14,7 @@ import javax.swing.WindowConstants;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.plot.PlotOrientation;
+import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
@@ -127,6 +128,7 @@ public class GenerationalActionGraph extends BaseGraph
         boolean legend = true;
         _chart = ChartFactory.createXYLineChart("Creature Actions by Generation", "Generation", "Action Percent",
                 dataset, orientation, legend, tooltips, urls);
+        ((XYPlot) _chart.getPlot()).getRangeAxis().setRange(0, 1);
         Utils.setChartToDefaultFont(_chart);
     }
 
