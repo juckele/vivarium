@@ -24,7 +24,7 @@ import io.vivarium.util.concurrency.ThreadRandAllocator;
 public class MutationRateLocal
 {
     private static final int WORLD_SIZE = 100;
-    private static final int LIFE_TIMES_PER_SIMULATION = 100;
+    private static final int LIFE_TIMES_PER_SIMULATION = 1000;
     private static final int TICKS_PER_SIMULATION = LIFE_TIMES_PER_SIMULATION * 20_000;
     private static final int MAX_SIMULATIONS = 101;
     private static final int PEAK_THREAD_THROUGHPUT = 4;
