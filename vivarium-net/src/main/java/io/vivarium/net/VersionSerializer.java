@@ -12,8 +12,8 @@ import io.vivarium.util.Version;
 public class VersionSerializer extends JsonSerializer<Version>
 {
     @Override
-    public void serialize(Version value, JsonGenerator generator, SerializerProvider serializers)
-            throws IOException {
+    public void serialize(Version value, JsonGenerator generator, SerializerProvider serializers) throws IOException
+    {
         generator.writeString(value.toString());
     }
 }

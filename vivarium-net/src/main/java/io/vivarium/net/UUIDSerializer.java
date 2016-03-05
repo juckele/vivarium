@@ -12,8 +12,8 @@ import io.vivarium.util.UUID;
 public class UUIDSerializer extends JsonSerializer<UUID>
 {
     @Override
-    public void serialize(UUID value, JsonGenerator generator, SerializerProvider serializers)
-            throws IOException {
+    public void serialize(UUID value, JsonGenerator generator, SerializerProvider serializers) throws IOException
+    {
         generator.writeString(value.toString());
     }
 }
