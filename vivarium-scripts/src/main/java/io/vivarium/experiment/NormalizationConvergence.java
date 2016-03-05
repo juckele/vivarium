@@ -20,9 +20,9 @@ import io.vivarium.util.UUID;
 public class NormalizationConvergence
 {
     private static int worldSize = 50;
-    private static int worldCountPerGroup = 1; // 24
-    private static long totalTicksPerWorld = 100; // 20_000_000
-    private static int snapshotsPerWorld = 5; // 100
+    private static int worldCountPerGroup = 24;
+    private static long totalTicksPerWorld = 20_000_000;
+    private static int snapshotsPerWorld = 100;
     private static long ticksPerSnapshot = totalTicksPerWorld / snapshotsPerWorld;
 
     /**
