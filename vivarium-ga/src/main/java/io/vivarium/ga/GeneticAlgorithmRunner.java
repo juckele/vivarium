@@ -81,8 +81,8 @@ public class GeneticAlgorithmRunner
         System.out.println("3rd Best member " + _population.get(_population.size() - 3).getValue0());
         System.out.println("2nd Best member " + _population.get(_population.size() - 2).getValue0());
         System.out.println("1st Best member " + _population.get(_population.size() - 1).getValue0());
-        System.out.println("1st Best member\n"
-                + _population.get(_population.size() - 1).getValue1().getProcessor().render(RenderCode.PROCESSOR_WEIGHTS));
+        System.out.println("1st Best member\n" + _population.get(_population.size() - 1).getValue1().getProcessor()
+                .render(RenderCode.PROCESSOR_WEIGHTS));
         ArrayList<Pair<Double, Creature>> newPopulation = new ArrayList<>(_populationSize);
         double fitnessSum = 0;
         for (int i = 0; i < _populationSize; i++)
@@ -102,8 +102,8 @@ public class GeneticAlgorithmRunner
             newPopulation.add(new Pair<>(0.0, child));
         }
         _population = newPopulation;
-        System.out.println("random new member\n"
-                + _population.get(_population.size() - 1).getValue1().getProcessor().render(RenderCode.PROCESSOR_WEIGHTS));
+        System.out.println("random new member\n" + _population.get(_population.size() - 1).getValue1().getProcessor()
+                .render(RenderCode.PROCESSOR_WEIGHTS));
     }
 
     public static void main(String[] args)

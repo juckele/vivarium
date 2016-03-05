@@ -31,12 +31,9 @@ public class SerializationEngine
 {
     public static final String ID_KEY = "uuid";
     public static final String CLASS_KEY = "+class";
-    public static final Map<String, Object> EMPTY_OBJECT_MAP = Collections
-            .unmodifiableMap(new HashMap<>());
-    public static final Map<VivariumObject, UUID> EMPTY_REFERENCE_MAP = Collections
-            .unmodifiableMap(new HashMap<>());
-    public static final Map<UUID, VivariumObject> EMPTY_DEREFERENCE_MAP = Collections
-            .unmodifiableMap(new HashMap<>());
+    public static final Map<String, Object> EMPTY_OBJECT_MAP = Collections.unmodifiableMap(new HashMap<>());
+    public static final Map<VivariumObject, UUID> EMPTY_REFERENCE_MAP = Collections.unmodifiableMap(new HashMap<>());
+    public static final Map<UUID, VivariumObject> EMPTY_DEREFERENCE_MAP = Collections.unmodifiableMap(new HashMap<>());
 
     private MapCollection _collection;
     private HashMap<VivariumObject, UUID> _referenceMap;

@@ -225,7 +225,8 @@ public class Creature extends VivariumObject
             // Main processor computation
             double[] outputs = this._processor.outputs(_inputs);
             // Save memory units
-            System.arraycopy(outputs, _species.getHardProcessorOutputs() - 1, _memoryUnits, 0, this._memoryUnits.length);
+            System.arraycopy(outputs, _species.getHardProcessorOutputs() - 1, _memoryUnits, 0,
+                    this._memoryUnits.length);
             // Clear the sound inputs and set the sound outputs
             for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
             {

@@ -47,8 +47,7 @@ public abstract class WorldRenderer
         }
     }
 
-    private static void actorRender(WorldGraphics graphicalSystem, World w, int milliseconds,
-            int selectedCreatureID)
+    private static void actorRender(WorldGraphics graphicalSystem, World w, int milliseconds, int selectedCreatureID)
     {
         // Draw creatures and food
         for (int i = 1; i < w.getWorldHeight() - 1; i++)
