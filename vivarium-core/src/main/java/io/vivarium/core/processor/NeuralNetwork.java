@@ -301,10 +301,7 @@ public class NeuralNetwork extends Processor
                     output.append(weight);
                     output.append('\t');
                 }
-                if (j == _weights[0].length - 1)
-                {
-                    output.append(lineEndLabel[j]);
-                }
+                output.append(lineEndLabel[j]);
                 output.append('\n');
             }
         }
