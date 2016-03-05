@@ -20,7 +20,3 @@ any problems. The basic set-up requires running `gradle eclipseSetup` and then
 importing the projects into Eclipse as existing Eclipse projects. Running any
 database code requires some additional setup (requires psql, a user named test
 with sufficient privelages on a database named test and with password test).
-
-## License
-
-Copyright © 2014 John H Uckele. All rights reserved.
