@@ -13,8 +13,7 @@ public class UUIDSerializer extends JsonSerializer<UUID>
 {
     @Override
     public void serialize(UUID value, JsonGenerator generator, SerializerProvider serializers)
-            throws IOException, JsonProcessingException
-    {
+            throws IOException {
         generator.writeString(value.toString());
     }
 }

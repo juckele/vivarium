@@ -13,8 +13,7 @@ public class VersionDeserializer extends JsonDeserializer<Version>
 {
 
     @Override
-    public Version deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException
-    {
+    public Version deserialize(JsonParser p, DeserializationContext ctxt) throws IOException {
         return new Version(p.getText());
     }
 }

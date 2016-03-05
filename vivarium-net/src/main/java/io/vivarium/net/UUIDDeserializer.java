@@ -13,7 +13,7 @@ public class UUIDDeserializer extends JsonDeserializer<UUID>
 {
 
     @Override
-    public UUID deserialize(JsonParser p, DeserializationContext ctxt) throws IOException, JsonProcessingException
+    public UUID deserialize(JsonParser p, DeserializationContext ctxt) throws IOException
     {
         return UUID.fromString(p.getText());
     }

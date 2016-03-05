@@ -13,8 +13,7 @@ public class VersionSerializer extends JsonSerializer<Version>
 {
     @Override
     public void serialize(Version value, JsonGenerator generator, SerializerProvider serializers)
-            throws IOException, JsonProcessingException
-    {
+            throws IOException {
         generator.writeString(value.toString());
     }
 }
