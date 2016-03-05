@@ -19,30 +19,30 @@ public class WorldViewer extends JFrame
 
     private World _w;
     private ArrayList<String> _overviewRenders = new ArrayList<>(50000);
-    private ArrayList<String> _ratListRenders = new ArrayList<>(50000);
+    private ArrayList<String> _creatureListRenders = new ArrayList<>(50000);
     private int _renderIndex = 0;
 
     private JTextArea _overviewRender;
-    private JTextArea _ratListRender;
+    private JTextArea _creatureListRender;
     private WorldViewerFrameController _frameController;
 
     public WorldViewer(World w)
     {
         _w = w;
         _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.PROCESSOR_WEIGHTS));
-        _ratListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
+        _creatureListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
 
         _overviewRender = new JTextArea(_overviewRenders.get(_renderIndex));
-        _ratListRender = new JTextArea(_ratListRenders.get(_renderIndex));
+        _creatureListRender = new JTextArea(_creatureListRenders.get(_renderIndex));
         _frameController = new WorldViewerFrameController(this, 0);
 
         this.add(_overviewRender);
-        this.add(_ratListRender);
+        this.add(_creatureListRender);
         this.add(_frameController);
 
         _overviewRender.setBounds(0, 35, 900, 965);
         _overviewRender.setTabSize(5);
-        _ratListRender.setBounds(900, 35, 800, 965);
+        _creatureListRender.setBounds(900, 35, 800, 965);
 
         this.setSize(1700, 1000);
         this.setVisible(true);
@@ -65,7 +65,7 @@ public class WorldViewer extends JFrame
             if (tick % renderEvery == 0)
             {
                 _overviewRenders.add(_w.render(RenderCode.WORLD_MAP) + "\n" + _w.render(RenderCode.PROCESSOR_WEIGHTS));
-                _ratListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
+                _creatureListRenders.add(_w.render(RenderCode.LIVE_CREATURE_LIST));
                 System.out.println("Population " + _w.getCount(EntityType.CREATURE));
             }
         }
@@ -77,7 +77,7 @@ public class WorldViewer extends JFrame
         index = Math.min(this.maxIndex(), index);
         _renderIndex = index;
         _overviewRender.setText(_overviewRenders.get(_renderIndex));
-        _ratListRender.setText(_ratListRenders.get(_renderIndex));
+        _creatureListRender.setText(_creatureListRenders.get(_renderIndex));
         _frameController.setRenderIndex(index);
     }
 
