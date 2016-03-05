@@ -5,7 +5,7 @@ package io.vivarium.net;
  */
 public interface OutboundNetworkConnection
 {
-    public void send(String text);
+    void send(String text);
 
-    public void close();
+    void close();
 }
