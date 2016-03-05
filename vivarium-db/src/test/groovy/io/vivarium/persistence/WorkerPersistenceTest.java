@@ -23,7 +23,7 @@ public class WorkerPersistenceTest
     {
         TestDatabase.initializeTestDatabase();
         try (Connection databaseConnection = DatabaseUtils.createDatabaseConnection(TestDatabase.TEST_DATABASE_NAME,
-                TestDatabase.TEST_DATABASE_USER, TestDatabase.TEST_DATABASE_PASSWORD);)
+                TestDatabase.TEST_DATABASE_USER, TestDatabase.TEST_DATABASE_PASSWORD))
         {
             UUID id = UUID.randomUUID();
             WorkerModel initial = new WorkerModel(id, new long[] { 100, 150, 200, 210 }, true,

@@ -365,7 +365,6 @@ public class Creature extends VivariumObject
                 break;
             case MOVE:
                 this._food += _species.getMovingFoodRate();
-                ;
                 break;
             case DIE:
                 break;

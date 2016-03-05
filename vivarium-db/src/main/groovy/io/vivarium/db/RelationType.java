@@ -9,5 +9,5 @@ public enum RelationType
         {
             return "=";
         }
-    };
+    }
 }

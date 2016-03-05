@@ -22,7 +22,7 @@ public class JobPersistenceTest
     {
         TestDatabase.initializeTestDatabase();
         try (Connection databaseConnection = DatabaseUtils.createDatabaseConnection(TestDatabase.TEST_DATABASE_NAME,
-                TestDatabase.TEST_DATABASE_USER, TestDatabase.TEST_DATABASE_PASSWORD);)
+                TestDatabase.TEST_DATABASE_USER, TestDatabase.TEST_DATABASE_PASSWORD))
         {
             UUID id = UUID.randomUUID();
             JobModel initial = new RunSimulationJobModel(id, JobStatus.BLOCKED, 0, null, null, null, 0,

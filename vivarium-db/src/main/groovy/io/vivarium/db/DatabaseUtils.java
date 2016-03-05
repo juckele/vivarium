@@ -86,7 +86,7 @@ public class DatabaseUtils
     public static void upsert(Connection connection, String tableName, Map<String, Object> relation,
             List<String> keyColumns) throws SQLException
     {
-        try (Statement sqlStatement = connection.createStatement();)
+        try (Statement sqlStatement = connection.createStatement())
         {
             // Build lists for all columns and non-key columns for streaming over while we build the the SQL statements.
             List<String> allColumns = new LinkedList<>();
@@ -257,7 +257,7 @@ public class DatabaseUtils
             }
         }
 
-        try (Statement sqlStatement = connection.createStatement();)
+        try (Statement sqlStatement = connection.createStatement())
         {
             // Builds an delete string in the form
             // DELETE FROM tableName

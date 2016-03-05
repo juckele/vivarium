@@ -27,7 +27,7 @@ public class DatabaseConnectionTest
     {
         TestDatabase.initializeTestDatabase();
         try (Connection databaseConnection = DatabaseUtils.createDatabaseConnection(TestDatabase.TEST_DATABASE_NAME,
-                TestDatabase.TEST_DATABASE_USER, TestDatabase.TEST_DATABASE_PASSWORD);)
+                TestDatabase.TEST_DATABASE_USER, TestDatabase.TEST_DATABASE_PASSWORD))
         {
             Tester.isNotNull("Database connection is not null: ", databaseConnection);
         }
