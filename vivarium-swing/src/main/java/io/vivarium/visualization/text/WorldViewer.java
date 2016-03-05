@@ -100,7 +100,7 @@ public class WorldViewer extends JFrame
 
         // Build 1 species
         Species species1 = Species.makeDefault();
-        species1.setMutationRateExponent(-9);
+        species1.setMutationRateExponent(-4);
         species1.setCreatureMemoryUnitCount(1);
         species1.setCreatureSoundChannelCount(1);
         species1.setNormalizeAfterMutation(Math.sqrt(9 * 8));
