@@ -101,22 +101,29 @@ public class MutationRateLocal
         }
 
         @Override
-        public Object call() throws Exception
+        public Object call()
         {
-            // Create a world
+            try
             {
-                log("Generating world " + _name);
-                String[] args = { "-b", _name + "_blueprint.viv", "-o", _name + "_initial.viv" };
-                CreateWorld.main(args);
-            }
+                // Create a world
+                {
+                    log("Generating world " + _name);
+                    String[] args = { "-b", _name + "_blueprint.viv", "-o", _name + "_initial.viv" };
+                    CreateWorld.main(args);
+                }
 
-            // Run the world
+                // Run the world
+                {
+                    log("Starting simulation of world " + _name);
+                    String[] args = { "-i", _name + "_initial.viv", "-o", _name + "_complete.viv", "-t",
+                            "" + TICKS_PER_SIMULATION };
+                    RunSimulation.main(args);
+                    log("Completeing simulation of world " + _name);
+                }
+            }
+            catch (Exception e)
             {
-                log("Starting simulation of world " + _name);
-                String[] args = { "-i", _name + "_initial.viv", "-o", _name + "_complete.viv", "-t",
-                        "" + TICKS_PER_SIMULATION };
-                RunSimulation.main(args);
-                log("Completeing simulation of world " + _name);
+                e.printStackTrace();
             }
 
             return null;
