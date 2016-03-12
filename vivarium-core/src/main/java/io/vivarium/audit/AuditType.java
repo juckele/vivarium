@@ -7,12 +7,6 @@ public enum AuditType
     ACTION_FREQUENCY
     {
         @Override
-        public Class<?> getAuditRecordClass()
-        {
-            return ActionFrequencyRecord.class;
-        }
-
-        @Override
         public ActionFrequencyFunction makeFunction()
         {
             return new ActionFrequencyFunction();
@@ -26,12 +20,6 @@ public enum AuditType
     },
     CENSUS
     {
-        @Override
-        public Class<?> getAuditRecordClass()
-        {
-            return CensusRecord.class;
-        }
-
         @Override
         public CensusFunction makeFunction()
         {
@@ -48,12 +36,6 @@ public enum AuditType
     MEMORIAL
     {
         @Override
-        public Class<?> getAuditRecordClass()
-        {
-            return CreatureMemorial.class;
-        }
-
-        @Override
         public AuditFunction makeFunction()
         {
             throw new UnsupportedOperationException("CreatureMemorialFunction does not exist");
@@ -65,8 +47,6 @@ public enum AuditType
             return new CreatureMemorial(species);
         }
     };
-
-    public abstract Class<?> getAuditRecordClass();
 
     public abstract AuditFunction makeFunction();
 
