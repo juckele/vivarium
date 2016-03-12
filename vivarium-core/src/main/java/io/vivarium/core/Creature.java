@@ -110,14 +110,14 @@ public class Creature extends VivariumObject
             if (parent2 != null)
             {
                 // Processor combined from genetic legacy
-                this._processor = ProcessorType.makeWithParents(_species.getProcessorType(), _species,
-                        parent1._processor, parent2._processor);
+                this._processor = ProcessorType.makeWithParents(_species.getProcessorArchitecture().getProcessorType(),
+                        _species, parent1._processor, parent2._processor);
             }
             else
             {
                 // Processor from single parent (might still mutate)
-                this._processor = ProcessorType.makeWithParents(_species.getProcessorType(), _species,
-                        parent1._processor, parent1._processor);
+                this._processor = ProcessorType.makeWithParents(_species.getProcessorArchitecture().getProcessorType(),
+                        _species, parent1._processor, parent1._processor);
             }
         }
         else
@@ -130,7 +130,8 @@ public class Creature extends VivariumObject
             else
             {
                 // Create a new default processor
-                this._processor = ProcessorType.makeWithSpecies(_species.getProcessorType(), _species);
+                this._processor = ProcessorType.makeWithSpecies(_species.getProcessorArchitecture().getProcessorType(),
+                        _species);
             }
         }
         _inputs = new double[_species.getTotalProcessorInputCount()];

@@ -1,6 +1,6 @@
 package io.vivarium.core;
 
-import io.vivarium.core.processor.ProcessorType;
+import io.vivarium.core.processor.ProcessorArchitecture;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -41,19 +41,17 @@ public class Species extends VivariumObject
 
     // Neurology
     @SerializedParameter
-    private ProcessorType _processorType = ProcessorType.NEURAL_NETWORK;
+    private ProcessorArchitecture _processorArchitecture = null;
     @SerializedParameter
-    private int _hardProcessorInputs = 5;
+    private double _normalizeAfterMutation = 0;
     @SerializedParameter
-    private int _hardProcessorOutputs = 6;
+    private int _sensorInputCount = 5;
+    @SerializedParameter
+    private int _controllerOutputCount = 6;
     @SerializedParameter
     private int _memoryUnitCount = 0;
     @SerializedParameter
     private int _soundChannelCount = 0;
-    @SerializedParameter
-    private boolean _randomInitialization = false;
-    @SerializedParameter
-    private double _normalizeAfterMutation = 0;
 
     // Mutation
     @SerializedParameter
@@ -74,12 +72,12 @@ public class Species extends VivariumObject
 
     public int getHardProcessorInputs()
     {
-        return _hardProcessorInputs;
+        return _sensorInputCount;
     }
 
     public int getHardProcessorOutputs()
     {
-        return _hardProcessorOutputs;
+        return _controllerOutputCount;
     }
 
     public double getFemaleThreshold()
@@ -178,39 +176,19 @@ public class Species extends VivariumObject
         this._initialGenerationProbability = probability;
     }
 
-    public ProcessorType getProcessorType()
-    {
-        return this._processorType;
-    }
-
-    public void setProcessorType(ProcessorType type)
-    {
-        this._processorType = type;
-    }
-
     public int getTotalProcessorInputCount()
     {
-        return this._hardProcessorInputs + this._memoryUnitCount + this._soundChannelCount;
+        return this._sensorInputCount + this._memoryUnitCount + this._soundChannelCount;
     }
 
     public int getTotalProcessorOutputCount()
     {
-        return this._hardProcessorOutputs + this._memoryUnitCount + this._soundChannelCount;
+        return this._controllerOutputCount + this._memoryUnitCount + this._soundChannelCount;
     }
 
     public int getHiddenLayerCount()
     {
         return 0;
-    }
-
-    public void setRandomInitialization(boolean b)
-    {
-        this._randomInitialization = b;
-    }
-
-    public boolean getRandomInitialization()
-    {
-        return this._randomInitialization;
     }
 
     public void setMaximumFood(int maximumFood)
@@ -272,6 +250,7 @@ public class Species extends VivariumObject
     {
         Species s = new Species();
         s.finalizeSerialization();
+        s.setProcessorArchitecture(ProcessorArchitecture.makeDefault());
         return s;
     }
 
@@ -285,5 +264,15 @@ public class Species extends VivariumObject
     public static void main(String[] args)
     {
         System.out.println(Species.makeDefault());
+    }
+
+    public ProcessorArchitecture getProcessorArchitecture()
+    {
+        return _processorArchitecture;
+    }
+
+    public void setProcessorArchitecture(ProcessorArchitecture processorArchitecture)
+    {
+        _processorArchitecture = processorArchitecture;
     }
 }
