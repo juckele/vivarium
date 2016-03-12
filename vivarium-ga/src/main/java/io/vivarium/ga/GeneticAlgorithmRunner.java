@@ -8,6 +8,7 @@ import org.javatuples.Pair;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
+import io.vivarium.core.processor.ProcessorArchitecture;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
 
@@ -114,8 +115,11 @@ public class GeneticAlgorithmRunner
 
     public static void main(String[] args)
     {
+        ProcessorArchitecture processorArchitecture = ProcessorArchitecture.makeDefault();
+        processorArchitecture.setRandomInitialization(true);
+
         Species species = Species.makeDefault();
-        species.setRandomInitialization(true);
+        species.setProcessorArchitecture(processorArchitecture);
         species.setInitialGenerationProbability(0);
         species.setMaximumFood(200);
         System.out.println("Species " + species);
