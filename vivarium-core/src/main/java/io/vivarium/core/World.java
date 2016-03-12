@@ -72,7 +72,7 @@ public class World extends VivariumObject
         {
             for (AuditFunction auditFunction : _blueprint.getAuditFunctions())
             {
-                _auditRecords[i] = auditFunction.getAuditType().makeRecordWithSpecies(auditFunction, species);
+                _auditRecords[i] = auditFunction.makeRecordWithSpecies(species);
                 i++;
             }
         }
