@@ -34,6 +34,6 @@ public class CensusTest
         Tester.equal("Population records should have one entry", populationRecords.size(), 1);
         Tester.equal("Initial population should match world", (int) populationRecords.get(0),
                 world.getCount(EntityType.CREATURE));
-        Tester.greaterThan("Initial population should be non-zero", (int) populationRecords.get(0), 0);
+        Tester.greaterThan("Initial population should be non-zero", populationRecords.get(0), 0);
     }
 }

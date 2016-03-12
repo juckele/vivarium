@@ -40,7 +40,7 @@ public class NeuralNetwork extends Processor
     {
         super();
         Preconditions.checkArgument(inputCount > 0);
-        assert(outputCount > 0);
+        Preconditions.checkArgument(outputCount > 0);
         constructWithDimensions(inputCount, outputCount, randomInitialization, normalizedLength);
     }
 

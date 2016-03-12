@@ -1,7 +1,5 @@
 package io.vivarium.core.processor;
 
-import java.util.Arrays;
-
 import io.vivarium.core.Species;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Rand;

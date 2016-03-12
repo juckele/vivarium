@@ -1,5 +1,10 @@
 package io.vivarium.core;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedList;
+
 import io.vivarium.audit.AuditFunction;
 import io.vivarium.audit.AuditRecord;
 import io.vivarium.core.processor.Processor;
@@ -10,11 +15,6 @@ import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.LinkedList;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString
