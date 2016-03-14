@@ -25,8 +25,14 @@ public class CreateSpecies extends CommonsScript
     protected List<Option> getScriptSpecificOptions()
     {
         LinkedList<Option> options = new LinkedList<>();
-        options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
-                .desc("file to save to species to").build());
+        options.add(Option
+                .builder("o")
+                .required(true)
+                .longOpt(OUTPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
+                .desc("file to save to species to")
+                .build());
         return options;
     }
 

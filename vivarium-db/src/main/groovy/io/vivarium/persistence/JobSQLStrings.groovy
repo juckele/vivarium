@@ -9,6 +9,7 @@ class JobSQLStrings {
     // - If the job is BLOCKED and doesn't have any pre-requisites which are not DONE,
     // the job will be set to WAITING.
     // - If the job is PROCESSING and the worker that has it checked out is no longer active, the job will be set to WAITING.
+    // @formatter:off
     static public final String updateStatusString = """
 UPDATE jobs
 SET    status = 'WAITING'
@@ -37,4 +38,5 @@ WHERE  id IN (SELECT t1.id
               WHERE  status = 'PROCESSING'
                      AND NOT workers.is_active);
 """
+    // @formatter:on
 }

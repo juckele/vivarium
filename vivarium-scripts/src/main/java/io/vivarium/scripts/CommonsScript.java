@@ -113,8 +113,13 @@ public abstract class CommonsScript
     protected List<Option> getCommonOptions()
     {
         LinkedList<Option> commonOptions = new LinkedList<>();
-        commonOptions.add(Option.builder("h").required(false).longOpt("help").hasArg(false)
-                .desc("display this help and exit").build());
+        commonOptions.add(Option
+                .builder("h")
+                .required(false)
+                .longOpt("help")
+                .hasArg(false)
+                .desc("display this help and exit")
+                .build());
         return commonOptions;
     }
 

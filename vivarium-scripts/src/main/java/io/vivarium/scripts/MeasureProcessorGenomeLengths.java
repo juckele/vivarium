@@ -26,8 +26,14 @@ public class MeasureProcessorGenomeLengths extends CommonsScript
     protected List<Option> getScriptSpecificOptions()
     {
         LinkedList<Option> options = new LinkedList<>();
-        options.add(Option.builder("i").required(true).longOpt(INPUT_FILE).hasArg(true).argName("FILE")
-                .desc("file to load processors from.").build());
+        options.add(Option
+                .builder("i")
+                .required(true)
+                .longOpt(INPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
+                .desc("file to load processors from.")
+                .build());
         return options;
     }
 

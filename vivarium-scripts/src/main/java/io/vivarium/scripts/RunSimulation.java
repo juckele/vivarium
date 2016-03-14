@@ -42,19 +42,54 @@ public class RunSimulation extends CommonsScript
     protected List<Option> getScriptSpecificOptions()
     {
         LinkedList<Option> options = new LinkedList<>();
-        options.add(Option.builder("i").required(true).longOpt(INPUT_FILE).hasArg(true).argName("FILE")
+        options.add(Option
+                .builder("i")
+                .required(true)
+                .longOpt(INPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
                 .desc("file to load, can be either a world or simulation. At least one limit, either for ticks or time, must be provided if the input is a world.")
                 .build());
-        options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
-                .desc("file to save, will be the same type as the provided input").build());
-        options.add(Option.builder("t").required(false).longOpt(TICKS).hasArg(true).argName("TICKS")
-                .desc("max number of ticks to simulate.").build());
-        options.add(Option.builder("s").required(false).longOpt(SECONDS).hasArg(true).argName("SECONDS")
-                .desc("max seconds to simulate for, only one time option can be provided").build());
-        options.add(Option.builder("m").required(false).longOpt(MINUTES).hasArg(true).argName("MINUTES")
-                .desc("max minutes to simulate for, only one time option can be provided").build());
-        options.add(Option.builder("h").required(false).longOpt(HOURS).hasArg(true).argName("HOURS")
-                .desc("max hours to simulate for, only one time option can be provided").build());
+        options.add(Option
+                .builder("o")
+                .required(true)
+                .longOpt(OUTPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
+                .desc("file to save, will be the same type as the provided input")
+                .build());
+        options.add(Option
+                .builder("t")
+                .required(false)
+                .longOpt(TICKS)
+                .hasArg(true)
+                .argName("TICKS")
+                .desc("max number of ticks to simulate.")
+                .build());
+        options.add(Option
+                .builder("s")
+                .required(false)
+                .longOpt(SECONDS)
+                .hasArg(true)
+                .argName("SECONDS")
+                .desc("max seconds to simulate for, only one time option can be provided")
+                .build());
+        options.add(Option
+                .builder("m")
+                .required(false)
+                .longOpt(MINUTES)
+                .hasArg(true)
+                .argName("MINUTES")
+                .desc("max minutes to simulate for, only one time option can be provided")
+                .build());
+        options.add(Option
+                .builder("h")
+                .required(false)
+                .longOpt(HOURS)
+                .hasArg(true)
+                .argName("HOURS")
+                .desc("max hours to simulate for, only one time option can be provided")
+                .build());
         return options;
     }
 

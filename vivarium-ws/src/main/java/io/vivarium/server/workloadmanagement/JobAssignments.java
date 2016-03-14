@@ -135,9 +135,9 @@ public class JobAssignments
     public static JobAssignments subtract(JobAssignments minuend, JobAssignments subtrahend)
     {
         // Check that these both the minuend and subtrahend have the same key set of workers.
-        Preconditions.checkArgument(
-                Sets.symmetricDifference(minuend._workerJobCounts.keySet(), subtrahend._workerJobCounts.keySet())
-                        .size() == 0);
+        Preconditions.checkArgument(Sets
+                .symmetricDifference(minuend._workerJobCounts.keySet(), subtrahend._workerJobCounts.keySet())
+                .size() == 0);
 
         // Create a new JobAssignments objects with the same worker key set.
         Set<WorkerModel> workers = minuend._workerJobCounts.keySet();

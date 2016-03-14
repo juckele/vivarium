@@ -27,11 +27,28 @@ public class ExtractCreatureFromWorld extends CommonsScript
     protected List<Option> getScriptSpecificOptions()
     {
         LinkedList<Option> options = new LinkedList<>();
-        options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
-                .desc("file to save to creature to").build());
-        options.add(Option.builder("w").required(true).longOpt(WORLD_INPUT_FILE).hasArg(true).argName("FILE")
-                .desc("file to load world from.").build());
-        options.add(Option.builder("i").required(false).argName("n").longOpt(CREATURE_ID).hasArg(true)
+        options.add(Option
+                .builder("o")
+                .required(true)
+                .longOpt(OUTPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
+                .desc("file to save to creature to")
+                .build());
+        options.add(Option
+                .builder("w")
+                .required(true)
+                .longOpt(WORLD_INPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
+                .desc("file to load world from.")
+                .build());
+        options.add(Option
+                .builder("i")
+                .required(false)
+                .argName("n")
+                .longOpt(CREATURE_ID)
+                .hasArg(true)
                 .desc("ID of the creature to extract from the world, if this is not set, a random creature is chosen.")
                 .build());
         return options;

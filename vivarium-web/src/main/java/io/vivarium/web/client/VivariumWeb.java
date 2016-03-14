@@ -174,7 +174,8 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
                     if (incomingMessage instanceof SendResourceMessage)
                     {
                         SendResourceMessage sendResource = (SendResourceMessage) incomingMessage;
-                        _collection = (VivariumObjectCollection) Streamer.get()
+                        _collection = (VivariumObjectCollection) Streamer
+                                .get()
                                 .fromString(sendResource.getDataString());
 
                         // Finish loading

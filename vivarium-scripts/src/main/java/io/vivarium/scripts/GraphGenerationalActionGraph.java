@@ -27,10 +27,22 @@ public class GraphGenerationalActionGraph extends CommonsScript
     protected List<Option> getScriptSpecificOptions()
     {
         LinkedList<Option> options = new LinkedList<>();
-        options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
-                .desc("file to save graph to").build());
-        options.add(Option.builder("i").required(true).longOpt(INPUT_FILE).hasArg(true).argName("FILE")
-                .desc("vivarium save file to load.").build());
+        options.add(Option
+                .builder("o")
+                .required(true)
+                .longOpt(OUTPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
+                .desc("file to save graph to")
+                .build());
+        options.add(Option
+                .builder("i")
+                .required(true)
+                .longOpt(INPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
+                .desc("vivarium save file to load.")
+                .build());
         return options;
     }
 

@@ -27,13 +27,30 @@ public class CreateWorld extends CommonsScript
     protected List<Option> getScriptSpecificOptions()
     {
         LinkedList<Option> options = new LinkedList<>();
-        options.add(Option.builder("o").required(true).longOpt(OUTPUT_FILE).hasArg(true).argName("FILE")
-                .desc("file to save to world to").build());
-        options.add(Option.builder("b").required(false).longOpt(BLUEPRINT_INPUT_FILE).hasArg(true).argName("FILE")
+        options.add(Option
+                .builder("o")
+                .required(true)
+                .longOpt(OUTPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
+                .desc("file to save to world to")
+                .build());
+        options.add(Option
+                .builder("b")
+                .required(false)
+                .longOpt(BLUEPRINT_INPUT_FILE)
+                .hasArg(true)
+                .argName("FILE")
                 .desc("file to load blueprint from. If this option is not given, a default blueprint will be created")
                 .build());
-        options.add(Option.builder("s").required(false).longOpt(SIZE_OPTION).hasArg(true).argName("n")
-                .desc("override the blueprint for world size").build());
+        options.add(Option
+                .builder("s")
+                .required(false)
+                .longOpt(SIZE_OPTION)
+                .hasArg(true)
+                .argName("n")
+                .desc("override the blueprint for world size")
+                .build());
         return options;
     }
 
