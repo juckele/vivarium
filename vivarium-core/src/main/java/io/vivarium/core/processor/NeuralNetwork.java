@@ -37,8 +37,8 @@ public class NeuralNetwork extends Processor
     public NeuralNetwork(int inputCount, int outputCount, boolean randomInitialization, double normalizedLength)
     {
         super();
-        assert(inputCount > 0);
-        assert(outputCount > 0);
+        assert (inputCount > 0);
+        assert (outputCount > 0);
         constructWithDimensions(inputCount, outputCount, randomInitialization, normalizedLength);
     }
 
