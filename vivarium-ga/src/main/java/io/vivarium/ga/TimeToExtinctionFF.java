@@ -1,5 +1,7 @@
 package io.vivarium.ga;
 
+import com.google.common.base.Preconditions;
+
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.EntityType;
@@ -25,7 +27,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     {
         // Build world
         Blueprint instanceBlueprint = new SerializationEngine().makeCopy(_blueprint);
-        assert (instanceBlueprint.getSpecies().size() == 1);
+        Preconditions.checkArgument(instanceBlueprint.getSpecies().size() == 1);
         Species instanceSpecies = instanceBlueprint.getSpecies().get(0);
         instanceSpecies.setMutationRateExponent(Double.NEGATIVE_INFINITY);
         Creature instanceCreature = new Creature(instanceSpecies, c);

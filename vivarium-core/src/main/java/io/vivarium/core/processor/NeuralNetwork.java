@@ -3,6 +3,8 @@ package io.vivarium.core.processor;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.common.base.Preconditions;
+
 import io.vivarium.core.Species;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Functions;
@@ -37,8 +39,8 @@ public class NeuralNetwork extends Processor
     public NeuralNetwork(int inputCount, int outputCount, boolean randomInitialization, double normalizedLength)
     {
         super();
-        assert (inputCount > 0);
-        assert (outputCount > 0);
+        Preconditions.checkArgument(inputCount > 0);
+        assert(outputCount > 0);
         constructWithDimensions(inputCount, outputCount, randomInitialization, normalizedLength);
     }
 
