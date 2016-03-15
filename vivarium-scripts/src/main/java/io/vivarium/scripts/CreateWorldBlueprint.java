@@ -36,7 +36,7 @@ public class CreateWorldBlueprint extends CommonsScript
                 .longOpt(OUTPUT_FILE)
                 .hasArg(true)
                 .argName("FILE")
-                .desc("file to save to blueprint to")
+                .desc("file to save to world blueprint to")
                 .build());
         options.add(Option
                 .builder("a")
@@ -113,27 +113,27 @@ public class CreateWorldBlueprint extends CommonsScript
         }
         Map<String, Object> extraOptions = this.extraArgsAsMap(commandLine);
 
-        // Build the blueprint
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        new SerializationEngine().deserialize(blueprint, extraOptions);
+        // Build the world blueprint
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        new SerializationEngine().deserialize(worldBlueprint, extraOptions);
         if (!creatureBlueprints.isEmpty())
         {
-            blueprint.setCreatureBlueprints(new ArrayList<>(creatureBlueprints));
+            worldBlueprint.setCreatureBlueprints(new ArrayList<>(creatureBlueprints));
         }
         if (!auditBlueprints.isEmpty())
         {
-            blueprint.setAuditBlueprints(new ArrayList<>(auditBlueprints));
+            worldBlueprint.setAuditBlueprints(new ArrayList<>(auditBlueprints));
         }
 
-        // Save the blueprint
+        // Save the world blueprint
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        FileIO.saveSerializer(blueprint, outputFile, Format.JSON);
+        FileIO.saveSerializer(worldBlueprint, outputFile, Format.JSON);
     }
 
     @Override
     protected String getUsageHeader()
     {
-        return "A tool for creating blueprints.";
+        return "A tool for creating world blueprints.";
     }
 
     @Override

@@ -26,9 +26,9 @@ public class ActionFrequencyRecord extends AuditRecord
     {
     }
 
-    protected ActionFrequencyRecord(CreatureBlueprint blueprint)
+    protected ActionFrequencyRecord(CreatureBlueprint creatureBlueprint)
     {
-        super(blueprint);
+        super(creatureBlueprint);
     }
 
     @Override

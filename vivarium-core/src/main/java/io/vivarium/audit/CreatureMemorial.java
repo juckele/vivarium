@@ -15,9 +15,9 @@ public class CreatureMemorial extends AuditRecord
         super();
     }
 
-    public CreatureMemorial(CreatureBlueprint blueprint)
+    public CreatureMemorial(CreatureBlueprint creatureBlueprint)
     {
-        super(blueprint);
+        super(creatureBlueprint);
     }
 
     @Override

@@ -22,12 +22,12 @@ public class CensusTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testCensus()
     {
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
         AuditBlueprint censusBlueprint = new CensusBlueprint();
         ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
         auditBlueprints.add(censusBlueprint);
-        blueprint.setAuditBlueprints(auditBlueprints);
-        World world = new World(blueprint);
+        worldBlueprint.setAuditBlueprints(auditBlueprints);
+        World world = new World(worldBlueprint);
         world.tick();
         CensusRecord record = (CensusRecord) world.getAuditRecords().remove();
         ArrayList<Integer> populationRecords = record.getPopulationRecords();

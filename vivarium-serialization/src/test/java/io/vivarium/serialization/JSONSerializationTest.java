@@ -27,9 +27,9 @@ public class JSONSerializationTest
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
         creatureBlueprint.setProcessorBlueprint(processorBlueprint);
         creatureBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        blueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
-        World world = new World(blueprint);
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        worldBlueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
+        World world = new World(worldBlueprint);
 
         // Convert to json
         String jsonString = JSONConverter.serializerToJSONString(world);

@@ -96,8 +96,8 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldMakeCopy() throws Exception
     {
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        World world = new World(blueprint);
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        World world = new World(worldBlueprint);
         World copy = new SerializationEngine().makeCopy(world);
         Tester.isNotNull("World copy should exist", copy);
     }

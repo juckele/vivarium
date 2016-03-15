@@ -19,9 +19,9 @@ public abstract class AuditRecord extends VivariumObject
     {
     }
 
-    protected AuditRecord(CreatureBlueprint blueprint)
+    protected AuditRecord(CreatureBlueprint creatureBlueprint)
     {
-        _trackedCreatureBlueprint = blueprint;
+        _trackedCreatureBlueprint = creatureBlueprint;
     }
 
     /**

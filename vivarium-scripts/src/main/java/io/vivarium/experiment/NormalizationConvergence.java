@@ -9,8 +9,8 @@ import com.google.common.collect.Lists;
 import io.vivarium.client.TaskClient;
 import io.vivarium.client.task.CreateJobTask;
 import io.vivarium.client.task.UploadResourceTask;
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.CreatureBlueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.net.jobs.CreateWorldJob;
 import io.vivarium.net.jobs.Job;
 import io.vivarium.net.jobs.SimulationJob;
@@ -39,7 +39,7 @@ public class NormalizationConvergence
      */
     public static void main(String[] args) throws URISyntaxException
     {
-        // Make the blueprint with the default behavior
+        // Make the blueprints with the default behavior
         WorldBlueprint defaultWorldBlueprint = WorldBlueprint.makeDefault();
         defaultWorldBlueprint.setSize(worldSize);
         ArrayList<CreatureBlueprint> defaultCreatureBlueprints = new ArrayList<>();
@@ -47,12 +47,12 @@ public class NormalizationConvergence
         defaultCreatureBlueprints.add(defaultCreatureBlueprint);
         defaultWorldBlueprint.setCreatureBlueprints(defaultCreatureBlueprints);
 
-        // Save the default blueprint
+        // Save the default blueprints
         TaskClient defaultUploadClient = new TaskClient(
                 new UploadResourceTask(defaultWorldBlueprint.getUUID(), defaultWorldBlueprint));
         defaultUploadClient.connect();
 
-        // Make the blueprint with the normalizing behavior
+        // Make the blueprints with the normalizing behavior
         WorldBlueprint normalizingWorldBlueprint = WorldBlueprint.makeDefault();
         normalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
@@ -61,7 +61,7 @@ public class NormalizationConvergence
         normalizingCreatureBlueprints.add(normalizingCreatureBlueprint);
         normalizingWorldBlueprint.setCreatureBlueprints(normalizingCreatureBlueprints);
 
-        // Save the normalizing blueprint
+        // Save the normalizing blueprints
         TaskClient normalizingUploadClient = new TaskClient(
                 new UploadResourceTask(normalizingWorldBlueprint.getUUID(), normalizingWorldBlueprint));
         normalizingUploadClient.connect();

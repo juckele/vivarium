@@ -6,8 +6,8 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.World;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
@@ -41,7 +41,7 @@ public class CreateWorld extends CommonsScript
                 .longOpt(BLUEPRINT_INPUT_FILE)
                 .hasArg(true)
                 .argName("FILE")
-                .desc("file to load blueprint from. If this option is not given, a default blueprint will be created")
+                .desc("file to load world blueprint from. If this option is not given, a default world blueprint will be created")
                 .build());
         options.add(Option
                 .builder("s")
@@ -49,7 +49,7 @@ public class CreateWorld extends CommonsScript
                 .longOpt(SIZE_OPTION)
                 .hasArg(true)
                 .argName("n")
-                .desc("override the blueprint for world size")
+                .desc("override the world blueprint for world size")
                 .build());
         return options;
     }
@@ -57,19 +57,19 @@ public class CreateWorld extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        WorldBlueprint blueprint = null;
+        WorldBlueprint worldBlueprint = null;
         if (commandLine.hasOption(BLUEPRINT_INPUT_FILE))
         {
             String blueprintFile = null;
             try
             {
                 blueprintFile = commandLine.getOptionValue(BLUEPRINT_INPUT_FILE);
-                blueprint = FileIO.loadObjectCollection(blueprintFile, Format.JSON).getFirst(WorldBlueprint.class);
+                worldBlueprint = FileIO.loadObjectCollection(blueprintFile, Format.JSON).getFirst(WorldBlueprint.class);
             }
             catch (ClassCastException e)
             {
-                String extendedMessage = "blueprint file " + blueprintFile
-                        + " does not contain a blueprint as a top level object";
+                String extendedMessage = "world blueprint file " + blueprintFile
+                        + " does not contain a world blueprint as a top level object";
                 throw new IllegalStateException(extendedMessage, e);
             }
         }
@@ -80,7 +80,7 @@ public class CreateWorld extends CommonsScript
         }
 
         // Build the world
-        World world = run(blueprint, size);
+        World world = run(worldBlueprint, size);
 
         // Save the world
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
@@ -90,25 +90,25 @@ public class CreateWorld extends CommonsScript
     /**
      * Creates a world given an (optional) Blueprint and (optional) world size.
      *
-     * @param blueprint
-     *            Optional blueprint. A default blueprint is created if this value is null.
+     * @param worldBlueprint
+     *            Optional world blueprint. A default world blueprint is created if this value is null.
      * @param size
      *            Optional size override. If this value is passed in, the world will be created with this size.
      * @return The new world.
      */
-    public World run(WorldBlueprint blueprint, Integer size)
+    public World run(WorldBlueprint worldBlueprint, Integer size)
     {
-        if (blueprint == null)
+        if (worldBlueprint == null)
         {
-            blueprint = WorldBlueprint.makeDefault();
+            worldBlueprint = WorldBlueprint.makeDefault();
         }
         if (size != null)
         {
             SerializationEngine serializer = new SerializationEngine();
-            blueprint = serializer.makeCopy(blueprint);
-            blueprint.setSize(size);
+            worldBlueprint = serializer.makeCopy(worldBlueprint);
+            worldBlueprint.setSize(size);
         }
-        return new World(blueprint);
+        return new World(worldBlueprint);
     }
 
     @Override

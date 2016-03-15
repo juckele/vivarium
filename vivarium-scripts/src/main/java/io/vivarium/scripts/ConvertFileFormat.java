@@ -69,7 +69,7 @@ public class ConvertFileFormat extends CommonsScript
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
         VivariumObjectCollection collection = FileIO.loadObjectCollection(inputFile, inputFormat);
 
-        // Save the blueprint
+        // Save the file
         Format outputFormat = Format.parseFormat(commandLine.getOptionValue(OUTPUT_FORMAT));
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
         FileIO.saveSerializerCollection(collection, outputFile, outputFormat);

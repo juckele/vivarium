@@ -38,22 +38,22 @@ public class World extends VivariumObject
     protected AuditRecord[] _auditRecords;
 
     @SerializedParameter
-    private WorldBlueprint _blueprint;
+    private WorldBlueprint _worldBlueprint;
 
     protected World()
     {
     }
 
-    public World(WorldBlueprint blueprint)
+    public World(WorldBlueprint worldBlueprint)
     {
-        // Store the blueprint
-        this._blueprint = blueprint;
+        // Store the world blueprint
+        this._worldBlueprint = worldBlueprint;
 
         // Set up base variables
         this._maximumCreatureID = 0;
 
         // Size the world
-        this.setWorldDimensions(blueprint.getWidth(), blueprint.getHeight());
+        this.setWorldDimensions(worldBlueprint.getWidth(), worldBlueprint.getHeight());
 
         // Fill the world with creatures and food
         this.populatateWorld();
@@ -65,12 +65,13 @@ public class World extends VivariumObject
 
     private void constructAuditRecords()
     {
-        int auditRecordCount = _blueprint.getCreatureBlueprints().size() * _blueprint.getAuditBlueprints().size();
+        int auditRecordCount = _worldBlueprint.getCreatureBlueprints().size()
+                * _worldBlueprint.getAuditBlueprints().size();
         _auditRecords = new AuditRecord[auditRecordCount];
         int i = 0;
-        for (CreatureBlueprint creatureBlueprint : _blueprint.getCreatureBlueprints())
+        for (CreatureBlueprint creatureBlueprint : _worldBlueprint.getCreatureBlueprints())
         {
-            for (AuditBlueprint auditBlueprint : _blueprint.getAuditBlueprints())
+            for (AuditBlueprint auditBlueprint : _worldBlueprint.getAuditBlueprints())
             {
                 _auditRecords[i] = auditBlueprint.makeRecordWithCreatureBlueprint(creatureBlueprint);
                 i++;
@@ -81,9 +82,9 @@ public class World extends VivariumObject
     private void populatateWorld()
     {
         WorldPopulator populator = new WorldPopulator();
-        populator.setCreatureBlueprints(_blueprint.getCreatureBlueprints());
-        populator.setWallProbability(_blueprint.getInitialWallGenerationProbability());
-        populator.setFoodProbability(_blueprint.getInitialFoodGenerationProbability());
+        populator.setCreatureBlueprints(_worldBlueprint.getCreatureBlueprints());
+        populator.setWallProbability(_worldBlueprint.getInitialWallGenerationProbability());
+        populator.setFoodProbability(_worldBlueprint.getInitialFoodGenerationProbability());
         for (int r = 0; r < _height; r++)
         {
             for (int c = 0; c < _width; c++)
@@ -168,7 +169,7 @@ public class World extends VivariumObject
 
     private void transmitSounds()
     {
-        if (this._blueprint.getSoundEnabled())
+        if (this._worldBlueprint.getSoundEnabled())
         {
             for (int r = 0; r < this._height; r++)
             {
@@ -278,7 +279,7 @@ public class World extends VivariumObject
         else if (action == Action.BREED
                 // Make sure we're facing another creature
                 && _entityGrid[facingR][facingC] == EntityType.CREATURE
-                // And that creature is shares the same blueprint as us
+                // And that creature is shares the same creature blueprint as us
                 && _creatureGrid[facingR][facingC].getBlueprint() == creature.getBlueprint()
                 // And that creature also is trying to breed
                 && _creatureGrid[facingR][facingC].getAction() == Action.BREED
@@ -313,7 +314,7 @@ public class World extends VivariumObject
                 if (_entityGrid[r][c] == EntityType.EMPTY)
                 {
                     double randomNumber = Rand.getInstance().getRandomPositiveDouble();
-                    if (randomNumber < this._blueprint.getFoodGenerationProbability())
+                    if (randomNumber < this._worldBlueprint.getFoodGenerationProbability())
                     {
                         setObject(EntityType.FOOD, r, c);
                         _entityGrid[r][c] = EntityType.FOOD;
@@ -601,7 +602,7 @@ public class World extends VivariumObject
         worldOutput.append("Walls: ");
         worldOutput.append(this.getCount(EntityType.WALL));
         HashMap<CreatureBlueprint, String> creatureBlueprintToGlyph = new HashMap<>();
-        for (CreatureBlueprint s : this._blueprint.getCreatureBlueprints())
+        for (CreatureBlueprint s : this._worldBlueprint.getCreatureBlueprints())
         {
             creatureBlueprintToGlyph.put(s, glyphs[creatureBlueprintToGlyph.size()]);
             worldOutput.append(", ").append(creatureBlueprintToGlyph.get(s)).append("-creatures: ");
@@ -639,9 +640,9 @@ public class World extends VivariumObject
     private String renderProcessorWeights()
     {
         StringBuilder multiCreatureBlueprintOutput = new StringBuilder();
-        for (CreatureBlueprint blueprint : this._blueprint.getCreatureBlueprints())
+        for (CreatureBlueprint creatureBlueprint : this._worldBlueprint.getCreatureBlueprints())
         {
-            multiCreatureBlueprintOutput.append(this.renderProcessorWeights(blueprint));
+            multiCreatureBlueprintOutput.append(this.renderProcessorWeights(creatureBlueprint));
         }
         return multiCreatureBlueprintOutput.toString();
     }

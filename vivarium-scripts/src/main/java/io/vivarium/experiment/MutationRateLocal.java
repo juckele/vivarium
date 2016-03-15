@@ -58,27 +58,27 @@ public class MutationRateLocal
             // Record the thread name
             String name = "mutation=2^" + mutationRateExponent;
 
-            // Make a blueprint
-            WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-            blueprint.setSize(WORLD_SIZE);
+            // Make a world blueprint
+            WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+            worldBlueprint.setSize(WORLD_SIZE);
             // Set creature blueprint
             ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
             CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
             creatureBlueprint.setMutationRateExponent(mutationRateExponent);
             creatureBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
             creatureBlueprints.add(creatureBlueprint);
-            blueprint.setCreatureBlueprints(creatureBlueprints);
+            worldBlueprint.setCreatureBlueprints(creatureBlueprints);
             // Set audit functions
             ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
             auditBlueprints.add(new ActionFrequencyBlueprint());
             auditBlueprints.add(new CensusBlueprint());
-            blueprint.setAuditBlueprints(auditBlueprints);
+            worldBlueprint.setAuditBlueprints(auditBlueprints);
 
-            // Save the blueprint
-            FileIO.saveSerializer(blueprint, name + "_blueprint.viv", Format.JSON);
+            // Save the world blueprint
+            FileIO.saveSerializer(worldBlueprint, name + "_blueprint.viv", Format.JSON);
 
             // Create callable
-            log("Generating blueprint " + name);
+            log("Generating world blueprint " + name);
             tasks.add(new WorldRunner(name));
         }
 

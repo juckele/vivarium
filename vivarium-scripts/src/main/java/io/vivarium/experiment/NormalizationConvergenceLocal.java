@@ -2,8 +2,8 @@ package io.vivarium.experiment;
 
 import java.util.ArrayList;
 
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.CreatureBlueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
 import io.vivarium.serialization.FileIO;
@@ -37,7 +37,7 @@ public class NormalizationConvergenceLocal
         // If we're running multi-threaded code, we need to use a multi-threaded random allocator
         Rand.setAllocator(new ThreadRandAllocator());
 
-        // Make the blueprint with the default behavior
+        // Make the blueprints with the default behavior
         WorldBlueprint defaultWorldBlueprint = WorldBlueprint.makeDefault();
         defaultWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> defaultCreatureBlueprints = new ArrayList<>();
@@ -45,10 +45,10 @@ public class NormalizationConvergenceLocal
         defaultCreatureBlueprints.add(defaultCreatureBlueprint);
         defaultWorldBlueprint.setCreatureBlueprints(defaultCreatureBlueprints);
 
-        // Save the default blueprint
+        // Save the default blueprints
         FileIO.saveSerializer(defaultWorldBlueprint, "defaultBlueprint.viv", Format.JSON);
 
-        // Make the blueprint with the normalizing behavior
+        // Make the blueprints with the normalizing behavior
         WorldBlueprint normalizingWorldBlueprint = WorldBlueprint.makeDefault();
         normalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
@@ -57,10 +57,10 @@ public class NormalizationConvergenceLocal
         normalizingCreatureBlueprints.add(normalizingCreatureBlueprint);
         normalizingWorldBlueprint.setCreatureBlueprints(normalizingCreatureBlueprints);
 
-        // Save the normalizing blueprint
+        // Save the normalizing blueprints
         FileIO.saveSerializer(normalizingWorldBlueprint, "normalizingBlueprint.viv", Format.JSON);
 
-        // Make the blueprint with the normalizing behavior and a longer length
+        // Make the blueprints with the normalizing behavior and a longer length
         WorldBlueprint longNormalizingWorldBlueprint = WorldBlueprint.makeDefault();
         longNormalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> longNormalizingCreatureBlueprints = new ArrayList<>();
@@ -69,7 +69,7 @@ public class NormalizationConvergenceLocal
         longNormalizingCreatureBlueprints.add(longNormalizingCreatureBlueprint);
         longNormalizingWorldBlueprint.setCreatureBlueprints(longNormalizingCreatureBlueprints);
 
-        // Save the normalizing blueprint
+        // Save the normalizing blueprints
         FileIO.saveSerializer(longNormalizingWorldBlueprint, "longBlueprint.viv", Format.JSON);
 
         // Run all the simulation batches

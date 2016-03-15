@@ -149,11 +149,11 @@ public class RunBenchmark extends CommonsScript
 
     private static double inlineTest(int size)
     {
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        blueprint.setSize(size);
-        blueprint.getCreatureBlueprints().get(0).setMaximumFood(Integer.MAX_VALUE); // Increase max food to prevent creatures from
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        worldBlueprint.setSize(size);
+        worldBlueprint.getCreatureBlueprints().get(0).setMaximumFood(Integer.MAX_VALUE); // Increase max food to prevent creatures from
                                                                          // starving during the benchmark
-        World world = new World(blueprint);
+        World world = new World(worldBlueprint);
         int tickCount = 2000;
         int worldPopulation = world.getCount(EntityType.CREATURE);
         long startTime = System.currentTimeMillis();

@@ -65,7 +65,7 @@ public class ExtractCreatureFromWorld extends CommonsScript
         }
         catch (ClassCastException e)
         {
-            String extendedMessage = "blueprint file " + worldFile + " does not contain a world as a top level object";
+            String extendedMessage = "world file " + worldFile + " does not contain a world as a top level object";
             throw new IllegalStateException(extendedMessage, e);
         }
 

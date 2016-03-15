@@ -18,8 +18,8 @@ public class JSONConverterTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testSaveLoadSaveWorld()
     {
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        World worldOriginal = new World(blueprint);
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        World worldOriginal = new World(worldBlueprint);
         String jsonString1 = JSONConverter.serializerToJSONString(worldOriginal);
         VivariumObjectCollection copiedCollection = JSONConverter.jsonStringToSerializerCollection(jsonString1);
         World worldCopy = copiedCollection.getFirst(World.class);

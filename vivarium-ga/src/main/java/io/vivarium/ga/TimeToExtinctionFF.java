@@ -12,12 +12,12 @@ import io.vivarium.serialization.SerializationEngine;
 public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
 {
     private int _initialPopulation;
-    private WorldBlueprint _blueprint;
+    private WorldBlueprint _worldBlueprint;
     private double _simulationDuration;
 
-    public TimeToExtinctionFF(WorldBlueprint blueprint, int initialPopulation, int simulationDuration)
+    public TimeToExtinctionFF(WorldBlueprint worldBlueprint, int initialPopulation, int simulationDuration)
     {
-        this._blueprint = blueprint;
+        this._worldBlueprint = worldBlueprint;
         this._initialPopulation = initialPopulation;
         this._simulationDuration = simulationDuration;
     }
@@ -26,7 +26,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     public double evaluate(Creature c)
     {
         // Build world
-        WorldBlueprint instanceBlueprint = new SerializationEngine().makeCopy(_blueprint);
+        WorldBlueprint instanceBlueprint = new SerializationEngine().makeCopy(_worldBlueprint);
         Preconditions.checkArgument(instanceBlueprint.getCreatureBlueprints().size() == 1);
         CreatureBlueprint instanceCreatureBlueprint = instanceBlueprint.getCreatureBlueprints().get(0);
         instanceCreatureBlueprint.setMutationRateExponent(Double.NEGATIVE_INFINITY);
