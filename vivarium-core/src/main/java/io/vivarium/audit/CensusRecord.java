@@ -2,7 +2,7 @@ package io.vivarium.audit;
 
 import java.util.ArrayList;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
@@ -25,7 +25,7 @@ public class CensusRecord extends AuditRecord
     {
     }
 
-    public CensusRecord(CensusBlueprint blueprint, Species species)
+    public CensusRecord(CensusBlueprint blueprint, CreatureBlueprint species)
     {
         super(species);
         _auditBlueprint = blueprint;
@@ -69,7 +69,7 @@ public class CensusRecord extends AuditRecord
         return new CensusRecord();
     }
 
-    public static CensusRecord makeWithSpecies(CensusBlueprint function, Species species)
+    public static CensusRecord makeWithSpecies(CensusBlueprint function, CreatureBlueprint species)
     {
         return new CensusRecord(function, species);
     }

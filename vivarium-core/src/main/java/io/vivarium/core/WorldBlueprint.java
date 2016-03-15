@@ -31,7 +31,7 @@ public class WorldBlueprint extends VivariumObject
 
     // Species
     @SerializedParameter
-    private ArrayList<Species> _species;
+    private ArrayList<CreatureBlueprint> _species;
 
     // Audit Functions
     @SerializedParameter
@@ -93,7 +93,7 @@ public class WorldBlueprint extends VivariumObject
         return this._auditBlueprints;
     }
 
-    public ArrayList<Species> getSpecies()
+    public ArrayList<CreatureBlueprint> getSpecies()
     {
         return this._species;
     }
@@ -124,7 +124,7 @@ public class WorldBlueprint extends VivariumObject
         this._soundEnabled = soundEnabled;
     }
 
-    public void setSpecies(ArrayList<Species> species)
+    public void setSpecies(ArrayList<CreatureBlueprint> species)
     {
         this._species = species;
     }
@@ -139,7 +139,7 @@ public class WorldBlueprint extends VivariumObject
         WorldBlueprint wb = new WorldBlueprint();
         wb.finalizeSerialization();
         wb._species = new ArrayList<>();
-        wb._species.add(Species.makeDefault());
+        wb._species.add(CreatureBlueprint.makeDefault());
         wb._auditBlueprints = new ArrayList<>();
         return wb;
     }

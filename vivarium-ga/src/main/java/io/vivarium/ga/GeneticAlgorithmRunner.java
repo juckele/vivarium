@@ -7,7 +7,7 @@ import org.javatuples.Pair;
 
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
@@ -18,14 +18,14 @@ import io.vivarium.visualization.RenderCode;
  */
 public class GeneticAlgorithmRunner
 {
-    Species _species;
+    CreatureBlueprint _species;
     int _currentGeneration = 1;
     int _generations = 100;
     int _populationSize = 100;
     ArrayList<Pair<Double, Creature>> _population = new ArrayList<>(_populationSize);
     private FitnessFunction _fitnessFunction;
 
-    public GeneticAlgorithmRunner(Species species, FitnessFunction fitnessFunction)
+    public GeneticAlgorithmRunner(CreatureBlueprint species, FitnessFunction fitnessFunction)
     {
         this._fitnessFunction = fitnessFunction;
 
@@ -118,7 +118,7 @@ public class GeneticAlgorithmRunner
         ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
         processorBlueprint.setRandomInitialization(true);
 
-        Species species = Species.makeDefault();
+        CreatureBlueprint species = CreatureBlueprint.makeDefault();
         species.setProcessorBlueprint(processorBlueprint);
         species.setInitialGenerationProbability(0);
         species.setMaximumFood(200);
@@ -126,7 +126,7 @@ public class GeneticAlgorithmRunner
 
         WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         blueprint.setSize(30);
-        ArrayList<Species> speciesList = new ArrayList<>();
+        ArrayList<CreatureBlueprint> speciesList = new ArrayList<>();
         blueprint.setSpecies(speciesList);
         blueprint.setInitialFoodGenerationProbability(0);
 

@@ -1,6 +1,6 @@
 package io.vivarium.audit;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
@@ -13,13 +13,13 @@ import lombok.ToString;
 public abstract class AuditRecord extends VivariumObject
 {
     @SerializedParameter
-    protected Species _trackedSpecies;
+    protected CreatureBlueprint _trackedSpecies;
 
     protected AuditRecord()
     {
     }
 
-    protected AuditRecord(Species species)
+    protected AuditRecord(CreatureBlueprint species)
     {
         _trackedSpecies = species;
     }

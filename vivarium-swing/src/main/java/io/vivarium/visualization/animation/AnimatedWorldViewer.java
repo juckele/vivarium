@@ -15,7 +15,7 @@ import javax.swing.WindowConstants;
 
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.visualization.util.Fullscreen;
 
@@ -94,10 +94,10 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         // Set up
         int worldDimensions = 34;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        ArrayList<Species> species = new ArrayList<>();
+        ArrayList<CreatureBlueprint> species = new ArrayList<>();
 
         // Build 1 species
-        Species species1 = Species.makeDefault();
+        CreatureBlueprint species1 = CreatureBlueprint.makeDefault();
         species1.setMutationRateExponent(-9);
         species1.setCreatureMemoryUnitCount(1);
         species1.setCreatureSoundChannelCount(1);

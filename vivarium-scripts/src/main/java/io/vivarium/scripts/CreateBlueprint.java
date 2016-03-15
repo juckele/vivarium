@@ -10,7 +10,7 @@ import org.apache.commons.cli.Option;
 
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
@@ -61,7 +61,7 @@ public class CreateBlueprint extends CommonsScript
     protected void run(CommandLine commandLine)
     {
         LinkedList<AuditBlueprint> auditBlueprints = new LinkedList<>();
-        LinkedList<Species> species = new LinkedList<>();
+        LinkedList<CreatureBlueprint> species = new LinkedList<>();
         if (commandLine.hasOption(AUDIT_INPUT_FILE))
         {
             String auditFile = null;
@@ -92,7 +92,7 @@ public class CreateBlueprint extends CommonsScript
             try
             {
                 speciesFile = commandLine.getOptionValue(SPECIES_INPUT_FILE);
-                for (Species specie : FileIO.loadObjectCollection(speciesFile, Format.JSON).getAll(Species.class))
+                for (CreatureBlueprint specie : FileIO.loadObjectCollection(speciesFile, Format.JSON).getAll(CreatureBlueprint.class))
                 {
                     species.add(specie);
                 }

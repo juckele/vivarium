@@ -2,7 +2,7 @@ package io.vivarium.audit;
 
 import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
@@ -26,7 +26,7 @@ public class ActionFrequencyRecord extends AuditRecord
     {
     }
 
-    protected ActionFrequencyRecord(Species species)
+    protected ActionFrequencyRecord(CreatureBlueprint species)
     {
         super(species);
     }

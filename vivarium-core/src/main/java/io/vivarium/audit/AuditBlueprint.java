@@ -1,6 +1,6 @@
 package io.vivarium.audit;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -24,7 +24,7 @@ public abstract class AuditBlueprint extends VivariumObject
         return _auditType;
     }
 
-    public abstract AuditRecord makeRecordWithSpecies(Species species);
+    public abstract AuditRecord makeRecordWithSpecies(CreatureBlueprint species);
 
     @Override
     public void finalizeSerialization()

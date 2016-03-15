@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
@@ -63,7 +63,7 @@ public class NeuralNetwork extends Processor
         }
     }
 
-    public NeuralNetwork(Species species, NeuralNetwork processor1, NeuralNetwork processor2)
+    public NeuralNetwork(CreatureBlueprint species, NeuralNetwork processor1, NeuralNetwork processor2)
     {
         // Construct the weight layer and store variables with the int based
         // constructor
@@ -474,13 +474,13 @@ public class NeuralNetwork extends Processor
         return new NeuralNetwork();
     }
 
-    public static NeuralNetwork makeWithSpecies(Species species)
+    public static NeuralNetwork makeWithSpecies(CreatureBlueprint species)
     {
         return new NeuralNetwork(species.getTotalProcessorInputCount(), species.getTotalProcessorOutputCount(),
                 species.getProcessorBlueprint().getRandomInitialization(), species.getNormalizeAfterMutation());
     }
 
-    public static NeuralNetwork makeWithParents(Species species, NeuralNetwork parentProcessor1,
+    public static NeuralNetwork makeWithParents(CreatureBlueprint species, NeuralNetwork parentProcessor1,
             NeuralNetwork parentProcessor2)
     {
         return new NeuralNetwork(species, parentProcessor1, parentProcessor2);

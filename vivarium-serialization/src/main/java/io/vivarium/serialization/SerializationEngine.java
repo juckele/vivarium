@@ -21,7 +21,7 @@ import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.core.processor.ProcessorBlueprint;
@@ -86,9 +86,9 @@ public class SerializationEngine
             {
                 constructor = ProcessorBlueprint.class.getDeclaredConstructor();
             }
-            else if (clazzName.equals(Species.class.getSimpleName()))
+            else if (clazzName.equals(CreatureBlueprint.class.getSimpleName()))
             {
-                constructor = Species.class.getDeclaredConstructor();
+                constructor = CreatureBlueprint.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(WorldBlueprint.class.getSimpleName()))
             {

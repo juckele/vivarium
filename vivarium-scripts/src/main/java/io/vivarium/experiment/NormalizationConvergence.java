@@ -10,7 +10,7 @@ import io.vivarium.client.TaskClient;
 import io.vivarium.client.task.CreateJobTask;
 import io.vivarium.client.task.UploadResourceTask;
 import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.net.jobs.CreateWorldJob;
 import io.vivarium.net.jobs.Job;
 import io.vivarium.net.jobs.SimulationJob;
@@ -42,8 +42,8 @@ public class NormalizationConvergence
         // Make the blueprint with the default behavior
         WorldBlueprint defaultBlueprint = WorldBlueprint.makeDefault();
         defaultBlueprint.setSize(worldSize);
-        ArrayList<Species> defaultSpeciesList = new ArrayList<>();
-        Species defaultSpecies = Species.makeDefault();
+        ArrayList<CreatureBlueprint> defaultSpeciesList = new ArrayList<>();
+        CreatureBlueprint defaultSpecies = CreatureBlueprint.makeDefault();
         defaultSpeciesList.add(defaultSpecies);
         defaultBlueprint.setSpecies(defaultSpeciesList);
 
@@ -55,8 +55,8 @@ public class NormalizationConvergence
         // Make the blueprint with the normalizing behavior
         WorldBlueprint normalizingBlueprint = WorldBlueprint.makeDefault();
         normalizingBlueprint.setSize(50);
-        ArrayList<Species> normalizingSpeciesList = new ArrayList<>();
-        Species normalizingSpecies = Species.makeDefault();
+        ArrayList<CreatureBlueprint> normalizingSpeciesList = new ArrayList<>();
+        CreatureBlueprint normalizingSpecies = CreatureBlueprint.makeDefault();
         normalizingSpecies.setNormalizeAfterMutation(1);
         normalizingSpeciesList.add(normalizingSpecies);
         normalizingBlueprint.setSpecies(normalizingSpeciesList);

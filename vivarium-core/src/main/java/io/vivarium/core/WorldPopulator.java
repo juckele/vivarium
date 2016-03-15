@@ -9,18 +9,18 @@ public class WorldPopulator
     private double _wallProbability;
     private double _foodProbability;
     private double _creatureProbability;
-    private ArrayList<Species> _species;
+    private ArrayList<CreatureBlueprint> _species;
 
     public WorldPopulator()
     {
 
     }
 
-    public void setSpecies(ArrayList<Species> species)
+    public void setSpecies(ArrayList<CreatureBlueprint> species)
     {
         _species = species;
         _creatureProbability = 0;
-        for (Species s : _species)
+        for (CreatureBlueprint s : _species)
         {
             _creatureProbability += s.getInitialGenerationProbability();
         }
@@ -59,10 +59,10 @@ public class WorldPopulator
         return EntityType.EMPTY;
     }
 
-    public Species getNextCreatureSpecies()
+    public CreatureBlueprint getNextCreatureSpecies()
     {
         double random = Rand.getInstance().getRandomPositiveDouble() * _creatureProbability;
-        for (Species s : _species)
+        for (CreatureBlueprint s : _species)
         {
             if (random < s.getInitialGenerationProbability())
             {

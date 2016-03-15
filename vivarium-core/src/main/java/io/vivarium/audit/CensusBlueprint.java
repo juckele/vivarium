@@ -1,6 +1,6 @@
 package io.vivarium.audit;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -15,7 +15,7 @@ public class CensusBlueprint extends AuditBlueprint
     }
 
     @Override
-    public CensusRecord makeRecordWithSpecies(Species species)
+    public CensusRecord makeRecordWithSpecies(CreatureBlueprint species)
     {
         return new CensusRecord(this, species);
     }

@@ -3,7 +3,7 @@ package io.vivarium.experiment;
 import java.util.ArrayList;
 
 import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
 import io.vivarium.serialization.FileIO;
@@ -40,8 +40,8 @@ public class NormalizationConvergenceLocal
         // Make the blueprint with the default behavior
         WorldBlueprint defaultBlueprint = WorldBlueprint.makeDefault();
         defaultBlueprint.setSize(50);
-        ArrayList<Species> defaultSpeciesList = new ArrayList<>();
-        Species defaultSpecies = Species.makeDefault();
+        ArrayList<CreatureBlueprint> defaultSpeciesList = new ArrayList<>();
+        CreatureBlueprint defaultSpecies = CreatureBlueprint.makeDefault();
         defaultSpeciesList.add(defaultSpecies);
         defaultBlueprint.setSpecies(defaultSpeciesList);
 
@@ -51,8 +51,8 @@ public class NormalizationConvergenceLocal
         // Make the blueprint with the normalizing behavior
         WorldBlueprint normalizingBlueprint = WorldBlueprint.makeDefault();
         normalizingBlueprint.setSize(50);
-        ArrayList<Species> normalizingSpeciesList = new ArrayList<>();
-        Species normalizingSpecies = Species.makeDefault();
+        ArrayList<CreatureBlueprint> normalizingSpeciesList = new ArrayList<>();
+        CreatureBlueprint normalizingSpecies = CreatureBlueprint.makeDefault();
         normalizingSpecies.setNormalizeAfterMutation(1);
         normalizingSpeciesList.add(normalizingSpecies);
         normalizingBlueprint.setSpecies(normalizingSpeciesList);
@@ -63,8 +63,8 @@ public class NormalizationConvergenceLocal
         // Make the blueprint with the normalizing behavior and a longer length
         WorldBlueprint longNormalizingBlueprint = WorldBlueprint.makeDefault();
         longNormalizingBlueprint.setSize(50);
-        ArrayList<Species> longNormalizingSpeciesList = new ArrayList<>();
-        Species longNormalizingSpecies = Species.makeDefault();
+        ArrayList<CreatureBlueprint> longNormalizingSpeciesList = new ArrayList<>();
+        CreatureBlueprint longNormalizingSpecies = CreatureBlueprint.makeDefault();
         longNormalizingSpecies.setNormalizeAfterMutation(Math.sqrt(42));
         longNormalizingSpeciesList.add(longNormalizingSpecies);
         longNormalizingBlueprint.setSpecies(longNormalizingSpeciesList);

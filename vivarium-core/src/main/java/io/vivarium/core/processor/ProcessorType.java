@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.visualization.RenderCode;
 
 public enum ProcessorType
@@ -63,7 +63,7 @@ public enum ProcessorType
         }
     }
 
-    public static Processor makeWithSpecies(ProcessorType type, Species species)
+    public static Processor makeWithSpecies(ProcessorType type, CreatureBlueprint species)
     {
         switch (type)
         {
@@ -76,7 +76,7 @@ public enum ProcessorType
         }
     }
 
-    public static Processor makeWithParents(ProcessorType type, Species species, Processor untypedParentProcessor1,
+    public static Processor makeWithParents(ProcessorType type, CreatureBlueprint species, Processor untypedParentProcessor1,
             Processor untypedParentProcessor2)
     {
         switch (type)

@@ -1,6 +1,6 @@
 package io.vivarium.core.processor;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
@@ -15,7 +15,7 @@ public class RandomGenerator extends Processor
     @SerializedParameter
     private double[] _outputs;
 
-    private RandomGenerator(Species species, RandomGenerator parentProcessor1, RandomGenerator parentProcessor2)
+    private RandomGenerator(CreatureBlueprint species, RandomGenerator parentProcessor1, RandomGenerator parentProcessor2)
     {
         // Random processor has no state, it's literally random output. This processor
         // does not evolve.
@@ -71,13 +71,13 @@ public class RandomGenerator extends Processor
         return new RandomGenerator();
     }
 
-    public static RandomGenerator makeWithSpecies(Species species)
+    public static RandomGenerator makeWithSpecies(CreatureBlueprint species)
     {
         RandomGenerator processor = new RandomGenerator(species.getTotalProcessorOutputCount());
         return processor;
     }
 
-    public static Processor makeWithParents(Species species, RandomGenerator untypedParentProcessor1,
+    public static Processor makeWithParents(CreatureBlueprint species, RandomGenerator untypedParentProcessor1,
             RandomGenerator untypedParentProcessor2)
     {
         RandomGenerator parentProcessor1 = untypedParentProcessor1;

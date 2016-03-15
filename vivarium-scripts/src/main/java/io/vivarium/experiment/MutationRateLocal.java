@@ -12,7 +12,7 @@ import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
 import io.vivarium.serialization.FileIO;
@@ -62,8 +62,8 @@ public class MutationRateLocal
             WorldBlueprint blueprint = WorldBlueprint.makeDefault();
             blueprint.setSize(WORLD_SIZE);
             // Set species
-            ArrayList<Species> speciesList = new ArrayList<>();
-            Species species = Species.makeDefault();
+            ArrayList<CreatureBlueprint> speciesList = new ArrayList<>();
+            CreatureBlueprint species = CreatureBlueprint.makeDefault();
             species.setMutationRateExponent(mutationRateExponent);
             species.setNormalizeAfterMutation(Math.sqrt(42));
             speciesList.add(species);

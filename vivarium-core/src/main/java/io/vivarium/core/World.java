@@ -68,7 +68,7 @@ public class World extends VivariumObject
         int auditRecordCount = _blueprint.getSpecies().size() * _blueprint.getAuditBlueprints().size();
         _auditRecords = new AuditRecord[auditRecordCount];
         int i = 0;
-        for (Species species : _blueprint.getSpecies())
+        for (CreatureBlueprint species : _blueprint.getSpecies())
         {
             for (AuditBlueprint auditBlueprint : _blueprint.getAuditBlueprints())
             {
@@ -99,7 +99,7 @@ public class World extends VivariumObject
                     EntityType object = populator.getNextEntityType();
                     if (object == EntityType.CREATURE)
                     {
-                        Species species = populator.getNextCreatureSpecies();
+                        CreatureBlueprint species = populator.getNextCreatureSpecies();
                         Creature creature = new Creature(species);
                         addCreature(creature, r, c);
                     }
@@ -465,7 +465,7 @@ public class World extends VivariumObject
         return (count);
     }
 
-    public int getCount(Species s)
+    public int getCount(CreatureBlueprint s)
     {
         int count = 0;
         for (int r = 0; r < _height; r++)
@@ -600,8 +600,8 @@ public class World extends VivariumObject
         StringBuilder worldOutput = new StringBuilder();
         worldOutput.append("Walls: ");
         worldOutput.append(this.getCount(EntityType.WALL));
-        HashMap<Species, String> speciesToGlyphMap = new HashMap<>();
-        for (Species s : this._blueprint.getSpecies())
+        HashMap<CreatureBlueprint, String> speciesToGlyphMap = new HashMap<>();
+        for (CreatureBlueprint s : this._blueprint.getSpecies())
         {
             speciesToGlyphMap.put(s, glyphs[speciesToGlyphMap.size()]);
             worldOutput.append(", ").append(speciesToGlyphMap.get(s)).append("-creatures: ");
@@ -639,14 +639,14 @@ public class World extends VivariumObject
     private String renderProcessorWeights()
     {
         StringBuilder multiSpeciesOutput = new StringBuilder();
-        for (Species species : this._blueprint.getSpecies())
+        for (CreatureBlueprint species : this._blueprint.getSpecies())
         {
             multiSpeciesOutput.append(this.renderProcessorWeights(species));
         }
         return multiSpeciesOutput.toString();
     }
 
-    private String renderProcessorWeights(Species s)
+    private String renderProcessorWeights(CreatureBlueprint s)
     {
         // Draw average processor
         // Draw creature readouts

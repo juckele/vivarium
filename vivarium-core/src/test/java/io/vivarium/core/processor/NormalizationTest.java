@@ -6,7 +6,7 @@ import org.junit.experimental.categories.Category;
 import com.johnuckele.vtest.Tester;
 
 import io.vivarium.core.Creature;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
 
@@ -19,7 +19,7 @@ public class NormalizationTest
         ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
         processorBlueprint.setRandomInitialization(true);
 
-        Species species = Species.makeDefault();
+        CreatureBlueprint species = CreatureBlueprint.makeDefault();
         species.setProcessorBlueprint(processorBlueprint);
         species.setNormalizeAfterMutation(Math.sqrt(42));
         Creature c1 = new Creature(species);

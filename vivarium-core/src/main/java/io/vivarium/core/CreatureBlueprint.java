@@ -9,7 +9,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class Species extends VivariumObject
+public class CreatureBlueprint extends VivariumObject
 {
     // Physical traits
     @SerializedParameter
@@ -66,7 +66,7 @@ public class Species extends VivariumObject
     @SerializedParameter
     private double _mutationTypeFlipRate = 0.25;
 
-    private Species()
+    private CreatureBlueprint()
     {
     }
 
@@ -246,9 +246,9 @@ public class Species extends VivariumObject
         _pregnantFoodRate = pregnantFoodRate;
     }
 
-    public static Species makeDefault()
+    public static CreatureBlueprint makeDefault()
     {
-        Species s = new Species();
+        CreatureBlueprint s = new CreatureBlueprint();
         s.finalizeSerialization();
         s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
         return s;
@@ -263,7 +263,7 @@ public class Species extends VivariumObject
 
     public static void main(String[] args)
     {
-        System.out.println(Species.makeDefault());
+        System.out.println(CreatureBlueprint.makeDefault());
     }
 
     public ProcessorBlueprint getProcessorBlueprint()

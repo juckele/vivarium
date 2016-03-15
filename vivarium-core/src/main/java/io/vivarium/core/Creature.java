@@ -19,7 +19,7 @@ public class Creature extends VivariumObject
     @SerializedParameter
     private int _id;
     @SerializedParameter
-    private Species _species;
+    private CreatureBlueprint _species;
     @SerializedParameter
     private double _generation;
 
@@ -64,12 +64,12 @@ public class Creature extends VivariumObject
 
     }
 
-    public Creature(Species species)
+    public Creature(CreatureBlueprint species)
     {
         this(species, null, null);
     }
 
-    public Creature(Species species, Creature prototype)
+    public Creature(CreatureBlueprint species, Creature prototype)
     {
         this(species, prototype, null);
     }
@@ -84,7 +84,7 @@ public class Creature extends VivariumObject
         this(parent1._species, parent1, parent2);
     }
 
-    public Creature(Species species, Creature parent1, Creature parent2)
+    public Creature(CreatureBlueprint species, Creature parent1, Creature parent2)
     {
         this._species = species;
 
@@ -463,7 +463,7 @@ public class Creature extends VivariumObject
         return (this._id);
     }
 
-    public Species getSpecies()
+    public CreatureBlueprint getSpecies()
     {
         return this._species;
     }

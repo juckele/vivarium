@@ -7,7 +7,7 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
@@ -42,7 +42,7 @@ public class CreateSpecies extends CommonsScript
         Map<String, Object> extraOptions = this.extraArgsAsMap(commandLine);
 
         // Build the species
-        Species species = Species.makeDefault();
+        CreatureBlueprint species = CreatureBlueprint.makeDefault();
         new SerializationEngine().deserialize(species, extraOptions);
 
         // Save the blueprint

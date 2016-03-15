@@ -1,6 +1,6 @@
 package io.vivarium.audit;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -15,7 +15,7 @@ public class ActionFrequencyBlueprint extends AuditBlueprint
     }
 
     @Override
-    public ActionFrequencyRecord makeRecordWithSpecies(Species species)
+    public ActionFrequencyRecord makeRecordWithSpecies(CreatureBlueprint species)
     {
         return new ActionFrequencyRecord(species);
     }

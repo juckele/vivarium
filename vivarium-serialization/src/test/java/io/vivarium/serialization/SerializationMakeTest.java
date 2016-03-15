@@ -7,7 +7,7 @@ import com.johnuckele.vtest.Tester;
 
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.core.processor.Processor;
 import io.vivarium.core.processor.ProcessorBlueprint;
@@ -38,7 +38,7 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testSpeciesMakeDefault() throws Exception
     {
-        Species species = Species.makeDefault();
+        CreatureBlueprint species = CreatureBlueprint.makeDefault();
         Tester.isNotNull("Species should exist", species);
     }
 
@@ -46,8 +46,8 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testSpeciesMakeCopy() throws Exception
     {
-        Species species = Species.makeDefault();
-        Species copy = new SerializationEngine().makeCopy(species);
+        CreatureBlueprint species = CreatureBlueprint.makeDefault();
+        CreatureBlueprint copy = new SerializationEngine().makeCopy(species);
         Tester.isNotNull("Species copy should exist", copy);
     }
 
@@ -59,7 +59,7 @@ public class SerializationMakeTest
         {
             ProcessorBlueprint processorArchitecture = ProcessorBlueprint.makeDefault();
             processorArchitecture.setProcessorType(processorType);
-            Species species = Species.makeDefault();
+            CreatureBlueprint species = CreatureBlueprint.makeDefault();
             species.setProcessorBlueprint(processorArchitecture);
             Processor processor = ProcessorType.makeWithSpecies(processorType, species);
             Tester.isNotNull("Processor of type " + processorType + " should exist", processor);
@@ -74,7 +74,7 @@ public class SerializationMakeTest
         {
             ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
             processorBlueprint.setProcessorType(processorType);
-            Species species = Species.makeDefault();
+            CreatureBlueprint species = CreatureBlueprint.makeDefault();
             species.setProcessorBlueprint(processorBlueprint);
             Processor processor = ProcessorType.makeWithSpecies(processorType, species);
             Processor copy = new SerializationEngine().makeCopy(processor);
@@ -86,7 +86,7 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testCreatureMakeCopy() throws Exception
     {
-        Species species = Species.makeDefault();
+        CreatureBlueprint species = CreatureBlueprint.makeDefault();
         Creature creature = new Creature(species);
         Creature copy = new SerializationEngine().makeCopy(creature);
         Tester.isNotNull("Creature copy should exist", copy);

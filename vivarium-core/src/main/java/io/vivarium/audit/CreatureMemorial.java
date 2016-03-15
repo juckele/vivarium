@@ -1,6 +1,6 @@
 package io.vivarium.audit;
 
-import io.vivarium.core.Species;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -15,7 +15,7 @@ public class CreatureMemorial extends AuditRecord
         super();
     }
 
-    public CreatureMemorial(Species species)
+    public CreatureMemorial(CreatureBlueprint species)
     {
         super(species);
     }
@@ -31,7 +31,7 @@ public class CreatureMemorial extends AuditRecord
         return new CreatureMemorial();
     }
 
-    public static CreatureMemorial makeWithSpecies(AuditBlueprint function, Species species)
+    public static CreatureMemorial makeWithSpecies(AuditBlueprint function, CreatureBlueprint species)
     {
         return new CreatureMemorial(species);
     }
