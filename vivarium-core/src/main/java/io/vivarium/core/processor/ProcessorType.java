@@ -91,17 +91,4 @@ public enum ProcessorType
                 throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
         }
     }
-
-    public static Class<?> getProcessorClass(ProcessorType type)
-    {
-        switch (type)
-        {
-            case NEURAL_NETWORK:
-                return NeuralNetwork.class;
-            case RANDOM:
-                return RandomGenerator.class;
-            default:
-                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
-        }
-    }
 }
