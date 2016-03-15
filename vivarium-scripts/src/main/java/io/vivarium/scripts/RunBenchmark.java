@@ -152,7 +152,7 @@ public class RunBenchmark extends CommonsScript
         WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
         worldBlueprint.setSize(size);
         worldBlueprint.getCreatureBlueprints().get(0).setMaximumFood(Integer.MAX_VALUE); // Increase max food to prevent creatures from
-                                                                         // starving during the benchmark
+        // starving during the benchmark
         World world = new World(worldBlueprint);
         int tickCount = 2000;
         int worldPopulation = world.getCount(EntityType.CREATURE);
