@@ -19,13 +19,15 @@ import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.ActionFrequencyRecord;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.NeuralNetwork;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.core.processor.RandomGenerator;
+import io.vivarium.core.processor.RandomGeneratorBlueprint;
 import io.vivarium.util.UUID;
 
 public class SerializationEngine
@@ -85,6 +87,14 @@ public class SerializationEngine
             if (clazzName.equals(ProcessorBlueprint.class.getSimpleName()))
             {
                 constructor = ProcessorBlueprint.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(RandomGeneratorBlueprint.class.getSimpleName()))
+            {
+                constructor = RandomGeneratorBlueprint.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(NeuralNetworkBlueprint.class.getSimpleName()))
+            {
+                constructor = NeuralNetworkBlueprint.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(CreatureBlueprint.class.getSimpleName()))
             {

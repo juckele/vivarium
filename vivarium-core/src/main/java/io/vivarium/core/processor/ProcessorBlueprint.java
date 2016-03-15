@@ -8,7 +8,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class ProcessorBlueprint extends VivariumObject
+public abstract class ProcessorBlueprint extends VivariumObject
 {
     @SerializedParameter
     private ProcessorType _processorType = ProcessorType.NEURAL_NETWORK;
@@ -159,8 +159,6 @@ public class ProcessorBlueprint extends VivariumObject
 
     public static ProcessorBlueprint makeDefault()
     {
-        ProcessorBlueprint a = new ProcessorBlueprint();
-        a.finalizeSerialization();
-        return a;
+        return NeuralNetworkBlueprint.makeDefault();
     }
 }
