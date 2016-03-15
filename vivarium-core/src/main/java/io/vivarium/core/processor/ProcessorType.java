@@ -50,19 +50,6 @@ public enum ProcessorType
         return processorOutput.toString();
     }
 
-    public static Processor makeWithCreatureBlueprint(ProcessorType type, CreatureBlueprint creatureBlueprint)
-    {
-        switch (type)
-        {
-            case NEURAL_NETWORK:
-                return NeuralNetwork.makeWithCreatureBlueprint(creatureBlueprint.getProcessorBlueprint());
-            case RANDOM:
-                return RandomGenerator.makeWithCreatureBlueprint(creatureBlueprint.getProcessorBlueprint());
-            default:
-                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
-        }
-    }
-
     public static Processor makeWithParents(ProcessorType type, CreatureBlueprint creatureBlueprint,
             Processor untypedParentProcessor1, Processor untypedParentProcessor2)
     {
@@ -74,6 +61,19 @@ public enum ProcessorType
             case RANDOM:
                 return RandomGenerator.makeWithParents(creatureBlueprint.getProcessorBlueprint(),
                         (RandomGenerator) untypedParentProcessor1, (RandomGenerator) untypedParentProcessor2);
+            default:
+                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
+        }
+    }
+
+    public static ProcessorBlueprint makeDefaultProcessorBlueprint(ProcessorType type)
+    {
+        switch (type)
+        {
+            case NEURAL_NETWORK:
+                return NeuralNetworkBlueprint.makeDefault();
+            case RANDOM:
+                return RandomGeneratorBlueprint.makeDefault();
             default:
                 throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
         }

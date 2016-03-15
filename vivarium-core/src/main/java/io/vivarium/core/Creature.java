@@ -131,9 +131,8 @@ public class Creature extends VivariumObject
             }
             else
             {
-                // Create a new default processor
-                this._processor = ProcessorType.makeWithCreatureBlueprint(
-                        _creatureBlueprint.getProcessorBlueprint().getProcessorType(), _creatureBlueprint);
+                // Create a new processor
+                this._processor = _creatureBlueprint.getProcessorBlueprint().makeProcessor();
             }
         }
         _inputs = new double[_creatureBlueprint.getProcessorBlueprint().getTotalProcessorInputCount()];

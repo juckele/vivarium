@@ -44,6 +44,8 @@ public abstract class ProcessorBlueprint extends VivariumObject
     {
     }
 
+    public abstract Processor makeProcessor();
+
     public ProcessorType getProcessorType()
     {
         return this._processorType;

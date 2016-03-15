@@ -12,6 +12,12 @@ public class NeuralNetworkBlueprint extends ProcessorBlueprint
     {
     }
 
+    @Override
+    public NeuralNetwork makeProcessor()
+    {
+        return NeuralNetwork.makeWithProcessorBlueprint(this);
+    }
+
     public static NeuralNetworkBlueprint makeDefault()
     {
         NeuralNetworkBlueprint a = new NeuralNetworkBlueprint();

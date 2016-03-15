@@ -12,6 +12,12 @@ public class RandomGeneratorBlueprint extends ProcessorBlueprint
     {
     }
 
+    @Override
+    public RandomGenerator makeProcessor()
+    {
+        return RandomGenerator.makeWithProcessorBlueprint(this);
+    }
+
     public static RandomGeneratorBlueprint makeDefault()
     {
         RandomGeneratorBlueprint a = new RandomGeneratorBlueprint();

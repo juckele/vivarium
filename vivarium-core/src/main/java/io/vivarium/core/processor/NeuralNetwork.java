@@ -474,7 +474,7 @@ public class NeuralNetwork extends Processor
         return new NeuralNetwork();
     }
 
-    public static NeuralNetwork makeWithCreatureBlueprint(ProcessorBlueprint processorBlueprint)
+    public static NeuralNetwork makeWithProcessorBlueprint(ProcessorBlueprint processorBlueprint)
     {
         return new NeuralNetwork(processorBlueprint.getTotalProcessorInputCount(),
                 processorBlueprint.getTotalProcessorOutputCount(), processorBlueprint.getRandomInitialization(),

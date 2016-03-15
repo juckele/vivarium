@@ -71,7 +71,7 @@ public class RandomGenerator extends Processor
         return new RandomGenerator();
     }
 
-    public static RandomGenerator makeWithCreatureBlueprint(ProcessorBlueprint processorBlueprint)
+    public static RandomGenerator makeWithProcessorBlueprint(ProcessorBlueprint processorBlueprint)
     {
         RandomGenerator processor = new RandomGenerator(processorBlueprint.getTotalProcessorOutputCount());
         return processor;

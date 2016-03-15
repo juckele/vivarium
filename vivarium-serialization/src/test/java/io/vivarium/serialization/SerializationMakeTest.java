@@ -61,7 +61,7 @@ public class SerializationMakeTest
             processorArchitecture.setProcessorType(processorType);
             CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
             creatureBlueprint.setProcessorBlueprint(processorArchitecture);
-            Processor processor = ProcessorType.makeWithCreatureBlueprint(processorType, creatureBlueprint);
+            Processor processor = ProcessorType.makeDefaultProcessorBlueprint(processorType).makeProcessor();
             Tester.isNotNull("Processor of type " + processorType + " should exist", processor);
         }
     }
@@ -76,7 +76,7 @@ public class SerializationMakeTest
             processorBlueprint.setProcessorType(processorType);
             CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
             creatureBlueprint.setProcessorBlueprint(processorBlueprint);
-            Processor processor = ProcessorType.makeWithCreatureBlueprint(processorType, creatureBlueprint);
+            Processor processor = ProcessorType.makeDefaultProcessorBlueprint(processorType).makeProcessor();
             Processor copy = new SerializationEngine().makeCopy(processor);
             Tester.isNotNull("Processor copy of type " + processorType + "should exist", copy);
         }
