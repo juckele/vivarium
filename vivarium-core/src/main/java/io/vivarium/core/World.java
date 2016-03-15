@@ -65,14 +65,14 @@ public class World extends VivariumObject
 
     private void constructAuditRecords()
     {
-        int auditRecordCount = _blueprint.getSpecies().size() * _blueprint.getAuditFunctions().size();
+        int auditRecordCount = _blueprint.getSpecies().size() * _blueprint.getAuditBlueprints().size();
         _auditRecords = new AuditRecord[auditRecordCount];
         int i = 0;
         for (Species species : _blueprint.getSpecies())
         {
-            for (AuditBlueprint auditFunction : _blueprint.getAuditFunctions())
+            for (AuditBlueprint auditBlueprint : _blueprint.getAuditBlueprints())
             {
-                _auditRecords[i] = auditFunction.makeRecordWithSpecies(species);
+                _auditRecords[i] = auditBlueprint.makeRecordWithSpecies(species);
                 i++;
             }
         }

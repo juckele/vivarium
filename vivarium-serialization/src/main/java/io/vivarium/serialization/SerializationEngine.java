@@ -15,9 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.vivarium.audit.ActionFrequencyFunction;
+import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.ActionFrequencyRecord;
-import io.vivarium.audit.CensusFunction;
+import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Creature;
@@ -110,17 +110,17 @@ public class SerializationEngine
             {
                 constructor = World.class.getDeclaredConstructor();
             }
-            else if (clazzName.equals(CensusFunction.class.getSimpleName()))
+            else if (clazzName.equals(CensusBlueprint.class.getSimpleName()))
             {
-                constructor = CensusFunction.class.getDeclaredConstructor();
+                constructor = CensusBlueprint.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(CensusRecord.class.getSimpleName()))
             {
                 constructor = CensusRecord.class.getDeclaredConstructor();
             }
-            else if (clazzName.equals(ActionFrequencyFunction.class.getSimpleName()))
+            else if (clazzName.equals(ActionFrequencyBlueprint.class.getSimpleName()))
             {
-                constructor = ActionFrequencyFunction.class.getDeclaredConstructor();
+                constructor = ActionFrequencyBlueprint.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(ActionFrequencyRecord.class.getSimpleName()))
             {

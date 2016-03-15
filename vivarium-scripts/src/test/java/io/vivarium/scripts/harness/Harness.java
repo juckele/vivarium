@@ -3,7 +3,7 @@ package io.vivarium.scripts.harness;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
-import io.vivarium.scripts.CreateAuditFunction;
+import io.vivarium.scripts.CreateAuditBlueprint;
 import io.vivarium.scripts.CreateBlueprint;
 import io.vivarium.scripts.CreateSpecies;
 import io.vivarium.scripts.CreateWorld;
@@ -20,7 +20,7 @@ public class Harness
     {
         {
             String[] commandArgs = { "-o", "/tmp/af.viv", "-t", "CENSUS" };
-            CreateAuditFunction.main(commandArgs);
+            CreateAuditBlueprint.main(commandArgs);
         }
 
         {

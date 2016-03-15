@@ -14,7 +14,7 @@ import lombok.ToString;
 public class CensusRecord extends AuditRecord
 {
     @SerializedParameter
-    private AuditBlueprint _auditFunction;
+    private AuditBlueprint _auditBlueprint;
 
     @SerializedParameter
     private ArrayList<Integer> _recordTicks;
@@ -25,10 +25,10 @@ public class CensusRecord extends AuditRecord
     {
     }
 
-    public CensusRecord(CensusFunction function, Species species)
+    public CensusRecord(CensusBlueprint blueprint, Species species)
     {
         super(species);
-        _auditFunction = function;
+        _auditBlueprint = blueprint;
         _creaturePopulation = new ArrayList<>();
         _recordTicks = new ArrayList<>();
     }
@@ -69,7 +69,7 @@ public class CensusRecord extends AuditRecord
         return new CensusRecord();
     }
 
-    public static CensusRecord makeWithSpecies(CensusFunction function, Species species)
+    public static CensusRecord makeWithSpecies(CensusBlueprint function, Species species)
     {
         return new CensusRecord(function, species);
     }

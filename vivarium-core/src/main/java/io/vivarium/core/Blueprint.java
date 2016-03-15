@@ -35,7 +35,7 @@ public class Blueprint extends VivariumObject
 
     // Audit Functions
     @SerializedParameter
-    private ArrayList<AuditBlueprint> _auditFunctions;
+    private ArrayList<AuditBlueprint> _auditBlueprints;
 
     // Private constructor for deserialization
     private Blueprint()
@@ -88,9 +88,9 @@ public class Blueprint extends VivariumObject
         return this._soundEnabled;
     }
 
-    public ArrayList<AuditBlueprint> getAuditFunctions()
+    public ArrayList<AuditBlueprint> getAuditBlueprints()
     {
-        return this._auditFunctions;
+        return this._auditBlueprints;
     }
 
     public ArrayList<Species> getSpecies()
@@ -129,9 +129,9 @@ public class Blueprint extends VivariumObject
         this._species = species;
     }
 
-    public void setAuditFunctions(ArrayList<AuditBlueprint> auditFunctions)
+    public void setAuditBlueprints(ArrayList<AuditBlueprint> auditBlueprints)
     {
-        this._auditFunctions = auditFunctions;
+        this._auditBlueprints = auditBlueprints;
     }
 
     public static Blueprint makeDefault()
@@ -140,7 +140,7 @@ public class Blueprint extends VivariumObject
         wb.finalizeSerialization();
         wb._species = new ArrayList<>();
         wb._species.add(Species.makeDefault());
-        wb._auditFunctions = new ArrayList<>();
+        wb._auditBlueprints = new ArrayList<>();
         return wb;
     }
 

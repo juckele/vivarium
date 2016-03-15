@@ -44,7 +44,7 @@ public class CreateBlueprint extends CommonsScript
                 .longOpt(AUDIT_INPUT_FILE)
                 .hasArg(true)
                 .argName("FILE")
-                .desc("file to load audit functions from. If this option is not given, no audit functions will be added to the blueprint.")
+                .desc("file to load audit blueprints from. If this option is not given, no audit blueprints will be added to the blueprint.")
                 .build());
         options.add(Option
                 .builder("s")
@@ -60,7 +60,7 @@ public class CreateBlueprint extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        LinkedList<AuditBlueprint> auditFunctions = new LinkedList<>();
+        LinkedList<AuditBlueprint> auditBlueprints = new LinkedList<>();
         LinkedList<Species> species = new LinkedList<>();
         if (commandLine.hasOption(AUDIT_INPUT_FILE))
         {
@@ -68,21 +68,21 @@ public class CreateBlueprint extends CommonsScript
             try
             {
                 auditFile = commandLine.getOptionValue(AUDIT_INPUT_FILE);
-                for (AuditBlueprint auditFunction : FileIO
+                for (AuditBlueprint auditBlueprint : FileIO
                         .loadObjectCollection(auditFile, Format.JSON)
                         .getAll(AuditBlueprint.class))
                 {
-                    auditFunctions.add(auditFunction);
+                    auditBlueprints.add(auditBlueprint);
                 }
-                if (auditFunctions.isEmpty())
+                if (auditBlueprints.isEmpty())
                 {
-                    throw new IllegalStateException("No audit functions found in audit input file " + auditFile);
+                    throw new IllegalStateException("No audit blueprints found in audit input file " + auditFile);
                 }
             }
             catch (ClassCastException e)
             {
                 String extendedMessage = "audit input file " + auditFile
-                        + " does not contain audit functions as top level objects";
+                        + " does not contain audit blueprints as top level objects";
                 throw new IllegalStateException(extendedMessage, e);
             }
         }
@@ -117,9 +117,9 @@ public class CreateBlueprint extends CommonsScript
         {
             blueprint.setSpecies(new ArrayList<>(species));
         }
-        if (!auditFunctions.isEmpty())
+        if (!auditBlueprints.isEmpty())
         {
-            blueprint.setAuditFunctions(new ArrayList<>(auditFunctions));
+            blueprint.setAuditBlueprints(new ArrayList<>(auditBlueprints));
         }
 
         // Save the blueprint

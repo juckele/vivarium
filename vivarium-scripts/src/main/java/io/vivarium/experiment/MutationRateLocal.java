@@ -8,9 +8,9 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import io.vivarium.audit.ActionFrequencyFunction;
+import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.AuditBlueprint;
-import io.vivarium.audit.CensusFunction;
+import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.scripts.CreateWorld;
@@ -69,10 +69,10 @@ public class MutationRateLocal
             speciesList.add(species);
             blueprint.setSpecies(speciesList);
             // Set audit functions
-            ArrayList<AuditBlueprint> auditFunctions = new ArrayList<>();
-            auditFunctions.add(new ActionFrequencyFunction());
-            auditFunctions.add(new CensusFunction());
-            blueprint.setAuditFunctions(auditFunctions);
+            ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
+            auditBlueprints.add(new ActionFrequencyBlueprint());
+            auditBlueprints.add(new CensusBlueprint());
+            blueprint.setAuditBlueprints(auditBlueprints);
 
             // Save the blueprint
             FileIO.saveSerializer(blueprint, name + "_blueprint.viv", Format.JSON);

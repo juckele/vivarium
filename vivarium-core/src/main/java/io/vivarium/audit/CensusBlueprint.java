@@ -7,16 +7,16 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class ActionFrequencyFunction extends AuditBlueprint
+public class CensusBlueprint extends AuditBlueprint
 {
-    public ActionFrequencyFunction()
+    public CensusBlueprint()
     {
-        super(AuditType.ACTION_FREQUENCY);
+        super(AuditType.CENSUS);
     }
 
     @Override
-    public ActionFrequencyRecord makeRecordWithSpecies(Species species)
+    public CensusRecord makeRecordWithSpecies(Species species)
     {
-        return new ActionFrequencyRecord(species);
+        return new CensusRecord(this, species);
     }
 }

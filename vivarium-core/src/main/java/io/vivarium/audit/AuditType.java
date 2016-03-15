@@ -5,27 +5,27 @@ public enum AuditType
     ACTION_FREQUENCY
     {
         @Override
-        public ActionFrequencyFunction makeFunction()
+        public ActionFrequencyBlueprint makeAuditBlueprint()
         {
-            return new ActionFrequencyFunction();
+            return new ActionFrequencyBlueprint();
         }
     },
     CENSUS
     {
         @Override
-        public CensusFunction makeFunction()
+        public CensusBlueprint makeAuditBlueprint()
         {
-            return new CensusFunction();
+            return new CensusBlueprint();
         }
     },
     MEMORIAL
     {
         @Override
-        public AuditBlueprint makeFunction()
+        public AuditBlueprint makeAuditBlueprint()
         {
             throw new UnsupportedOperationException("CreatureMemorialFunction is not implemented");
         }
     };
 
-    public abstract AuditBlueprint makeFunction();
+    public abstract AuditBlueprint makeAuditBlueprint();
 }

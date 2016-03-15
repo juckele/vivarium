@@ -14,12 +14,12 @@ import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
 
-public class CreateAuditFunction extends CommonsScript
+public class CreateAuditBlueprint extends CommonsScript
 {
     private static final String OUTPUT_FILE = "output";
     private static final String AUDIT_TYPE = "type";
 
-    public CreateAuditFunction(String[] args)
+    public CreateAuditBlueprint(String[] args)
     {
         super(args);
     }
@@ -34,7 +34,7 @@ public class CreateAuditFunction extends CommonsScript
                 .longOpt(OUTPUT_FILE)
                 .hasArg(true)
                 .argName("FILE")
-                .desc("file to save to audit function to")
+                .desc("file to save to audit blueprint to")
                 .build());
         options.add(Option
                 .builder("t")
@@ -42,7 +42,7 @@ public class CreateAuditFunction extends CommonsScript
                 .longOpt(AUDIT_TYPE)
                 .hasArg(true)
                 .argName("TYPE")
-                .desc("type of audit function to create")
+                .desc("type of audit blueprint to create")
                 .build());
         return options;
     }
@@ -66,19 +66,19 @@ public class CreateAuditFunction extends CommonsScript
             return;
         }
 
-        // Build the audit function
-        AuditBlueprint auditFunction = auditType.makeFunction();
-        new SerializationEngine().deserialize(auditFunction, extraOptions);
+        // Build the audit blueprint
+        AuditBlueprint auditBlueprint = auditType.makeAuditBlueprint();
+        new SerializationEngine().deserialize(auditBlueprint, extraOptions);
 
-        // Save the audit function
+        // Save the audit blueprint
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        FileIO.saveSerializer(auditFunction, outputFile, Format.JSON);
+        FileIO.saveSerializer(auditBlueprint, outputFile, Format.JSON);
     }
 
     @Override
     protected String getUsageHeader()
     {
-        return "A tool for creating audit functions.";
+        return "A tool for creating audit blueprints.";
     }
 
     @Override
@@ -89,6 +89,6 @@ public class CreateAuditFunction extends CommonsScript
 
     public static void main(String[] args)
     {
-        new CreateAuditFunction(args);
+        new CreateAuditBlueprint(args);
     }
 }
