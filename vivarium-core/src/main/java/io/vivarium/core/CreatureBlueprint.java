@@ -42,42 +42,9 @@ public class CreatureBlueprint extends VivariumObject
     // Neurology
     @SerializedParameter
     private ProcessorBlueprint _processorBlueprint = null;
-    @SerializedParameter
-    private double _normalizeAfterMutation = 0;
-    @SerializedParameter
-    private int _sensorInputCount = 5;
-    @SerializedParameter
-    private int _controllerOutputCount = 6;
-    @SerializedParameter
-    private int _memoryUnitCount = 0;
-    @SerializedParameter
-    private int _soundChannelCount = 0;
-
-    // Mutation
-    @SerializedParameter
-    private double _inheritanceGaussianMixRate = 0.8;
-    @SerializedParameter
-    private double _mutationRateExponent = -7;
-    private double _mutationRate;
-    @SerializedParameter
-    private double _mutationTypeSmallScaleRate = 0.5;
-    @SerializedParameter
-    private double _mutationTypeRandomRate = 0.25;
-    @SerializedParameter
-    private double _mutationTypeFlipRate = 0.25;
 
     private CreatureBlueprint()
     {
-    }
-
-    public int getHardProcessorInputs()
-    {
-        return _sensorInputCount;
-    }
-
-    public int getHardProcessorOutputs()
-    {
-        return _controllerOutputCount;
     }
 
     public double getFemaleThreshold()
@@ -100,95 +67,14 @@ public class CreatureBlueprint extends VivariumObject
         return _maximumGestation;
     }
 
-    public double getNormalizeAfterMutation()
-    {
-        return this._normalizeAfterMutation;
-    }
-
-    public void setNormalizeAfterMutation(double normalizeAfterMutation)
-    {
-        _normalizeAfterMutation = normalizeAfterMutation;
-    }
-
-    public double getMutationSmallScaleRate()
-    {
-        return this._mutationTypeSmallScaleRate;
-    }
-
-    public double getMutationRateExponent()
-    {
-        return this._mutationRateExponent;
-    }
-
-    public double getMutationRate()
-    {
-        return this._mutationRate;
-    }
-
-    public double getMutationFlipRate()
-    {
-        return this._mutationTypeFlipRate;
-    }
-
-    public double getMutationRandomRate()
-    {
-        return this._mutationTypeRandomRate;
-    }
-
-    public double getInheritanceGaussianMixRate()
-    {
-        return this._inheritanceGaussianMixRate;
-    }
-
     public double getInitialGenerationProbability()
     {
         return this._initialGenerationProbability;
     }
 
-    public int getMemoryUnitCount()
-    {
-        return this._memoryUnitCount;
-    }
-
-    public int getSoundChannelCount()
-    {
-        return this._soundChannelCount;
-    }
-
-    public void setMutationRateExponent(double exponent)
-    {
-        this._mutationRateExponent = exponent;
-        this._mutationRate = Math.pow(2, exponent);
-    }
-
-    public void setCreatureMemoryUnitCount(int memoryUnitCount)
-    {
-        this._memoryUnitCount = memoryUnitCount;
-    }
-
-    public void setCreatureSoundChannelCount(int soundChannelCount)
-    {
-        this._soundChannelCount = soundChannelCount;
-    }
-
     public void setInitialGenerationProbability(double probability)
     {
         this._initialGenerationProbability = probability;
-    }
-
-    public int getTotalProcessorInputCount()
-    {
-        return this._sensorInputCount + this._memoryUnitCount + this._soundChannelCount;
-    }
-
-    public int getTotalProcessorOutputCount()
-    {
-        return this._controllerOutputCount + this._memoryUnitCount + this._soundChannelCount;
-    }
-
-    public int getHiddenLayerCount()
-    {
-        return 0;
     }
 
     public void setMaximumFood(int maximumFood)
@@ -257,8 +143,7 @@ public class CreatureBlueprint extends VivariumObject
     @Override
     public void finalizeSerialization()
     {
-        // update mutation rate
-        _mutationRate = Math.pow(2, _mutationRateExponent);
+        // Do nothing
     }
 
     public static void main(String[] args)

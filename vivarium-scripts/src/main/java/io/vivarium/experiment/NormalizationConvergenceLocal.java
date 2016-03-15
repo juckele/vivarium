@@ -53,7 +53,7 @@ public class NormalizationConvergenceLocal
         normalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint normalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
-        normalizingCreatureBlueprint.setNormalizeAfterMutation(1);
+        normalizingCreatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(1);
         normalizingCreatureBlueprints.add(normalizingCreatureBlueprint);
         normalizingWorldBlueprint.setCreatureBlueprints(normalizingCreatureBlueprints);
 
@@ -65,7 +65,7 @@ public class NormalizationConvergenceLocal
         longNormalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> longNormalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint longNormalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
-        longNormalizingCreatureBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
+        longNormalizingCreatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(42));
         longNormalizingCreatureBlueprints.add(longNormalizingCreatureBlueprint);
         longNormalizingWorldBlueprint.setCreatureBlueprints(longNormalizingCreatureBlueprints);
 

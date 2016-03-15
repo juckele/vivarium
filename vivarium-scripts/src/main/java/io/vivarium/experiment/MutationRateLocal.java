@@ -64,8 +64,8 @@ public class MutationRateLocal
             // Set creature blueprint
             ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
             CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
-            creatureBlueprint.setMutationRateExponent(mutationRateExponent);
-            creatureBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
+            creatureBlueprint.getProcessorBlueprint().setMutationRateExponent(mutationRateExponent);
+            creatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(42));
             creatureBlueprints.add(creatureBlueprint);
             worldBlueprint.setCreatureBlueprints(creatureBlueprints);
             // Set audit functions

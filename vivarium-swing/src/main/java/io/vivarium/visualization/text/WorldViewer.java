@@ -100,10 +100,10 @@ public class WorldViewer extends JFrame
 
         // Build 1 creature blueprint
         CreatureBlueprint creatureBlueprint1 = CreatureBlueprint.makeDefault();
-        creatureBlueprint1.setMutationRateExponent(-4);
-        creatureBlueprint1.setCreatureMemoryUnitCount(1);
-        creatureBlueprint1.setCreatureSoundChannelCount(1);
-        creatureBlueprint1.setNormalizeAfterMutation(Math.sqrt(9 * 8));
+        creatureBlueprint1.getProcessorBlueprint().setMutationRateExponent(-4);
+        creatureBlueprint1.getProcessorBlueprint().setCreatureMemoryUnitCount(1);
+        creatureBlueprint1.getProcessorBlueprint().setCreatureSoundChannelCount(1);
+        creatureBlueprint1.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(9 * 8));
         creatureBlueprints.add(creatureBlueprint1);
 
         // Construct the world proper

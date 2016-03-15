@@ -98,9 +98,9 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
 
         // Build 1 creature blueprint
         CreatureBlueprint creatureBlueprint1 = CreatureBlueprint.makeDefault();
-        creatureBlueprint1.setMutationRateExponent(-9);
-        creatureBlueprint1.setCreatureMemoryUnitCount(1);
-        creatureBlueprint1.setCreatureSoundChannelCount(1);
+        creatureBlueprint1.getProcessorBlueprint().setMutationRateExponent(-9);
+        creatureBlueprint1.getProcessorBlueprint().setCreatureMemoryUnitCount(1);
+        creatureBlueprint1.getProcessorBlueprint().setCreatureSoundChannelCount(1);
         creatureBlueprints.add(creatureBlueprint1);
 
         // Construct the world proper

@@ -57,7 +57,7 @@ public class NormalizationConvergence
         normalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint normalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
-        normalizingCreatureBlueprint.setNormalizeAfterMutation(1);
+        normalizingCreatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(1);
         normalizingCreatureBlueprints.add(normalizingCreatureBlueprint);
         normalizingWorldBlueprint.setCreatureBlueprints(normalizingCreatureBlueprints);
 

@@ -21,7 +21,7 @@ public class NormalizationTest
 
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
         creatureBlueprint.setProcessorBlueprint(processorBlueprint);
-        creatureBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
+        creatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(42));
         Creature c1 = new Creature(creatureBlueprint);
         Creature c2 = new Creature(creatureBlueprint);
         Creature c3 = new Creature(c1, c2);

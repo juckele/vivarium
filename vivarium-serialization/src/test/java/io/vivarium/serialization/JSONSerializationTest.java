@@ -7,9 +7,9 @@ import org.junit.experimental.categories.Category;
 
 import com.google.common.collect.Lists;
 
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
@@ -26,7 +26,7 @@ public class JSONSerializationTest
 
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
         creatureBlueprint.setProcessorBlueprint(processorBlueprint);
-        creatureBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
+        creatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(42));
         WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
         worldBlueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         World world = new World(worldBlueprint);

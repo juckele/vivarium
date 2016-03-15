@@ -110,14 +110,16 @@ public class Creature extends VivariumObject
             if (parent2 != null)
             {
                 // Processor combined from genetic legacy
-                this._processor = ProcessorType.makeWithParents(_creatureBlueprint.getProcessorBlueprint().getProcessorType(),
-                        _creatureBlueprint, parent1._processor, parent2._processor);
+                this._processor = ProcessorType.makeWithParents(
+                        _creatureBlueprint.getProcessorBlueprint().getProcessorType(), _creatureBlueprint,
+                        parent1._processor, parent2._processor);
             }
             else
             {
                 // Processor from single parent (might still mutate)
-                this._processor = ProcessorType.makeWithParents(_creatureBlueprint.getProcessorBlueprint().getProcessorType(),
-                        _creatureBlueprint, parent1._processor, parent1._processor);
+                this._processor = ProcessorType.makeWithParents(
+                        _creatureBlueprint.getProcessorBlueprint().getProcessorType(), _creatureBlueprint,
+                        parent1._processor, parent1._processor);
             }
         }
         else
@@ -130,14 +132,14 @@ public class Creature extends VivariumObject
             else
             {
                 // Create a new default processor
-                this._processor = ProcessorType.makeWithCreatureBlueprint(_creatureBlueprint.getProcessorBlueprint().getProcessorType(),
-                        _creatureBlueprint);
+                this._processor = ProcessorType.makeWithCreatureBlueprint(
+                        _creatureBlueprint.getProcessorBlueprint().getProcessorType(), _creatureBlueprint);
             }
         }
-        _inputs = new double[_creatureBlueprint.getTotalProcessorInputCount()];
-        _memoryUnits = new double[_creatureBlueprint.getMemoryUnitCount()];
-        _soundInputs = new double[_creatureBlueprint.getSoundChannelCount()];
-        _soundOutputs = new double[_creatureBlueprint.getSoundChannelCount()];
+        _inputs = new double[_creatureBlueprint.getProcessorBlueprint().getTotalProcessorInputCount()];
+        _memoryUnits = new double[_creatureBlueprint.getProcessorBlueprint().getMemoryUnitCount()];
+        _soundInputs = new double[_creatureBlueprint.getProcessorBlueprint().getSoundChannelCount()];
+        _soundOutputs = new double[_creatureBlueprint.getProcessorBlueprint().getSoundChannelCount()];
 
         // Set gender
         double randomNumber = Rand.getInstance().getRandomPositiveDouble();
@@ -186,7 +188,8 @@ public class Creature extends VivariumObject
 
     public void listenToCreature(Creature u, double distanceSquared)
     {
-        int soundChannels = Math.min(this._creatureBlueprint.getSoundChannelCount(), u._creatureBlueprint.getSoundChannelCount());
+        int soundChannels = Math.min(this._creatureBlueprint.getProcessorBlueprint().getSoundChannelCount(),
+                u._creatureBlueprint.getProcessorBlueprint().getSoundChannelCount());
         for (int i = 0; i < soundChannels; i++)
         {
             this._soundInputs[i] += u._soundOutputs[i] / distanceSquared;
@@ -217,26 +220,29 @@ public class Creature extends VivariumObject
             _inputs[3] = facingObject == EntityType.WALL ? 1 : 0;
             _inputs[4] = ((double) this._food) / _creatureBlueprint.getMaximumFood();
             // Read memory units
-            System.arraycopy(_memoryUnits, 0, _inputs, _creatureBlueprint.getHardProcessorInputs() - 1, this._memoryUnits.length);
+            System.arraycopy(_memoryUnits, 0, _inputs,
+                    _creatureBlueprint.getProcessorBlueprint().getHardProcessorInputs() - 1, this._memoryUnits.length);
             // Read sound inputs
-            for (int i = 0; i < this.getBlueprint().getSoundChannelCount(); i++)
+            for (int i = 0; i < this.getBlueprint().getProcessorBlueprint().getSoundChannelCount(); i++)
             {
-                _inputs[_creatureBlueprint.getHardProcessorInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
+                _inputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorInputs() - 1
+                        + this._memoryUnits.length + i] = _soundInputs[i];
             }
             // Main processor computation
             double[] outputs = this._processor.outputs(_inputs);
             // Save memory units
-            System.arraycopy(outputs, _creatureBlueprint.getHardProcessorOutputs() - 1, _memoryUnits, 0,
-                    this._memoryUnits.length);
+            System.arraycopy(outputs, _creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs() - 1,
+                    _memoryUnits, 0, this._memoryUnits.length);
             // Clear the sound inputs and set the sound outputs
-            for (int i = 0; i < this.getBlueprint().getSoundChannelCount(); i++)
+            for (int i = 0; i < this.getBlueprint().getProcessorBlueprint().getSoundChannelCount(); i++)
             {
                 this._soundInputs[i] = 0;
-                this._soundOutputs[i] = outputs[_creatureBlueprint.getHardProcessorOutputs() - 1 + this._memoryUnits.length + i];
+                this._soundOutputs[i] = outputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs() - 1
+                        + this._memoryUnits.length + i];
             }
             // Hard coded outputs (actionable outputs)
             int maxActionOutput = 0;
-            for (int i = 1; i < _creatureBlueprint.getHardProcessorOutputs(); i++)
+            for (int i = 1; i < _creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs(); i++)
             {
                 if (outputs[i] > outputs[maxActionOutput])
                 {
