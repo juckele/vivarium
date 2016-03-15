@@ -50,19 +50,6 @@ public enum ProcessorType
         return processorOutput.toString();
     }
 
-    public static Processor makeUninitialized(ProcessorType type)
-    {
-        switch (type)
-        {
-            case NEURAL_NETWORK:
-                return NeuralNetwork.makeUninitialized();
-            case RANDOM:
-                return RandomGenerator.makeUninitialized();
-            default:
-                throw new IllegalArgumentException("ProcessorType " + type + " not fully implemented");
-        }
-    }
-
     public static Processor makeWithCreatureBlueprint(ProcessorType type, CreatureBlueprint creatureBlueprint)
     {
         switch (type)
