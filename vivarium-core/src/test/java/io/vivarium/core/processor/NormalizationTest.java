@@ -16,11 +16,11 @@ public class NormalizationTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testBreedNormalize()
     {
-        ProcessorArchitecture processorArchitecture = ProcessorArchitecture.makeDefault();
-        processorArchitecture.setRandomInitialization(true);
+        ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
+        processorBlueprint.setRandomInitialization(true);
 
         Species species = Species.makeDefault();
-        species.setProcessorArchitecture(processorArchitecture);
+        species.setProcessorBlueprint(processorBlueprint);
         species.setNormalizeAfterMutation(Math.sqrt(42));
         Creature c1 = new Creature(species);
         Creature c2 = new Creature(species);

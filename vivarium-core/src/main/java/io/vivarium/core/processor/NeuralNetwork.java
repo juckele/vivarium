@@ -477,7 +477,7 @@ public class NeuralNetwork extends Processor
     public static NeuralNetwork makeWithSpecies(Species species)
     {
         return new NeuralNetwork(species.getTotalProcessorInputCount(), species.getTotalProcessorOutputCount(),
-                species.getProcessorArchitecture().getRandomInitialization(), species.getNormalizeAfterMutation());
+                species.getProcessorBlueprint().getRandomInitialization(), species.getNormalizeAfterMutation());
     }
 
     public static NeuralNetwork makeWithParents(Species species, NeuralNetwork parentProcessor1,

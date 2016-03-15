@@ -10,7 +10,7 @@ import com.google.common.collect.Lists;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
-import io.vivarium.core.processor.ProcessorArchitecture;
+import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
 
@@ -21,11 +21,11 @@ public class JSONSerializationTest
     public void testWorldSerializeAndDeserialize()
     {
         // Build a world with creatures
-        ProcessorArchitecture processorArchitecture = ProcessorArchitecture.makeDefault();
-        processorArchitecture.setRandomInitialization(true);
+        ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
+        processorBlueprint.setRandomInitialization(true);
 
         Species species = Species.makeDefault();
-        species.setProcessorArchitecture(processorArchitecture);
+        species.setProcessorBlueprint(processorBlueprint);
         species.setNormalizeAfterMutation(Math.sqrt(42));
         Blueprint blueprint = Blueprint.makeDefault();
         blueprint.setSpecies(Lists.newArrayList(species));

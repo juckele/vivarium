@@ -1,6 +1,6 @@
 package io.vivarium.core;
 
-import io.vivarium.core.processor.ProcessorArchitecture;
+import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -41,7 +41,7 @@ public class Species extends VivariumObject
 
     // Neurology
     @SerializedParameter
-    private ProcessorArchitecture _processorArchitecture = null;
+    private ProcessorBlueprint _processorBlueprint = null;
     @SerializedParameter
     private double _normalizeAfterMutation = 0;
     @SerializedParameter
@@ -250,7 +250,7 @@ public class Species extends VivariumObject
     {
         Species s = new Species();
         s.finalizeSerialization();
-        s.setProcessorArchitecture(ProcessorArchitecture.makeDefault());
+        s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
         return s;
     }
 
@@ -266,13 +266,13 @@ public class Species extends VivariumObject
         System.out.println(Species.makeDefault());
     }
 
-    public ProcessorArchitecture getProcessorArchitecture()
+    public ProcessorBlueprint getProcessorBlueprint()
     {
-        return _processorArchitecture;
+        return _processorBlueprint;
     }
 
-    public void setProcessorArchitecture(ProcessorArchitecture processorArchitecture)
+    public void setProcessorBlueprint(ProcessorBlueprint processorBlueprint)
     {
-        _processorArchitecture = processorArchitecture;
+        _processorBlueprint = processorBlueprint;
     }
 }
