@@ -1,6 +1,5 @@
 package io.vivarium.core.processor;
 
-import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
@@ -15,12 +14,12 @@ public class RandomGenerator extends Processor
     @SerializedParameter
     private double[] _outputs;
 
-    private RandomGenerator(CreatureBlueprint creatureBlueprint, RandomGenerator parentProcessor1,
+    private RandomGenerator(ProcessorBlueprint processorBlueprint, RandomGenerator parentProcessor1,
             RandomGenerator parentProcessor2)
     {
         // Random processor has no state, it's literally random output. This processor
         // does not evolve.
-        this._outputs = new double[creatureBlueprint.getProcessorBlueprint().getTotalProcessorOutputCount()];
+        this._outputs = new double[processorBlueprint.getTotalProcessorOutputCount()];
     }
 
     public RandomGenerator(int totalProcessorOutputCount)
@@ -72,19 +71,18 @@ public class RandomGenerator extends Processor
         return new RandomGenerator();
     }
 
-    public static RandomGenerator makeWithCreatureBlueprint(CreatureBlueprint creatureBlueprint)
+    public static RandomGenerator makeWithCreatureBlueprint(ProcessorBlueprint processorBlueprint)
     {
-        RandomGenerator processor = new RandomGenerator(
-                creatureBlueprint.getProcessorBlueprint().getTotalProcessorOutputCount());
+        RandomGenerator processor = new RandomGenerator(processorBlueprint.getTotalProcessorOutputCount());
         return processor;
     }
 
-    public static Processor makeWithParents(CreatureBlueprint creatureBlueprint,
+    public static Processor makeWithParents(ProcessorBlueprint processorBlueprint,
             RandomGenerator untypedParentProcessor1, RandomGenerator untypedParentProcessor2)
     {
         RandomGenerator parentProcessor1 = untypedParentProcessor1;
         RandomGenerator parentProcessor2 = untypedParentProcessor2;
-        RandomGenerator processor = new RandomGenerator(creatureBlueprint, parentProcessor1, parentProcessor2);
+        RandomGenerator processor = new RandomGenerator(processorBlueprint, parentProcessor1, parentProcessor2);
         return processor;
     }
 

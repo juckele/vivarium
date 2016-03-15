@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
-import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
@@ -63,12 +62,12 @@ public class NeuralNetwork extends Processor
         }
     }
 
-    public NeuralNetwork(CreatureBlueprint creatureBlueprint, NeuralNetwork processor1, NeuralNetwork processor2)
+    public NeuralNetwork(ProcessorBlueprint processorBlueprint, NeuralNetwork processor1, NeuralNetwork processor2)
     {
         // Construct the weight layer and store variables with the int based
         // constructor
         this(processor1.getInputCount(), processor1.getOutputCount(), false,
-                creatureBlueprint.getProcessorBlueprint().getNormalizeAfterMutation());
+                processorBlueprint.getNormalizeAfterMutation());
 
         // Set all the weights with
         for (int i = 0; i < _weights.length; i++)
@@ -81,7 +80,7 @@ public class NeuralNetwork extends Processor
                     double randomValue = Rand.getInstance().getRandomPositiveDouble();
                     // Sometimes mix the two values with a gaussian
                     // approximation.
-                    if (randomValue < creatureBlueprint.getProcessorBlueprint().getInheritanceGaussianMixRate())
+                    if (randomValue < processorBlueprint.getInheritanceGaussianMixRate())
                     {
                         // Radnom.nextGaussian generates a Gaussian with μ = 0
                         // and σ = 1
@@ -111,10 +110,10 @@ public class NeuralNetwork extends Processor
 
                     // Sometimes mutate
                     randomValue = Rand.getInstance().getRandomPositiveDouble();
-                    if (randomValue < creatureBlueprint.getProcessorBlueprint().getMutationRate())
+                    if (randomValue < processorBlueprint.getMutationRate())
                     {
                         randomValue = Rand.getInstance().getRandomPositiveDouble();
-                        if (randomValue < creatureBlueprint.getProcessorBlueprint().getMutationSmallScaleRate())
+                        if (randomValue < processorBlueprint.getMutationSmallScaleRate())
                         {
                             // Gaussian multiplication mutation,
                             // μ = 1 and σ = 0.2
@@ -123,23 +122,23 @@ public class NeuralNetwork extends Processor
                         }
                         else
                         {
-                            randomValue -= creatureBlueprint.getProcessorBlueprint().getMutationSmallScaleRate();
-                            if (randomValue < creatureBlueprint.getProcessorBlueprint().getMutationRandomRate())
+                            randomValue -= processorBlueprint.getMutationSmallScaleRate();
+                            if (randomValue < processorBlueprint.getMutationRandomRate())
                             {
                                 // Random mutation
                                 _weights[i][j][k] = Rand.getInstance().getRandomDouble();
                             }
                             else
                             {
-                                randomValue -= creatureBlueprint.getProcessorBlueprint().getMutationRandomRate();
-                                if (randomValue < creatureBlueprint.getProcessorBlueprint().getMutationFlipRate())
+                                randomValue -= processorBlueprint.getMutationRandomRate();
+                                if (randomValue < processorBlueprint.getMutationFlipRate())
                                 {
                                     // Flip mutation
                                     _weights[i][j][k] = -_weights[i][j][k];
                                 }
                                 else
                                 {
-                                    randomValue -= creatureBlueprint.getProcessorBlueprint().getMutationFlipRate();
+                                    randomValue -= processorBlueprint.getMutationFlipRate();
                                 }
                             }
                         }
@@ -147,9 +146,9 @@ public class NeuralNetwork extends Processor
                 }
             }
         }
-        if (creatureBlueprint.getProcessorBlueprint().getNormalizeAfterMutation() != 0)
+        if (processorBlueprint.getNormalizeAfterMutation() != 0)
         {
-            normalizeWeights(creatureBlueprint.getProcessorBlueprint().getNormalizeAfterMutation());
+            normalizeWeights(processorBlueprint.getNormalizeAfterMutation());
         }
     }
 
@@ -475,17 +474,16 @@ public class NeuralNetwork extends Processor
         return new NeuralNetwork();
     }
 
-    public static NeuralNetwork makeWithCreatureBlueprint(CreatureBlueprint creatureBlueprint)
+    public static NeuralNetwork makeWithCreatureBlueprint(ProcessorBlueprint processorBlueprint)
     {
-        return new NeuralNetwork(creatureBlueprint.getProcessorBlueprint().getTotalProcessorInputCount(),
-                creatureBlueprint.getProcessorBlueprint().getTotalProcessorOutputCount(),
-                creatureBlueprint.getProcessorBlueprint().getRandomInitialization(),
-                creatureBlueprint.getProcessorBlueprint().getNormalizeAfterMutation());
+        return new NeuralNetwork(processorBlueprint.getTotalProcessorInputCount(),
+                processorBlueprint.getTotalProcessorOutputCount(), processorBlueprint.getRandomInitialization(),
+                processorBlueprint.getNormalizeAfterMutation());
     }
 
-    public static NeuralNetwork makeWithParents(CreatureBlueprint creatureBlueprint, NeuralNetwork parentProcessor1,
+    public static NeuralNetwork makeWithParents(ProcessorBlueprint processorBlueprint, NeuralNetwork parentProcessor1,
             NeuralNetwork parentProcessor2)
     {
-        return new NeuralNetwork(creatureBlueprint, parentProcessor1, parentProcessor2);
+        return new NeuralNetwork(processorBlueprint, parentProcessor1, parentProcessor2);
     }
 }
