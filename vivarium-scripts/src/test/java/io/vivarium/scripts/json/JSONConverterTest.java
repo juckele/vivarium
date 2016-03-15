@@ -5,7 +5,7 @@ import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
@@ -18,7 +18,7 @@ public class JSONConverterTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testSaveLoadSaveWorld()
     {
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         World worldOriginal = new World(blueprint);
         String jsonString1 = JSONConverter.serializerToJSONString(worldOriginal);
         VivariumObjectCollection copiedCollection = JSONConverter.jsonStringToSerializerCollection(jsonString1);

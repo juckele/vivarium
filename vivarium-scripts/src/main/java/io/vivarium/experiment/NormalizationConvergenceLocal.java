@@ -2,7 +2,7 @@ package io.vivarium.experiment;
 
 import java.util.ArrayList;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Species;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
@@ -38,7 +38,7 @@ public class NormalizationConvergenceLocal
         Rand.setAllocator(new ThreadRandAllocator());
 
         // Make the blueprint with the default behavior
-        Blueprint defaultBlueprint = Blueprint.makeDefault();
+        WorldBlueprint defaultBlueprint = WorldBlueprint.makeDefault();
         defaultBlueprint.setSize(50);
         ArrayList<Species> defaultSpeciesList = new ArrayList<>();
         Species defaultSpecies = Species.makeDefault();
@@ -49,7 +49,7 @@ public class NormalizationConvergenceLocal
         FileIO.saveSerializer(defaultBlueprint, "defaultBlueprint.viv", Format.JSON);
 
         // Make the blueprint with the normalizing behavior
-        Blueprint normalizingBlueprint = Blueprint.makeDefault();
+        WorldBlueprint normalizingBlueprint = WorldBlueprint.makeDefault();
         normalizingBlueprint.setSize(50);
         ArrayList<Species> normalizingSpeciesList = new ArrayList<>();
         Species normalizingSpecies = Species.makeDefault();
@@ -61,7 +61,7 @@ public class NormalizationConvergenceLocal
         FileIO.saveSerializer(normalizingBlueprint, "normalizingBlueprint.viv", Format.JSON);
 
         // Make the blueprint with the normalizing behavior and a longer length
-        Blueprint longNormalizingBlueprint = Blueprint.makeDefault();
+        WorldBlueprint longNormalizingBlueprint = WorldBlueprint.makeDefault();
         longNormalizingBlueprint.setSize(50);
         ArrayList<Species> longNormalizingSpeciesList = new ArrayList<>();
         Species longNormalizingSpecies = Species.makeDefault();

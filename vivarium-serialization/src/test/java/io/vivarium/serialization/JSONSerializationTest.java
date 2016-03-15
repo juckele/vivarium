@@ -7,7 +7,7 @@ import org.junit.experimental.categories.Category;
 
 import com.google.common.collect.Lists;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.core.processor.ProcessorBlueprint;
@@ -27,7 +27,7 @@ public class JSONSerializationTest
         Species species = Species.makeDefault();
         species.setProcessorBlueprint(processorBlueprint);
         species.setNormalizeAfterMutation(Math.sqrt(42));
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         blueprint.setSpecies(Lists.newArrayList(species));
         World world = new World(blueprint);
 

@@ -11,7 +11,7 @@ import java.util.concurrent.TimeUnit;
 import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Species;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
@@ -59,7 +59,7 @@ public class MutationRateLocal
             String name = "mutation=2^" + mutationRateExponent;
 
             // Make a blueprint
-            Blueprint blueprint = Blueprint.makeDefault();
+            WorldBlueprint blueprint = WorldBlueprint.makeDefault();
             blueprint.setSize(WORLD_SIZE);
             // Set species
             ArrayList<Species> speciesList = new ArrayList<>();

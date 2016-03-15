@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 import io.vivarium.client.TaskClient;
 import io.vivarium.client.task.CreateJobTask;
 import io.vivarium.client.task.UploadResourceTask;
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Species;
 import io.vivarium.net.jobs.CreateWorldJob;
 import io.vivarium.net.jobs.Job;
@@ -40,7 +40,7 @@ public class NormalizationConvergence
     public static void main(String[] args) throws URISyntaxException
     {
         // Make the blueprint with the default behavior
-        Blueprint defaultBlueprint = Blueprint.makeDefault();
+        WorldBlueprint defaultBlueprint = WorldBlueprint.makeDefault();
         defaultBlueprint.setSize(worldSize);
         ArrayList<Species> defaultSpeciesList = new ArrayList<>();
         Species defaultSpecies = Species.makeDefault();
@@ -53,7 +53,7 @@ public class NormalizationConvergence
         defaultUploadClient.connect();
 
         // Make the blueprint with the normalizing behavior
-        Blueprint normalizingBlueprint = Blueprint.makeDefault();
+        WorldBlueprint normalizingBlueprint = WorldBlueprint.makeDefault();
         normalizingBlueprint.setSize(50);
         ArrayList<Species> normalizingSpeciesList = new ArrayList<>();
         Species normalizingSpecies = Species.makeDefault();

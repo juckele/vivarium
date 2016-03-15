@@ -10,7 +10,7 @@ import com.johnuckele.vtest.Tester;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.test.FastTest;
@@ -22,7 +22,7 @@ public class CensusTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testCensus()
     {
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         AuditBlueprint censusBlueprint = new CensusBlueprint();
         ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
         auditBlueprints.add(censusBlueprint);

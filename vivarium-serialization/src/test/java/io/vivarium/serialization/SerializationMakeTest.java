@@ -5,7 +5,7 @@ import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
@@ -21,7 +21,7 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldBlueprintMakeDefault() throws Exception
     {
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         Tester.isNotNull("Blueprint should exist", blueprint);
     }
 
@@ -29,8 +29,8 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldBlueprintMakeCopy() throws Exception
     {
-        Blueprint blueprint = Blueprint.makeDefault();
-        Blueprint copy = new SerializationEngine().makeCopy(blueprint);
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
+        WorldBlueprint copy = new SerializationEngine().makeCopy(blueprint);
         Tester.isNotNull("Blueprint copy should exist", copy);
     }
 
@@ -96,7 +96,7 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldMakeCopy() throws Exception
     {
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         World world = new World(blueprint);
         World copy = new SerializationEngine().makeCopy(world);
         Tester.isNotNull("World copy should exist", copy);

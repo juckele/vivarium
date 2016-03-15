@@ -8,7 +8,7 @@ import io.vivarium.client.WorkerClient;
 import io.vivarium.client.WorkerConfig;
 import io.vivarium.client.task.DownloadResourceTask;
 import io.vivarium.client.task.UploadResourceTask;
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.server.VivariumResearchServer;
@@ -23,7 +23,7 @@ public class DemoTest
 
         Thread.sleep(100);
 
-        World world = new World(Blueprint.makeDefault());
+        World world = new World(WorldBlueprint.makeDefault());
         UploadResourceTask t1 = new UploadResourceTask(UUID.randomUUID(), world);
         TaskClient c1 = new TaskClient(t1);
         c1.connect();

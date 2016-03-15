@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
@@ -57,14 +57,14 @@ public class CreateWorld extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        Blueprint blueprint = null;
+        WorldBlueprint blueprint = null;
         if (commandLine.hasOption(BLUEPRINT_INPUT_FILE))
         {
             String blueprintFile = null;
             try
             {
                 blueprintFile = commandLine.getOptionValue(BLUEPRINT_INPUT_FILE);
-                blueprint = FileIO.loadObjectCollection(blueprintFile, Format.JSON).getFirst(Blueprint.class);
+                blueprint = FileIO.loadObjectCollection(blueprintFile, Format.JSON).getFirst(WorldBlueprint.class);
             }
             catch (ClassCastException e)
             {
@@ -96,11 +96,11 @@ public class CreateWorld extends CommonsScript
      *            Optional size override. If this value is passed in, the world will be created with this size.
      * @return The new world.
      */
-    public World run(Blueprint blueprint, Integer size)
+    public World run(WorldBlueprint blueprint, Integer size)
     {
         if (blueprint == null)
         {
-            blueprint = Blueprint.makeDefault();
+            blueprint = WorldBlueprint.makeDefault();
         }
         if (size != null)
         {

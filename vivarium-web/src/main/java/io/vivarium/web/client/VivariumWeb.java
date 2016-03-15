@@ -25,7 +25,7 @@ import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.RootPanel;
 import com.googlecode.gwtstreamer.client.Streamer;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
 import io.vivarium.net.messages.Message;
@@ -129,7 +129,7 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private void buildWorld()
     {
         // Build the world
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         Species s = Species.makeDefault();
         ArrayList<Species> species = new ArrayList<>();
         species.add(s);

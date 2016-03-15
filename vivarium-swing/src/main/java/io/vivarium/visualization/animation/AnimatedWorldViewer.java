@@ -13,7 +13,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
@@ -109,7 +109,7 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         // species.add(species2);
 
         // Construct the world proper
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         blueprint.setSpecies(species);
         blueprint.setWidth(60);
         blueprint.setHeight(34);

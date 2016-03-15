@@ -38,13 +38,13 @@ public class World extends VivariumObject
     protected AuditRecord[] _auditRecords;
 
     @SerializedParameter
-    private Blueprint _blueprint;
+    private WorldBlueprint _blueprint;
 
     protected World()
     {
     }
 
-    public World(Blueprint blueprint)
+    public World(WorldBlueprint blueprint)
     {
         // Store the blueprint
         this._blueprint = blueprint;

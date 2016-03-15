@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.core.simulation.Simulation;
@@ -149,7 +149,7 @@ public class RunBenchmark extends CommonsScript
 
     private static double inlineTest(int size)
     {
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         blueprint.setSize(size);
         blueprint.getSpecies().get(0).setMaximumFood(Integer.MAX_VALUE); // Increase max food to prevent creatures from
                                                                          // starving during the benchmark

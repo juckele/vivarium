@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
@@ -112,7 +112,7 @@ public class WorldViewer extends JFrame
         // species.add(species2);
 
         // Construct the world proper
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         blueprint.setSpecies(species);
         blueprint.setSize(worldDimensions);
 

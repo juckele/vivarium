@@ -18,7 +18,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.graphing.util.Utils;
 
@@ -46,7 +46,7 @@ public class PopulationGraph extends BaseGraph
 
     public static void main(String[] args) throws IOException
     {
-        Blueprint b = Blueprint.makeDefault();
+        WorldBlueprint b = WorldBlueprint.makeDefault();
 
         ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
         CensusBlueprint census = new CensusBlueprint();

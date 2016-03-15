@@ -19,7 +19,7 @@ import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.ActionFrequencyRecord;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Species;
 import io.vivarium.core.World;
@@ -90,9 +90,9 @@ public class SerializationEngine
             {
                 constructor = Species.class.getDeclaredConstructor();
             }
-            else if (clazzName.equals(Blueprint.class.getSimpleName()))
+            else if (clazzName.equals(WorldBlueprint.class.getSimpleName()))
             {
-                constructor = Blueprint.class.getDeclaredConstructor();
+                constructor = WorldBlueprint.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(RandomGenerator.class.getSimpleName()))
             {

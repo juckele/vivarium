@@ -9,7 +9,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import io.vivarium.audit.AuditBlueprint;
-import io.vivarium.core.Blueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Species;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
@@ -111,7 +111,7 @@ public class CreateBlueprint extends CommonsScript
         Map<String, Object> extraOptions = this.extraArgsAsMap(commandLine);
 
         // Build the blueprint
-        Blueprint blueprint = Blueprint.makeDefault();
+        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         new SerializationEngine().deserialize(blueprint, extraOptions);
         if (!species.isEmpty())
         {

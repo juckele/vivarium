@@ -11,7 +11,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class Blueprint extends VivariumObject
+public class WorldBlueprint extends VivariumObject
 {
     // World Generation
     @SerializedParameter
@@ -38,7 +38,7 @@ public class Blueprint extends VivariumObject
     private ArrayList<AuditBlueprint> _auditBlueprints;
 
     // Private constructor for deserialization
-    private Blueprint()
+    private WorldBlueprint()
     {
     }
 
@@ -134,9 +134,9 @@ public class Blueprint extends VivariumObject
         this._auditBlueprints = auditBlueprints;
     }
 
-    public static Blueprint makeDefault()
+    public static WorldBlueprint makeDefault()
     {
-        Blueprint wb = new Blueprint();
+        WorldBlueprint wb = new WorldBlueprint();
         wb.finalizeSerialization();
         wb._species = new ArrayList<>();
         wb._species.add(Species.makeDefault());
@@ -152,6 +152,6 @@ public class Blueprint extends VivariumObject
 
     public static void main(String[] args)
     {
-        System.out.println("" + Blueprint.makeDefault().hashCode() + ":" + Blueprint.makeDefault().toString());
+        System.out.println("" + WorldBlueprint.makeDefault().hashCode() + ":" + WorldBlueprint.makeDefault().toString());
     }
 }
