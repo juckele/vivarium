@@ -5,9 +5,9 @@ import java.util.Collections;
 
 import org.javatuples.Pair;
 
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.util.Rand;
 import io.vivarium.visualization.RenderCode;
@@ -18,18 +18,18 @@ import io.vivarium.visualization.RenderCode;
  */
 public class GeneticAlgorithmRunner
 {
-    CreatureBlueprint _species;
+    CreatureBlueprint _creatureBlueprint;
     int _currentGeneration = 1;
     int _generations = 100;
     int _populationSize = 100;
     ArrayList<Pair<Double, Creature>> _population = new ArrayList<>(_populationSize);
     private FitnessFunction _fitnessFunction;
 
-    public GeneticAlgorithmRunner(CreatureBlueprint species, FitnessFunction fitnessFunction)
+    public GeneticAlgorithmRunner(CreatureBlueprint creatureBlueprint, FitnessFunction fitnessFunction)
     {
         this._fitnessFunction = fitnessFunction;
 
-        this._species = species;
+        this._creatureBlueprint = creatureBlueprint;
 
         buildInitialPopulation();
     }
@@ -38,7 +38,7 @@ public class GeneticAlgorithmRunner
     {
         for (int i = 0; i < _populationSize; i++)
         {
-            Creature c = new Creature(_species);
+            Creature c = new Creature(_creatureBlueprint);
             System.out.println(c.getProcessor().render(RenderCode.PROCESSOR_WEIGHTS));
             _population.add(new Pair<>(0.0, c));
         }
@@ -118,21 +118,21 @@ public class GeneticAlgorithmRunner
         ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
         processorBlueprint.setRandomInitialization(true);
 
-        CreatureBlueprint species = CreatureBlueprint.makeDefault();
-        species.setProcessorBlueprint(processorBlueprint);
-        species.setInitialGenerationProbability(0);
-        species.setMaximumFood(200);
-        System.out.println("Species " + species);
+        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
+        creatureBlueprint.setProcessorBlueprint(processorBlueprint);
+        creatureBlueprint.setInitialGenerationProbability(0);
+        creatureBlueprint.setMaximumFood(200);
+        System.out.println("Creature Blueprint: " + creatureBlueprint);
 
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        blueprint.setSize(30);
-        ArrayList<CreatureBlueprint> speciesList = new ArrayList<>();
-        blueprint.setSpecies(speciesList);
-        blueprint.setInitialFoodGenerationProbability(0);
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        worldBlueprint.setSize(30);
+        ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
+        worldBlueprint.setCreatureBlueprints(creatureBlueprints);
+        worldBlueprint.setInitialFoodGenerationProbability(0);
 
-        int tenLifespans = species.getMaximumAge() * 10;
-        GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(species,
-                new TimeToExtinctionFF(blueprint, 100, tenLifespans));
+        int tenLifespans = creatureBlueprint.getMaximumAge() * 10;
+        GeneticAlgorithmRunner runner = new GeneticAlgorithmRunner(creatureBlueprint,
+                new TimeToExtinctionFF(worldBlueprint, 100, tenLifespans));
         runner.run();
     }
 }

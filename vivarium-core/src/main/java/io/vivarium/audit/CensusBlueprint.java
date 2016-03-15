@@ -15,8 +15,8 @@ public class CensusBlueprint extends AuditBlueprint
     }
 
     @Override
-    public CensusRecord makeRecordWithSpecies(CreatureBlueprint species)
+    public CensusRecord makeRecordWithCreatureBlueprint(CreatureBlueprint blueprint)
     {
-        return new CensusRecord(this, species);
+        return new CensusRecord(this, blueprint);
     }
 }

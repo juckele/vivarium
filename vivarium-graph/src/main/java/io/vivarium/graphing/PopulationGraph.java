@@ -18,8 +18,8 @@ import org.jfree.data.xy.XYSeriesCollection;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.World;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.graphing.util.Utils;
 
 public class PopulationGraph extends BaseGraph
@@ -30,7 +30,7 @@ public class PopulationGraph extends BaseGraph
         ArrayList<Integer> ticks = record.getRecordTicks();
 
         PlotOrientation orientation = PlotOrientation.VERTICAL;
-        XYSeries series = new XYSeries("Species 1");
+        XYSeries series = new XYSeries("Creature Blueprint 1");
         for (int i = 0; i < ticks.size(); i++)
         {
             series.add(ticks.get(i), popRecords.get(i));

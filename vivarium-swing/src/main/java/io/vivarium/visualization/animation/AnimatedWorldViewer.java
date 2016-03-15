@@ -13,10 +13,10 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.visualization.util.Fullscreen;
 
 public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseListener, MouseMotionListener
@@ -94,26 +94,21 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         // Set up
         int worldDimensions = 34;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        ArrayList<CreatureBlueprint> species = new ArrayList<>();
+        ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
 
-        // Build 1 species
-        CreatureBlueprint species1 = CreatureBlueprint.makeDefault();
-        species1.setMutationRateExponent(-9);
-        species1.setCreatureMemoryUnitCount(1);
-        species1.setCreatureSoundChannelCount(1);
-        species.add(species1);
-
-        // Build another
-        // Species species2 = Species.makeDefault();
-        // species2.setProcessorType(ProcessorType.RANDOM);
-        // species.add(species2);
+        // Build 1 creature blueprint
+        CreatureBlueprint creatureBlueprint1 = CreatureBlueprint.makeDefault();
+        creatureBlueprint1.setMutationRateExponent(-9);
+        creatureBlueprint1.setCreatureMemoryUnitCount(1);
+        creatureBlueprint1.setCreatureSoundChannelCount(1);
+        creatureBlueprints.add(creatureBlueprint1);
 
         // Construct the world proper
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        blueprint.setSpecies(species);
-        blueprint.setWidth(60);
-        blueprint.setHeight(34);
-        World w = new World(blueprint);
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        worldBlueprint.setCreatureBlueprints(creatureBlueprints);
+        worldBlueprint.setWidth(60);
+        worldBlueprint.setHeight(34);
+        World w = new World(worldBlueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
         // Create and show the window

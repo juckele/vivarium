@@ -30,7 +30,7 @@ public class ConvertFileFormatTest
     {
         {
             String[] commandArgs = { "-o", path + "b.viv" };
-            CreateBlueprint.main(commandArgs);
+            CreateWorldBlueprint.main(commandArgs);
         }
         {
             String[] commandArgs = { "-i", path + "b.viv", "-x", "JSON", "-o", path + "b.gwt", "-y", "GWT" };

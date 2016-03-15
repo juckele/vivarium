@@ -9,18 +9,18 @@ public class WorldPopulator
     private double _wallProbability;
     private double _foodProbability;
     private double _creatureProbability;
-    private ArrayList<CreatureBlueprint> _species;
+    private ArrayList<CreatureBlueprint> _creatureBlueprints;
 
     public WorldPopulator()
     {
 
     }
 
-    public void setSpecies(ArrayList<CreatureBlueprint> species)
+    public void setCreatureBlueprints(ArrayList<CreatureBlueprint> creatureBlueprints)
     {
-        _species = species;
+        _creatureBlueprints = creatureBlueprints;
         _creatureProbability = 0;
-        for (CreatureBlueprint s : _species)
+        for (CreatureBlueprint s : _creatureBlueprints)
         {
             _creatureProbability += s.getInitialGenerationProbability();
         }
@@ -59,10 +59,10 @@ public class WorldPopulator
         return EntityType.EMPTY;
     }
 
-    public CreatureBlueprint getNextCreatureSpecies()
+    public CreatureBlueprint getNextCreatureBlueprint()
     {
         double random = Rand.getInstance().getRandomPositiveDouble() * _creatureProbability;
-        for (CreatureBlueprint s : _species)
+        for (CreatureBlueprint s : _creatureBlueprints)
         {
             if (random < s.getInitialGenerationProbability())
             {
@@ -72,7 +72,7 @@ public class WorldPopulator
         }
         // If we fall through the for loop returns, it's because we've fundamentally screwed up our math.
         throw new IllegalStateException(
-                "Species s.getInitialGenerationProbability() should sum to " + _creatureProbability);
+                "CreatureBlueprint s.getInitialGenerationProbability() should sum to " + _creatureProbability);
     }
 
 }

@@ -38,39 +38,39 @@ public class NormalizationConvergenceLocal
         Rand.setAllocator(new ThreadRandAllocator());
 
         // Make the blueprint with the default behavior
-        WorldBlueprint defaultBlueprint = WorldBlueprint.makeDefault();
-        defaultBlueprint.setSize(50);
-        ArrayList<CreatureBlueprint> defaultSpeciesList = new ArrayList<>();
-        CreatureBlueprint defaultSpecies = CreatureBlueprint.makeDefault();
-        defaultSpeciesList.add(defaultSpecies);
-        defaultBlueprint.setSpecies(defaultSpeciesList);
+        WorldBlueprint defaultWorldBlueprint = WorldBlueprint.makeDefault();
+        defaultWorldBlueprint.setSize(50);
+        ArrayList<CreatureBlueprint> defaultCreatureBlueprints = new ArrayList<>();
+        CreatureBlueprint defaultCreatureBlueprint = CreatureBlueprint.makeDefault();
+        defaultCreatureBlueprints.add(defaultCreatureBlueprint);
+        defaultWorldBlueprint.setCreatureBlueprints(defaultCreatureBlueprints);
 
         // Save the default blueprint
-        FileIO.saveSerializer(defaultBlueprint, "defaultBlueprint.viv", Format.JSON);
+        FileIO.saveSerializer(defaultWorldBlueprint, "defaultBlueprint.viv", Format.JSON);
 
         // Make the blueprint with the normalizing behavior
-        WorldBlueprint normalizingBlueprint = WorldBlueprint.makeDefault();
-        normalizingBlueprint.setSize(50);
-        ArrayList<CreatureBlueprint> normalizingSpeciesList = new ArrayList<>();
-        CreatureBlueprint normalizingSpecies = CreatureBlueprint.makeDefault();
-        normalizingSpecies.setNormalizeAfterMutation(1);
-        normalizingSpeciesList.add(normalizingSpecies);
-        normalizingBlueprint.setSpecies(normalizingSpeciesList);
+        WorldBlueprint normalizingWorldBlueprint = WorldBlueprint.makeDefault();
+        normalizingWorldBlueprint.setSize(50);
+        ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
+        CreatureBlueprint normalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
+        normalizingCreatureBlueprint.setNormalizeAfterMutation(1);
+        normalizingCreatureBlueprints.add(normalizingCreatureBlueprint);
+        normalizingWorldBlueprint.setCreatureBlueprints(normalizingCreatureBlueprints);
 
         // Save the normalizing blueprint
-        FileIO.saveSerializer(normalizingBlueprint, "normalizingBlueprint.viv", Format.JSON);
+        FileIO.saveSerializer(normalizingWorldBlueprint, "normalizingBlueprint.viv", Format.JSON);
 
         // Make the blueprint with the normalizing behavior and a longer length
-        WorldBlueprint longNormalizingBlueprint = WorldBlueprint.makeDefault();
-        longNormalizingBlueprint.setSize(50);
-        ArrayList<CreatureBlueprint> longNormalizingSpeciesList = new ArrayList<>();
-        CreatureBlueprint longNormalizingSpecies = CreatureBlueprint.makeDefault();
-        longNormalizingSpecies.setNormalizeAfterMutation(Math.sqrt(42));
-        longNormalizingSpeciesList.add(longNormalizingSpecies);
-        longNormalizingBlueprint.setSpecies(longNormalizingSpeciesList);
+        WorldBlueprint longNormalizingWorldBlueprint = WorldBlueprint.makeDefault();
+        longNormalizingWorldBlueprint.setSize(50);
+        ArrayList<CreatureBlueprint> longNormalizingCreatureBlueprints = new ArrayList<>();
+        CreatureBlueprint longNormalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
+        longNormalizingCreatureBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
+        longNormalizingCreatureBlueprints.add(longNormalizingCreatureBlueprint);
+        longNormalizingWorldBlueprint.setCreatureBlueprints(longNormalizingCreatureBlueprints);
 
         // Save the normalizing blueprint
-        FileIO.saveSerializer(longNormalizingBlueprint, "longBlueprint.viv", Format.JSON);
+        FileIO.saveSerializer(longNormalizingWorldBlueprint, "longBlueprint.viv", Format.JSON);
 
         // Run all the simulation batches
         System.out.println("Starting Simulation");

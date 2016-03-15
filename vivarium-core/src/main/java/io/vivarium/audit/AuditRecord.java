@@ -13,15 +13,15 @@ import lombok.ToString;
 public abstract class AuditRecord extends VivariumObject
 {
     @SerializedParameter
-    protected CreatureBlueprint _trackedSpecies;
+    protected CreatureBlueprint _trackedCreatureBlueprint;
 
     protected AuditRecord()
     {
     }
 
-    protected AuditRecord(CreatureBlueprint species)
+    protected AuditRecord(CreatureBlueprint blueprint)
     {
-        _trackedSpecies = species;
+        _trackedCreatureBlueprint = blueprint;
     }
 
     /**

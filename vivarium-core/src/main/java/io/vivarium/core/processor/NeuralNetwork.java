@@ -63,11 +63,11 @@ public class NeuralNetwork extends Processor
         }
     }
 
-    public NeuralNetwork(CreatureBlueprint species, NeuralNetwork processor1, NeuralNetwork processor2)
+    public NeuralNetwork(CreatureBlueprint creatureBlueprint, NeuralNetwork processor1, NeuralNetwork processor2)
     {
         // Construct the weight layer and store variables with the int based
         // constructor
-        this(processor1.getInputCount(), processor1.getOutputCount(), false, species.getNormalizeAfterMutation());
+        this(processor1.getInputCount(), processor1.getOutputCount(), false, creatureBlueprint.getNormalizeAfterMutation());
 
         // Set all the weights with
         for (int i = 0; i < _weights.length; i++)
@@ -80,7 +80,7 @@ public class NeuralNetwork extends Processor
                     double randomValue = Rand.getInstance().getRandomPositiveDouble();
                     // Sometimes mix the two values with a gaussian
                     // approximation.
-                    if (randomValue < species.getInheritanceGaussianMixRate())
+                    if (randomValue < creatureBlueprint.getInheritanceGaussianMixRate())
                     {
                         // Radnom.nextGaussian generates a Gaussian with μ = 0
                         // and σ = 1
@@ -110,10 +110,10 @@ public class NeuralNetwork extends Processor
 
                     // Sometimes mutate
                     randomValue = Rand.getInstance().getRandomPositiveDouble();
-                    if (randomValue < species.getMutationRate())
+                    if (randomValue < creatureBlueprint.getMutationRate())
                     {
                         randomValue = Rand.getInstance().getRandomPositiveDouble();
-                        if (randomValue < species.getMutationSmallScaleRate())
+                        if (randomValue < creatureBlueprint.getMutationSmallScaleRate())
                         {
                             // Gaussian multiplication mutation,
                             // μ = 1 and σ = 0.2
@@ -122,23 +122,23 @@ public class NeuralNetwork extends Processor
                         }
                         else
                         {
-                            randomValue -= species.getMutationSmallScaleRate();
-                            if (randomValue < species.getMutationRandomRate())
+                            randomValue -= creatureBlueprint.getMutationSmallScaleRate();
+                            if (randomValue < creatureBlueprint.getMutationRandomRate())
                             {
                                 // Random mutation
                                 _weights[i][j][k] = Rand.getInstance().getRandomDouble();
                             }
                             else
                             {
-                                randomValue -= species.getMutationRandomRate();
-                                if (randomValue < species.getMutationFlipRate())
+                                randomValue -= creatureBlueprint.getMutationRandomRate();
+                                if (randomValue < creatureBlueprint.getMutationFlipRate())
                                 {
                                     // Flip mutation
                                     _weights[i][j][k] = -_weights[i][j][k];
                                 }
                                 else
                                 {
-                                    randomValue -= species.getMutationFlipRate();
+                                    randomValue -= creatureBlueprint.getMutationFlipRate();
                                 }
                             }
                         }
@@ -146,9 +146,9 @@ public class NeuralNetwork extends Processor
                 }
             }
         }
-        if (species.getNormalizeAfterMutation() != 0)
+        if (creatureBlueprint.getNormalizeAfterMutation() != 0)
         {
-            normalizeWeights(species.getNormalizeAfterMutation());
+            normalizeWeights(creatureBlueprint.getNormalizeAfterMutation());
         }
     }
 
@@ -474,15 +474,15 @@ public class NeuralNetwork extends Processor
         return new NeuralNetwork();
     }
 
-    public static NeuralNetwork makeWithSpecies(CreatureBlueprint species)
+    public static NeuralNetwork makeWithCreatureBlueprint(CreatureBlueprint creatureBlueprint)
     {
-        return new NeuralNetwork(species.getTotalProcessorInputCount(), species.getTotalProcessorOutputCount(),
-                species.getProcessorBlueprint().getRandomInitialization(), species.getNormalizeAfterMutation());
+        return new NeuralNetwork(creatureBlueprint.getTotalProcessorInputCount(), creatureBlueprint.getTotalProcessorOutputCount(),
+                creatureBlueprint.getProcessorBlueprint().getRandomInitialization(), creatureBlueprint.getNormalizeAfterMutation());
     }
 
-    public static NeuralNetwork makeWithParents(CreatureBlueprint species, NeuralNetwork parentProcessor1,
+    public static NeuralNetwork makeWithParents(CreatureBlueprint creatureBlueprint, NeuralNetwork parentProcessor1,
             NeuralNetwork parentProcessor2)
     {
-        return new NeuralNetwork(species, parentProcessor1, parentProcessor2);
+        return new NeuralNetwork(creatureBlueprint, parentProcessor1, parentProcessor2);
     }
 }

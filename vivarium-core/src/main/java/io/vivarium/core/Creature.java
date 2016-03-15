@@ -19,7 +19,7 @@ public class Creature extends VivariumObject
     @SerializedParameter
     private int _id;
     @SerializedParameter
-    private CreatureBlueprint _species;
+    private CreatureBlueprint _creatureBlueprint;
     @SerializedParameter
     private double _generation;
 
@@ -64,29 +64,29 @@ public class Creature extends VivariumObject
 
     }
 
-    public Creature(CreatureBlueprint species)
+    public Creature(CreatureBlueprint creatureBlueprint)
     {
-        this(species, null, null);
+        this(creatureBlueprint, null, null);
     }
 
-    public Creature(CreatureBlueprint species, Creature prototype)
+    public Creature(CreatureBlueprint creatureBlueprint, Creature prototype)
     {
-        this(species, prototype, null);
+        this(creatureBlueprint, prototype, null);
     }
 
     public Creature(Creature prototype)
     {
-        this(prototype._species, prototype, null);
+        this(prototype._creatureBlueprint, prototype, null);
     }
 
     public Creature(Creature parent1, Creature parent2)
     {
-        this(parent1._species, parent1, parent2);
+        this(parent1._creatureBlueprint, parent1, parent2);
     }
 
-    public Creature(CreatureBlueprint species, Creature parent1, Creature parent2)
+    public Creature(CreatureBlueprint creatureBlueprint, Creature parent1, Creature parent2)
     {
-        this._species = species;
+        this._creatureBlueprint = creatureBlueprint;
 
         if (parent1 != null)
         {
@@ -110,14 +110,14 @@ public class Creature extends VivariumObject
             if (parent2 != null)
             {
                 // Processor combined from genetic legacy
-                this._processor = ProcessorType.makeWithParents(_species.getProcessorBlueprint().getProcessorType(),
-                        _species, parent1._processor, parent2._processor);
+                this._processor = ProcessorType.makeWithParents(_creatureBlueprint.getProcessorBlueprint().getProcessorType(),
+                        _creatureBlueprint, parent1._processor, parent2._processor);
             }
             else
             {
                 // Processor from single parent (might still mutate)
-                this._processor = ProcessorType.makeWithParents(_species.getProcessorBlueprint().getProcessorType(),
-                        _species, parent1._processor, parent1._processor);
+                this._processor = ProcessorType.makeWithParents(_creatureBlueprint.getProcessorBlueprint().getProcessorType(),
+                        _creatureBlueprint, parent1._processor, parent1._processor);
             }
         }
         else
@@ -130,18 +130,18 @@ public class Creature extends VivariumObject
             else
             {
                 // Create a new default processor
-                this._processor = ProcessorType.makeWithSpecies(_species.getProcessorBlueprint().getProcessorType(),
-                        _species);
+                this._processor = ProcessorType.makeWithCreatureBlueprint(_creatureBlueprint.getProcessorBlueprint().getProcessorType(),
+                        _creatureBlueprint);
             }
         }
-        _inputs = new double[_species.getTotalProcessorInputCount()];
-        _memoryUnits = new double[_species.getMemoryUnitCount()];
-        _soundInputs = new double[_species.getSoundChannelCount()];
-        _soundOutputs = new double[_species.getSoundChannelCount()];
+        _inputs = new double[_creatureBlueprint.getTotalProcessorInputCount()];
+        _memoryUnits = new double[_creatureBlueprint.getMemoryUnitCount()];
+        _soundInputs = new double[_creatureBlueprint.getSoundChannelCount()];
+        _soundOutputs = new double[_creatureBlueprint.getSoundChannelCount()];
 
         // Set gender
         double randomNumber = Rand.getInstance().getRandomPositiveDouble();
-        if (randomNumber < _species.getFemaleThreshold())
+        if (randomNumber < _creatureBlueprint.getFemaleThreshold())
         {
             this._gender = Gender.FEMALE;
         }
@@ -158,7 +158,7 @@ public class Creature extends VivariumObject
         // Set defaults
         this._age = 0;
         this._gestation = 0;
-        this._food = _species.getMaximumFood();
+        this._food = _creatureBlueprint.getMaximumFood();
         this._facing = Direction.NORTH;
         this._action = Action.REST;
     }
@@ -174,9 +174,9 @@ public class Creature extends VivariumObject
         if (this._gestation > 0)
         {
             this._gestation++;
-            this._food += _species.getPregnantFoodRate();
+            this._food += _creatureBlueprint.getPregnantFoodRate();
         }
-        this._food += _species.getBaseFoodRate();
+        this._food += _creatureBlueprint.getBaseFoodRate();
     }
 
     public Action getAction()
@@ -186,7 +186,7 @@ public class Creature extends VivariumObject
 
     public void listenToCreature(Creature u, double distanceSquared)
     {
-        int soundChannels = Math.min(this._species.getSoundChannelCount(), u._species.getSoundChannelCount());
+        int soundChannels = Math.min(this._creatureBlueprint.getSoundChannelCount(), u._creatureBlueprint.getSoundChannelCount());
         for (int i = 0; i < soundChannels; i++)
         {
             this._soundInputs[i] += u._soundOutputs[i] / distanceSquared;
@@ -215,28 +215,28 @@ public class Creature extends VivariumObject
             _inputs[1] = facingObject == EntityType.FOOD ? 1 : 0;
             _inputs[2] = facingObject == EntityType.CREATURE ? 1 : 0;
             _inputs[3] = facingObject == EntityType.WALL ? 1 : 0;
-            _inputs[4] = ((double) this._food) / _species.getMaximumFood();
+            _inputs[4] = ((double) this._food) / _creatureBlueprint.getMaximumFood();
             // Read memory units
-            System.arraycopy(_memoryUnits, 0, _inputs, _species.getHardProcessorInputs() - 1, this._memoryUnits.length);
+            System.arraycopy(_memoryUnits, 0, _inputs, _creatureBlueprint.getHardProcessorInputs() - 1, this._memoryUnits.length);
             // Read sound inputs
-            for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
+            for (int i = 0; i < this.getBlueprint().getSoundChannelCount(); i++)
             {
-                _inputs[_species.getHardProcessorInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
+                _inputs[_creatureBlueprint.getHardProcessorInputs() - 1 + this._memoryUnits.length + i] = _soundInputs[i];
             }
             // Main processor computation
             double[] outputs = this._processor.outputs(_inputs);
             // Save memory units
-            System.arraycopy(outputs, _species.getHardProcessorOutputs() - 1, _memoryUnits, 0,
+            System.arraycopy(outputs, _creatureBlueprint.getHardProcessorOutputs() - 1, _memoryUnits, 0,
                     this._memoryUnits.length);
             // Clear the sound inputs and set the sound outputs
-            for (int i = 0; i < this.getSpecies().getSoundChannelCount(); i++)
+            for (int i = 0; i < this.getBlueprint().getSoundChannelCount(); i++)
             {
                 this._soundInputs[i] = 0;
-                this._soundOutputs[i] = outputs[_species.getHardProcessorOutputs() - 1 + this._memoryUnits.length + i];
+                this._soundOutputs[i] = outputs[_creatureBlueprint.getHardProcessorOutputs() - 1 + this._memoryUnits.length + i];
             }
             // Hard coded outputs (actionable outputs)
             int maxActionOutput = 0;
-            for (int i = 1; i < _species.getHardProcessorOutputs(); i++)
+            for (int i = 1; i < _creatureBlueprint.getHardProcessorOutputs(); i++)
             {
                 if (outputs[i] > outputs[maxActionOutput])
                 {
@@ -252,12 +252,12 @@ public class Creature extends VivariumObject
     {
         // Forced actions
         // Old Creatures Die
-        if (this._age > _species.getMaximumAge() || this._food < 1)
+        if (this._age > _creatureBlueprint.getMaximumAge() || this._food < 1)
         {
             return (Action.DIE);
         }
         // Pregnant Creatures can give birth
-        else if (this._gestation > _species.getMaximumGestation())
+        else if (this._gestation > _creatureBlueprint.getMaximumGestation())
         {
             return (Action.BIRTH);
         }
@@ -317,10 +317,10 @@ public class Creature extends VivariumObject
                     this._gestation = 1;
                     this._fetus = createOffspringWith(breedingTarget);
                 }
-                this._food += _species.getBreedingFoodRate();
+                this._food += _creatureBlueprint.getBreedingFoodRate();
                 break;
             case MOVE:
-                this._food += _species.getMovingFoodRate();
+                this._food += _creatureBlueprint.getMovingFoodRate();
                 break;
             case REST:
             case DIE:
@@ -333,10 +333,10 @@ public class Creature extends VivariumObject
                 this._facing = Direction.stepClockwise(this._facing);
                 break;
             case EAT:
-                this._food += _species.getEatingFoodRate();
-                if (this._food > _species.getMaximumFood())
+                this._food += _creatureBlueprint.getEatingFoodRate();
+                if (this._food > _creatureBlueprint.getMaximumFood())
                 {
-                    this._food = _species.getMaximumFood();
+                    this._food = _creatureBlueprint.getMaximumFood();
                 }
                 break;
             default:
@@ -359,14 +359,14 @@ public class Creature extends VivariumObject
                 break;
             case BREED:
                 // Trying to breed for no good reason is still tiring
-                this._food += _species.getBreedingFoodRate();
+                this._food += _creatureBlueprint.getBreedingFoodRate();
                 break;
             case EAT:
                 // Trying to eat nothing and failing costs nothing (this has been changed because the file format
                 // doesn't have a variable for this cost currently. This cost could be reintroduced later)
                 break;
             case MOVE:
-                this._food += _species.getMovingFoodRate();
+                this._food += _creatureBlueprint.getMovingFoodRate();
                 break;
             case DIE:
                 break;
@@ -463,9 +463,9 @@ public class Creature extends VivariumObject
         return (this._id);
     }
 
-    public CreatureBlueprint getSpecies()
+    public CreatureBlueprint getBlueprint()
     {
-        return this._species;
+        return this._creatureBlueprint;
     }
 
     public double getGeneration()

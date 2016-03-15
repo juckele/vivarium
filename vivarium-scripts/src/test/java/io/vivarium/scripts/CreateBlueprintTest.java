@@ -30,21 +30,21 @@ public class CreateBlueprintTest
     {
         {
             String[] commandArgs = { "-o", path + "b.viv" };
-            CreateBlueprint.main(commandArgs);
+            CreateWorldBlueprint.main(commandArgs);
         }
     }
 
     @Test
     @Category({ FastTest.class, SystemTest.class })
-    public void testWithSpecies() throws IOException
+    public void testWithCreatureBlueprint() throws IOException
     {
         {
             String[] commandArgs = { "-o", path + "s.viv" };
-            CreateSpecies.main(commandArgs);
+            CreateCreatureBlueprint.main(commandArgs);
         }
         {
             String[] commandArgs = { "-o", path + "b.viv", "-s", path + "s.viv" };
-            CreateBlueprint.main(commandArgs);
+            CreateWorldBlueprint.main(commandArgs);
         }
     }
 

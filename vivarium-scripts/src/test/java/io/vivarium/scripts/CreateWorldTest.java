@@ -40,7 +40,7 @@ public class CreateWorldTest
     {
         {
             String[] commandArgs = { "-o", path + "b.viv" };
-            CreateBlueprint.main(commandArgs);
+            CreateWorldBlueprint.main(commandArgs);
         }
         {
             String[] commandArgs = { "-o", path + "w.viv", "-b", path + "b.viv" };

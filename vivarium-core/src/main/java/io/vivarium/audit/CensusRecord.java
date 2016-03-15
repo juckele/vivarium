@@ -25,10 +25,10 @@ public class CensusRecord extends AuditRecord
     {
     }
 
-    public CensusRecord(CensusBlueprint blueprint, CreatureBlueprint species)
+    public CensusRecord(CensusBlueprint auditBlueprint, CreatureBlueprint creatureBlueprint)
     {
-        super(species);
-        _auditBlueprint = blueprint;
+        super(creatureBlueprint);
+        _auditBlueprint = auditBlueprint;
         _creaturePopulation = new ArrayList<>();
         _recordTicks = new ArrayList<>();
     }
@@ -50,16 +50,16 @@ public class CensusRecord extends AuditRecord
         if (_creaturePopulation.size() < 1)
         {
             _recordTicks.add(tick);
-            _creaturePopulation.add(world.getCount(_trackedSpecies));
+            _creaturePopulation.add(world.getCount(_trackedCreatureBlueprint));
         }
         else
         {
             // Now get the current population and only record the new value if it has changed from the last record
-            int currentCount = world.getCount(_trackedSpecies);
+            int currentCount = world.getCount(_trackedCreatureBlueprint);
             if (_creaturePopulation.get(_creaturePopulation.size() - 1) != currentCount)
             {
                 _recordTicks.add(tick);
-                _creaturePopulation.add(world.getCount(_trackedSpecies));
+                _creaturePopulation.add(world.getCount(_trackedCreatureBlueprint));
             }
         }
     }
@@ -67,10 +67,5 @@ public class CensusRecord extends AuditRecord
     public static CensusRecord makeUninitialized()
     {
         return new CensusRecord();
-    }
-
-    public static CensusRecord makeWithSpecies(CensusBlueprint function, CreatureBlueprint species)
-    {
-        return new CensusRecord(function, species);
     }
 }

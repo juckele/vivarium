@@ -15,8 +15,8 @@ public class ActionFrequencyBlueprint extends AuditBlueprint
     }
 
     @Override
-    public ActionFrequencyRecord makeRecordWithSpecies(CreatureBlueprint species)
+    public ActionFrequencyRecord makeRecordWithCreatureBlueprint(CreatureBlueprint blueprint)
     {
-        return new ActionFrequencyRecord(species);
+        return new ActionFrequencyRecord(blueprint);
     }
 }

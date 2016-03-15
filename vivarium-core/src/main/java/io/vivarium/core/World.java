@@ -65,14 +65,14 @@ public class World extends VivariumObject
 
     private void constructAuditRecords()
     {
-        int auditRecordCount = _blueprint.getSpecies().size() * _blueprint.getAuditBlueprints().size();
+        int auditRecordCount = _blueprint.getCreatureBlueprints().size() * _blueprint.getAuditBlueprints().size();
         _auditRecords = new AuditRecord[auditRecordCount];
         int i = 0;
-        for (CreatureBlueprint species : _blueprint.getSpecies())
+        for (CreatureBlueprint creatureBlueprint : _blueprint.getCreatureBlueprints())
         {
             for (AuditBlueprint auditBlueprint : _blueprint.getAuditBlueprints())
             {
-                _auditRecords[i] = auditBlueprint.makeRecordWithSpecies(species);
+                _auditRecords[i] = auditBlueprint.makeRecordWithCreatureBlueprint(creatureBlueprint);
                 i++;
             }
         }
@@ -81,7 +81,7 @@ public class World extends VivariumObject
     private void populatateWorld()
     {
         WorldPopulator populator = new WorldPopulator();
-        populator.setSpecies(_blueprint.getSpecies());
+        populator.setCreatureBlueprints(_blueprint.getCreatureBlueprints());
         populator.setWallProbability(_blueprint.getInitialWallGenerationProbability());
         populator.setFoodProbability(_blueprint.getInitialFoodGenerationProbability());
         for (int r = 0; r < _height; r++)
@@ -99,8 +99,8 @@ public class World extends VivariumObject
                     EntityType object = populator.getNextEntityType();
                     if (object == EntityType.CREATURE)
                     {
-                        CreatureBlueprint species = populator.getNextCreatureSpecies();
-                        Creature creature = new Creature(species);
+                        CreatureBlueprint creatureBlueprint = populator.getNextCreatureBlueprint();
+                        Creature creature = new Creature(creatureBlueprint);
                         addCreature(creature, r, c);
                     }
                     else
@@ -278,8 +278,8 @@ public class World extends VivariumObject
         else if (action == Action.BREED
                 // Make sure we're facing another creature
                 && _entityGrid[facingR][facingC] == EntityType.CREATURE
-                // And that creature is the same species as us
-                && _creatureGrid[facingR][facingC].getSpecies() == creature.getSpecies()
+                // And that creature is shares the same blueprint as us
+                && _creatureGrid[facingR][facingC].getBlueprint() == creature.getBlueprint()
                 // And that creature also is trying to breed
                 && _creatureGrid[facingR][facingC].getAction() == Action.BREED
                 // And that creature is the opposite gender
@@ -472,7 +472,7 @@ public class World extends VivariumObject
         {
             for (int c = 0; c < _width; c++)
             {
-                if (this._creatureGrid[r][c] != null && this._creatureGrid[r][c].getSpecies().equals(s))
+                if (this._creatureGrid[r][c] != null && this._creatureGrid[r][c].getBlueprint().equals(s))
                 {
                     count++;
                 }
@@ -600,11 +600,11 @@ public class World extends VivariumObject
         StringBuilder worldOutput = new StringBuilder();
         worldOutput.append("Walls: ");
         worldOutput.append(this.getCount(EntityType.WALL));
-        HashMap<CreatureBlueprint, String> speciesToGlyphMap = new HashMap<>();
-        for (CreatureBlueprint s : this._blueprint.getSpecies())
+        HashMap<CreatureBlueprint, String> creatureBlueprintToGlyph = new HashMap<>();
+        for (CreatureBlueprint s : this._blueprint.getCreatureBlueprints())
         {
-            speciesToGlyphMap.put(s, glyphs[speciesToGlyphMap.size()]);
-            worldOutput.append(", ").append(speciesToGlyphMap.get(s)).append("-creatures: ");
+            creatureBlueprintToGlyph.put(s, glyphs[creatureBlueprintToGlyph.size()]);
+            worldOutput.append(", ").append(creatureBlueprintToGlyph.get(s)).append("-creatures: ");
             worldOutput.append(this.getCount(s));
         }
         worldOutput.append(", Food: ");
@@ -628,7 +628,7 @@ public class World extends VivariumObject
                 }
                 else if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
-                    worldOutput.append(speciesToGlyphMap.get(_creatureGrid[r][c].getSpecies()));
+                    worldOutput.append(creatureBlueprintToGlyph.get(_creatureGrid[r][c].getBlueprint()));
                 }
             }
             worldOutput.append('\n');
@@ -638,12 +638,12 @@ public class World extends VivariumObject
 
     private String renderProcessorWeights()
     {
-        StringBuilder multiSpeciesOutput = new StringBuilder();
-        for (CreatureBlueprint species : this._blueprint.getSpecies())
+        StringBuilder multiCreatureBlueprintOutput = new StringBuilder();
+        for (CreatureBlueprint blueprint : this._blueprint.getCreatureBlueprints())
         {
-            multiSpeciesOutput.append(this.renderProcessorWeights(species));
+            multiCreatureBlueprintOutput.append(this.renderProcessorWeights(blueprint));
         }
-        return multiSpeciesOutput.toString();
+        return multiCreatureBlueprintOutput.toString();
     }
 
     private String renderProcessorWeights(CreatureBlueprint s)
@@ -655,7 +655,7 @@ public class World extends VivariumObject
         {
             for (int c = 0; c < this._width; c++)
             {
-                if (_entityGrid[r][c] == EntityType.CREATURE && _creatureGrid[r][c].getSpecies().equals(s))
+                if (_entityGrid[r][c] == EntityType.CREATURE && _creatureGrid[r][c].getBlueprint().equals(s))
                 {
                     processors.add(_creatureGrid[r][c].getProcessor());
                 }

@@ -12,7 +12,7 @@ import org.junit.rules.TemporaryFolder;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.SystemTest;
 
-public class CreateSpeciesTest
+public class CreateCreatureBlueprintTest
 {
     @Rule
     public TemporaryFolder folder = new TemporaryFolder();
@@ -30,7 +30,7 @@ public class CreateSpeciesTest
     {
         {
             String[] commandArgs = { "-o", path + "s.viv" };
-            CreateSpecies.main(commandArgs);
+            CreateCreatureBlueprint.main(commandArgs);
         }
     }
 }

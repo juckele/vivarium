@@ -26,9 +26,9 @@ public class ActionFrequencyRecord extends AuditRecord
     {
     }
 
-    protected ActionFrequencyRecord(CreatureBlueprint species)
+    protected ActionFrequencyRecord(CreatureBlueprint blueprint)
     {
-        super(species);
+        super(blueprint);
     }
 
     @Override
@@ -39,7 +39,7 @@ public class ActionFrequencyRecord extends AuditRecord
             for (int c = 0; c < world.getWorldHeight(); c++)
             {
                 Creature creature = world.getCreature(r, c);
-                if (creature != null && creature.getSpecies() == this._trackedSpecies)
+                if (creature != null && creature.getBlueprint() == this._trackedCreatureBlueprint)
                 {
                     addRecord((int) creature.getGeneration(), creature.getIsFemale(), creature.getGestation() > 0,
                             creature.getAction(), creature.wasSuccessful());

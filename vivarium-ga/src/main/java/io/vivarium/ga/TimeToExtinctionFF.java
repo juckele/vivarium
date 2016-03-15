@@ -27,10 +27,10 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     {
         // Build world
         WorldBlueprint instanceBlueprint = new SerializationEngine().makeCopy(_blueprint);
-        Preconditions.checkArgument(instanceBlueprint.getSpecies().size() == 1);
-        CreatureBlueprint instanceSpecies = instanceBlueprint.getSpecies().get(0);
-        instanceSpecies.setMutationRateExponent(Double.NEGATIVE_INFINITY);
-        Creature instanceCreature = new Creature(instanceSpecies, c);
+        Preconditions.checkArgument(instanceBlueprint.getCreatureBlueprints().size() == 1);
+        CreatureBlueprint instanceCreatureBlueprint = instanceBlueprint.getCreatureBlueprints().get(0);
+        instanceCreatureBlueprint.setMutationRateExponent(Double.NEGATIVE_INFINITY);
+        Creature instanceCreature = new Creature(instanceCreatureBlueprint, c);
 
         World w = new World(instanceBlueprint);
         for (int i = 0; i < _initialPopulation; i++)

@@ -9,19 +9,19 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import io.vivarium.audit.AuditBlueprint;
-import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.CreatureBlueprint;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
 
-public class CreateBlueprint extends CommonsScript
+public class CreateWorldBlueprint extends CommonsScript
 {
     private static final String OUTPUT_FILE = "output";
     private static final String AUDIT_INPUT_FILE = "audit";
-    private static final String SPECIES_INPUT_FILE = "species";
+    private static final String CREATURE_INPUT_FILE = "creature";
 
-    public CreateBlueprint(String[] args)
+    public CreateWorldBlueprint(String[] args)
     {
         super(args);
     }
@@ -44,15 +44,15 @@ public class CreateBlueprint extends CommonsScript
                 .longOpt(AUDIT_INPUT_FILE)
                 .hasArg(true)
                 .argName("FILE")
-                .desc("file to load audit blueprints from. If this option is not given, no audit blueprints will be added to the blueprint.")
+                .desc("file to load audit blueprints from. If this option is not given, no audit blueprints will be added to the world blueprint.")
                 .build());
         options.add(Option
                 .builder("s")
                 .required(false)
-                .longOpt(SPECIES_INPUT_FILE)
+                .longOpt(CREATURE_INPUT_FILE)
                 .hasArg(true)
                 .argName("FILE")
-                .desc("file to load species from. If this option is not given, a single default species will be added to the blueprint.")
+                .desc("file to load creature blueprints from. If this option is not given, a single default creature blueprint will be added to the world blueprint.")
                 .build());
         return options;
     }
@@ -61,7 +61,7 @@ public class CreateBlueprint extends CommonsScript
     protected void run(CommandLine commandLine)
     {
         LinkedList<AuditBlueprint> auditBlueprints = new LinkedList<>();
-        LinkedList<CreatureBlueprint> species = new LinkedList<>();
+        LinkedList<CreatureBlueprint> creatureBlueprints = new LinkedList<>();
         if (commandLine.hasOption(AUDIT_INPUT_FILE))
         {
             String auditFile = null;
@@ -86,25 +86,28 @@ public class CreateBlueprint extends CommonsScript
                 throw new IllegalStateException(extendedMessage, e);
             }
         }
-        if (commandLine.hasOption(SPECIES_INPUT_FILE))
+        if (commandLine.hasOption(CREATURE_INPUT_FILE))
         {
-            String speciesFile = null;
+            String creatureFile = null;
             try
             {
-                speciesFile = commandLine.getOptionValue(SPECIES_INPUT_FILE);
-                for (CreatureBlueprint specie : FileIO.loadObjectCollection(speciesFile, Format.JSON).getAll(CreatureBlueprint.class))
+                creatureFile = commandLine.getOptionValue(CREATURE_INPUT_FILE);
+                for (CreatureBlueprint specie : FileIO
+                        .loadObjectCollection(creatureFile, Format.JSON)
+                        .getAll(CreatureBlueprint.class))
                 {
-                    species.add(specie);
+                    creatureBlueprints.add(specie);
                 }
-                if (species.isEmpty())
+                if (creatureBlueprints.isEmpty())
                 {
-                    throw new IllegalStateException("No species found in species input file " + speciesFile);
+                    throw new IllegalStateException(
+                            "No creature blueprints found in creature input file " + creatureFile);
                 }
             }
             catch (ClassCastException e)
             {
-                String extendedMessage = "species input file " + speciesFile
-                        + " does not contain species as top level objects";
+                String extendedMessage = "creature input file " + creatureFile
+                        + " does not contain creture blueprints as top level objects";
                 throw new IllegalStateException(extendedMessage, e);
             }
         }
@@ -113,9 +116,9 @@ public class CreateBlueprint extends CommonsScript
         // Build the blueprint
         WorldBlueprint blueprint = WorldBlueprint.makeDefault();
         new SerializationEngine().deserialize(blueprint, extraOptions);
-        if (!species.isEmpty())
+        if (!creatureBlueprints.isEmpty())
         {
-            blueprint.setSpecies(new ArrayList<>(species));
+            blueprint.setCreatureBlueprints(new ArrayList<>(creatureBlueprints));
         }
         if (!auditBlueprints.isEmpty())
         {
@@ -141,6 +144,6 @@ public class CreateBlueprint extends CommonsScript
 
     public static void main(String[] args)
     {
-        new CreateBlueprint(args);
+        new CreateWorldBlueprint(args);
     }
 }

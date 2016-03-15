@@ -15,11 +15,12 @@ public class RandomGenerator extends Processor
     @SerializedParameter
     private double[] _outputs;
 
-    private RandomGenerator(CreatureBlueprint species, RandomGenerator parentProcessor1, RandomGenerator parentProcessor2)
+    private RandomGenerator(CreatureBlueprint creatureBlueprint, RandomGenerator parentProcessor1,
+            RandomGenerator parentProcessor2)
     {
         // Random processor has no state, it's literally random output. This processor
         // does not evolve.
-        this._outputs = new double[species.getTotalProcessorOutputCount()];
+        this._outputs = new double[creatureBlueprint.getTotalProcessorOutputCount()];
     }
 
     public RandomGenerator(int totalProcessorOutputCount)
@@ -71,18 +72,18 @@ public class RandomGenerator extends Processor
         return new RandomGenerator();
     }
 
-    public static RandomGenerator makeWithSpecies(CreatureBlueprint species)
+    public static RandomGenerator makeWithCreatureBlueprint(CreatureBlueprint creatureBlueprint)
     {
-        RandomGenerator processor = new RandomGenerator(species.getTotalProcessorOutputCount());
+        RandomGenerator processor = new RandomGenerator(creatureBlueprint.getTotalProcessorOutputCount());
         return processor;
     }
 
-    public static Processor makeWithParents(CreatureBlueprint species, RandomGenerator untypedParentProcessor1,
+    public static Processor makeWithParents(CreatureBlueprint creatureBlueprint, RandomGenerator untypedParentProcessor1,
             RandomGenerator untypedParentProcessor2)
     {
         RandomGenerator parentProcessor1 = untypedParentProcessor1;
         RandomGenerator parentProcessor2 = untypedParentProcessor2;
-        RandomGenerator processor = new RandomGenerator(species, parentProcessor1, parentProcessor2);
+        RandomGenerator processor = new RandomGenerator(creatureBlueprint, parentProcessor1, parentProcessor2);
         return processor;
     }
 

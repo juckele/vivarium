@@ -4,8 +4,8 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import io.vivarium.scripts.CreateAuditBlueprint;
-import io.vivarium.scripts.CreateBlueprint;
-import io.vivarium.scripts.CreateSpecies;
+import io.vivarium.scripts.CreateWorldBlueprint;
+import io.vivarium.scripts.CreateCreatureBlueprint;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RenderWorld;
 import io.vivarium.scripts.RunSimulation;
@@ -25,17 +25,17 @@ public class Harness
 
         {
             String[] commandArgs = { "-o", "/tmp/s.viv", "maximumFood", "3000" };
-            CreateSpecies.main(commandArgs);
+            CreateCreatureBlueprint.main(commandArgs);
         }
 
         {
             String[] commandArgs = { "-o", "/tmp/bp.viv", "-a", "/tmp/af.viv" };
-            CreateBlueprint.main(commandArgs);
+            CreateWorldBlueprint.main(commandArgs);
         }
 
         {
             String[] commandArgs = { "-o", "/tmp/bp.viv", "-a", "/tmp/af.viv", "-s", "/tmp/s.viv" };
-            CreateBlueprint.main(commandArgs);
+            CreateWorldBlueprint.main(commandArgs);
         }
 
         {

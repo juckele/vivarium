@@ -24,7 +24,7 @@ public abstract class AuditBlueprint extends VivariumObject
         return _auditType;
     }
 
-    public abstract AuditRecord makeRecordWithSpecies(CreatureBlueprint species);
+    public abstract AuditRecord makeRecordWithCreatureBlueprint(CreatureBlueprint blueprint);
 
     @Override
     public void finalizeSerialization()

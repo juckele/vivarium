@@ -29,9 +29,9 @@ public class WorldBlueprint extends VivariumObject
     @SerializedParameter
     private boolean _soundEnabled = false;
 
-    // Species
+    // Blueprints for creatures
     @SerializedParameter
-    private ArrayList<CreatureBlueprint> _species;
+    private ArrayList<CreatureBlueprint> _creatureBlueprints;
 
     // Audit Functions
     @SerializedParameter
@@ -93,9 +93,9 @@ public class WorldBlueprint extends VivariumObject
         return this._auditBlueprints;
     }
 
-    public ArrayList<CreatureBlueprint> getSpecies()
+    public ArrayList<CreatureBlueprint> getCreatureBlueprints()
     {
-        return this._species;
+        return this._creatureBlueprints;
     }
 
     public void setFoodGenerationProbability(double p)
@@ -124,9 +124,9 @@ public class WorldBlueprint extends VivariumObject
         this._soundEnabled = soundEnabled;
     }
 
-    public void setSpecies(ArrayList<CreatureBlueprint> species)
+    public void setCreatureBlueprints(ArrayList<CreatureBlueprint> creatureBlueprints)
     {
-        this._species = species;
+        this._creatureBlueprints = creatureBlueprints;
     }
 
     public void setAuditBlueprints(ArrayList<AuditBlueprint> auditBlueprints)
@@ -138,8 +138,8 @@ public class WorldBlueprint extends VivariumObject
     {
         WorldBlueprint wb = new WorldBlueprint();
         wb.finalizeSerialization();
-        wb._species = new ArrayList<>();
-        wb._species.add(CreatureBlueprint.makeDefault());
+        wb._creatureBlueprints = new ArrayList<>();
+        wb._creatureBlueprints.add(CreatureBlueprint.makeDefault());
         wb._auditBlueprints = new ArrayList<>();
         return wb;
     }
@@ -152,6 +152,7 @@ public class WorldBlueprint extends VivariumObject
 
     public static void main(String[] args)
     {
-        System.out.println("" + WorldBlueprint.makeDefault().hashCode() + ":" + WorldBlueprint.makeDefault().toString());
+        System.out
+                .println("" + WorldBlueprint.makeDefault().hashCode() + ":" + WorldBlueprint.makeDefault().toString());
     }
 }

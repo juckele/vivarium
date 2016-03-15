@@ -24,11 +24,11 @@ public class JSONSerializationTest
         ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
         processorBlueprint.setRandomInitialization(true);
 
-        CreatureBlueprint species = CreatureBlueprint.makeDefault();
-        species.setProcessorBlueprint(processorBlueprint);
-        species.setNormalizeAfterMutation(Math.sqrt(42));
+        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
+        creatureBlueprint.setProcessorBlueprint(processorBlueprint);
+        creatureBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
         WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        blueprint.setSpecies(Lists.newArrayList(species));
+        blueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         World world = new World(blueprint);
 
         // Convert to json

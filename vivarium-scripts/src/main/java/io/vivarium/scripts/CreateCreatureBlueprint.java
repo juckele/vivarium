@@ -12,11 +12,11 @@ import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
 
-public class CreateSpecies extends CommonsScript
+public class CreateCreatureBlueprint extends CommonsScript
 {
     private static final String OUTPUT_FILE = "output";
 
-    public CreateSpecies(String[] args)
+    public CreateCreatureBlueprint(String[] args)
     {
         super(args);
     }
@@ -31,7 +31,7 @@ public class CreateSpecies extends CommonsScript
                 .longOpt(OUTPUT_FILE)
                 .hasArg(true)
                 .argName("FILE")
-                .desc("file to save to species to")
+                .desc("file to save to creature blueprint to")
                 .build());
         return options;
     }
@@ -41,19 +41,19 @@ public class CreateSpecies extends CommonsScript
     {
         Map<String, Object> extraOptions = this.extraArgsAsMap(commandLine);
 
-        // Build the species
-        CreatureBlueprint species = CreatureBlueprint.makeDefault();
-        new SerializationEngine().deserialize(species, extraOptions);
+        // Build the creature blueprint
+        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
+        new SerializationEngine().deserialize(creatureBlueprint, extraOptions);
 
         // Save the blueprint
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
-        FileIO.saveSerializer(species, outputFile, Format.JSON);
+        FileIO.saveSerializer(creatureBlueprint, outputFile, Format.JSON);
     }
 
     @Override
     protected String getUsageHeader()
     {
-        return "A tool for creating species.";
+        return "A tool for creating creature blueprints.";
     }
 
     @Override
@@ -64,6 +64,6 @@ public class CreateSpecies extends CommonsScript
 
     public static void main(String[] args)
     {
-        new CreateSpecies(args);
+        new CreateCreatureBlueprint(args);
     }
 }

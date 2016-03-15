@@ -40,30 +40,30 @@ public class NormalizationConvergence
     public static void main(String[] args) throws URISyntaxException
     {
         // Make the blueprint with the default behavior
-        WorldBlueprint defaultBlueprint = WorldBlueprint.makeDefault();
-        defaultBlueprint.setSize(worldSize);
-        ArrayList<CreatureBlueprint> defaultSpeciesList = new ArrayList<>();
-        CreatureBlueprint defaultSpecies = CreatureBlueprint.makeDefault();
-        defaultSpeciesList.add(defaultSpecies);
-        defaultBlueprint.setSpecies(defaultSpeciesList);
+        WorldBlueprint defaultWorldBlueprint = WorldBlueprint.makeDefault();
+        defaultWorldBlueprint.setSize(worldSize);
+        ArrayList<CreatureBlueprint> defaultCreatureBlueprints = new ArrayList<>();
+        CreatureBlueprint defaultCreatureBlueprint = CreatureBlueprint.makeDefault();
+        defaultCreatureBlueprints.add(defaultCreatureBlueprint);
+        defaultWorldBlueprint.setCreatureBlueprints(defaultCreatureBlueprints);
 
         // Save the default blueprint
         TaskClient defaultUploadClient = new TaskClient(
-                new UploadResourceTask(defaultBlueprint.getUUID(), defaultBlueprint));
+                new UploadResourceTask(defaultWorldBlueprint.getUUID(), defaultWorldBlueprint));
         defaultUploadClient.connect();
 
         // Make the blueprint with the normalizing behavior
-        WorldBlueprint normalizingBlueprint = WorldBlueprint.makeDefault();
-        normalizingBlueprint.setSize(50);
-        ArrayList<CreatureBlueprint> normalizingSpeciesList = new ArrayList<>();
-        CreatureBlueprint normalizingSpecies = CreatureBlueprint.makeDefault();
-        normalizingSpecies.setNormalizeAfterMutation(1);
-        normalizingSpeciesList.add(normalizingSpecies);
-        normalizingBlueprint.setSpecies(normalizingSpeciesList);
+        WorldBlueprint normalizingWorldBlueprint = WorldBlueprint.makeDefault();
+        normalizingWorldBlueprint.setSize(50);
+        ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
+        CreatureBlueprint normalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
+        normalizingCreatureBlueprint.setNormalizeAfterMutation(1);
+        normalizingCreatureBlueprints.add(normalizingCreatureBlueprint);
+        normalizingWorldBlueprint.setCreatureBlueprints(normalizingCreatureBlueprints);
 
         // Save the normalizing blueprint
         TaskClient normalizingUploadClient = new TaskClient(
-                new UploadResourceTask(normalizingBlueprint.getUUID(), normalizingBlueprint));
+                new UploadResourceTask(normalizingWorldBlueprint.getUUID(), normalizingWorldBlueprint));
         normalizingUploadClient.connect();
 
         // Pre-allocate the resource snapshots
@@ -83,13 +83,13 @@ public class NormalizationConvergence
         for (int i = 1; i <= worldCountPerGroup; i++)
         {
             // Create world creation jobs
-            Job createDefaultWorldJob = new CreateWorldJob(Lists.newArrayList(defaultBlueprint.getUUID()),
+            Job createDefaultWorldJob = new CreateWorldJob(Lists.newArrayList(defaultWorldBlueprint.getUUID()),
                     Lists.newArrayList(defaultWorldSnapshots[0]), new LinkedList<>());
             TaskClient createDefaultWorlClient = new TaskClient(new CreateJobTask(createDefaultWorldJob));
             createDefaultWorlClient.connect();
 
             // Create world creation jobs
-            Job createNormalizingWorldJob = new CreateWorldJob(Lists.newArrayList(normalizingBlueprint.getUUID()),
+            Job createNormalizingWorldJob = new CreateWorldJob(Lists.newArrayList(normalizingWorldBlueprint.getUUID()),
                     Lists.newArrayList(normalizingWorldSnapshots[0]), new LinkedList<>());
             TaskClient createNormalizingWorlClient = new TaskClient(new CreateJobTask(createNormalizingWorldJob));
             createNormalizingWorlClient.connect();
@@ -98,8 +98,8 @@ public class NormalizationConvergence
             long endTick = ticksPerSnapshot;
             UUID defaultJobDependency = createDefaultWorldJob.getJobID();
             UUID normalizingJobDependency = createNormalizingWorldJob.getJobID();
-            UUID defaultInputResource = defaultBlueprint.getUUID();
-            UUID normalizingInputResource = normalizingBlueprint.getUUID();
+            UUID defaultInputResource = defaultWorldBlueprint.getUUID();
+            UUID normalizingInputResource = normalizingWorldBlueprint.getUUID();
             // Create simulation jobs
             for (int j = 0; j < snapshotsPerWorld; j++)
             {

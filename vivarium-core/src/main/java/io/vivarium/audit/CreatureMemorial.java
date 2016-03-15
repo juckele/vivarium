@@ -15,9 +15,9 @@ public class CreatureMemorial extends AuditRecord
         super();
     }
 
-    public CreatureMemorial(CreatureBlueprint species)
+    public CreatureMemorial(CreatureBlueprint blueprint)
     {
-        super(species);
+        super(blueprint);
     }
 
     @Override
@@ -29,10 +29,5 @@ public class CreatureMemorial extends AuditRecord
     public static CreatureMemorial makeUninitialized()
     {
         return new CreatureMemorial();
-    }
-
-    public static CreatureMemorial makeWithSpecies(AuditBlueprint function, CreatureBlueprint species)
-    {
-        return new CreatureMemorial(species);
     }
 }

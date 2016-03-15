@@ -129,14 +129,14 @@ public class VivariumWeb implements AnimationCallback, EntryPoint, LoadHandler
     private void buildWorld()
     {
         // Build the world
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        CreatureBlueprint s = CreatureBlueprint.makeDefault();
-        ArrayList<CreatureBlueprint> species = new ArrayList<>();
-        species.add(s);
-        blueprint.setSpecies(species);
-        blueprint.setSize(30);
-        blueprint.setWidth(45);
-        world = new World(blueprint);
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
+        ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
+        creatureBlueprints.add(creatureBlueprint);
+        worldBlueprint.setCreatureBlueprints(creatureBlueprints);
+        worldBlueprint.setSize(30);
+        worldBlueprint.setWidth(45);
+        world = new World(worldBlueprint);
     }
 
     private void setUpGraphics()

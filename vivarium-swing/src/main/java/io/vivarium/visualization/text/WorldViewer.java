@@ -5,10 +5,10 @@ import java.util.ArrayList;
 import javax.swing.JFrame;
 import javax.swing.JTextArea;
 
-import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.EntityType;
 import io.vivarium.core.CreatureBlueprint;
+import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial") // Never actually serialized
@@ -96,27 +96,22 @@ public class WorldViewer extends JFrame
         // Set up
         int worldDimensions = 25;
         System.out.println("Creating world... " + worldDimensions + " x " + worldDimensions);
-        ArrayList<CreatureBlueprint> species = new ArrayList<>();
+        ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
 
-        // Build 1 species
-        CreatureBlueprint species1 = CreatureBlueprint.makeDefault();
-        species1.setMutationRateExponent(-4);
-        species1.setCreatureMemoryUnitCount(1);
-        species1.setCreatureSoundChannelCount(1);
-        species1.setNormalizeAfterMutation(Math.sqrt(9 * 8));
-        species.add(species1);
-
-        // Build another
-        // Species species2 = Species.makeDefault();
-        // species2.setProcessorType(ProcessorType.RANDOM);
-        // species.add(species2);
+        // Build 1 creature blueprint
+        CreatureBlueprint creatureBlueprint1 = CreatureBlueprint.makeDefault();
+        creatureBlueprint1.setMutationRateExponent(-4);
+        creatureBlueprint1.setCreatureMemoryUnitCount(1);
+        creatureBlueprint1.setCreatureSoundChannelCount(1);
+        creatureBlueprint1.setNormalizeAfterMutation(Math.sqrt(9 * 8));
+        creatureBlueprints.add(creatureBlueprint1);
 
         // Construct the world proper
-        WorldBlueprint blueprint = WorldBlueprint.makeDefault();
-        blueprint.setSpecies(species);
-        blueprint.setSize(worldDimensions);
+        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        worldBlueprint.setCreatureBlueprints(creatureBlueprints);
+        worldBlueprint.setSize(worldDimensions);
 
-        World w = new World(blueprint);
+        World w = new World(worldBlueprint);
         System.out.println("Created world... " + worldDimensions + " x " + worldDimensions);
 
         // Run simulation
