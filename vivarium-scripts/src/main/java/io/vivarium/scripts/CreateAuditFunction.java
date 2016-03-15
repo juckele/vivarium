@@ -8,7 +8,7 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.audit.AuditFunction;
+import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.AuditType;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
@@ -67,7 +67,7 @@ public class CreateAuditFunction extends CommonsScript
         }
 
         // Build the audit function
-        AuditFunction auditFunction = auditType.makeFunction();
+        AuditBlueprint auditFunction = auditType.makeFunction();
         new SerializationEngine().deserialize(auditFunction, extraOptions);
 
         // Save the audit function

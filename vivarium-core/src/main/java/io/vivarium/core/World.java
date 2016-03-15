@@ -5,7 +5,7 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import io.vivarium.audit.AuditFunction;
+import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.AuditRecord;
 import io.vivarium.core.processor.Processor;
 import io.vivarium.core.processor.ProcessorType;
@@ -70,7 +70,7 @@ public class World extends VivariumObject
         int i = 0;
         for (Species species : _blueprint.getSpecies())
         {
-            for (AuditFunction auditFunction : _blueprint.getAuditFunctions())
+            for (AuditBlueprint auditFunction : _blueprint.getAuditFunctions())
             {
                 _auditRecords[i] = auditFunction.makeRecordWithSpecies(species);
                 i++;

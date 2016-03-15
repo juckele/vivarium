@@ -14,7 +14,7 @@ import lombok.ToString;
 public class CensusRecord extends AuditRecord
 {
     @SerializedParameter
-    private AuditFunction _auditFunction;
+    private AuditBlueprint _auditFunction;
 
     @SerializedParameter
     private ArrayList<Integer> _recordTicks;

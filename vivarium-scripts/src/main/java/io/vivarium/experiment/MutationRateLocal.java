@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 import io.vivarium.audit.ActionFrequencyFunction;
-import io.vivarium.audit.AuditFunction;
+import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusFunction;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
@@ -69,7 +69,7 @@ public class MutationRateLocal
             speciesList.add(species);
             blueprint.setSpecies(speciesList);
             // Set audit functions
-            ArrayList<AuditFunction> auditFunctions = new ArrayList<>();
+            ArrayList<AuditBlueprint> auditFunctions = new ArrayList<>();
             auditFunctions.add(new ActionFrequencyFunction());
             auditFunctions.add(new CensusFunction());
             blueprint.setAuditFunctions(auditFunctions);

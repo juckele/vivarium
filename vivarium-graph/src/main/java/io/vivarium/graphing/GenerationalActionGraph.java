@@ -21,7 +21,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 
 import io.vivarium.audit.ActionFrequencyFunction;
 import io.vivarium.audit.ActionFrequencyRecord;
-import io.vivarium.audit.AuditFunction;
+import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.core.Action;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.World;
@@ -140,7 +140,7 @@ public class GenerationalActionGraph extends BaseGraph
     {
         Blueprint b = Blueprint.makeDefault();
 
-        ArrayList<AuditFunction> auditFunctions = new ArrayList<>();
+        ArrayList<AuditBlueprint> auditFunctions = new ArrayList<>();
         ActionFrequencyFunction actionFrequencies = new ActionFrequencyFunction();
         auditFunctions.add(actionFrequencies);
         b.setAuditFunctions(auditFunctions);

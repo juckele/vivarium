@@ -2,7 +2,7 @@ package io.vivarium.core;
 
 import java.util.ArrayList;
 
-import io.vivarium.audit.AuditFunction;
+import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -35,7 +35,7 @@ public class Blueprint extends VivariumObject
 
     // Audit Functions
     @SerializedParameter
-    private ArrayList<AuditFunction> _auditFunctions;
+    private ArrayList<AuditBlueprint> _auditFunctions;
 
     // Private constructor for deserialization
     private Blueprint()
@@ -88,7 +88,7 @@ public class Blueprint extends VivariumObject
         return this._soundEnabled;
     }
 
-    public ArrayList<AuditFunction> getAuditFunctions()
+    public ArrayList<AuditBlueprint> getAuditFunctions()
     {
         return this._auditFunctions;
     }
@@ -129,7 +129,7 @@ public class Blueprint extends VivariumObject
         this._species = species;
     }
 
-    public void setAuditFunctions(ArrayList<AuditFunction> auditFunctions)
+    public void setAuditFunctions(ArrayList<AuditBlueprint> auditFunctions)
     {
         this._auditFunctions = auditFunctions;
     }

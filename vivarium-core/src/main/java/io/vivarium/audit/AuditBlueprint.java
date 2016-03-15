@@ -9,12 +9,12 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public abstract class AuditFunction extends VivariumObject
+public abstract class AuditBlueprint extends VivariumObject
 {
     @SerializedParameter
     protected AuditType _auditType;
 
-    protected AuditFunction(AuditType auditType)
+    protected AuditBlueprint(AuditType auditType)
     {
         this._auditType = auditType;
     }

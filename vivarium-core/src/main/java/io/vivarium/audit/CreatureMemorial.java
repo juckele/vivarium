@@ -31,7 +31,7 @@ public class CreatureMemorial extends AuditRecord
         return new CreatureMemorial();
     }
 
-    public static CreatureMemorial makeWithSpecies(AuditFunction function, Species species)
+    public static CreatureMemorial makeWithSpecies(AuditBlueprint function, Species species)
     {
         return new CreatureMemorial(species);
     }

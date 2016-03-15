@@ -8,7 +8,7 @@ import java.util.Map;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.audit.AuditFunction;
+import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.core.Blueprint;
 import io.vivarium.core.Species;
 import io.vivarium.serialization.FileIO;
@@ -60,7 +60,7 @@ public class CreateBlueprint extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        LinkedList<AuditFunction> auditFunctions = new LinkedList<>();
+        LinkedList<AuditBlueprint> auditFunctions = new LinkedList<>();
         LinkedList<Species> species = new LinkedList<>();
         if (commandLine.hasOption(AUDIT_INPUT_FILE))
         {
@@ -68,9 +68,9 @@ public class CreateBlueprint extends CommonsScript
             try
             {
                 auditFile = commandLine.getOptionValue(AUDIT_INPUT_FILE);
-                for (AuditFunction auditFunction : FileIO
+                for (AuditBlueprint auditFunction : FileIO
                         .loadObjectCollection(auditFile, Format.JSON)
-                        .getAll(AuditFunction.class))
+                        .getAll(AuditBlueprint.class))
                 {
                     auditFunctions.add(auditFunction);
                 }

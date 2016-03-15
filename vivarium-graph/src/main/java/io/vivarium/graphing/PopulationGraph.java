@@ -15,7 +15,7 @@ import org.jfree.data.xy.XYDataset;
 import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 
-import io.vivarium.audit.AuditFunction;
+import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusFunction;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.Blueprint;
@@ -48,7 +48,7 @@ public class PopulationGraph extends BaseGraph
     {
         Blueprint b = Blueprint.makeDefault();
 
-        ArrayList<AuditFunction> auditFunctions = new ArrayList<>();
+        ArrayList<AuditBlueprint> auditFunctions = new ArrayList<>();
         CensusFunction census = new CensusFunction();
         auditFunctions.add(census);
         b.setAuditFunctions(auditFunctions);

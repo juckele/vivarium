@@ -7,7 +7,7 @@ import org.junit.experimental.categories.Category;
 
 import com.johnuckele.vtest.Tester;
 
-import io.vivarium.audit.AuditFunction;
+import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusFunction;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.Blueprint;
@@ -23,8 +23,8 @@ public class CensusTest
     public void testCensus()
     {
         Blueprint blueprint = Blueprint.makeDefault();
-        AuditFunction censusFunction = new CensusFunction();
-        ArrayList<AuditFunction> auditFunctions = new ArrayList<>();
+        AuditBlueprint censusFunction = new CensusFunction();
+        ArrayList<AuditBlueprint> auditFunctions = new ArrayList<>();
         auditFunctions.add(censusFunction);
         blueprint.setAuditFunctions(auditFunctions);
         World world = new World(blueprint);

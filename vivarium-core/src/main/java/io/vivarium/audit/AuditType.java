@@ -21,11 +21,11 @@ public enum AuditType
     MEMORIAL
     {
         @Override
-        public AuditFunction makeFunction()
+        public AuditBlueprint makeFunction()
         {
             throw new UnsupportedOperationException("CreatureMemorialFunction is not implemented");
         }
     };
 
-    public abstract AuditFunction makeFunction();
+    public abstract AuditBlueprint makeFunction();
 }

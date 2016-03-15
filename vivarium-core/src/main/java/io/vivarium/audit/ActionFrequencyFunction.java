@@ -7,7 +7,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class ActionFrequencyFunction extends AuditFunction
+public class ActionFrequencyFunction extends AuditBlueprint
 {
     public ActionFrequencyFunction()
     {
