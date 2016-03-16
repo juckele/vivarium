@@ -119,6 +119,17 @@ subprojects {
 }
 
 project(':vivarium-core') {
+    if (!project.hasProperty("mainClass")) {
+        ext.mainClass = ""
+    }
+    task execute(type:JavaExec) {
+        if ( mainClass.equals("") ) {
+            logger.error('Error: mainClass not set for execute task. Use -PmainClass="com.test" to set')
+        }
+        main = mainClass
+        classpath = sourceSets.main.runtimeClasspath
+    }
+
     dependencies {
         compile 'com.google.guava:guava:19.0'
         compile 'com.google.guava:guava-gwt:19.0'

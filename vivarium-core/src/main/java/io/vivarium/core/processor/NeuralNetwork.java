@@ -28,6 +28,8 @@ public class NeuralNetwork extends Processor
     private double[][][] _weights;
     @SerializedParameter
     private double[] _outputs;
+    @SerializedParameter
+    private double[][] _hiddenNodes;
 
     private static int BIAS_UNIT_COUNT = 2;
 
@@ -40,20 +42,58 @@ public class NeuralNetwork extends Processor
         super();
         Preconditions.checkArgument(inputCount > 0);
         Preconditions.checkArgument(outputCount > 0);
-        constructWithDimensions(inputCount, outputCount, randomInitialization, normalizedLength);
+
+        int[] connectionCount = { inputCount, outputCount };
+        constructWithDimensions(connectionCount, randomInitialization, normalizedLength);
     }
 
-    private void constructWithDimensions(int inputCount, int outputCount, boolean randomInitialization,
+    public NeuralNetwork(int inputCount, int outputCount, int hiddenLayers, boolean randomInitialization,
             double normalizedLength)
     {
-        this._outputs = new double[outputCount];
-        this._weights = new double[1][][]; // Store all NNs as multi-layer with no hidden layer for now
-        this._weights[0] = new double[outputCount][inputCount + BIAS_UNIT_COUNT];
-        for (int j = 0; j < _weights[0].length; j++)
+        super();
+        Preconditions.checkArgument(inputCount > 0);
+        Preconditions.checkArgument(outputCount > 0);
+        Preconditions.checkArgument(hiddenLayers >= 0);
+
+        int[] connectionCount = new int[hiddenLayers + 2];
+        int hiddenSize = Math.max(inputCount, outputCount);
+        connectionCount[0] = inputCount;
+        for (int i = 0; i < hiddenLayers; i++)
         {
-            for (int k = 0; k < _weights[0][j].length; k++)
+            connectionCount[1 + i] = hiddenSize;
+        }
+        connectionCount[hiddenLayers + 1] = outputCount;
+        constructWithDimensions(connectionCount, randomInitialization, normalizedLength);
+    }
+
+    private void constructWithDimensions(int[] connectionCount, boolean randomInitialization, double normalizedLength)
+    {
+        Preconditions.checkArgument(connectionCount.length >= 2);
+
+        int hiddenLayers = connectionCount.length - 2;
+        this._outputs = new double[connectionCount[connectionCount.length - 1]];
+        if (hiddenLayers > 0)
+        {
+            this._hiddenNodes = new double[hiddenLayers][];
+            for (int i = 0; i < hiddenLayers; i++)
             {
-                _weights[0][j][k] = randomInitialization ? Rand.getInstance().getRandomDouble() : 1;
+                this._hiddenNodes[i] = new double[connectionCount[i + 1]];
+            }
+        }
+        else
+        {
+            this._hiddenNodes = new double[0][0];
+        }
+        this._weights = new double[hiddenLayers + 1][][];
+        for (int i = 0; i < hiddenLayers + 1; i++)
+        {
+            this._weights[i] = new double[connectionCount[i + 1]][connectionCount[i] + BIAS_UNIT_COUNT];
+            for (int j = 0; j < _weights[i].length; j++)
+            {
+                for (int k = 0; k < _weights[i][j].length; k++)
+                {
+                    _weights[i][j][k] = randomInitialization ? Rand.getInstance().getRandomDouble() : 1;
+                }
             }
         }
         if (normalizedLength != 0)
@@ -212,9 +252,14 @@ public class NeuralNetwork extends Processor
         }
 
         // Compute the full NN
-        if (_weights.length != 1)
+        if (_weights.length > 1)
         {
-            throw new UnsupportedOperationException("Hidden layer NNs are currently not fully implemented.");
+            computeLayerInPlace(inputs, _hiddenNodes[0], _weights[0]);
+            for (int i = 1; i < _hiddenNodes.length; i++)
+            {
+                computeLayerInPlace(_hiddenNodes[i - 1], _hiddenNodes[i], _weights[i]);
+            }
+            computeLayerInPlace(_hiddenNodes[_hiddenNodes.length - 1], _outputs, _weights[_weights.length - 1]);
         }
         else
         {
@@ -313,23 +358,28 @@ public class NeuralNetwork extends Processor
 
     public static void main(String[] args)
     {
-        NeuralNetwork processor = new NeuralNetwork(3, 10, false, 0);
+        NeuralNetwork processor = new NeuralNetwork(2, 2, 4, false, 0);
         System.out.println("Creating Processor...");
         System.out.println(processor);
         System.out.println("Processor Outputs for inputs");
         double[] inputs = { 0.0, 0.0 };
-        System.out.println("" + Arrays.toString(inputs) + " -> " + Arrays.toString(processor.outputs(inputs)));
-        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs)));
-        double[] inputs2 = { -1.0, 0.0 };
-        System.out.println("" + Arrays.toString(inputs2) + " -> " + Arrays.toString(processor.outputs(inputs2)));
-        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs2)));
-        double[] inputs3 = { 1.0, 0.0 };
-        System.out.println("" + Arrays.toString(inputs3) + " -> " + Arrays.toString(processor.outputs(inputs3)));
-        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs3)));
-        double[] inputs4 = { 0.5, 0.5 };
-        System.out.println("" + Arrays.toString(inputs4) + " -> " + Arrays.toString(processor.outputs(inputs4)));
-        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs4)));
+        processor.outputs(inputs);
+        System.out.println(stateToString(inputs, processor));
+        double[] inputs2 = { 1.0, 0.0 };
+        processor.outputs(inputs2);
+        System.out.println(stateToString(inputs2, processor));
+        double[] inputs3 = { -1.0, -1.0 };
+        processor.outputs(inputs3);
+        System.out.println(stateToString(inputs3, processor));
+        double[] inputs4 = { -10.0, -10.0 };
+        processor.outputs(inputs4);
+        System.out.println(stateToString(inputs4, processor));
+    }
 
+    public static String stateToString(double[] inputs, NeuralNetwork processor)
+    {
+        return "" + Arrays.toString(inputs) + " -> " + Arrays.deepToString(processor._hiddenNodes) + " -> "
+                + Arrays.toString(processor._outputs);
     }
 
     public static NeuralNetwork minProcessor(List<NeuralNetwork> processors)
