@@ -17,6 +17,7 @@ import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.visualization.util.Fullscreen;
 
 public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseListener, MouseMotionListener
@@ -97,10 +98,14 @@ public class AnimatedWorldViewer extends JPanel implements KeyListener, MouseLis
         ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
 
         // Build 1 creature blueprint
+        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault();
+        processorBlueprint.setHiddenLayerCount(2);
         CreatureBlueprint creatureBlueprint1 = CreatureBlueprint.makeDefault();
-        creatureBlueprint1.getProcessorBlueprint().setMutationRateExponent(-9);
-        creatureBlueprint1.getProcessorBlueprint().setCreatureMemoryUnitCount(1);
-        creatureBlueprint1.getProcessorBlueprint().setCreatureSoundChannelCount(1);
+        creatureBlueprint1.setProcessorBlueprint(processorBlueprint);
+        creatureBlueprint1.getProcessorBlueprint().setMutationRateExponent(-8);
+        creatureBlueprint1.getProcessorBlueprint().setCreatureMemoryUnitCount(3);
+        creatureBlueprint1.getProcessorBlueprint().setCreatureSoundChannelCount(3);
+        creatureBlueprint1.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(500));
         creatureBlueprints.add(creatureBlueprint1);
 
         // Construct the world proper
