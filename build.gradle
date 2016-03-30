@@ -226,23 +226,23 @@ project(':vivarium-scripts') {
             from sharedManifest
         }
     }
-    task jarCreateAuditFunction( type: OneJar ) {
-        archiveName = 'create-audit-function'+'-'+version+'.jar'
-        mainClass = 'io.vivarium.scripts.CreateAuditFunction'
+    task jarCreateAuditBlueprint( type: OneJar ) {
+        archiveName = 'create-audit-blueprint'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.CreateAuditBlueprint'
         manifest = project.manifest {
             from sharedManifest
         }
     }
-    task jarCreateBlueprint( type: OneJar ) {
-        archiveName = 'create-blueprint'+'-'+version+'.jar'
-        mainClass = 'io.vivarium.scripts.CreateBlueprint'
+    task jarCreateCreatureBlueprint( type: OneJar ) {
+        archiveName = 'create-creature-blueprint'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.CreateCreatureBlueprint'
         manifest = project.manifest {
             from sharedManifest
         }
     }
-    task jarCreateSpecies( type: OneJar ) {
-        archiveName = 'create-species'+'-'+version+'.jar'
-        mainClass = 'io.vivarium.scripts.CreateSpecies'
+    task jarCreateWorldBlueprint( type: OneJar ) {
+        archiveName = 'create-world-blueprint'+'-'+version+'.jar'
+        mainClass = 'io.vivarium.scripts.CreateWorldBlueprint'
         manifest = project.manifest {
             from sharedManifest
         }
@@ -310,9 +310,9 @@ project(':vivarium-scripts') {
     jarCollection.dependsOn jarNormalizationConvergenceLocal
     jarCollection.dependsOn jarMutationRateLocal
     jarCollection.dependsOn jarConvertFileFormat
-    jarCollection.dependsOn jarCreateAuditFunction
-    jarCollection.dependsOn jarCreateBlueprint
-    jarCollection.dependsOn jarCreateSpecies
+    jarCollection.dependsOn jarCreateAuditBlueprint
+    jarCollection.dependsOn jarCreateCreatureBlueprint
+    jarCollection.dependsOn jarCreateWorldBlueprint
     jarCollection.dependsOn jarCreateWorld
     jarCollection.dependsOn jarExtractCreatureFromWorld
     jarCollection.dependsOn jarGraphGenerationalActionGraph
