@@ -26,6 +26,8 @@ public abstract class ProcessorBlueprint extends VivariumObject
     private int _memoryUnitCount = 0;
     @SerializedParameter
     private int _soundChannelCount = 0;
+    @SerializedParameter
+    private int _signChannelCount = 0;
 
     // Mutation
     @SerializedParameter
@@ -126,6 +128,11 @@ public abstract class ProcessorBlueprint extends VivariumObject
         return this._soundChannelCount;
     }
 
+    public int getSignChannelCount()
+    {
+        return this._signChannelCount;
+    }
+
     public void setMutationRateExponent(double exponent)
     {
         this._mutationRateExponent = exponent;
@@ -142,14 +149,19 @@ public abstract class ProcessorBlueprint extends VivariumObject
         this._soundChannelCount = soundChannelCount;
     }
 
+    public void setCreatureSignChannelCount(int signChannelCount)
+    {
+        this._signChannelCount = signChannelCount;
+    }
+
     public int getTotalProcessorInputCount()
     {
-        return this._sensorInputCount + this._memoryUnitCount + this._soundChannelCount;
+        return this._sensorInputCount + this._memoryUnitCount + this._soundChannelCount + this._signChannelCount;
     }
 
     public int getTotalProcessorOutputCount()
     {
-        return this._controllerOutputCount + this._memoryUnitCount + this._soundChannelCount;
+        return this._controllerOutputCount + this._memoryUnitCount + this._soundChannelCount + this._signChannelCount;
     }
 
     @Override
