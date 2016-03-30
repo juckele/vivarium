@@ -28,6 +28,9 @@ public class WorldBlueprint extends VivariumObject
     // Simulation Details
     @SerializedParameter
     private boolean _soundEnabled = false;
+    // Simulation Details
+    @SerializedParameter
+    private boolean _signEnabled = false;
 
     // Blueprints for creatures
     @SerializedParameter
@@ -88,6 +91,11 @@ public class WorldBlueprint extends VivariumObject
         return this._soundEnabled;
     }
 
+    public boolean getSignEnabled()
+    {
+        return this._signEnabled;
+    }
+
     public ArrayList<AuditBlueprint> getAuditBlueprints()
     {
         return this._auditBlueprints;
@@ -122,6 +130,11 @@ public class WorldBlueprint extends VivariumObject
     public void setSoundEnabled(boolean soundEnabled)
     {
         this._soundEnabled = soundEnabled;
+    }
+
+    public void setSignEnabled(boolean signEnabled)
+    {
+        this._signEnabled = signEnabled;
     }
 
     public void setCreatureBlueprints(ArrayList<CreatureBlueprint> creatureBlueprints)

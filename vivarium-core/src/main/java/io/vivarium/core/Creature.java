@@ -34,6 +34,10 @@ public class Creature extends VivariumObject
     private double[] _soundInputs;
     @SerializedParameter
     private double[] _soundOutputs;
+    @SerializedParameter
+    private double[] _signInputs;
+    @SerializedParameter
+    private double[] _signOutputs;
 
     // State
     @SerializedParameter
@@ -139,6 +143,8 @@ public class Creature extends VivariumObject
         _memoryUnits = new double[_creatureBlueprint.getProcessorBlueprint().getMemoryUnitCount()];
         _soundInputs = new double[_creatureBlueprint.getProcessorBlueprint().getSoundChannelCount()];
         _soundOutputs = new double[_creatureBlueprint.getProcessorBlueprint().getSoundChannelCount()];
+        _signInputs = new double[_creatureBlueprint.getProcessorBlueprint().getSignChannelCount()];
+        _signOutputs = new double[_creatureBlueprint.getProcessorBlueprint().getSignChannelCount()];
 
         // Set gender
         double randomNumber = Rand.getInstance().getRandomPositiveDouble();
@@ -195,6 +201,16 @@ public class Creature extends VivariumObject
         }
     }
 
+    public void lookAtCreature(Creature u)
+    {
+        int signChannels = Math.min(this._creatureBlueprint.getProcessorBlueprint().getSignChannelCount(),
+                u._creatureBlueprint.getProcessorBlueprint().getSignChannelCount());
+        for (int i = 0; i < signChannels; i++)
+        {
+            this._signInputs[i] = u._signOutputs[i];
+        }
+    }
+
     public void planAction(World w, int r, int c)
     {
         _action = determineAction(w, r, c);
@@ -227,6 +243,12 @@ public class Creature extends VivariumObject
                 _inputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorInputs() - 1
                         + this._memoryUnits.length + i] = _soundInputs[i];
             }
+            // Read sign inputs
+            for (int i = 0; i < this.getBlueprint().getProcessorBlueprint().getSignChannelCount(); i++)
+            {
+                _inputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorInputs() - 1
+                        + this._memoryUnits.length + this._soundInputs.length + i] = _signInputs[i];
+            }
             // Main processor computation
             double[] outputs = this._processor.outputs(_inputs);
             // Save memory units
@@ -238,6 +260,13 @@ public class Creature extends VivariumObject
                 this._soundInputs[i] = 0;
                 this._soundOutputs[i] = outputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs() - 1
                         + this._memoryUnits.length + i];
+            }
+            // Clear the sign inputs and set the sign outputs
+            for (int i = 0; i < this.getBlueprint().getProcessorBlueprint().getSignChannelCount(); i++)
+            {
+                this._signInputs[i] = 0;
+                this._signOutputs[i] = outputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs() - 1
+                        + this._memoryUnits.length + this._soundInputs.length + i];
             }
             // Hard coded outputs (actionable outputs)
             int maxActionOutput = 0;

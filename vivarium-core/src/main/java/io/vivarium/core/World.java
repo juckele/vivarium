@@ -135,8 +135,9 @@ public class World extends VivariumObject
         // gestation, and energy levels.
         tickCreatures();
 
-        // Creatures transmit sound
+        // Creatures transmit sound & signs
         transmitSounds();
+        transmitSigns();
 
         // Each creature plans which actions to
         // attempt to do during the next phase
@@ -186,6 +187,9 @@ public class World extends VivariumObject
 
     private void transmitSoundsFrom(int r1, int c1)
     {
+        // We transmit sounds both directions at the same time, so we only want to get each pair of
+        // creatures once. Anything 'below and to the right' is should be a pair that haven't shared
+        // sounds yet.
         for (int c2 = c1 + 1; c2 < this._width; c2++)
         {
             int r2 = r1;
@@ -211,6 +215,47 @@ public class World extends VivariumObject
         int distanceSquared = (r1 - r2) * (r1 - r2) + (c1 - c2) * (c1 - c2);
         _creatureGrid[r1][c1].listenToCreature(_creatureGrid[r2][c2], distanceSquared);
         _creatureGrid[r2][c2].listenToCreature(_creatureGrid[r1][c1], distanceSquared);
+    }
+
+    private void transmitSigns()
+    {
+        if (this._worldBlueprint.getSignEnabled())
+        {
+            for (int r = 0; r < this._height; r++)
+            {
+                for (int c = 0; c < this._width; c++)
+                {
+                    if (_entityGrid[r][c] == EntityType.CREATURE)
+                    {
+                        transmitSignsFrom(r, c);
+                    }
+                }
+            }
+        }
+    }
+
+    private void transmitSignsFrom(int r1, int c1)
+    {
+        Direction facing = _creatureGrid[r1][c1].getFacing();
+        int r2 = r1 + Direction.getVerticalComponent(facing);
+        int c2 = c1 + Direction.getHorizontalComponent(facing);
+        // We transmit signs both directions at the same time, so we only want to get each pair of
+        // creatures once. Anything 'below and to the right' is should be a pair that haven't shared
+        // signs yet.
+        if (r1 <= r2 && c1 <= c2)
+        {
+            if (_entityGrid[r2][c2] == EntityType.CREATURE
+                    && facing == Direction.flipDirection(_creatureGrid[r2][c2].getFacing()))
+            {
+                transmitSignsFromTo(r1, c1, r2, c2);
+            }
+        }
+    }
+
+    private void transmitSignsFromTo(int r1, int c1, int r2, int c2)
+    {
+        _creatureGrid[r1][c1].lookAtCreature(_creatureGrid[r2][c2]);
+        _creatureGrid[r2][c2].lookAtCreature(_creatureGrid[r1][c1]);
     }
 
     private void letCreaturesPlan()
