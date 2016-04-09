@@ -7,6 +7,7 @@
 */.settings/gradle/
 */.apt_generated
 bin/
+vivarium-html/war/
 vivarium-web/war/
 build/
 test.*

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
+<module rename-to="html">
+  <inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
+
+  <!-- For GWT WS support                                         -->
+  <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
+  <!-- For GWT Jackson JSON parsing support                       -->
+  <inherits name="com.github.nmorel.gwtjackson.GwtJackson"/>
+  <!-- For GWT side serialization/copying                         -->
+  <inherits name="com.googlecode.gwtstreamer.GWTStreamer"/>
+  <!-- For GWT Guava                                              -->
+  <inherits name="com.google.common.io.Io"/>
+
+  <!-- Configuration for GWT Jackson support                      -->
+  <extend-configuration-property name="gwtjackson.configuration.extension" value="io.vivarium.web.Configuration" />
+  
+  <!-- Vivarium cross project modules                             -->
+  <inherits name='io.vivarium.Core' />
+  <inherits name='io.vivarium.Net' />
+  <inherits name='io.vivarium.Visualizer' />
+
+  <!-- Entry point to web-app                                     -->
+  <entry-point class='io.vivarium.client.HtmlLauncher' />
+
+  <!-- Vivarium graphical assets                                  -->
+  <set-configuration-property name="gdx.assetpath" value="../vivarium-visualizer/assets" />
+  <set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
+</module>
