@@ -24,6 +24,10 @@ allprojects {
         ext.timestamp = String.valueOf(System.currentTimeMillis())
     }
 
+    ext {
+        gdxVersion = '1.9.2'
+    }
+
     repositories {
         jcenter()
     }
@@ -138,6 +142,15 @@ project(':vivarium-core') {
         compile 'org.projectlombok:lombok:1.16.6'
 	testApt 'org.projectlombok:lombok:1.16.6'
         testCompile 'org.projectlombok:lombok:1.16.6'
+    }
+}
+
+project(':vivarium-desktop') {
+    dependencies {
+        compile project(':vivarium-core')
+        compile project(':vivarium-visualizer')
+        compile "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     }
 }
 
@@ -332,6 +345,13 @@ project(':vivarium-scripts') {
         compile 'com.fasterxml.jackson.core:jackson-core:2.6.3'
         compile 'com.fasterxml.jackson.core:jackson-databind:2.6.3'
         compile 'commons-cli:commons-cli:1.3.1'
+    }
+}
+
+project(':vivarium-visualizer') {
+    dependencies {
+        compile project(':vivarium-core')
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
     }
 }
 

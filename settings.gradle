@@ -1,11 +1,13 @@
 include 'vivarium-core',
 	'vivarium-db',
+	'vivarium-desktop',
 	'vivarium-ga',
 	'vivarium-graph',
 	'vivarium-net',
 	'vivarium-scripts',
 	'vivarium-serialization',
 	'vivarium-swing',
+	'vivarium-visualizer',
 	'vivarium-visualization',
 	'vivarium-web',
 	'vivarium-ws'
