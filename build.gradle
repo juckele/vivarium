@@ -26,6 +26,7 @@ allprojects {
 
     ext {
         gdxVersion = '1.9.2'
+	guavaVersion = '18.0'
     }
 
     repositories {
@@ -135,8 +136,8 @@ project(':vivarium-core') {
     }
 
     dependencies {
-        compile 'com.google.guava:guava:19.0'
-        compile 'com.google.guava:guava-gwt:19.0'
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.guava:guava-gwt:$guavaVersion"
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
         apt 'org.projectlombok:lombok:1.16.6'
         compile 'org.projectlombok:lombok:1.16.6'
@@ -394,8 +395,8 @@ project(':vivarium-html') {
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
         compile 'com.github.nmorel.gwtjackson:gwt-jackson:0.10.0'
-        compile 'com.google.guava:guava:19.0'
-        compile 'com.google.guava:guava-gwt:19.0'
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.guava:guava-gwt:$guavaVersion"
         compile 'com.google.gwt:gwt-user:2.7.0'
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
         compile 'org.realityforge.gwt.websockets:gwt-websockets:1.1.2'
@@ -421,8 +422,8 @@ project(':vivarium-web') {
         compile project(':vivarium-net')
         compile project(':vivarium-visualization')
         compile 'com.github.nmorel.gwtjackson:gwt-jackson:0.10.0'
-        compile 'com.google.guava:guava:19.0'
-        compile 'com.google.guava:guava-gwt:19.0'
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.guava:guava-gwt:$guavaVersion"
         compile 'com.google.gwt:gwt-user:2.7.0'
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
         compile 'org.realityforge.gwt.websockets:gwt-websockets:1.1.2'
