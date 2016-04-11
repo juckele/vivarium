@@ -10,8 +10,8 @@ public class DesktopLauncher
     public static void main(String[] arg)
     {
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-        config.width = 1024;
-        config.height = 786;
+        config.width = (int) (Vivarium.getWidth() * 1.5);
+        config.height = Vivarium.getHeight();
         new LwjglApplication(new Vivarium(), config);
     }
 }

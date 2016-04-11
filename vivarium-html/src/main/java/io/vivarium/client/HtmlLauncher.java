@@ -12,7 +12,7 @@ public class HtmlLauncher extends GwtApplication
     @Override
     public GwtApplicationConfiguration getConfig()
     {
-        return new GwtApplicationConfiguration(1024, 786);
+        return new GwtApplicationConfiguration((int) (Vivarium.getWidth() * 1.5), Vivarium.getHeight());
     }
 
     @Override

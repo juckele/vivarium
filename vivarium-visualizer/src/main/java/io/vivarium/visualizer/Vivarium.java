@@ -13,6 +13,8 @@ import io.vivarium.core.WorldBlueprint;
 
 public class Vivarium extends ApplicationAdapter
 {
+    private static final int SIZE = 30;
+    private static final int BLOCK_SIZE = 32;
     // Simulation information
     private WorldBlueprint _blueprint;
     private World _world;
@@ -26,6 +28,7 @@ public class Vivarium extends ApplicationAdapter
     public void create()
     {
         _blueprint = WorldBlueprint.makeDefault();
+        _blueprint.setSize(SIZE);
         _world = new World(_blueprint);
 
         batch = new SpriteBatch();
@@ -42,7 +45,7 @@ public class Vivarium extends ApplicationAdapter
         colored.setColor((float) Math.random(), (float) Math.random(), (float) Math.random(), 1f);
         colored.setPosition(100, 00);
         batch.begin();
-        batch.draw(img, 0, 0);
+        // batch.draw(img, 0, 0);
 
         for (int c = 0; c < _world.getWorldWidth(); c++)
         {
@@ -50,18 +53,18 @@ public class Vivarium extends ApplicationAdapter
             {
                 if (_world.getEntityType(r, c) == EntityType.WALL)
                 {
-                    float x = c * 32;
-                    float y = r * 32;
-                    float originX = 16;
-                    float originY = 16;
-                    float width = 32;
-                    float height = 32;
+                    float x = c * BLOCK_SIZE;
+                    float y = r * BLOCK_SIZE;
+                    float originX = BLOCK_SIZE / 2;
+                    float originY = BLOCK_SIZE / 2;
+                    float width = BLOCK_SIZE;
+                    float height = BLOCK_SIZE;
                     float scale = 1;
-                    float rotation = (float) (360 * Math.random());
-                    int srcX = 32;
+                    float rotation = 0; // In degrees
+                    int srcX = BLOCK_SIZE;
                     int srcY = 0;
-                    int srcW = 32;
-                    int srcH = 32;
+                    int srcW = BLOCK_SIZE;
+                    int srcH = BLOCK_SIZE;
                     boolean flipX = false;
                     boolean flipY = false;
                     batch.draw(img, x, y, originX, originY, width, height, scale, scale, rotation, srcX, srcY, srcW,
@@ -70,7 +73,17 @@ public class Vivarium extends ApplicationAdapter
             }
         }
 
-        colored.draw(batch);
+        // colored.draw(batch);
         batch.end();
+    }
+
+    public static int getHeight()
+    {
+        return SIZE * BLOCK_SIZE;
+    }
+
+    public static int getWidth()
+    {
+        return SIZE * BLOCK_SIZE;
     }
 }
