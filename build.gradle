@@ -25,12 +25,16 @@ allprojects {
     }
 
     ext {
-        gdxVersion = '1.9.2'
+        gdxVersion = '1.9.3-SNAPSHOT'
 	guavaVersion = '18.0'
     }
 
     repositories {
         jcenter()
+        maven {
+            url "https://oss.sonatype.org/content/repositories/releases/"
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
 
     jacoco {
