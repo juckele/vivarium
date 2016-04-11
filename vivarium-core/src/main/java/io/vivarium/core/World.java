@@ -12,7 +12,6 @@ import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Rand;
-import io.vivarium.visualization.RenderCode;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

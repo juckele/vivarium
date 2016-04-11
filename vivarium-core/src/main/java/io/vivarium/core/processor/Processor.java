@@ -1,7 +1,7 @@
 package io.vivarium.core.processor;
 
+import io.vivarium.core.RenderCode;
 import io.vivarium.serialization.VivariumObject;
-import io.vivarium.visualization.RenderCode;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

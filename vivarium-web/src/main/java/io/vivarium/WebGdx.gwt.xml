@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit trunk//EN" "http://google-web-toolkit.googlecode.com/svn/trunk/distro-source/core/src/gwt-module.dtd">
-<module rename-to="html">
+<!DOCTYPE module PUBLIC "-//Google Inc.//DTD Google Web Toolkit 2.6.0//EN"
+  "http://google-web-toolkit.googlecode.com/svn/tags/2.6.0/distro-source/core/src/gwt-module.dtd">
+<module rename-to="vivariumwebgdx">
+  <!-- Inherit the core Web Toolkit stuff.                        -->
   <inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
-  <inherits name="com.google.gwt.user.User" />
+  <inherits name='com.google.gwt.user.User'/>
 
   <!-- For GWT WS support                                         -->
   <inherits name="org.realityforge.gwt.websockets.WebSockets"/>
@@ -15,16 +17,22 @@
 
   <!-- Configuration for GWT Jackson support                      -->
   <extend-configuration-property name="gwtjackson.configuration.extension" value="io.vivarium.web.Configuration" />
-  
+
   <!-- Vivarium cross project modules                             -->
   <inherits name='io.vivarium.Core' />
   <inherits name='io.vivarium.Net' />
+  <inherits name='io.vivarium.Visualization' />
   <inherits name='io.vivarium.Visualizer' />
 
-  <!-- Entry point to web-app                                     -->
-  <entry-point class='io.vivarium.client.HtmlLauncher' />
+  <!-- Specify the app entry point class.                         -->
+  <entry-point class='io.vivarium.web.client.HtmlLauncher' />
 
-  <!-- Vivarium graphical assets                                  -->
+  <!-- Specify the paths for translatable code                    -->
+  <source path='web'/>
+  <source path='web/client'/>
+
+  <!-- allow Super Dev Mode -->
+  <add-linker name="xsiframe"/>
   <set-configuration-property name="gdx.assetpath" value="../vivarium-visualizer/assets" />
   <set-configuration-property name='xsiframe.failIfScriptTag' value='FALSE'/>
 </module>

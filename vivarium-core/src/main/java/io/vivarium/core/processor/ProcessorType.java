@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.visualization.RenderCode;
+import io.vivarium.core.RenderCode;
 
 public enum ProcessorType
 {

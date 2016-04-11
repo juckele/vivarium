@@ -1,9 +1,9 @@
 package io.vivarium.scripts;
 
 import io.vivarium.core.Creature;
+import io.vivarium.core.RenderCode;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
-import io.vivarium.visualization.RenderCode;
 
 public class RenderCreature extends Script
 {

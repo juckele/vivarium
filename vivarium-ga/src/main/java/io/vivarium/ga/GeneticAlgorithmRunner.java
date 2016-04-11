@@ -7,10 +7,10 @@ import org.javatuples.Pair;
 
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
+import io.vivarium.core.RenderCode;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.util.Rand;
-import io.vivarium.visualization.RenderCode;
 
 /**
  * A class for running a standard genetic algorithm across a population of creatures testing them with one or more

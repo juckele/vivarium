@@ -5,10 +5,10 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
+import io.vivarium.core.RenderCode;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
-import io.vivarium.visualization.RenderCode;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 

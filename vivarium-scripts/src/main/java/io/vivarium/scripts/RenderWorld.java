@@ -1,9 +1,9 @@
 package io.vivarium.scripts;
 
+import io.vivarium.core.RenderCode;
 import io.vivarium.core.World;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
-import io.vivarium.visualization.RenderCode;
 
 public class RenderWorld extends Script
 {

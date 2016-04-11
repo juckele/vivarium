@@ -7,10 +7,10 @@ import javax.swing.JTextArea;
 
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.EntityType;
+import io.vivarium.core.RenderCode;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
-import io.vivarium.visualization.RenderCode;
 
 @SuppressWarnings("serial") // Never actually serialized
 public class WorldViewer extends JFrame

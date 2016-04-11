@@ -1,4 +1,4 @@
-package io.vivarium.visualization;
+package io.vivarium.core;
 
 public enum RenderCode
 {
