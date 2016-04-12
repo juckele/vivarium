@@ -8,19 +8,24 @@ individuals who have contributed to the strong open source ecosystem of
 modern Java development.
 
 Apache License 2.0 libraries:
+- com.badlogicgames.gdx:gdx:1.9.3-SNAPSHOT
+- com.badlogicgames.gdx:gdx-backend-gwt:1.9.3-SNAPSHOT
+- com.badlogicgames.gdx:gdx-backend-lwjgl:1.9.3-SNAPSHOT
+- com.badlogicgames.gdx:gdx-platform:1.9.3-SNAPSHOT
 - com.fasterxml.jackson.core:jackson-core:2.6.3
 - com.fasterxml.jackson.core:jackson-databind:2.6.3
 - com.github.nmorel.gwtjackson:gwt-jackson:0.10.0
 - com.github.rholder:gradle-one-jar:1.0.4
 - com.google.auto.factory:auto-factory:1.0-beta3
-- com.google.guava:guava:19.0
-- com.google.guava:guava-gwt:19.0
+- com.google.guava:guava:18.0
+- com.google.guava:guava-gwt:18.0
 - com.google.gwt:gwt-dev:2.7.0
 - com.google.gwt:gwt-user:2.7.0
 - commons-cli:commons-cli:1.3.1
 - de.richsource.gradle.plugins:gwt-gradle-plugin:0.6
 - net.java.dev.jna:jna-platform:4.0.0
 - org.apache.commons:commons-collections4:4.1
+- org.codehaus.groovy:groovy-all:2.4.5
 - org.javatuples:javatuples:1.2
 - org.jppf:jppf-node:5.1.1
 - org.realityforge.gwt.websockets:gwt-websockets:1.1.2
@@ -33,7 +38,7 @@ The MIT License libraries:
 - org.projectlombok:lombok:1.16.6
 
 Eclipse Public License 1.0 libraries:
-- junit
+- junit:junit:4.+
 
 The PostgreSQL License libraries:
 - org.postgresql:postgresql:9.4-1201-jdbc41
