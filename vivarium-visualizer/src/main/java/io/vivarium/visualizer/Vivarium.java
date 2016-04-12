@@ -69,6 +69,26 @@ public class Vivarium extends ApplicationAdapter
         _batch.end();
     }
 
+    private void drawSprite(VivariumSprite sprite, int xPos, int yPos, float angle)
+    {
+        float x = xPos * BLOCK_SIZE;
+        float y = getHeight() - yPos * BLOCK_SIZE - BLOCK_SIZE;
+        float originX = BLOCK_SIZE / 2;
+        float originY = BLOCK_SIZE / 2;
+        float width = BLOCK_SIZE;
+        float height = BLOCK_SIZE;
+        float scale = 1;
+        float rotation = angle; // In degrees
+        int srcX = sprite.x * BLOCK_SIZE;
+        int srcY = sprite.y * BLOCK_SIZE;
+        int srcW = BLOCK_SIZE;
+        int srcH = BLOCK_SIZE;
+        boolean flipX = false;
+        boolean flipY = false;
+        _batch.draw(_img, x, y, originX, originY, width, height, scale, scale, rotation, srcX, srcY, srcW, srcH, flipX,
+                flipY);
+    }
+
     private void drawTerrain()
     {
         for (int c = 0; c < _world.getWorldWidth(); c++)
@@ -77,22 +97,7 @@ public class Vivarium extends ApplicationAdapter
             {
                 if (_world.getEntityType(r, c) == EntityType.WALL)
                 {
-                    float x = c * BLOCK_SIZE;
-                    float y = getHeight() - r * BLOCK_SIZE - BLOCK_SIZE;
-                    float originX = BLOCK_SIZE / 2;
-                    float originY = BLOCK_SIZE / 2;
-                    float width = BLOCK_SIZE;
-                    float height = BLOCK_SIZE;
-                    float scale = 1;
-                    float rotation = 0; // In degrees
-                    int srcX = VivariumSprite.WALL.x * BLOCK_SIZE;
-                    int srcY = VivariumSprite.WALL.y * BLOCK_SIZE;
-                    int srcW = BLOCK_SIZE;
-                    int srcH = BLOCK_SIZE;
-                    boolean flipX = false;
-                    boolean flipY = false;
-                    _batch.draw(_img, x, y, originX, originY, width, height, scale, scale, rotation, srcX, srcY, srcW,
-                            srcH, flipX, flipY);
+                    drawSprite(VivariumSprite.WALL, c, r, 0);
                 }
             }
         }
@@ -106,22 +111,7 @@ public class Vivarium extends ApplicationAdapter
             {
                 if (_world.getEntityType(r, c) == EntityType.FOOD)
                 {
-                    float x = c * BLOCK_SIZE;
-                    float y = getHeight() - r * BLOCK_SIZE - BLOCK_SIZE;
-                    float originX = BLOCK_SIZE / 2;
-                    float originY = BLOCK_SIZE / 2;
-                    float width = BLOCK_SIZE;
-                    float height = BLOCK_SIZE;
-                    float scale = 1;
-                    float rotation = 0; // In degrees
-                    int srcX = VivariumSprite.FOOD.x * BLOCK_SIZE;
-                    int srcY = VivariumSprite.FOOD.y * BLOCK_SIZE;
-                    int srcW = BLOCK_SIZE;
-                    int srcH = BLOCK_SIZE;
-                    boolean flipX = false;
-                    boolean flipY = false;
-                    _batch.draw(_img, x, y, originX, originY, width, height, scale, scale, rotation, srcX, srcY, srcW,
-                            srcH, flipX, flipY);
+                    drawSprite(VivariumSprite.FOOD, c, r, 0);
                 }
             }
         }
@@ -136,23 +126,9 @@ public class Vivarium extends ApplicationAdapter
                 if (_world.getEntityType(r, c) == EntityType.CREATURE)
                 {
                     Creature creature = _world.getCreature(r, c);
-                    float x = c * BLOCK_SIZE;
-                    float y = getHeight() - r * BLOCK_SIZE - BLOCK_SIZE;
-                    float originX = BLOCK_SIZE / 2;
-                    float originY = BLOCK_SIZE / 2;
-                    float width = BLOCK_SIZE;
-                    float height = BLOCK_SIZE;
-                    float scale = 1;
-                    float rotation = (float) (Direction.getRadiansFromNorth(creature.getFacing()) * 180 / (Math.PI));
-                    int srcX = VivariumSprite.CREATURE_2.x * BLOCK_SIZE;
-                    int srcY = VivariumSprite.CREATURE_2.y * BLOCK_SIZE;
-                    int srcW = BLOCK_SIZE;
-                    int srcH = BLOCK_SIZE;
-                    boolean flipX = false;
-                    boolean flipY = false;
                     setColorOnGenderAndPregnancy(creature);
-                    _batch.draw(_img, x, y, originX, originY, width, height, scale, scale, rotation, srcX, srcY, srcW,
-                            srcH, flipX, flipY);
+                    float rotation = (float) (Direction.getRadiansFromNorth(creature.getFacing()) * 180 / (Math.PI));
+                    drawSprite(VivariumSprite.CREATURE_2, c, r, rotation);
                 }
             }
         }
