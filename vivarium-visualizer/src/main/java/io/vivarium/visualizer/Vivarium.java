@@ -150,16 +150,38 @@ public class Vivarium extends ApplicationAdapter
                     int srcH = BLOCK_SIZE;
                     boolean flipX = false;
                     boolean flipY = false;
-                    // _batch.setColor(new Color((float) Math.random(), (float) Math.random(), (float) Math.random(),
-                    // 1));
-                    float food = ((float) creature.getFood()) / creature.getBlueprint().getMaximumFood();
-                    float age = ((float) creature.getAge()) / creature.getBlueprint().getMaximumAge();
-                    _batch.setColor(new Color(1, food, age, 1));
+                    setColorOnGenderAndPregnancy(creature);
                     _batch.draw(_img, x, y, originX, originY, width, height, scale, scale, rotation, srcX, srcY, srcW,
                             srcH, flipX, flipY);
                 }
             }
         }
+    }
+
+    public void setColorOnGenderAndPregnancy(Creature creature)
+    {
+        if (creature.getIsFemale())
+        {
+            if (creature.getGestation() > 0)
+            {
+                _batch.setColor(new Color(0.4f, 0, 0.4f, 1));
+            }
+            else
+            {
+                _batch.setColor(new Color(0, 0.8f, 0.8f, 1));
+            }
+        }
+        else
+        {
+            _batch.setColor(new Color(0.8f, 0, 0, 1));
+        }
+    }
+
+    public void setColorOnAgeAndFood(Creature creature)
+    {
+        float food = ((float) creature.getFood()) / creature.getBlueprint().getMaximumFood();
+        float age = ((float) creature.getAge()) / creature.getBlueprint().getMaximumAge();
+        _batch.setColor(new Color(1, food, age, 1));
     }
 
     public static int getHeight()
