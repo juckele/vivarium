@@ -7,8 +7,5 @@ include 'vivarium-core',
 	'vivarium-net',
 	'vivarium-scripts',
 	'vivarium-serialization',
-	'vivarium-swing',
 	'vivarium-visualizer',
-	'vivarium-visualization',
-	'vivarium-web',
 	'vivarium-ws'
