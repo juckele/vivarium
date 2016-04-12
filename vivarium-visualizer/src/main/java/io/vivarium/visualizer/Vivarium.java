@@ -5,7 +5,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 import io.vivarium.core.Creature;
@@ -18,6 +17,7 @@ public class Vivarium extends ApplicationAdapter
 {
     private static final int SIZE = 30;
     private static final int BLOCK_SIZE = 32;
+
     // Simulation information
     private WorldBlueprint _blueprint;
     private World _world;
@@ -26,7 +26,6 @@ public class Vivarium extends ApplicationAdapter
     // Low Level Graphics information
     private SpriteBatch _batch;
     private Texture _img;
-    private Sprite _colored;
 
     @Override
     public void create()
@@ -37,7 +36,6 @@ public class Vivarium extends ApplicationAdapter
 
         _batch = new SpriteBatch();
         _img = new Texture("sprites.png");
-        _colored = new Sprite(_img);
     }
 
     @Override
@@ -46,15 +44,14 @@ public class Vivarium extends ApplicationAdapter
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        _colored.setColor((float) Math.random(), (float) Math.random(), (float) Math.random(), 1f);
-        _colored.setPosition(100, 00);
         _batch.begin();
-        // batch.draw(img, 0, 0);
 
         _batch.setColor(Color.WHITE);
         drawTerrain();
         drawFood();
         drawCreatures();
+
+        _batch.end();
 
         tick++;
         if (tick > 0)
@@ -65,8 +62,6 @@ public class Vivarium extends ApplicationAdapter
             }
             tick = 0;
         }
-        // colored.draw(batch);
-        _batch.end();
     }
 
     private void drawSprite(VivariumSprite sprite, int xPos, int yPos, float angle)
