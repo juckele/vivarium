@@ -55,7 +55,7 @@ public class Vivarium extends ApplicationAdapter
         drawCreatures();
 
         tick++;
-        if (tick > 100)
+        if (tick > 5)
         {
             _world.tick();
             tick = 0;
@@ -80,8 +80,8 @@ public class Vivarium extends ApplicationAdapter
                     float height = BLOCK_SIZE;
                     float scale = 1;
                     float rotation = 0; // In degrees
-                    int srcX = BLOCK_SIZE;
-                    int srcY = 0;
+                    int srcX = VivariumSprite.WALL.x * BLOCK_SIZE;
+                    int srcY = VivariumSprite.WALL.y * BLOCK_SIZE;
                     int srcW = BLOCK_SIZE;
                     int srcH = BLOCK_SIZE;
                     boolean flipX = false;
@@ -109,8 +109,8 @@ public class Vivarium extends ApplicationAdapter
                     float height = BLOCK_SIZE;
                     float scale = 1;
                     float rotation = 0; // In degrees
-                    int srcX = 2 * BLOCK_SIZE;
-                    int srcY = 0;
+                    int srcX = VivariumSprite.FOOD.x * BLOCK_SIZE;
+                    int srcY = VivariumSprite.FOOD.y * BLOCK_SIZE;
                     int srcW = BLOCK_SIZE;
                     int srcH = BLOCK_SIZE;
                     boolean flipX = false;
@@ -139,8 +139,8 @@ public class Vivarium extends ApplicationAdapter
                     float height = BLOCK_SIZE;
                     float scale = 1;
                     float rotation = (float) (Direction.getRadiansFromNorth(creature.getFacing()) * 180 / (Math.PI));
-                    int srcX = 2 * BLOCK_SIZE;
-                    int srcY = 2 * BLOCK_SIZE;
+                    int srcX = VivariumSprite.CREATURE_2.x * BLOCK_SIZE;
+                    int srcY = VivariumSprite.CREATURE_2.y * BLOCK_SIZE;
                     int srcW = BLOCK_SIZE;
                     int srcH = BLOCK_SIZE;
                     boolean flipX = false;
