@@ -14,6 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
@@ -68,7 +69,8 @@ public class Vivarium extends ApplicationAdapter
         // A skin can be loaded via JSON or defined programmatically, either is fine. Using a skin is optional but
         // strongly
         // recommended solely for the convenience of getting a texture, region, etc as a drawable, tinted drawable, etc.
-        skin = new Skin();
+        // skin = new Skin();
+        skin = new Skin(Gdx.files.internal("data/uiskin.json"));
 
         // Generate a 1x1 white texture and store it in the skin named "white".
         Pixmap pixmap = new Pixmap(1, 1, Format.RGBA8888);
@@ -100,6 +102,10 @@ public class Vivarium extends ApplicationAdapter
         final TextButton button = new TextButton("Click me!", skin);
         button.setX(0);
         table.add(button);
+
+        final Slider slider = new Slider(0, 10, 1, false, skin);
+        slider.setAnimateDuration(0.3f);
+        table.add(slider);
 
         // Add a listener to the button. ChangeListener is fired when the button's checked state changes, eg when
         // clicked,
