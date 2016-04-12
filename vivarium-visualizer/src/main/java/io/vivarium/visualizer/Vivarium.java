@@ -2,6 +2,7 @@ package io.vivarium.visualizer;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -50,14 +51,18 @@ public class Vivarium extends ApplicationAdapter
         _batch.begin();
         // batch.draw(img, 0, 0);
 
+        _batch.setColor(Color.WHITE);
         drawTerrain();
         drawFood();
         drawCreatures();
 
         tick++;
-        if (tick > 5)
+        if (tick > 0)
         {
-            _world.tick();
+            for (int i = 0; i < 1; i++)
+            {
+                _world.tick();
+            }
             tick = 0;
         }
         // colored.draw(batch);
@@ -145,6 +150,11 @@ public class Vivarium extends ApplicationAdapter
                     int srcH = BLOCK_SIZE;
                     boolean flipX = false;
                     boolean flipY = false;
+                    // _batch.setColor(new Color((float) Math.random(), (float) Math.random(), (float) Math.random(),
+                    // 1));
+                    float food = ((float) creature.getFood()) / creature.getBlueprint().getMaximumFood();
+                    float age = ((float) creature.getAge()) / creature.getBlueprint().getMaximumAge();
+                    _batch.setColor(new Color(1, food, age, 1));
                     _batch.draw(_img, x, y, originX, originY, width, height, scale, scale, rotation, srcX, srcY, srcW,
                             srcH, flipX, flipY);
                 }
