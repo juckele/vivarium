@@ -61,7 +61,7 @@ public class Vivarium extends ApplicationAdapter
 
     private enum CreatureRenderMode
     {
-        GENDER, HEALTH
+        GENDER, HEALTH, HUNGER, AGE
     }
 
     // High Level Graphics information
@@ -348,6 +348,14 @@ public class Vivarium extends ApplicationAdapter
                         case HEALTH:
                             setColorOnAgeAndFood(creature);
                             break;
+                        case AGE:
+                            setColorOnAge(creature);
+                            break;
+                        case HUNGER:
+                            setColorOnFood(creature);
+                            break;
+                        default:
+                            break;
                     }
                     float rotation = (float) (Direction.getRadiansFromNorth(creature.getFacing()) * 180 / (Math.PI));
                     drawSprite(VivariumSprite.CREATURE_2, c, r, rotation);
@@ -380,6 +388,18 @@ public class Vivarium extends ApplicationAdapter
         float food = ((float) creature.getFood()) / creature.getBlueprint().getMaximumFood();
         float age = ((float) creature.getAge()) / creature.getBlueprint().getMaximumAge();
         _batch.setColor(new Color(1, food, age, 1));
+    }
+
+    public void setColorOnFood(Creature creature)
+    {
+        float food = ((float) creature.getFood()) / creature.getBlueprint().getMaximumFood();
+        _batch.setColor(new Color(1, food, food, 1));
+    }
+
+    public void setColorOnAge(Creature creature)
+    {
+        float age = ((float) creature.getAge()) / creature.getBlueprint().getMaximumAge();
+        _batch.setColor(new Color(age, 1, age, 1));
     }
 
     public static int getHeight()
