@@ -1,5 +1,7 @@
 package io.vivarium.visualizer;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input.Keys;
@@ -37,6 +39,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import io.vivarium.core.Creature;
+import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.Direction;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
@@ -63,7 +66,7 @@ public class Vivarium extends ApplicationAdapter
 
     private enum CreatureRenderMode
     {
-        GENDER, HEALTH, HUNGER, AGE
+        GENDER, HEALTH, HUNGER, AGE, MEMORY, SIGN
     }
 
     // High Level Graphics information
@@ -84,6 +87,13 @@ public class Vivarium extends ApplicationAdapter
     {
         // Create simulation
         _blueprint = WorldBlueprint.makeDefault();
+        ArrayList<CreatureBlueprint> creatureBlueprints = _blueprint.getCreatureBlueprints();
+        for (CreatureBlueprint creatureBlueprint : creatureBlueprints)
+        {
+            creatureBlueprint.getProcessorBlueprint().setCreatureMemoryUnitCount(3);
+            creatureBlueprint.getProcessorBlueprint().setCreatureSignChannelCount(3);
+        }
+        _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
         _world = new World(_blueprint);
 
@@ -387,7 +397,11 @@ public class Vivarium extends ApplicationAdapter
                         case HUNGER:
                             setColorOnFood(creature);
                             break;
-                        default:
+                        case MEMORY:
+                            setColorOnMemory(creature);
+                            break;
+                        case SIGN:
+                            setColorOnSignLanguage(creature);
                             break;
                     }
                     float rotation = (float) (Direction.getRadiansFromNorth(creature.getFacing()) * 180 / (Math.PI));
@@ -433,6 +447,28 @@ public class Vivarium extends ApplicationAdapter
     {
         float age = ((float) creature.getAge()) / creature.getBlueprint().getMaximumAge();
         _batch.setColor(new Color(age, 1, age, 1));
+    }
+
+    public void setColorOnMemory(Creature creature)
+    {
+        double[] memories = creature.getMemoryUnits();
+        float[] displayMemories = { 1, 1, 1 };
+        for (int i = 0; i < memories.length && i < displayMemories.length; i++)
+        {
+            displayMemories[i] = (float) memories[i];
+        }
+        _batch.setColor(new Color(displayMemories[0], displayMemories[1], displayMemories[2], 1));
+    }
+
+    public void setColorOnSignLanguage(Creature creature)
+    {
+        double[] signs = creature.getSignOutputs();
+        float[] displaySigns = { 1, 1, 1 };
+        for (int i = 0; i < signs.length && i < displaySigns.length; i++)
+        {
+            displaySigns[i] = (float) signs[i];
+        }
+        _batch.setColor(new Color(displaySigns[0], displaySigns[1], displaySigns[2], 1));
     }
 
     public static int getHeight()

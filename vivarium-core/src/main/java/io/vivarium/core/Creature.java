@@ -329,6 +329,21 @@ public class Creature extends VivariumObject
         return (_processor);
     }
 
+    public double[] getMemoryUnits()
+    {
+        return (_memoryUnits);
+    }
+
+    public double[] getSoundOutputs()
+    {
+        return (_soundOutputs);
+    }
+
+    public double[] getSignOutputs()
+    {
+        return (_signOutputs);
+    }
+
     public void executeAction(Action action)
     {
         this._hasActed = true;
