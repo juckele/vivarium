@@ -58,6 +58,8 @@ public class Vivarium extends ApplicationAdapter
 
     // Graphical settings
     private CreatureRenderMode _creatureRenderMode = CreatureRenderMode.GENDER;
+    private int _ticks = 1;
+    private int _overFrames = 1;
 
     private enum CreatureRenderMode
     {
@@ -126,8 +128,11 @@ public class Vivarium extends ApplicationAdapter
         final Slider slider = new Slider(0, 10, 1, false, skin);
         slider.setAnimateDuration(0.3f);
         TextField textfield = new TextField("", skin);
-        textfield.setMessageText("Click here!");
+        textfield.setMessageText("1");
         textfield.setAlignment(Align.center);
+        TextField textfield2 = new TextField("", skin);
+        textfield2.setMessageText("1");
+        textfield2.setAlignment(Align.center);
         final SelectBox<String> selectBox = new SelectBox<>(skin);
         selectBox.addListener(new ChangeListener()
         {
@@ -187,7 +192,10 @@ public class Vivarium extends ApplicationAdapter
         window.add(slider).minWidth(100).fillX().colspan(3);
         window.row();
         window.add(selectBox).maxWidth(100);
+        window.row();
         window.add(textfield).minWidth(100).expandX().fillX().colspan(3);
+        window.row();
+        window.add(textfield2).minWidth(100).expandX().fillX().colspan(3);
         window.row();
         window.add(splitPane).fill().expand().colspan(4).maxHeight(200);
         window.row();
@@ -208,6 +216,31 @@ public class Vivarium extends ApplicationAdapter
                 if (key == '\n')
                 {
                     textField.getOnscreenKeyboard().show(false);
+                }
+                try
+                {
+                    _ticks = Integer.parseInt(textField.getText().trim());
+                }
+                catch (Exception e)
+                {
+                }
+            }
+        });
+        textfield2.setTextFieldListener(new TextFieldListener()
+        {
+            @Override
+            public void keyTyped(TextField textField, char key)
+            {
+                if (key == '\n')
+                {
+                    textField.getOnscreenKeyboard().show(false);
+                }
+                try
+                {
+                    _overFrames = Integer.parseInt(textField.getText().trim());
+                }
+                catch (Exception e)
+                {
                 }
             }
         });
@@ -273,9 +306,9 @@ public class Vivarium extends ApplicationAdapter
         stage.draw();
 
         tick++;
-        if (tick > 0)
+        if (tick >= _overFrames)
         {
-            for (int i = 0; i < 1; i++)
+            for (int i = 0; i < _ticks; i++)
             {
                 _world.tick();
             }
