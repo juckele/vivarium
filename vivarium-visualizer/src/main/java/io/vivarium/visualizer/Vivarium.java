@@ -6,9 +6,7 @@ import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
@@ -28,7 +26,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Slider;
 import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton.TextButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
@@ -59,14 +56,17 @@ public class Vivarium extends ApplicationAdapter
     private SpriteBatch _batch;
     private Texture _img;
 
+    // Graphical settings
+    private CreatureRenderMode _creatureRenderMode = CreatureRenderMode.GENDER;
+
+    private enum CreatureRenderMode
+    {
+        GENDER, HEALTH
+    }
+
     // High Level Graphics information
     private Stage stage;
-    private BitmapFont font;
-    private TextureAtlas buttonAtlas;
     private Skin skin;
-    private TextButtonStyle textButtonStyle;
-    private TextButton button;
-    private TextField textfield;
     private Texture texture1;
     private Texture texture2;
     Object[] listEntries = { "This is a list entry1", "And another one1", "The meaning of life1", "Is hard to come by1",
@@ -134,14 +134,17 @@ public class Vivarium extends ApplicationAdapter
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                System.out.println(selectBox.getSelected());
+                _creatureRenderMode = CreatureRenderMode.valueOf(selectBox.getSelected());
+                System.out.println();
             }
         });
-        selectBox.setItems("Android1", "Windows1 long text in item", "Linux1", "OSX1", "Android2", "Windows2", "Linux2",
-                "OSX2", "Android3", "Windows3", "Linux3", "OSX3", "Android4", "Windows4", "Linux4", "OSX4", "Android5",
-                "Windows5", "Linux5", "OSX5", "Android6", "Windows6", "Linux6", "OSX6", "Android7", "Windows7",
-                "Linux7", "OSX7");
-        selectBox.setSelected("Linux6");
+        String[] creatureRenderModeStrings = new String[CreatureRenderMode.values().length];
+        for (int i = 0; i < CreatureRenderMode.values().length; i++)
+        {
+            creatureRenderModeStrings[i] = CreatureRenderMode.values()[i].toString();
+        }
+        selectBox.setItems(creatureRenderModeStrings);
+        selectBox.setSelected(_creatureRenderMode.toString());
         Image imageActor = new Image(image2);
         ScrollPane scrollPane = new ScrollPane(imageActor);
         List<Object> list = new List<>(skin);
@@ -167,7 +170,7 @@ public class Vivarium extends ApplicationAdapter
         Table tooltipTable = new Table(skin);
         tooltipTable.pad(10).background("default-round");
         tooltipTable.add(new TextButton("Fancy tooltip!", skin));
-        imgButton.addListener(new Tooltip(tooltipTable));
+        imgButton.addListener(new Tooltip<Table>(tooltipTable));
 
         // window.debug();
         Window window = new Window("Dialog", skin);
@@ -337,7 +340,15 @@ public class Vivarium extends ApplicationAdapter
                 if (_world.getEntityType(r, c) == EntityType.CREATURE)
                 {
                     Creature creature = _world.getCreature(r, c);
-                    setColorOnGenderAndPregnancy(creature);
+                    switch (_creatureRenderMode)
+                    {
+                        case GENDER:
+                            setColorOnGenderAndPregnancy(creature);
+                            break;
+                        case HEALTH:
+                            setColorOnAgeAndFood(creature);
+                            break;
+                    }
                     float rotation = (float) (Direction.getRadiansFromNorth(creature.getFacing()) * 180 / (Math.PI));
                     drawSprite(VivariumSprite.CREATURE_2, c, r, rotation);
                 }
