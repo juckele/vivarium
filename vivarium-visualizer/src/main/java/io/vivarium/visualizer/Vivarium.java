@@ -322,7 +322,14 @@ public class Vivarium extends ApplicationAdapter
         _batch.setColor(Color.WHITE);
         drawTerrain();
         drawFood();
-        drawCreatures();
+        if (this._enableInterpolation)
+        {
+            drawCreatures(_worldSnapshot1, _worldSnapshot2);
+        }
+        else
+        {
+            drawCreatures(_world, _world);
+        }
 
         _batch.end();
 
@@ -336,8 +343,13 @@ public class Vivarium extends ApplicationAdapter
             for (int i = 0; i < _ticks; i++)
             {
                 _world.tick();
-                _worldSnapshot1 = _worldSnapshot2;
-                _worldSnapshot2 = new SerializationEngine().makeCopy(_world);
+                if (_enableInterpolation)
+                {
+                    // TODO: Cache two ticks when transitioning to-from interpolation mode, this is going to create a
+                    // weird flashback bug
+                    _worldSnapshot1 = _worldSnapshot2;
+                    _worldSnapshot2 = new SerializationEngine().makeCopy(_world);
+                }
             }
             framesSinceTick = 0;
         }
@@ -391,15 +403,15 @@ public class Vivarium extends ApplicationAdapter
         }
     }
 
-    private void drawCreatures()
+    private void drawCreatures(World w1, World w2)
     {
-        for (int c = 0; c < _worldSnapshot2.getWorldWidth(); c++)
+        for (int c = 0; c < w2.getWorldWidth(); c++)
         {
-            for (int r = 0; r < _worldSnapshot2.getWorldHeight(); r++)
+            for (int r = 0; r < w2.getWorldHeight(); r++)
             {
-                if (_worldSnapshot2.getEntityType(r, c) == EntityType.CREATURE)
+                if (w2.getEntityType(r, c) == EntityType.CREATURE)
                 {
-                    Creature creature = _worldSnapshot2.getCreature(r, c);
+                    Creature creature = w2.getCreature(r, c);
                     switch (_creatureRenderMode)
                     {
                         case GENDER:
@@ -434,12 +446,12 @@ public class Vivarium extends ApplicationAdapter
                         {
                             for (int dr = -1; dr <= 1; dr++)
                             {
-                                if (_worldSnapshot1.getEntityType(r2 + dr, c2 + dc) == EntityType.CREATURE
-                                        && _worldSnapshot1.getCreature(r2 + dr, c2 + dc).getID() == creature.getID())
+                                if (w1.getEntityType(r2 + dr, c2 + dc) == EntityType.CREATURE
+                                        && w1.getCreature(r2 + dr, c2 + dc).getID() == creature.getID())
                                 {
                                     c1 = c2 + dc;
                                     r1 = r2 + dr;
-                                    creature1 = _worldSnapshot1.getCreature(r1, c1);
+                                    creature1 = w1.getCreature(r1, c1);
                                 }
                             }
                         }
@@ -455,9 +467,19 @@ public class Vivarium extends ApplicationAdapter
                         {
                             float rInterpolated = (1 - interpolationFraction) * r1 + interpolationFraction * r2;
                             float cInterpolated = (1 - interpolationFraction) * c1 + interpolationFraction * c2;
-                            float rotation = (float) (Direction.getRadiansFromNorth(creature2.getFacing()) * 180
+                            float rotation1 = (float) (Direction.getRadiansFromNorth(creature1.getFacing()) * 180
                                     / (Math.PI));
-                            drawSprite(VivariumSprite.CREATURE_2, cInterpolated, rInterpolated, rotation);
+                            float rotation2 = (float) (Direction.getRadiansFromNorth(creature2.getFacing()) * 180
+                                    / (Math.PI));
+                            if ((rotation1 == 0 && rotation2 > 180) || (rotation1 > 180 && rotation2 == 0))
+                            {
+                                rotation1 = rotation1 == 0 ? 360 : rotation1;
+                                rotation2 = rotation2 == 0 ? 360 : rotation2;
+                            }
+                            float rotationInterpolated = (1 - interpolationFraction) * rotation1
+                                    + interpolationFraction * rotation2;
+                            VivariumSprite creatureSprite = getCreatureSpriteFrame(interpolationFraction, creature2);
+                            drawSprite(creatureSprite, cInterpolated, rInterpolated, rotationInterpolated);
                         }
                     }
                     else
@@ -529,6 +551,27 @@ public class Vivarium extends ApplicationAdapter
             displaySigns[i] = (float) signs[i];
         }
         _batch.setColor(new Color(displaySigns[0], displaySigns[1], displaySigns[2], 1));
+    }
+
+    private VivariumSprite getCreatureSpriteFrame(float cycle, Creature creature)
+    {
+        int offset = (int) (cycle * 100 + creature.getRandomSeed() * 100) % 100;
+        if (offset < 25)
+        {
+            return VivariumSprite.CREATURE_1;
+        }
+        else if (offset < 50)
+        {
+            return VivariumSprite.CREATURE_2;
+        }
+        else if (offset < 75)
+        {
+            return VivariumSprite.CREATURE_3;
+        }
+        else
+        {
+            return VivariumSprite.CREATURE_2;
+        }
     }
 
     public static int getHeight()
