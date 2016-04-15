@@ -44,6 +44,7 @@ import io.vivarium.core.Direction;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.serialization.SerializationEngine;
 
 public class Vivarium extends ApplicationAdapter
 {
@@ -53,7 +54,12 @@ public class Vivarium extends ApplicationAdapter
     // Simulation information
     private WorldBlueprint _blueprint;
     private World _world;
-    private int tick = 0;
+
+    // Simulation + Animation
+    private int framesSinceTick = 0;
+    private World _worldSnapshot1;
+    private World _worldSnapshot2;
+    private boolean _enableInterpolation = false;
 
     // Low Level Graphics information
     private SpriteBatch _batch;
@@ -81,7 +87,6 @@ public class Vivarium extends ApplicationAdapter
             "This is a list entry5", "And another one5", "The meaning of life5", "Is hard to come by5" };
     private Label fpsLabel;
 
-    @SuppressWarnings("unchecked")
     @Override
     public void create()
     {
@@ -96,6 +101,8 @@ public class Vivarium extends ApplicationAdapter
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
         _world = new World(_blueprint);
+        _worldSnapshot1 = new SerializationEngine().makeCopy(_world);
+        _worldSnapshot2 = new SerializationEngine().makeCopy(_world);
 
         // Low level grahpics
         _batch = new SpriteBatch();
@@ -233,7 +240,11 @@ public class Vivarium extends ApplicationAdapter
                 }
                 catch (Exception e)
                 {
+                    _ticks = 1;
                 }
+                _ticks = Math.max(_ticks, 1);
+                _ticks = Math.min(_ticks, 1_000);
+                _enableInterpolation = _ticks == 1 && _overFrames > 1;
             }
         });
         textfield2.setTextFieldListener(new TextFieldListener()
@@ -251,7 +262,11 @@ public class Vivarium extends ApplicationAdapter
                 }
                 catch (Exception e)
                 {
+                    _overFrames = 1;
                 }
+                _overFrames = Math.max(_overFrames, 1);
+                _overFrames = Math.min(_overFrames, 600);
+                _enableInterpolation = _ticks == 1 && _overFrames > 1;
             }
         });
 
@@ -315,18 +330,20 @@ public class Vivarium extends ApplicationAdapter
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
-        tick++;
-        if (tick >= _overFrames)
+        framesSinceTick++;
+        if (framesSinceTick >= _overFrames)
         {
             for (int i = 0; i < _ticks; i++)
             {
                 _world.tick();
+                _worldSnapshot1 = _worldSnapshot2;
+                _worldSnapshot2 = new SerializationEngine().makeCopy(_world);
             }
-            tick = 0;
+            framesSinceTick = 0;
         }
     }
 
-    private void drawSprite(VivariumSprite sprite, int xPos, int yPos, float angle)
+    private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle)
     {
         float x = SIZE / 2 * BLOCK_SIZE + xPos * BLOCK_SIZE;
         float y = getHeight() - yPos * BLOCK_SIZE - BLOCK_SIZE;
@@ -376,13 +393,13 @@ public class Vivarium extends ApplicationAdapter
 
     private void drawCreatures()
     {
-        for (int c = 0; c < _world.getWorldWidth(); c++)
+        for (int c = 0; c < _worldSnapshot2.getWorldWidth(); c++)
         {
-            for (int r = 0; r < _world.getWorldHeight(); r++)
+            for (int r = 0; r < _worldSnapshot2.getWorldHeight(); r++)
             {
-                if (_world.getEntityType(r, c) == EntityType.CREATURE)
+                if (_worldSnapshot2.getEntityType(r, c) == EntityType.CREATURE)
                 {
-                    Creature creature = _world.getCreature(r, c);
+                    Creature creature = _worldSnapshot2.getCreature(r, c);
                     switch (_creatureRenderMode)
                     {
                         case GENDER:
@@ -404,8 +421,51 @@ public class Vivarium extends ApplicationAdapter
                             setColorOnSignLanguage(creature);
                             break;
                     }
-                    float rotation = (float) (Direction.getRadiansFromNorth(creature.getFacing()) * 180 / (Math.PI));
-                    drawSprite(VivariumSprite.CREATURE_2, c, r, rotation);
+                    if (_enableInterpolation)
+                    {
+                        float interpolationFraction = (float) framesSinceTick / _overFrames;
+                        int c1 = -1;
+                        int r1 = -1;
+                        Creature creature1 = null;
+                        int c2 = c;
+                        int r2 = r;
+                        Creature creature2 = creature;
+                        for (int dc = -1; dc <= 1; dc++)
+                        {
+                            for (int dr = -1; dr <= 1; dr++)
+                            {
+                                if (_worldSnapshot1.getEntityType(r2 + dr, c2 + dc) == EntityType.CREATURE
+                                        && _worldSnapshot1.getCreature(r2 + dr, c2 + dc).getID() == creature.getID())
+                                {
+                                    c1 = c2 + dc;
+                                    r1 = r2 + dr;
+                                    creature1 = _worldSnapshot1.getCreature(r1, c1);
+                                }
+                            }
+                        }
+                        if (creature1 == null)
+                        {
+                            // Spawn animation
+                            // TODO: WRITE THIS
+                            float rotation = (float) (Direction.getRadiansFromNorth(creature2.getFacing()) * 180
+                                    / (Math.PI));
+                            drawSprite(VivariumSprite.CREATURE_2, c, r, rotation);
+                        }
+                        else
+                        {
+                            float rInterpolated = (1 - interpolationFraction) * r1 + interpolationFraction * r2;
+                            float cInterpolated = (1 - interpolationFraction) * c1 + interpolationFraction * c2;
+                            float rotation = (float) (Direction.getRadiansFromNorth(creature2.getFacing()) * 180
+                                    / (Math.PI));
+                            drawSprite(VivariumSprite.CREATURE_2, cInterpolated, rInterpolated, rotation);
+                        }
+                    }
+                    else
+                    {
+                        float rotation = (float) (Direction.getRadiansFromNorth(creature.getFacing()) * 180
+                                / (Math.PI));
+                        drawSprite(VivariumSprite.CREATURE_2, c, r, rotation);
+                    }
                 }
             }
         }
