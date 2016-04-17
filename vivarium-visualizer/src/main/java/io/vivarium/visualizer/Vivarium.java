@@ -4,37 +4,20 @@ import java.util.ArrayList;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input.Keys;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Button.ButtonStyle;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.List;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.Slider;
-import com.badlogic.gdx.scenes.scene2d.ui.SplitPane;
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
-import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
-import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
@@ -79,13 +62,6 @@ public class Vivarium extends ApplicationAdapter
     // High Level Graphics information
     private Stage stage;
     private Skin skin;
-    private Texture texture1;
-    private Texture texture2;
-    Object[] listEntries = { "This is a list entry1", "And another one1", "The meaning of life1", "Is hard to come by1",
-            "This is a list entry2", "And another one2", "The meaning of life2", "Is hard to come by2",
-            "This is a list entry3", "And another one3", "The meaning of life3", "Is hard to come by3",
-            "This is a list entry4", "And another one4", "The meaning of life4", "Is hard to come by4",
-            "This is a list entry5", "And another one5", "The meaning of life5", "Is hard to come by5" };
     private Label fpsLabel;
 
     @Override
@@ -115,53 +91,27 @@ public class Vivarium extends ApplicationAdapter
     private void buildSidebarUI()
     {
         skin = new Skin(Gdx.files.internal("data/uiskin.json"));
-        texture1 = new Texture(Gdx.files.internal("sprites.png"));
-        texture2 = new Texture(Gdx.files.internal("sprites.png"));
-        TextureRegion image = new TextureRegion(texture1);
-        TextureRegion imageFlipped = new TextureRegion(image);
-        imageFlipped.flip(true, true);
-        TextureRegion image2 = new TextureRegion(texture2);
         // stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, new PolygonSpriteBatch());
         stage = new Stage(new ScreenViewport());
         Gdx.input.setInputProcessor(stage);
 
-        // Group.debug = true;
+        // Simulation Speed
+        TextField framesPerTickTextInput = new TextField("", skin);
+        framesPerTickTextInput.setMessageText("1");
+        framesPerTickTextInput.setAlignment(Align.center);
+        TextField perFramesTextInput = new TextField("", skin);
+        perFramesTextInput.setMessageText("1");
+        perFramesTextInput.setAlignment(Align.center);
 
-        ImageButtonStyle style = new ImageButtonStyle(skin.get(ButtonStyle.class));
-        style.imageUp = new TextureRegionDrawable(image);
-        style.imageDown = new TextureRegionDrawable(imageFlipped);
-        ImageButton iconButton = new ImageButton(style);
-
-        Button buttonMulti = new TextButton("Multi\nLine\nToggle", skin, "toggle");
-        Button imgButton = new Button(new Image(image), skin);
-        Button imgToggleButton = new Button(new Image(image), skin, "toggle");
-
-        Label myLabel = new Label("this is some text.", skin);
-        myLabel.setWrap(true);
-
-        Table t = new Table();
-        t.row();
-        t.add(myLabel);
-
-        t.layout();
-
-        final CheckBox checkBox = new CheckBox(" Continuous rendering", skin);
-        checkBox.setChecked(true);
-        final Slider slider = new Slider(0, 10, 1, false, skin);
-        slider.setAnimateDuration(0.3f);
-        TextField textfield = new TextField("", skin);
-        textfield.setMessageText("1");
-        textfield.setAlignment(Align.center);
-        TextField textfield2 = new TextField("", skin);
-        textfield2.setMessageText("1");
-        textfield2.setAlignment(Align.center);
-        final SelectBox<String> selectBox = new SelectBox<>(skin);
-        selectBox.addListener(new ChangeListener()
+        // Render Mode
+        final Label renderModeLabel = new Label("Render Mode: ", skin);
+        final SelectBox<String> renderModeSelectBox = new SelectBox<>(skin);
+        renderModeSelectBox.addListener(new ChangeListener()
         {
             @Override
             public void changed(ChangeEvent event, Actor actor)
             {
-                _creatureRenderMode = CreatureRenderMode.valueOf(selectBox.getSelected());
+                _creatureRenderMode = CreatureRenderMode.valueOf(renderModeSelectBox.getSelected());
                 System.out.println();
             }
         });
@@ -170,59 +120,24 @@ public class Vivarium extends ApplicationAdapter
         {
             creatureRenderModeStrings[i] = CreatureRenderMode.values()[i].toString();
         }
-        selectBox.setItems(creatureRenderModeStrings);
-        selectBox.setSelected(_creatureRenderMode.toString());
-        Image imageActor = new Image(image2);
-        ScrollPane scrollPane = new ScrollPane(imageActor);
-        List<Object> list = new List<>(skin);
-        list.setItems(listEntries);
-        list.getSelection().setMultiple(true);
-        list.getSelection().setRequired(false);
-        // list.getSelection().setToggle(true);
-        ScrollPane scrollPane2 = new ScrollPane(list, skin);
-        scrollPane2.setFlickScroll(false);
-        SplitPane splitPane = new SplitPane(scrollPane, scrollPane2, false, skin, "default-horizontal");
+        renderModeSelectBox.setItems(creatureRenderModeStrings);
+        renderModeSelectBox.setSelected(_creatureRenderMode.toString());
+
+        // FPS Display
         fpsLabel = new Label("fps:", skin);
 
-        // configures an example of a TextField in password mode.
-        final Label passwordLabel = new Label("Textfield in password mode: ", skin);
-        final TextField passwordTextField = new TextField("", skin);
-        passwordTextField.setMessageText("password");
-        passwordTextField.setPasswordCharacter('*');
-        passwordTextField.setPasswordMode(true);
-
-        buttonMulti.addListener(new TextTooltip(
-                "This is a tooltip! This is a tooltip! This is a tooltip! This is a tooltip! This is a tooltip! This is a tooltip!",
-                skin));
-        Table tooltipTable = new Table(skin);
-        tooltipTable.pad(10).background("default-round");
-        tooltipTable.add(new TextButton("Fancy tooltip!", skin));
-        imgButton.addListener(new Tooltip<Table>(tooltipTable));
-
-        // window.debug();
+        // Layout
         Window window = new Window("Dialog", skin);
         window.getTitleTable().add(new TextButton("X", skin)).height(window.getPadTop());
         window.setPosition(0, 0);
         window.defaults().spaceBottom(10);
         window.row().fill().expandX();
-        window.add(iconButton);
-        window.add(buttonMulti);
-        window.add(imgButton);
-        window.add(imgToggleButton);
+        window.add(renderModeLabel).colspan(2);
+        window.add(renderModeSelectBox).maxWidth(100);
         window.row();
-        window.add(checkBox);
-        window.add(slider).minWidth(100).fillX().colspan(3);
+        window.add(framesPerTickTextInput).minWidth(100).expandX().fillX().colspan(3);
         window.row();
-        window.add(selectBox).maxWidth(100);
-        window.row();
-        window.add(textfield).minWidth(100).expandX().fillX().colspan(3);
-        window.row();
-        window.add(textfield2).minWidth(100).expandX().fillX().colspan(3);
-        window.row();
-        window.add(splitPane).fill().expand().colspan(4).maxHeight(200);
-        window.row();
-        window.add(passwordLabel).colspan(2);
-        window.add(passwordTextField).minWidth(100).expandX().fillX().colspan(2);
+        window.add(perFramesTextInput).minWidth(100).expandX().fillX().colspan(3);
         window.row();
         window.add(fpsLabel).colspan(4);
         window.pack();
@@ -230,7 +145,7 @@ public class Vivarium extends ApplicationAdapter
         // stage.addActor(new Button("Behind Window", skin));
         stage.addActor(window);
 
-        textfield.setTextFieldListener(new TextFieldListener()
+        framesPerTickTextInput.setTextFieldListener(new TextFieldListener()
         {
             @Override
             public void keyTyped(TextField textField, char key)
@@ -252,7 +167,7 @@ public class Vivarium extends ApplicationAdapter
                 _enableInterpolation = _ticks == 1 && _overFrames > 1;
             }
         });
-        textfield2.setTextFieldListener(new TextFieldListener()
+        perFramesTextInput.setTextFieldListener(new TextFieldListener()
         {
             @Override
             public void keyTyped(TextField textField, char key)
@@ -272,46 +187,6 @@ public class Vivarium extends ApplicationAdapter
                 _overFrames = Math.max(_overFrames, 1);
                 _overFrames = Math.min(_overFrames, 600);
                 _enableInterpolation = _ticks == 1 && _overFrames > 1;
-            }
-        });
-
-        slider.addListener(new ChangeListener()
-        {
-            @Override
-            public void changed(ChangeEvent event, Actor actor)
-            {
-                Gdx.app.log("UITest", "slider: " + slider.getValue());
-            }
-        });
-
-        iconButton.addListener(new ChangeListener()
-        {
-            @Override
-            public void changed(ChangeEvent event, Actor actor)
-            {
-                new Dialog("Some Dialog", skin, "dialog")
-                {
-                    @Override
-                    protected void result(Object object)
-                    {
-                        System.out.println("Chosen: " + object);
-                    }
-                }
-                        .text("Are you enjoying this demo?")
-                        .button("Yes", true)
-                        .button("No", false)
-                        .key(Keys.ENTER, true)
-                        .key(Keys.ESCAPE, false)
-                        .show(stage);
-            }
-        });
-
-        checkBox.addListener(new ChangeListener()
-        {
-            @Override
-            public void changed(ChangeEvent event, Actor actor)
-            {
-                Gdx.graphics.setContinuousRendering(checkBox.isChecked());
             }
         });
     }
