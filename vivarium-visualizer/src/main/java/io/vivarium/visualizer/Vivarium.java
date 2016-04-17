@@ -109,7 +109,11 @@ public class Vivarium extends ApplicationAdapter
         _batch = new SpriteBatch();
         _img = new Texture("sprites.png");
 
-        // High level graphics
+        buildSidebarUI();
+    }
+
+    private void buildSidebarUI()
+    {
         skin = new Skin(Gdx.files.internal("data/uiskin.json"));
         texture1 = new Texture(Gdx.files.internal("sprites.png"));
         texture2 = new Texture(Gdx.files.internal("sprites.png"));
