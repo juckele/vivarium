@@ -1,6 +1,7 @@
 package io.vivarium.visualizer;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -62,6 +63,9 @@ public class Vivarium extends ApplicationAdapter
     private Stage stage;
     private Skin skin;
     private Label fpsLabel;
+    private Label populationLabel;
+    private Label generationLabel;
+    private Label foodSupplyLabel;
 
     @Override
     public void create()
@@ -95,9 +99,12 @@ public class Vivarium extends ApplicationAdapter
         Gdx.input.setInputProcessor(stage);
 
         // Simulation Speed
+        final Label ticksLabel = new Label("Ticks", skin);
         TextField framesPerTickTextInput = new TextField("", skin);
         framesPerTickTextInput.setMessageText("1");
         framesPerTickTextInput.setAlignment(Align.center);
+        final Label perLabel = new Label("per", skin);
+        final Label framesLabel = new Label("Frames", skin);
         TextField perFramesTextInput = new TextField("", skin);
         perFramesTextInput.setMessageText("1");
         perFramesTextInput.setAlignment(Align.center);
@@ -124,6 +131,9 @@ public class Vivarium extends ApplicationAdapter
 
         // FPS Display
         fpsLabel = new Label("fps:", skin);
+        populationLabel = new Label("population:", skin);
+        generationLabel = new Label("generation:", skin);
+        foodSupplyLabel = new Label("food:", skin);
 
         // Layout
         Table table = new Table();
@@ -131,24 +141,22 @@ public class Vivarium extends ApplicationAdapter
         table.add(renderModeLabel).colspan(2);
         table.add(renderModeSelectBox).maxWidth(100);
         table.row();
-        table.add(framesPerTickTextInput).minWidth(100).expandX().fillX().colspan(3);
+        table.add();
+        table.add(framesPerTickTextInput);
+        table.add(ticksLabel);
         table.row();
-        table.add(perFramesTextInput).minWidth(100).expandX().fillX().colspan(3);
+        table.add(perLabel);
+        table.add(perFramesTextInput);
+        table.add(framesLabel);
         table.row();
         table.add(fpsLabel).colspan(4);
+        table.row();
+        table.add(populationLabel).colspan(4);
+        table.row();
+        table.add(generationLabel).colspan(4);
+        table.row();
+        table.add(foodSupplyLabel).colspan(4);
         stage.addActor(table);
-
-        /*
-         * Window window = new Window("Dialog", skin); window.getTitleTable().add(new TextButton("X",
-         * skin)).height(window.getPadTop()); window.setPosition(0, 0); window.defaults().spaceBottom(10);
-         * window.row().fill().expandX(); window.add(renderModeLabel).colspan(2);
-         * window.add(renderModeSelectBox).maxWidth(100); window.row();
-         * window.add(framesPerTickTextInput).minWidth(100).expandX().fillX().colspan(3); window.row();
-         * window.add(perFramesTextInput).minWidth(100).expandX().fillX().colspan(3); window.row();
-         * window.add(fpsLabel).colspan(4); window.pack();
-         * 
-         * // stage.addActor(new Button("Behind Window", skin)); stage.addActor(window);
-         */
 
         framesPerTickTextInput.setTextFieldListener(new TextFieldListener()
         {
@@ -218,7 +226,7 @@ public class Vivarium extends ApplicationAdapter
 
         _batch.end();
 
-        fpsLabel.setText("fps: " + Gdx.graphics.getFramesPerSecond());
+        setLabels();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
@@ -238,6 +246,21 @@ public class Vivarium extends ApplicationAdapter
             }
             framesSinceTick = 0;
         }
+    }
+
+    private void setLabels()
+    {
+        fpsLabel.setText("fps: " + Gdx.graphics.getFramesPerSecond());
+        populationLabel.setText("population: " + _world.getCount(EntityType.CREATURE));
+        LinkedList<Creature> creatures = _world.getCreatures();
+        double generation = 0;
+        for (Creature creature : creatures)
+        {
+            generation += creature.getGeneration();
+        }
+        generation /= creatures.size();
+        generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
+        foodSupplyLabel.setText("food: " + _world.getCount(EntityType.FOOD));
     }
 
     private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle)
