@@ -13,10 +13,9 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -127,23 +126,29 @@ public class Vivarium extends ApplicationAdapter
         fpsLabel = new Label("fps:", skin);
 
         // Layout
-        Window window = new Window("Dialog", skin);
-        window.getTitleTable().add(new TextButton("X", skin)).height(window.getPadTop());
-        window.setPosition(0, 0);
-        window.defaults().spaceBottom(10);
-        window.row().fill().expandX();
-        window.add(renderModeLabel).colspan(2);
-        window.add(renderModeSelectBox).maxWidth(100);
-        window.row();
-        window.add(framesPerTickTextInput).minWidth(100).expandX().fillX().colspan(3);
-        window.row();
-        window.add(perFramesTextInput).minWidth(100).expandX().fillX().colspan(3);
-        window.row();
-        window.add(fpsLabel).colspan(4);
-        window.pack();
+        Table table = new Table();
+        table.setPosition(200, getHeight() - 100);
+        table.add(renderModeLabel).colspan(2);
+        table.add(renderModeSelectBox).maxWidth(100);
+        table.row();
+        table.add(framesPerTickTextInput).minWidth(100).expandX().fillX().colspan(3);
+        table.row();
+        table.add(perFramesTextInput).minWidth(100).expandX().fillX().colspan(3);
+        table.row();
+        table.add(fpsLabel).colspan(4);
+        stage.addActor(table);
 
-        // stage.addActor(new Button("Behind Window", skin));
-        stage.addActor(window);
+        /*
+         * Window window = new Window("Dialog", skin); window.getTitleTable().add(new TextButton("X",
+         * skin)).height(window.getPadTop()); window.setPosition(0, 0); window.defaults().spaceBottom(10);
+         * window.row().fill().expandX(); window.add(renderModeLabel).colspan(2);
+         * window.add(renderModeSelectBox).maxWidth(100); window.row();
+         * window.add(framesPerTickTextInput).minWidth(100).expandX().fillX().colspan(3); window.row();
+         * window.add(perFramesTextInput).minWidth(100).expandX().fillX().colspan(3); window.row();
+         * window.add(fpsLabel).colspan(4); window.pack();
+         * 
+         * // stage.addActor(new Button("Behind Window", skin)); stage.addActor(window);
+         */
 
         framesPerTickTextInput.setTextFieldListener(new TextFieldListener()
         {
