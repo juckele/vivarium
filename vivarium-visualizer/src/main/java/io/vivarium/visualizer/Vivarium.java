@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -29,7 +30,7 @@ import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.serialization.SerializationEngine;
 
-public class Vivarium extends ApplicationAdapter
+public class Vivarium extends ApplicationAdapter implements InputProcessor
 {
     private static final int SIZE = 30;
     private static final int BLOCK_SIZE = 32;
@@ -66,6 +67,13 @@ public class Vivarium extends ApplicationAdapter
     private Label populationLabel;
     private Label generationLabel;
     private Label foodSupplyLabel;
+    private Label mouseLabel;
+
+    // Input tracking
+    private int _xDown;
+    private int _yDown;
+    private int _xUp;
+    private int _yUp;
 
     @Override
     public void create()
@@ -84,6 +92,9 @@ public class Vivarium extends ApplicationAdapter
         _worldSnapshot1 = new SerializationEngine().makeCopy(_world);
         _worldSnapshot2 = new SerializationEngine().makeCopy(_world);
 
+        // Setup Input Listeners
+        Gdx.input.setInputProcessor(this);
+
         // Low level grahpics
         _batch = new SpriteBatch();
         _img = new Texture("sprites.png");
@@ -96,7 +107,7 @@ public class Vivarium extends ApplicationAdapter
         skin = new Skin(Gdx.files.internal("data/uiskin.json"));
         // stage = new Stage(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), false, new PolygonSpriteBatch());
         stage = new Stage(new ScreenViewport());
-        Gdx.input.setInputProcessor(stage);
+        // Gdx.input.setInputProcessor(stage);
 
         // Simulation Speed
         final Label ticksLabel = new Label("Ticks", skin);
@@ -134,6 +145,7 @@ public class Vivarium extends ApplicationAdapter
         populationLabel = new Label("population:", skin);
         generationLabel = new Label("generation:", skin);
         foodSupplyLabel = new Label("food:", skin);
+        mouseLabel = new Label("mouse:", skin);
 
         // Layout
         Table table = new Table();
@@ -156,6 +168,8 @@ public class Vivarium extends ApplicationAdapter
         table.add(generationLabel).colspan(4);
         table.row();
         table.add(foodSupplyLabel).colspan(4);
+        table.row();
+        table.add(mouseLabel).colspan(4);
         stage.addActor(table);
 
         framesPerTickTextInput.setTextFieldListener(new TextFieldListener()
@@ -261,6 +275,7 @@ public class Vivarium extends ApplicationAdapter
         generation /= creatures.size();
         generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
         foodSupplyLabel.setText("food: " + _world.getCount(EntityType.FOOD));
+        mouseLabel.setText("mouse:(" + _xDown + "," + _yDown + "),(" + _xUp + "," + _yUp + ")");
     }
 
     private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle)
@@ -510,5 +525,66 @@ public class Vivarium extends ApplicationAdapter
     public static int getWidth()
     {
         return SIZE * BLOCK_SIZE;
+    }
+
+    @Override
+    public boolean keyDown(int keycode)
+    {
+        stage.keyDown(keycode);
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode)
+    {
+        stage.keyUp(keycode);
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character)
+    {
+        stage.keyTyped(character);
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button)
+    {
+        stage.touchDown(screenX, screenY, pointer, button);
+        _xDown = screenX;
+        _yDown = screenY;
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button)
+    {
+        stage.touchUp(screenX, screenY, pointer, button);
+        System.out.println("HEY!");
+        _xUp = screenX;
+        _yUp = screenY;
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer)
+    {
+        stage.touchDragged(screenX, screenY, pointer);
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY)
+    {
+        stage.mouseMoved(screenX, screenY);
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(int amount)
+    {
+        stage.scrolled(amount);
+        return false;
     }
 }
