@@ -12,6 +12,7 @@ public class DesktopLauncher
         LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
         config.width = (int) (Vivarium.getWidth() * 1.5);
         config.height = Vivarium.getHeight();
+        config.resizable = false;
         new LwjglApplication(new Vivarium(), config);
     }
 }
