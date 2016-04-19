@@ -70,10 +70,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private Label mouseLabel;
 
     // Input tracking
-    private int _xDown;
-    private int _yDown;
-    private int _xUp;
-    private int _yUp;
+    private int _xDownWorld = -1;
+    private int _yDownWorld = -1;
 
     @Override
     public void create()
@@ -275,7 +273,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         generation /= creatures.size();
         generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
         foodSupplyLabel.setText("food: " + _world.getCount(EntityType.FOOD));
-        mouseLabel.setText("mouse:(" + _xDown + "," + _yDown + "),(" + _xUp + "," + _yUp + ")");
     }
 
     private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle)
@@ -552,19 +549,40 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
         stage.touchDown(screenX, screenY, pointer, button);
-        _xDown = screenX;
-        _yDown = screenY;
-        return false;
+
+        if (screenX > SIZE / 2 * BLOCK_SIZE)
+        {
+            this._xDownWorld = (screenX - SIZE / 2 * BLOCK_SIZE) / BLOCK_SIZE;
+            this._yDownWorld = screenY / BLOCK_SIZE;
+        }
+        else
+        {
+            this._xDownWorld = -1;
+            this._yDownWorld = -1;
+        }
+        return true;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
         stage.touchUp(screenX, screenY, pointer, button);
-        System.out.println("HEY!");
-        _xUp = screenX;
-        _yUp = screenY;
-        return false;
+
+        if (screenX > SIZE / 2 * BLOCK_SIZE)
+        {
+            int xUpWorld = (screenX - SIZE / 2 * BLOCK_SIZE) / BLOCK_SIZE;
+            int yUpWorld = screenY / BLOCK_SIZE;
+            if (_xDownWorld == xUpWorld && _yDownWorld == yUpWorld)
+            {
+                if (_world.getCreature(yUpWorld, xUpWorld) != null)
+                {
+                    this._selectedCreature = _world.getCreature(yUpWorld, xUpWorld).getID();
+                }
+            }
+        }
+        this._xDownWorld = -1;
+        this._yDownWorld = -1;
+        return true;
     }
 
     @Override
