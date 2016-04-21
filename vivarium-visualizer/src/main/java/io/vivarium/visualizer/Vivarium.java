@@ -28,6 +28,7 @@ import io.vivarium.core.Direction;
 import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.serialization.SerializationEngine;
 
 public class Vivarium extends ApplicationAdapter implements InputProcessor
@@ -90,6 +91,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         {
             creatureBlueprint.getProcessorBlueprint().setCreatureMemoryUnitCount(3);
             creatureBlueprint.getProcessorBlueprint().setCreatureSignChannelCount(3);
+            ((NeuralNetworkBlueprint) (creatureBlueprint.getProcessorBlueprint())).setHiddenLayerCount(1);
         }
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
