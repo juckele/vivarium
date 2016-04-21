@@ -52,12 +52,19 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     // Graphical settings
     private CreatureRenderMode _creatureRenderMode = CreatureRenderMode.GENDER;
-    private int _ticks = 1;
-    private int _overFrames = 1;
 
     private enum CreatureRenderMode
     {
         GENDER, HEALTH, HUNGER, AGE, MEMORY, SIGN
+    }
+
+    private int _ticks = 1;
+    private int _overFrames = 1;
+    private MouseClickMode _mouseClickMode = MouseClickMode.SELECT_CREATURE;
+
+    private enum MouseClickMode
+    {
+        SELECT_CREATURE, ADD_WALL, ADD_WALL_BRUTALLY, REMOVE_WALL, VOID_GUN;
     }
 
     // High Level Graphics information
@@ -118,6 +125,27 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         perFramesTextInput.setMessageText("1");
         perFramesTextInput.setAlignment(Align.center);
 
+        // Click Mode
+        final Label clickModeLabel = new Label("Click Mode: ", skin);
+        final SelectBox<String> clickModeSelectBox = new SelectBox<>(skin);
+        clickModeSelectBox.addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ChangeEvent event, Actor actor)
+            {
+                _mouseClickMode = MouseClickMode.valueOf(clickModeSelectBox.getSelected());
+                _xDownWorld = -1;
+                _yDownWorld = -1;
+            }
+        });
+        String[] clickModeStrings = new String[MouseClickMode.values().length];
+        for (int i = 0; i < MouseClickMode.values().length; i++)
+        {
+            clickModeStrings[i] = MouseClickMode.values()[i].toString();
+        }
+        clickModeSelectBox.setItems(clickModeStrings);
+        clickModeSelectBox.setSelected(_mouseClickMode.toString());
+
         // Render Mode
         final Label renderModeLabel = new Label("Render Mode: ", skin);
         final SelectBox<String> renderModeSelectBox = new SelectBox<>(skin);
@@ -127,7 +155,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
             public void changed(ChangeEvent event, Actor actor)
             {
                 _creatureRenderMode = CreatureRenderMode.valueOf(renderModeSelectBox.getSelected());
-                System.out.println();
             }
         });
         String[] creatureRenderModeStrings = new String[CreatureRenderMode.values().length];
@@ -147,9 +174,12 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
         // Layout
         Table table = new Table();
-        table.setPosition(200, getHeight() - 100);
+        table.setPosition(200, getHeight() - 150);
         table.add(renderModeLabel).colspan(2);
         table.add(renderModeSelectBox).maxWidth(100);
+        table.row();
+        table.add(clickModeLabel).colspan(2);
+        table.add(clickModeSelectBox).maxWidth(100);
         table.row();
         table.add();
         table.add(framesPerTickTextInput);
@@ -219,6 +249,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     @Override
     public void render()
     {
+
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -257,6 +288,37 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 }
             }
             framesSinceTick = 0;
+        }
+
+        mouseBrush();
+    }
+
+    private void mouseBrush()
+    {
+        if (this._xDownWorld > -1 && this._yDownWorld > -1)
+        {
+            switch (this._mouseClickMode)
+            {
+                case ADD_WALL:
+                    if (_world.getEntityType(_yDownWorld, _xDownWorld) == EntityType.EMPTY)
+                    {
+                        _world.setObject(EntityType.WALL, _yDownWorld, _xDownWorld);
+                    }
+                    break;
+                case ADD_WALL_BRUTALLY:
+                    _world.setObject(EntityType.WALL, _yDownWorld, _xDownWorld);
+                    break;
+                case REMOVE_WALL:
+                    if (_world.getEntityType(_yDownWorld, _xDownWorld) == EntityType.WALL)
+                    {
+                        _world.setObject(EntityType.EMPTY, _yDownWorld, _xDownWorld);
+                    }
+                    break;
+                case VOID_GUN:
+                    _world.setObject(EntityType.EMPTY, _yDownWorld, _xDownWorld);
+                case SELECT_CREATURE:
+                    break;
+            }
         }
     }
 
@@ -574,14 +636,37 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
             int yUpWorld = screenY / BLOCK_SIZE;
             if (_xDownWorld == xUpWorld && _yDownWorld == yUpWorld)
             {
-                if (_world.getCreature(yUpWorld, xUpWorld) != null)
+                switch (this._mouseClickMode)
                 {
-                    this._selectedCreature = _world.getCreature(yUpWorld, xUpWorld).getID();
+                    case ADD_WALL:
+                        if (_world.getEntityType(yUpWorld, xUpWorld) == EntityType.EMPTY)
+                        {
+                            _world.setObject(EntityType.WALL, yUpWorld, xUpWorld);
+                        }
+                        break;
+                    case ADD_WALL_BRUTALLY:
+                        _world.setObject(EntityType.WALL, yUpWorld, xUpWorld);
+                        break;
+                    case REMOVE_WALL:
+                        if (_world.getEntityType(yUpWorld, xUpWorld) == EntityType.WALL)
+                        {
+                            _world.setObject(EntityType.EMPTY, yUpWorld, xUpWorld);
+                        }
+                        break;
+                    case VOID_GUN:
+                        _world.setObject(EntityType.EMPTY, yUpWorld, xUpWorld);
+                        break;
+                    case SELECT_CREATURE:
+                        if (_world.getCreature(yUpWorld, xUpWorld) != null)
+                        {
+                            this._selectedCreature = _world.getCreature(yUpWorld, xUpWorld).getID();
+                        }
+                        this._xDownWorld = -1;
+                        this._yDownWorld = -1;
+                        break;
                 }
             }
         }
-        this._xDownWorld = -1;
-        this._yDownWorld = -1;
         return true;
     }
 
@@ -589,6 +674,42 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
         stage.touchDragged(screenX, screenY, pointer);
+        if (screenX > SIZE / 2 * BLOCK_SIZE)
+        {
+            int xDragWorld = (screenX - SIZE / 2 * BLOCK_SIZE) / BLOCK_SIZE;
+            int yDragWorld = screenY / BLOCK_SIZE;
+            switch (this._mouseClickMode)
+            {
+                case ADD_WALL:
+                    this._xDownWorld = xDragWorld;
+                    this._yDownWorld = yDragWorld;
+                    if (_world.getEntityType(yDragWorld, xDragWorld) == EntityType.EMPTY)
+                    {
+                        _world.setObject(EntityType.WALL, yDragWorld, xDragWorld);
+                    }
+                    break;
+                case ADD_WALL_BRUTALLY:
+                    this._xDownWorld = xDragWorld;
+                    this._yDownWorld = yDragWorld;
+                    _world.setObject(EntityType.WALL, yDragWorld, xDragWorld);
+                    break;
+                case REMOVE_WALL:
+                    this._xDownWorld = xDragWorld;
+                    this._yDownWorld = yDragWorld;
+                    if (_world.getEntityType(yDragWorld, xDragWorld) == EntityType.WALL)
+                    {
+                        _world.setObject(EntityType.EMPTY, yDragWorld, xDragWorld);
+                    }
+                    break;
+                case VOID_GUN:
+                    this._xDownWorld = xDragWorld;
+                    this._yDownWorld = yDragWorld;
+                    _world.setObject(EntityType.EMPTY, yDragWorld, xDragWorld);
+                    break;
+                case SELECT_CREATURE:
+                    break;
+            }
+        }
         return false;
     }
 
