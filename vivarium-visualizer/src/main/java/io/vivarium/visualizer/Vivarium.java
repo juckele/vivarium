@@ -125,6 +125,12 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         perFramesTextInput.setMessageText("1");
         perFramesTextInput.setAlignment(Align.center);
 
+        // Food Spawn Rate
+        final Label foodSpawnLabel = new Label("Food Spawn", skin);
+        TextField foodSpawnTextInput = new TextField("", skin);
+        foodSpawnTextInput.setMessageText("0.01");
+        foodSpawnTextInput.setAlignment(Align.center);
+
         // Click Mode
         final Label clickModeLabel = new Label("Click Mode: ", skin);
         final SelectBox<String> clickModeSelectBox = new SelectBox<>(skin);
@@ -189,6 +195,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         table.add(perFramesTextInput);
         table.add(framesLabel);
         table.row();
+        table.add(foodSpawnLabel);
+        table.add(foodSpawnTextInput);
+        table.row();
         table.add(fpsLabel).colspan(4);
         table.row();
         table.add(populationLabel).colspan(4);
@@ -234,6 +243,28 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 try
                 {
                     _overFrames = Integer.parseInt(textField.getText().trim());
+                }
+                catch (Exception e)
+                {
+                    _overFrames = 1;
+                }
+                _overFrames = Math.max(_overFrames, 1);
+                _overFrames = Math.min(_overFrames, 600);
+                _enableInterpolation = _ticks == 1 && _overFrames > 1;
+            }
+        });
+        foodSpawnTextInput.setTextFieldListener(new TextFieldListener()
+        {
+            @Override
+            public void keyTyped(TextField textField, char key)
+            {
+                if (key == '\n')
+                {
+                    textField.getOnscreenKeyboard().show(false);
+                }
+                try
+                {
+                    _world.getBlueprint().setFoodGenerationProbability(Double.parseDouble(textField.getText().trim()));
                 }
                 catch (Exception e)
                 {

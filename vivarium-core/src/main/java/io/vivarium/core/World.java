@@ -462,6 +462,11 @@ public class World extends VivariumObject
         return auditRecords;
     }
 
+    public WorldBlueprint getBlueprint()
+    {
+        return this._worldBlueprint;
+    }
+
     public LinkedList<Creature> getCreatures()
     {
         LinkedList<Creature> allCreatures = new LinkedList<>();
