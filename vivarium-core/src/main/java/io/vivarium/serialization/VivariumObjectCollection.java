@@ -22,6 +22,16 @@ public class VivariumObjectCollection implements Streamable
         _data.add(object);
     }
 
+    public List<UUID> getUUIDs()
+    {
+        List<UUID> uuids = new LinkedList<>();
+        for (VivariumObject object : _data)
+        {
+            uuids.add(object.getUUID());
+        }
+        return uuids;
+    }
+
     @SuppressWarnings("unchecked") // Not actually unchecked...
     public <T extends VivariumObject> List<T> getAll(Class<T> clazz)
     {
