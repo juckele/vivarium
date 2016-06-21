@@ -17,6 +17,8 @@ import java.util.Set;
 
 import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.ActionFrequencyRecord;
+import io.vivarium.audit.BreedingPatternBlueprint;
+import io.vivarium.audit.BreedingPatternRecord;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.Creature;
@@ -135,6 +137,14 @@ public class SerializationEngine
             else if (clazzName.equals(ActionFrequencyRecord.class.getSimpleName()))
             {
                 constructor = ActionFrequencyRecord.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(BreedingPatternBlueprint.class.getSimpleName()))
+            {
+                constructor = BreedingPatternBlueprint.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(BreedingPatternRecord.class.getSimpleName()))
+            {
+                constructor = BreedingPatternRecord.class.getDeclaredConstructor();
             }
             else
             {
