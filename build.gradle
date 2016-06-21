@@ -25,7 +25,7 @@ allprojects {
     }
 
     ext {
-        gdxVersion = '1.9.3-SNAPSHOT'
+        gdxVersion = '1.9.3'
 	guavaVersion = '18.0'
     }
 
