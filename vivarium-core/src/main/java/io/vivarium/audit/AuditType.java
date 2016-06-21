@@ -10,6 +10,14 @@ public enum AuditType
             return new ActionFrequencyBlueprint();
         }
     },
+    BREEDING_PATTERN
+    {
+        @Override
+        public BreedingPatternBlueprint makeAuditBlueprint()
+        {
+            return new BreedingPatternBlueprint();
+        }
+    },
     CENSUS
     {
         @Override
