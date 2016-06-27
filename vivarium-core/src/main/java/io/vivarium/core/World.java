@@ -84,9 +84,9 @@ public class World extends VivariumObject
         populator.setCreatureBlueprints(_worldBlueprint.getCreatureBlueprints());
         populator.setWallProbability(_worldBlueprint.getInitialWallGenerationProbability());
         populator.setFoodProbability(_worldBlueprint.getInitialFoodGenerationProbability());
-        for (int r = 0; r < _height; r++)
+        for (int r = 1; r < _height - 1; r++)
         {
-            for (int c = 0; c < _width; c++)
+            for (int c = 1; c < _width - 1; c++)
             {
                 setObject(EntityType.EMPTY, r, c);
                 _creatureGrid[r][c] = null;
@@ -155,9 +155,9 @@ public class World extends VivariumObject
 
     private void tickCreatures()
     {
-        for (int r = 0; r < _height; r++)
+        for (int r = 1; r < _height - 1; r++)
         {
-            for (int c = 0; c < _width; c++)
+            for (int c = 1; c < _width - 1; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
@@ -171,9 +171,9 @@ public class World extends VivariumObject
     {
         if (this._worldBlueprint.getSoundEnabled())
         {
-            for (int r = 0; r < this._height; r++)
+            for (int r = 1; r < this._height - 1; r++)
             {
-                for (int c = 0; c < this._width; c++)
+                for (int c = 1; c < this._width - 1; c++)
                 {
                     if (_entityGrid[r][c] == EntityType.CREATURE)
                     {
@@ -220,9 +220,9 @@ public class World extends VivariumObject
     {
         if (this._worldBlueprint.getSignEnabled())
         {
-            for (int r = 0; r < this._height; r++)
+            for (int r = 1; r < this._height - 1; r++)
             {
-                for (int c = 0; c < this._width; c++)
+                for (int c = 1; c < this._width - 1; c++)
                 {
                     if (_entityGrid[r][c] == EntityType.CREATURE)
                     {
@@ -259,9 +259,9 @@ public class World extends VivariumObject
 
     private void letCreaturesPlan()
     {
-        for (int r = 0; r < _height; r++)
+        for (int r = 1; r < _height - 1; r++)
         {
-            for (int c = 0; c < _width; c++)
+            for (int c = 1; c < _width - 1; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
@@ -274,9 +274,9 @@ public class World extends VivariumObject
     private void executeCreaturePlans()
     {
         // Creatures act
-        for (int r = 0; r < _height; r++)
+        for (int r = 1; r < _height - 1; r++)
         {
-            for (int c = 0; c < _width; c++)
+            for (int c = 1; c < _width - 1; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
@@ -470,9 +470,9 @@ public class World extends VivariumObject
     public LinkedList<Creature> getCreatures()
     {
         LinkedList<Creature> allCreatures = new LinkedList<>();
-        for (int r = 0; r < this._height; r++)
+        for (int r = 1; r < this._height - 1; r++)
         {
-            for (int c = 0; c < this._width; c++)
+            for (int c = 1; c < this._width - 1; c++)
             {
                 if (_entityGrid[r][c] == EntityType.CREATURE)
                 {
