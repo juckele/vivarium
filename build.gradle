@@ -361,21 +361,6 @@ project(':vivarium-visualizer') {
     }
 }
 
-project(':vivarium-visualization') {
-    dependencies {
-        compile project(':vivarium-core')
-    }
-}
-
-project(':vivarium-swing') {
-    dependencies {
-        compile project(':vivarium-core')
-        compile project(':vivarium-visualization')
-        compile project(':vivarium-scripts')
-        compile 'net.java.dev.jna:jna-platform:4.0.0'
-    }
-}
-
 project(':vivarium-html') {
     apply plugin: 'gwt'
     apply plugin: 'war'
