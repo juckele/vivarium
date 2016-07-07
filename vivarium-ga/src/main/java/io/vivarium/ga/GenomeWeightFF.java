@@ -10,7 +10,7 @@ public class GenomeWeightFF extends FitnessFunction
     public double evaluate(Creature c)
     {
         NeuralNetwork b = (NeuralNetwork) c.getProcessor();
-        return b.getWeights()[0][0][0];
+        return b.getWeights()[0][0];
     }
 
 }

@@ -25,11 +25,9 @@ public class NeuralNetwork extends Processor
     // bias unit with a value of 1 and a stochastic bias unit
     // with a normally distributed value between -1 and 1.
     @SerializedParameter
-    private double[][][] _weights;
+    private double[][] _weights;
     @SerializedParameter
     private double[] _outputs;
-    @SerializedParameter
-    private double[][] _hiddenNodes;
 
     private static int BIAS_UNIT_COUNT = 2;
 
@@ -37,73 +35,24 @@ public class NeuralNetwork extends Processor
     {
     }
 
-    public NeuralNetwork(int[] connectionCount, boolean randomInitialization, double normalizedLength)
-    {
-        super();
-        Preconditions.checkArgument(connectionCount.length >= 2);
-        Preconditions.checkArgument(connectionCount[0] > 0);
-        Preconditions.checkArgument(connectionCount[connectionCount.length - 1] > 0);
-
-        constructWithDimensions(connectionCount, randomInitialization, normalizedLength);
-    }
-
     public NeuralNetwork(int inputCount, int outputCount, boolean randomInitialization, double normalizedLength)
     {
         super();
         Preconditions.checkArgument(inputCount > 0);
         Preconditions.checkArgument(outputCount > 0);
-
-        int[] connectionCount = { inputCount, outputCount };
-        constructWithDimensions(connectionCount, randomInitialization, normalizedLength);
+        constructWithDimensions(inputCount, outputCount, randomInitialization, normalizedLength);
     }
 
-    public NeuralNetwork(int inputCount, int outputCount, int hiddenLayers, boolean randomInitialization,
+    private void constructWithDimensions(int inputCount, int outputCount, boolean randomInitialization,
             double normalizedLength)
     {
-        super();
-        Preconditions.checkArgument(inputCount > 0);
-        Preconditions.checkArgument(outputCount > 0);
-        Preconditions.checkArgument(hiddenLayers >= 0);
-
-        int[] connectionCount = new int[hiddenLayers + 2];
-        int hiddenSize = Math.max(inputCount, outputCount);
-        connectionCount[0] = inputCount;
-        for (int i = 0; i < hiddenLayers; i++)
+        this._outputs = new double[outputCount];
+        this._weights = new double[outputCount][inputCount + BIAS_UNIT_COUNT];
+        for (int i = 0; i < _weights.length; i++)
         {
-            connectionCount[1 + i] = hiddenSize;
-        }
-        connectionCount[hiddenLayers + 1] = outputCount;
-        constructWithDimensions(connectionCount, randomInitialization, normalizedLength);
-    }
-
-    private void constructWithDimensions(int[] connectionCount, boolean randomInitialization, double normalizedLength)
-    {
-        Preconditions.checkArgument(connectionCount.length >= 2);
-
-        int hiddenLayers = connectionCount.length - 2;
-        this._outputs = new double[connectionCount[connectionCount.length - 1]];
-        if (hiddenLayers > 0)
-        {
-            this._hiddenNodes = new double[hiddenLayers][];
-            for (int i = 0; i < hiddenLayers; i++)
-            {
-                this._hiddenNodes[i] = new double[connectionCount[i + 1]];
-            }
-        }
-        else
-        {
-            this._hiddenNodes = new double[0][0];
-        }
-        this._weights = new double[hiddenLayers + 1][][];
-        for (int i = 0; i < hiddenLayers + 1; i++)
-        {
-            this._weights[i] = new double[connectionCount[i + 1]][connectionCount[i] + BIAS_UNIT_COUNT];
             for (int j = 0; j < _weights[i].length; j++)
             {
-                for (int k = 0; k < _weights[i][j].length; k++)
-                {
-                    _weights[i][j][k] = randomInitialization ? Rand.getInstance().getRandomDouble() : 1;
-                }
+                _weights[i][j] = randomInitialization ? Rand.getInstance().getRandomDouble() : 1;
             }
         }
         if (normalizedLength != 0)
@@ -116,7 +65,7 @@ public class NeuralNetwork extends Processor
     {
         // Construct the weight layer and store variables with the int based
         // constructor
-        this(processor1.getInputCount(), processor1.getOutputCount(), processor1._weights.length - 1, false,
+        this(processor1.getInputCount(), processor1.getOutputCount(), false,
                 processorBlueprint.getNormalizeAfterMutation());
 
         // Set all the weights with
@@ -124,72 +73,69 @@ public class NeuralNetwork extends Processor
         {
             for (int j = 0; j < _weights[i].length; j++)
             {
-                for (int k = 0; k < _weights[i][j].length; k++)
+                // Mix first
+                double randomValue = Rand.getInstance().getRandomPositiveDouble();
+                // Sometimes mix the two values with a gaussian
+                // approximation.
+                if (randomValue < processorBlueprint.getInheritanceGaussianMixRate())
                 {
-                    // Mix first
-                    double randomValue = Rand.getInstance().getRandomPositiveDouble();
-                    // Sometimes mix the two values with a gaussian
-                    // approximation.
-                    if (randomValue < processorBlueprint.getInheritanceGaussianMixRate())
+                    // Radnom.nextGaussian generates a Gaussian with μ = 0
+                    // and σ = 1
+                    // but we want μ = 0.5 and σ = 0.5 to mix between
+                    // numbers
+                    // This can cause a mix to introduce values higher or
+                    // lower than
+                    // either parent, which is by design.
+                    double gaussianRandomValue = Rand.getInstance().getRandomGaussian() / 2 + 0.5;
+                    double weightDifference = processor2._weights[i][j] - processor1._weights[i][j];
+                    _weights[i][j] = processor1._weights[i][j] + gaussianRandomValue * weightDifference;
+                }
+                // Otherwise pick one value
+                else
+                {
+                    randomValue = Rand.getInstance().getRandomPositiveDouble();
+                    if (randomValue < 0.5)
                     {
-                        // Radnom.nextGaussian generates a Gaussian with μ = 0
-                        // and σ = 1
-                        // but we want μ = 0.5 and σ = 0.5 to mix between
-                        // numbers
-                        // This can cause a mix to introduce values higher or
-                        // lower than
-                        // either parent, which is by design.
-                        double gaussianRandomValue = Rand.getInstance().getRandomGaussian() / 2 + 0.5;
-                        double weightDifference = processor2._weights[i][j][k] - processor1._weights[i][j][k];
-                        _weights[i][j][k] = processor1._weights[i][j][k] + gaussianRandomValue * weightDifference;
+                        _weights[i][j] = processor1._weights[i][j];
                     }
-                    // Otherwise pick one value
+
                     else
                     {
-                        randomValue = Rand.getInstance().getRandomPositiveDouble();
-                        if (randomValue < 0.5)
-                        {
-                            _weights[i][j][k] = processor1._weights[i][j][k];
-                        }
-
-                        else
-                        {
-                            _weights[i][j][k] = processor2._weights[i][j][k];
-                        }
+                        _weights[i][j] = processor2._weights[i][j];
                     }
+                }
 
-                    // Sometimes mutate
+                // Sometimes mutate
+                randomValue = Rand.getInstance().getRandomPositiveDouble();
+                if (randomValue < processorBlueprint.getMutationRate())
+                {
                     randomValue = Rand.getInstance().getRandomPositiveDouble();
-                    if (randomValue < processorBlueprint.getMutationRate())
+                    if (randomValue < processorBlueprint.getMutationSmallScaleRate())
                     {
-                        randomValue = Rand.getInstance().getRandomPositiveDouble();
-                        if (randomValue < processorBlueprint.getMutationSmallScaleRate())
+                        // Gaussian multiplication mutation,
+                        // μ = 1 and σ = 0.2
+                        double gaussianRandomValue = Rand.getInstance().getRandomGaussian() / 5 + 1;
+                        _weights[i][j] = gaussianRandomValue * _weights[i][j];
+                    }
+                    else
+                    {
+                        randomValue -= processorBlueprint.getMutationSmallScaleRate();
+                        if (randomValue < processorBlueprint.getMutationRandomRate())
                         {
-                            // Gaussian multiplication mutation,
-                            // μ = 1 and σ = 0.2
-                            double gaussianRandomValue = Rand.getInstance().getRandomGaussian() / 5 + 1;
-                            _weights[i][j][k] = gaussianRandomValue * _weights[i][j][k];
+                            // Random mutation
+                            _weights[i][j] = Rand.getInstance().getRandomDouble();
                         }
                         else
                         {
-                            randomValue -= processorBlueprint.getMutationSmallScaleRate();
-                            if (randomValue < processorBlueprint.getMutationRandomRate())
+                            randomValue -= processorBlueprint.getMutationRandomRate();
+                            if (randomValue < processorBlueprint.getMutationFlipRate())
                             {
-                                // Random mutation
-                                _weights[i][j][k] = Rand.getInstance().getRandomDouble();
+                                // Flip mutation
+                                _weights[i][j] = -_weights[i][j];
                             }
                             else
                             {
-                                randomValue -= processorBlueprint.getMutationRandomRate();
-                                if (randomValue < processorBlueprint.getMutationFlipRate())
-                                {
-                                    // Flip mutation
-                                    _weights[i][j][k] = -_weights[i][j][k];
-                                }
-                                else
-                                {
-                                    randomValue -= processorBlueprint.getMutationFlipRate();
-                                }
+                                randomValue -= processorBlueprint.getMutationFlipRate();
                             }
                         }
                     }
@@ -210,10 +156,7 @@ public class NeuralNetwork extends Processor
         {
             for (int j = 0; j < _weights[i].length; j++)
             {
-                for (int k = 0; k < _weights[i][j].length; k++)
-                {
-                    _weights[i][j][k] = normalizedLength * _weights[i][j][k] / vectorLength;
-                }
+                _weights[i][j] = normalizedLength * _weights[i][j] / vectorLength;
             }
         }
     }
@@ -226,41 +169,27 @@ public class NeuralNetwork extends Processor
         {
             for (int j = 0; j < _weights[i].length; j++)
             {
-                for (int k = 0; k < _weights[i][j].length; k++)
-                {
-                    sumOfSquares += Math.pow(_weights[i][j][k], 2);
-                }
+                sumOfSquares += Math.pow(_weights[i][j], 2);
             }
         }
         return Math.sqrt(sumOfSquares);
     }
 
-    public double[][][] getWeights()
+    public double[][] getWeights()
     {
         return (this._weights);
-    }
-
-    private int[] getConnectionCount()
-    {
-        int[] connectionCount = new int[_weights.length + 1];
-        for (int i = 0; i < _weights.length; i++)
-        {
-            connectionCount[i] = _weights[i][0].length - BIAS_UNIT_COUNT;
-        }
-        connectionCount[_weights.length] = _weights[_weights.length - 1].length;
-        return connectionCount;
     }
 
     @Override
     public int getInputCount()
     {
-        return _weights[0][0].length - BIAS_UNIT_COUNT;
+        return _weights[0].length - BIAS_UNIT_COUNT;
     }
 
     @Override
     public int getOutputCount()
     {
-        return _weights[_weights.length - 1].length;
+        return _weights.length;
     }
 
     @Override
@@ -272,24 +201,14 @@ public class NeuralNetwork extends Processor
             _outputs[i] = 0;
         }
 
-        // Compute the full NN
-        if (_weights.length > 1)
-        {
-            computeLayerInPlace(inputs, _hiddenNodes[0], _weights[0]);
-            for (int i = 1; i < _hiddenNodes.length; i++)
-            {
-                computeLayerInPlace(_hiddenNodes[i - 1], _hiddenNodes[i], _weights[i]);
-            }
-            computeLayerInPlace(_hiddenNodes[_hiddenNodes.length - 1], _outputs, _weights[_weights.length - 1]);
-        }
-        else
-        {
-            computeLayerInPlace(inputs, _outputs, _weights[0]);
-        }
+        computeLayerInPlace(inputs, _outputs, _weights);
 
         // Return
         return (_outputs);
     }
+
+    @SerializedParameter
+    private int _hiddenLayerCount = 0;
 
     public static void computeLayerInPlace(double[] inputs, double[] outputs, double[][] weights)
     {
@@ -363,12 +282,9 @@ public class NeuralNetwork extends Processor
         {
             for (int j = 0; j < _weights[i].length; j++)
             {
-                for (int k = 0; k < _weights[i][j].length; k++)
-                {
-                    double weight = (int) (1000 * _weights[i][j][k]) / 1000.0;
-                    output.append(weight);
-                    output.append('\t');
-                }
+                double weight = (int) (1000 * _weights[i][j]) / 1000.0;
+                output.append(weight);
+                output.append('\t');
                 output.append(lineEndLabel[j]);
                 output.append('\n');
             }
@@ -379,29 +295,23 @@ public class NeuralNetwork extends Processor
 
     public static void main(String[] args)
     {
-        NeuralNetwork processor = new NeuralNetwork(2, 2, 4, false, 0);
+        NeuralNetwork processor = new NeuralNetwork(3, 10, false, 0);
         System.out.println("Creating Processor...");
         System.out.println(processor);
-        System.out.println(processor.render(RenderCode.PROCESSOR_WEIGHTS));
         System.out.println("Processor Outputs for inputs");
         double[] inputs = { 0.0, 0.0 };
-        processor.outputs(inputs);
-        System.out.println(stateToString(inputs, processor));
-        double[] inputs2 = { 1.0, 0.0 };
-        processor.outputs(inputs2);
-        System.out.println(stateToString(inputs2, processor));
-        double[] inputs3 = { -1.0, -1.0 };
-        processor.outputs(inputs3);
-        System.out.println(stateToString(inputs3, processor));
-        double[] inputs4 = { -10.0, -10.0 };
-        processor.outputs(inputs4);
-        System.out.println(stateToString(inputs4, processor));
-    }
+        System.out.println("" + Arrays.toString(inputs) + " -> " + Arrays.toString(processor.outputs(inputs)));
+        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs)));
+        double[] inputs2 = { -1.0, 0.0 };
+        System.out.println("" + Arrays.toString(inputs2) + " -> " + Arrays.toString(processor.outputs(inputs2)));
+        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs2)));
+        double[] inputs3 = { 1.0, 0.0 };
+        System.out.println("" + Arrays.toString(inputs3) + " -> " + Arrays.toString(processor.outputs(inputs3)));
+        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs3)));
+        double[] inputs4 = { 0.5, 0.5 };
+        System.out.println("" + Arrays.toString(inputs4) + " -> " + Arrays.toString(processor.outputs(inputs4)));
+        System.out.println("Maximum output " + Arrays.toString(processor.outputs(inputs4)));
 
-    public static String stateToString(double[] inputs, NeuralNetwork processor)
-    {
-        return "" + Arrays.toString(inputs) + " -> " + Arrays.deepToString(processor._hiddenNodes) + " -> "
-                + Arrays.toString(processor._outputs);
     }
 
     public static NeuralNetwork minProcessor(List<NeuralNetwork> processors)
@@ -415,11 +325,7 @@ public class NeuralNetwork extends Processor
             {
                 for (int j = 0; j < minProcessor._weights[i].length; j++)
                 {
-                    for (int k = 0; k < minProcessor._weights[i][j].length; k++)
-                    {
-                        minProcessor._weights[i][j][k] = Math.min(processor._weights[i][j][k],
-                                minProcessor._weights[i][j][k]);
-                    }
+                    minProcessor._weights[i][j] = Math.min(processor._weights[i][j], minProcessor._weights[i][j]);
                 }
             }
         }
@@ -438,11 +344,7 @@ public class NeuralNetwork extends Processor
             {
                 for (int j = 0; j < maxProcessor._weights[i].length; j++)
                 {
-                    for (int k = 0; k < maxProcessor._weights[i][j].length; k++)
-                    {
-                        maxProcessor._weights[i][j][k] = Math.max(processor._weights[i][j][k],
-                                maxProcessor._weights[i][j][k]);
-                    }
+                    maxProcessor._weights[i][j] = Math.max(processor._weights[i][j], maxProcessor._weights[i][j]);
                 }
             }
         }
@@ -451,16 +353,14 @@ public class NeuralNetwork extends Processor
 
     public static NeuralNetwork medianProcessor(List<NeuralNetwork> processors)
     {
-        NeuralNetwork medianProcessor = new NeuralNetwork(processors.get(0).getConnectionCount(), false, 0);
+        NeuralNetwork medianProcessor = new NeuralNetwork(processors.get(0).getInputCount(),
+                processors.get(0).getOutputCount(), false, 0);
         // Set all the weights with
         for (int i = 0; i < medianProcessor._weights.length; i++)
         {
             for (int j = 0; j < medianProcessor._weights[i].length; j++)
             {
-                for (int k = 0; k < medianProcessor._weights[i][j].length; k++)
-                {
-                    medianProcessor._weights[i][j][k] = 0;
-                }
+                medianProcessor._weights[i][j] = 0;
             }
         }
         int processorsAveraged = processors.size();
@@ -470,10 +370,7 @@ public class NeuralNetwork extends Processor
             {
                 for (int j = 0; j < medianProcessor._weights[i].length; j++)
                 {
-                    for (int k = 0; k < medianProcessor._weights[i][j].length; k++)
-                    {
-                        medianProcessor._weights[i][j][k] += processor._weights[i][j][k];
-                    }
+                    medianProcessor._weights[i][j] += processor._weights[i][j];
                 }
             }
         }
@@ -481,10 +378,7 @@ public class NeuralNetwork extends Processor
         {
             for (int j = 0; j < medianProcessor._weights[i].length; j++)
             {
-                for (int k = 0; k < medianProcessor._weights[i][j].length; k++)
-                {
-                    medianProcessor._weights[i][j][k] /= processorsAveraged;
-                }
+                medianProcessor._weights[i][j] /= processorsAveraged;
             }
         }
         return medianProcessor;
@@ -499,10 +393,7 @@ public class NeuralNetwork extends Processor
         {
             for (int j = 0; j < standardDeviationProcessor._weights[i].length; j++)
             {
-                for (int k = 0; k < standardDeviationProcessor._weights[i][j].length; k++)
-                {
-                    standardDeviationProcessor._weights[i][j][k] = 0;
-                }
+                standardDeviationProcessor._weights[i][j] = 0;
             }
         }
         int processorsAveraged = processors.size();
@@ -513,11 +404,8 @@ public class NeuralNetwork extends Processor
             {
                 for (int j = 0; j < standardDeviationProcessor._weights[i].length; j++)
                 {
-                    for (int k = 0; k < standardDeviationProcessor._weights[i][j].length; k++)
-                    {
-                        error = processor._weights[i][j][k] - medianProcessor._weights[i][j][k];
-                        standardDeviationProcessor._weights[i][j][k] += error * error;
-                    }
+                    error = processor._weights[i][j] - medianProcessor._weights[i][j];
+                    standardDeviationProcessor._weights[i][j] += error * error;
                 }
             }
         }
@@ -525,10 +413,7 @@ public class NeuralNetwork extends Processor
         {
             for (int j = 0; j < standardDeviationProcessor._weights[i].length; j++)
             {
-                for (int k = 0; k < standardDeviationProcessor._weights[i][j].length; k++)
-                {
-                    standardDeviationProcessor._weights[i][j][k] /= processorsAveraged;
-                }
+                standardDeviationProcessor._weights[i][j] /= processorsAveraged;
             }
         }
         return standardDeviationProcessor;
@@ -545,11 +430,11 @@ public class NeuralNetwork extends Processor
         return new NeuralNetwork();
     }
 
-    public static NeuralNetwork makeWithProcessorBlueprint(NeuralNetworkBlueprint processorBlueprint)
+    public static NeuralNetwork makeWithProcessorBlueprint(ProcessorBlueprint processorBlueprint)
     {
         return new NeuralNetwork(processorBlueprint.getTotalProcessorInputCount(),
-                processorBlueprint.getTotalProcessorOutputCount(), processorBlueprint.getHiddenLayerCount(),
-                processorBlueprint.getRandomInitialization(), processorBlueprint.getNormalizeAfterMutation());
+                processorBlueprint.getTotalProcessorOutputCount(), processorBlueprint.getRandomInitialization(),
+                processorBlueprint.getNormalizeAfterMutation());
     }
 
     public static NeuralNetwork makeWithParents(ProcessorBlueprint processorBlueprint, NeuralNetwork parentProcessor1,
