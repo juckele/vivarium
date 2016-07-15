@@ -6,6 +6,11 @@ import io.vivarium.util.Rand;
 
 public class WorldPopulator
 {
+    public enum EntityType
+    {
+        CREATURE, ITEM, TERRAIN, VOID
+    }
+
     private double _wallProbability;
     private double _foodProbability;
     private double _creatureProbability;
@@ -41,13 +46,13 @@ public class WorldPopulator
         double random = Rand.getInstance().getRandomPositiveDouble();
         if (random < this._wallProbability)
         {
-            return EntityType.WALL;
+            return EntityType.TERRAIN;
         }
         random -= this._wallProbability;
 
         if (random < this._foodProbability)
         {
-            return EntityType.FOOD;
+            return EntityType.ITEM;
         }
         random -= this._foodProbability;
 
@@ -56,7 +61,7 @@ public class WorldPopulator
             return EntityType.CREATURE;
         }
 
-        return EntityType.EMPTY;
+        return EntityType.VOID;
     }
 
     public CreatureBlueprint getNextCreatureBlueprint()

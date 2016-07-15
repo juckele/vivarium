@@ -11,7 +11,6 @@ import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
@@ -32,8 +31,7 @@ public class CensusTest
         CensusRecord record = (CensusRecord) world.getAuditRecords().remove();
         ArrayList<Integer> populationRecords = record.getPopulationRecords();
         Tester.equal("Population records should have one entry", populationRecords.size(), 1);
-        Tester.equal("Initial population should match world", (int) populationRecords.get(0),
-                world.getCount(EntityType.CREATURE));
+        Tester.equal("Initial population should match world", (int) populationRecords.get(0), world.getCreatureCount());
         Tester.greaterThan("Initial population should be non-zero", (int) populationRecords.get(0), 0);
     }
 }

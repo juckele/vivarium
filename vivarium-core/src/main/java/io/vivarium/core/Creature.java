@@ -227,11 +227,13 @@ public class Creature extends VivariumObject
             // Hard coded inputs
             int facingR = r + Direction.getVerticalComponent(this._facing);
             int facingC = c + Direction.getHorizontalComponent(this._facing);
-            EntityType facingObject = w.getEntityType(facingR, facingC);
+            Creature facingCreature = w.getCreature(facingR, facingC);
+            ItemType facingItem = w.getItem(facingR, facingC);
+            TerrainType facingTerrain = w.getTerrain(facingR, facingC);
             _inputs[0] = this._gender == Gender.FEMALE ? 1 : 0;
-            _inputs[1] = facingObject == EntityType.FOOD ? 1 : 0;
-            _inputs[2] = facingObject == EntityType.CREATURE ? 1 : 0;
-            _inputs[3] = facingObject == EntityType.WALL ? 1 : 0;
+            _inputs[1] = facingItem == ItemType.FOOD ? 1 : 0;
+            _inputs[2] = facingCreature != null ? 1 : 0;
+            _inputs[3] = facingTerrain == TerrainType.WALL ? 1 : 0;
             _inputs[4] = ((double) this._food) / _creatureBlueprint.getMaximumFood();
             // Read memory units
             System.arraycopy(_memoryUnits, 0, _inputs,

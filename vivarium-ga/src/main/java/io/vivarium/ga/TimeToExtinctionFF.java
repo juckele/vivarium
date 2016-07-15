@@ -4,7 +4,6 @@ import com.google.common.base.Preconditions;
 
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.serialization.SerializationEngine;
@@ -41,7 +40,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
         // Run simulation
         for (int i = 0; i < _simulationDuration; i++)
         {
-            int count = w.getCount(EntityType.CREATURE);
+            int count = w.getCreatureCount();
             if (count == 0)
             {
                 return i / _simulationDuration;

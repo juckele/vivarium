@@ -25,7 +25,8 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.Direction;
-import io.vivarium.core.EntityType;
+import io.vivarium.core.ItemType;
+import io.vivarium.core.TerrainType;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
@@ -339,22 +340,23 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
             switch (this._mouseClickMode)
             {
                 case ADD_WALL:
-                    if (_world.getEntityType(_yDownWorld, _xDownWorld) == EntityType.EMPTY)
+                    if (_world.squareIsEmpty(_yDownWorld, _xDownWorld))
                     {
-                        _world.setObject(EntityType.WALL, _yDownWorld, _xDownWorld);
+                        _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
                     }
                     break;
                 case ADD_WALL_BRUTALLY:
-                    _world.setObject(EntityType.WALL, _yDownWorld, _xDownWorld);
+                    _world.removeObject(_yDownWorld, _xDownWorld);
+                    _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
                     break;
                 case REMOVE_WALL:
-                    if (_world.getEntityType(_yDownWorld, _xDownWorld) == EntityType.WALL)
+                    if (_world.getTerrain(_yDownWorld, _xDownWorld) == TerrainType.WALL)
                     {
-                        _world.setObject(EntityType.EMPTY, _yDownWorld, _xDownWorld);
+                        _world.setTerrain(null, _yDownWorld, _xDownWorld);
                     }
                     break;
                 case VOID_GUN:
-                    _world.setObject(EntityType.EMPTY, _yDownWorld, _xDownWorld);
+                    _world.removeObject(_yDownWorld, _xDownWorld);
                 case SELECT_CREATURE:
                     break;
             }
@@ -364,7 +366,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private void setLabels()
     {
         fpsLabel.setText("fps: " + Gdx.graphics.getFramesPerSecond());
-        populationLabel.setText("population: " + _world.getCount(EntityType.CREATURE));
+        populationLabel.setText("population: " + _world.getCreatureCount());
         LinkedList<Creature> creatures = _world.getCreatures();
         double generation = 0;
         for (Creature creature : creatures)
@@ -373,7 +375,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
         generation /= creatures.size();
         generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
-        foodSupplyLabel.setText("food: " + _world.getCount(EntityType.FOOD));
+        foodSupplyLabel.setText("food: " + _world.getItemCount());
     }
 
     private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle)
@@ -402,7 +404,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         {
             for (int r = 0; r < _world.getWorldHeight(); r++)
             {
-                if (_world.getEntityType(r, c) == EntityType.WALL)
+                if (_world.getTerrain(r, c) == TerrainType.WALL)
                 {
                     drawSprite(VivariumSprite.WALL, c, r, 0);
                 }
@@ -416,7 +418,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         {
             for (int r = 0; r < _world.getWorldHeight(); r++)
             {
-                if (_world.getEntityType(r, c) == EntityType.FOOD)
+                if (_world.getItem(r, c) == ItemType.FOOD)
                 {
                     drawSprite(VivariumSprite.FOOD, c, r, 0);
                 }
@@ -430,7 +432,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         {
             for (int r = 0; r < w2.getWorldHeight(); r++)
             {
-                if (w2.getEntityType(r, c) == EntityType.CREATURE)
+                if (w2.getCreature(r, c) != null)
                 {
                     Creature creature = w2.getCreature(r, c);
                     switch (_creatureRenderMode)
@@ -465,7 +467,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                     {
                         for (int dr = -1; dr <= 1; dr++)
                         {
-                            if (w1.getEntityType(r2 + dr, c2 + dc) == EntityType.CREATURE
+                            if (w1.getCreature(r2 + dr, c2 + dc) != null
                                     && w1.getCreature(r2 + dr, c2 + dc).getID() == creature.getID())
                             {
                                 c1 = c2 + dc;
@@ -678,23 +680,23 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 switch (this._mouseClickMode)
                 {
                     case ADD_WALL:
-                        if (_world.getEntityType(yUpWorld, xUpWorld) == EntityType.EMPTY)
+                        if (_world.squareIsEmpty(_yDownWorld, _xDownWorld))
                         {
-                            _world.setObject(EntityType.WALL, yUpWorld, xUpWorld);
+                            _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
                         }
                         break;
                     case ADD_WALL_BRUTALLY:
-                        _world.setObject(EntityType.WALL, yUpWorld, xUpWorld);
+                        _world.removeObject(_yDownWorld, _xDownWorld);
+                        _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
                         break;
                     case REMOVE_WALL:
-                        if (_world.getEntityType(yUpWorld, xUpWorld) == EntityType.WALL)
+                        if (_world.getTerrain(_yDownWorld, _xDownWorld) == TerrainType.WALL)
                         {
-                            _world.setObject(EntityType.EMPTY, yUpWorld, xUpWorld);
+                            _world.setTerrain(null, _yDownWorld, _xDownWorld);
                         }
                         break;
                     case VOID_GUN:
-                        _world.setObject(EntityType.EMPTY, yUpWorld, xUpWorld);
-                        break;
+                        _world.removeObject(_yDownWorld, _xDownWorld);
                     case SELECT_CREATURE:
                         if (_world.getCreature(yUpWorld, xUpWorld) != null)
                         {
@@ -720,31 +722,23 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
             switch (this._mouseClickMode)
             {
                 case ADD_WALL:
-                    this._xDownWorld = xDragWorld;
-                    this._yDownWorld = yDragWorld;
-                    if (_world.getEntityType(yDragWorld, xDragWorld) == EntityType.EMPTY)
+                    if (_world.squareIsEmpty(yDragWorld, xDragWorld))
                     {
-                        _world.setObject(EntityType.WALL, yDragWorld, xDragWorld);
+                        _world.setTerrain(TerrainType.WALL, yDragWorld, xDragWorld);
                     }
                     break;
                 case ADD_WALL_BRUTALLY:
-                    this._xDownWorld = xDragWorld;
-                    this._yDownWorld = yDragWorld;
-                    _world.setObject(EntityType.WALL, yDragWorld, xDragWorld);
+                    _world.removeObject(yDragWorld, xDragWorld);
+                    _world.setTerrain(TerrainType.WALL, yDragWorld, xDragWorld);
                     break;
                 case REMOVE_WALL:
-                    this._xDownWorld = xDragWorld;
-                    this._yDownWorld = yDragWorld;
-                    if (_world.getEntityType(yDragWorld, xDragWorld) == EntityType.WALL)
+                    if (_world.getTerrain(yDragWorld, xDragWorld) == TerrainType.WALL)
                     {
-                        _world.setObject(EntityType.EMPTY, yDragWorld, xDragWorld);
+                        _world.setTerrain(null, yDragWorld, xDragWorld);
                     }
                     break;
                 case VOID_GUN:
-                    this._xDownWorld = xDragWorld;
-                    this._yDownWorld = yDragWorld;
-                    _world.setObject(EntityType.EMPTY, yDragWorld, xDragWorld);
-                    break;
+                    _world.removeObject(yDragWorld, xDragWorld);
                 case SELECT_CREATURE:
                     break;
             }

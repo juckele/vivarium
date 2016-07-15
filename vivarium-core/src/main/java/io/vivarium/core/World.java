@@ -7,6 +7,7 @@ import java.util.LinkedList;
 
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.AuditRecord;
+import io.vivarium.core.WorldPopulator.EntityType;
 import io.vivarium.core.processor.Processor;
 import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
@@ -30,9 +31,11 @@ public class World extends VivariumObject
     private int _height;
 
     @SerializedParameter
-    protected EntityType[][] _entityGrid;
+    protected ItemType[][] _itemGrid;
     @SerializedParameter
     protected Creature[][] _creatureGrid;
+    @SerializedParameter
+    protected TerrainType[][] _terrainGrid;
     @SerializedParameter
     protected AuditRecord[] _auditRecords;
 
@@ -88,24 +91,29 @@ public class World extends VivariumObject
         {
             for (int c = 0; c < _width; c++)
             {
-                setObject(EntityType.EMPTY, r, c);
                 _creatureGrid[r][c] = null;
                 if (r < 1 || c < 1 || r > _height - 2 || c > _width - 2)
                 {
-                    setObject(EntityType.WALL, r, c);
+                    setTerrain(TerrainType.WALL, r, c);
                 }
                 else
                 {
-                    EntityType object = populator.getNextEntityType();
-                    if (object == EntityType.CREATURE)
+                    EntityType type = populator.getNextEntityType();
+                    if (type == EntityType.CREATURE)
                     {
                         CreatureBlueprint creatureBlueprint = populator.getNextCreatureBlueprint();
                         Creature creature = new Creature(creatureBlueprint);
                         addCreature(creature, r, c);
                     }
-                    else
+                    else if (type == EntityType.ITEM)
                     {
-                        setObject(object, r, c);
+                        // TODO: Add non-food items
+                        setItem(ItemType.FOOD, r, c);
+                    }
+                    else if (type == EntityType.TERRAIN)
+                    {
+                        // TODO: Add non-wall terrain
+                        setTerrain(TerrainType.WALL, r, c);
                     }
                 }
             }
@@ -159,7 +167,7 @@ public class World extends VivariumObject
         {
             for (int c = 1; c < _width - 1; c++)
             {
-                if (_entityGrid[r][c] == EntityType.CREATURE)
+                if (_creatureGrid[r][c] != null)
                 {
                     _creatureGrid[r][c].tick();
                 }
@@ -175,7 +183,7 @@ public class World extends VivariumObject
             {
                 for (int c = 1; c < this._width - 1; c++)
                 {
-                    if (_entityGrid[r][c] == EntityType.CREATURE)
+                    if (_creatureGrid[r][c] != null)
                     {
                         transmitSoundsFrom(r, c);
                     }
@@ -192,7 +200,7 @@ public class World extends VivariumObject
         for (int c2 = c1 + 1; c2 < this._width; c2++)
         {
             int r2 = r1;
-            if (_entityGrid[r2][c2] == EntityType.CREATURE)
+            if (_creatureGrid[r1][c1] != null)
             {
                 transmitSoundsFromTo(r1, c1, r2, c2);
             }
@@ -201,7 +209,7 @@ public class World extends VivariumObject
         {
             for (int c2 = c1; c2 < this._width; c2++)
             {
-                if (_entityGrid[r2][c2] == EntityType.CREATURE)
+                if (_creatureGrid[r2][c2] != null)
                 {
                     transmitSoundsFromTo(r1, c1, r2, c2);
                 }
@@ -224,7 +232,7 @@ public class World extends VivariumObject
             {
                 for (int c = 1; c < this._width - 1; c++)
                 {
-                    if (_entityGrid[r][c] == EntityType.CREATURE)
+                    if (_creatureGrid[r][c] != null)
                     {
                         transmitSignsFrom(r, c);
                     }
@@ -243,8 +251,7 @@ public class World extends VivariumObject
         // signs yet.
         if (r1 <= r2 && c1 <= c2)
         {
-            if (_entityGrid[r2][c2] == EntityType.CREATURE
-                    && facing == Direction.flipDirection(_creatureGrid[r2][c2].getFacing()))
+            if (_creatureGrid[r2][c2] != null && facing == Direction.flipDirection(_creatureGrid[r2][c2].getFacing()))
             {
                 transmitSignsFromTo(r1, c1, r2, c2);
             }
@@ -263,7 +270,7 @@ public class World extends VivariumObject
         {
             for (int c = 1; c < _width - 1; c++)
             {
-                if (_entityGrid[r][c] == EntityType.CREATURE)
+                if (_creatureGrid[r][c] != null)
                 {
                     _creatureGrid[r][c].planAction(this, r, c);
                 }
@@ -278,7 +285,7 @@ public class World extends VivariumObject
         {
             for (int c = 1; c < _width - 1; c++)
             {
-                if (_entityGrid[r][c] == EntityType.CREATURE)
+                if (_creatureGrid[r][c] != null)
                 {
                     if (!_creatureGrid[r][c].hasActed())
                     {
@@ -308,13 +315,13 @@ public class World extends VivariumObject
             creature.executeAction(action);
         }
         // Movement
-        else if (action == Action.MOVE && _entityGrid[facingR][facingC] == EntityType.EMPTY)
+        else if (action == Action.MOVE && squareIsEmpty(facingR, facingC))
         {
             creature.executeAction(action);
-            moveObject(r, c, facing);
+            moveCreature(r, c, facing);
         }
         // Eating
-        else if (action == Action.EAT && _entityGrid[facingR][facingC] == EntityType.FOOD)
+        else if (action == Action.EAT && _itemGrid[facingR][facingC] == ItemType.FOOD)
         {
             creature.executeAction(action);
             removeObject(r, c, facing);
@@ -322,7 +329,7 @@ public class World extends VivariumObject
         // Attempt to breed
         else if (action == Action.BREED
                 // Make sure we're facing another creature
-                && _entityGrid[facingR][facingC] == EntityType.CREATURE
+                && _creatureGrid[facingR][facingC] != null
                 // And that creature is shares the same creature blueprint as us
                 && _creatureGrid[facingR][facingC].getBlueprint() == creature.getBlueprint()
                 // And that creature also is trying to breed
@@ -335,7 +342,7 @@ public class World extends VivariumObject
             creature.executeAction(action, _creatureGrid[facingR][facingC]);
         }
         // Giving Birth
-        else if (action == Action.BIRTH && _entityGrid[facingR][facingC] == EntityType.EMPTY)
+        else if (action == Action.BIRTH && squareIsEmpty(facingR, facingC))
         {
             Creature spawningCreature = creature.getFetus();
             creature.executeAction(action);
@@ -355,13 +362,12 @@ public class World extends VivariumObject
         {
             for (int c = 0; c < _width; c++)
             {
-                if (_entityGrid[r][c] == EntityType.EMPTY)
+                if (squareIsEmpty(r, c))
                 {
                     double randomNumber = Rand.getInstance().getRandomPositiveDouble();
                     if (randomNumber < this._worldBlueprint.getFoodGenerationProbability())
                     {
-                        setObject(EntityType.FOOD, r, c);
-                        _entityGrid[r][c] = EntityType.FOOD;
+                        this.setItem(ItemType.FOOD, r, c);
                     }
                 }
             }
@@ -381,7 +387,7 @@ public class World extends VivariumObject
         return _tick;
     }
 
-    private void moveObject(int r, int c, Direction direction)
+    private void moveCreature(int r, int c, Direction direction)
     {
         int r1 = r;
         int c1 = c;
@@ -406,18 +412,11 @@ public class World extends VivariumObject
                 new Error().printStackTrace();
         }
 
-        // Default object move
-        _entityGrid[r2][c2] = _entityGrid[r1][c1];
-        _entityGrid[r1][c1] = EntityType.EMPTY;
-        // Special creatures move extras
-        if (_entityGrid[r2][c2] == EntityType.CREATURE)
-        {
-            _creatureGrid[r2][c2] = _creatureGrid[r1][c1];
-            _creatureGrid[r1][c1] = null;
-        }
+        _creatureGrid[r2][c2] = _creatureGrid[r1][c1];
+        _creatureGrid[r1][c1] = null;
     }
 
-    private void removeObject(int r, int c)
+    public void removeObject(int r, int c)
     {
         this.removeObject(r, c, Direction.NORTH, 0);
     }
@@ -448,8 +447,9 @@ public class World extends VivariumObject
                 new Error().printStackTrace();
         }
 
-        _entityGrid[r][c] = EntityType.EMPTY;
         _creatureGrid[r][c] = null;
+        _itemGrid[r][c] = null;
+        _terrainGrid[r][c] = null;
     }
 
     public LinkedList<AuditRecord> getAuditRecords()
@@ -474,7 +474,7 @@ public class World extends VivariumObject
         {
             for (int c = 1; c < this._width - 1; c++)
             {
-                if (_entityGrid[r][c] == EntityType.CREATURE)
+                if (_creatureGrid[r][c] != null)
                 {
                     allCreatures.add(_creatureGrid[r][c]);
                 }
@@ -499,14 +499,46 @@ public class World extends VivariumObject
         return allCreatures;
     }
 
-    public int getCount(EntityType obj)
+    public int getCreatureCount()
     {
         int count = 0;
         for (int r = 0; r < _height; r++)
         {
             for (int c = 0; c < _width; c++)
             {
-                if (this._entityGrid[r][c] == obj)
+                if (this._creatureGrid[r][c] != null)
+                {
+                    count++;
+                }
+            }
+        }
+        return (count);
+    }
+
+    public int getItemCount()
+    {
+        int count = 0;
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                if (this._itemGrid[r][c] != null)
+                {
+                    count++;
+                }
+            }
+        }
+        return (count);
+    }
+
+    public int getTerrainCount()
+    {
+        int count = 0;
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                if (this._terrainGrid[r][c] != null)
                 {
                     count++;
                 }
@@ -546,10 +578,25 @@ public class World extends VivariumObject
         return this._creatureGrid[r][c];
     }
 
+    public ItemType getItem(int r, int c)
+    {
+        return this._itemGrid[r][c];
+    }
+
+    public TerrainType getTerrain(int r, int c)
+    {
+        return this._terrainGrid[r][c];
+    }
+
+    public boolean squareIsEmpty(int r, int c)
+    {
+        return _creatureGrid[r][c] == null && _itemGrid[r][c] == null && _terrainGrid[r][c] == null;
+    }
+
     private void addCreature(Creature creature, int r, int c)
     {
         creature.setID(this.getNewCreatureID());
-        setObject(EntityType.CREATURE, creature, r, c);
+        _creatureGrid[r][c] = creature;
     }
 
     private void killCreature(int r, int c)
@@ -564,7 +611,7 @@ public class World extends VivariumObject
         {
             int r = Rand.getInstance().getRandomInt(this._height);
             int c = Rand.getInstance().getRandomInt(this._width);
-            if (_entityGrid[r][c] == EntityType.EMPTY)
+            if (this.squareIsEmpty(r, c))
             {
                 addCreature(creature, r, c);
                 immigrantPlaced = true;
@@ -587,28 +634,19 @@ public class World extends VivariumObject
         this._width = width;
         this._height = height;
 
-        this._entityGrid = new EntityType[height][width];
         this._creatureGrid = new Creature[height][width];
+        this._itemGrid = new ItemType[height][width];
+        this._terrainGrid = new TerrainType[height][width];
     }
 
-    public EntityType getEntityType(int r, int c)
+    public void setTerrain(TerrainType terrainType, int r, int c)
     {
-        return (this._entityGrid[r][c]);
+        this._terrainGrid[r][c] = terrainType;
     }
 
-    public void setObject(EntityType obj, int r, int c)
+    public void setItem(ItemType itemType, int r, int c)
     {
-        if (obj == EntityType.CREATURE)
-        {
-            throw new Error("Creature EntityTypes should not be assinged directly, use setCreature");
-        }
-        setObject(obj, null, r, c);
-    }
-
-    private void setObject(EntityType obj, Creature creature, int r, int c)
-    {
-        _entityGrid[r][c] = obj;
-        _creatureGrid[r][c] = creature;
+        this._itemGrid[r][c] = itemType;
     }
 
     public String render(RenderCode code)
@@ -628,7 +666,7 @@ public class World extends VivariumObject
             {
                 for (int c = 0; c < this._width; c++)
                 {
-                    if (_entityGrid[r][c] == EntityType.CREATURE)
+                    if (_creatureGrid[r][c] != null)
                     {
                         creatureOutput.append(_creatureGrid[r][c].render(RenderCode.SIMPLE_CREATURE, r, c));
                         creatureOutput.append('\n');
@@ -649,7 +687,7 @@ public class World extends VivariumObject
         // Draw world map
         StringBuilder worldOutput = new StringBuilder();
         worldOutput.append("Walls: ");
-        worldOutput.append(this.getCount(EntityType.WALL));
+        worldOutput.append(this.getTerrainCount());
         HashMap<CreatureBlueprint, String> creatureBlueprintToGlyph = new HashMap<>();
         for (CreatureBlueprint s : this._worldBlueprint.getCreatureBlueprints())
         {
@@ -658,27 +696,27 @@ public class World extends VivariumObject
             worldOutput.append(this.getCount(s));
         }
         worldOutput.append(", Food: ");
-        worldOutput.append(this.getCount(EntityType.FOOD));
+        worldOutput.append(this.getItemCount());
         worldOutput.append('\n');
         for (int r = 0; r < _height; r++)
         {
             for (int c = 0; c < _width; c++)
             {
-                if (_entityGrid[r][c] == EntityType.EMPTY)
-                {
-                    worldOutput.append('\u3000');
-                }
-                else if (_entityGrid[r][c] == EntityType.WALL)
+                if (_terrainGrid[r][c] == TerrainType.WALL)
                 {
                     worldOutput.append('口');
                 }
-                else if (_entityGrid[r][c] == EntityType.FOOD)
+                else if (_itemGrid[r][c] == ItemType.FOOD)
                 {
                     worldOutput.append('一');
                 }
-                else if (_entityGrid[r][c] == EntityType.CREATURE)
+                else if (_creatureGrid[r][c] != null)
                 {
                     worldOutput.append(creatureBlueprintToGlyph.get(_creatureGrid[r][c].getBlueprint()));
+                }
+                else
+                {
+                    worldOutput.append('\u3000');
                 }
             }
             worldOutput.append('\n');
@@ -705,7 +743,7 @@ public class World extends VivariumObject
         {
             for (int c = 0; c < this._width; c++)
             {
-                if (_entityGrid[r][c] == EntityType.CREATURE && _creatureGrid[r][c].getBlueprint().equals(s))
+                if (_creatureGrid[r][c] != null && _creatureGrid[r][c].getBlueprint().equals(s))
                 {
                     processors.add(_creatureGrid[r][c].getProcessor());
                 }

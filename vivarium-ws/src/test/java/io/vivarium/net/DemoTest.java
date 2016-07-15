@@ -8,9 +8,8 @@ import io.vivarium.client.WorkerClient;
 import io.vivarium.client.WorkerConfig;
 import io.vivarium.client.task.DownloadResourceTask;
 import io.vivarium.client.task.UploadResourceTask;
-import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.EntityType;
 import io.vivarium.core.World;
+import io.vivarium.core.WorldBlueprint;
 import io.vivarium.server.VivariumResearchServer;
 import io.vivarium.util.UUID;
 
@@ -27,7 +26,7 @@ public class DemoTest
         UploadResourceTask t1 = new UploadResourceTask(UUID.randomUUID(), world);
         TaskClient c1 = new TaskClient(t1);
         c1.connect();
-        System.out.println("New world with " + world.getCount(EntityType.CREATURE) + " creatures");
+        System.out.println("New world with " + world.getCreatureCount() + " creatures");
 
         /*
          * List<UUID> dependencies = new LinkedList<>();
@@ -53,7 +52,7 @@ public class DemoTest
         try
         {
             World world_copy = t3.waitForResource().getFirst(World.class);
-            System.out.println("DL world with " + world_copy.getCount(EntityType.CREATURE) + " creatures");
+            System.out.println("DL world with " + world_copy.getCreatureCount() + " creatures");
         }
         catch (ExecutionException e)
         {
