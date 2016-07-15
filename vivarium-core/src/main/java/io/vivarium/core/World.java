@@ -84,9 +84,9 @@ public class World extends VivariumObject
         populator.setCreatureBlueprints(_worldBlueprint.getCreatureBlueprints());
         populator.setWallProbability(_worldBlueprint.getInitialWallGenerationProbability());
         populator.setFoodProbability(_worldBlueprint.getInitialFoodGenerationProbability());
-        for (int r = 1; r < _height - 1; r++)
+        for (int r = 0; r < _height; r++)
         {
-            for (int c = 1; c < _width - 1; c++)
+            for (int c = 0; c < _width; c++)
             {
                 setObject(EntityType.EMPTY, r, c);
                 _creatureGrid[r][c] = null;
