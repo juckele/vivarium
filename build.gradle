@@ -150,6 +150,12 @@ project(':vivarium-core') {
     }
 }
 
+project(':vivarium-concurrency') {
+    dependencies {
+        compile project(':vivarium-core')
+    }
+}
+
 project(':vivarium-desktop') {
     dependencies {
         compile project(':vivarium-core')
@@ -190,6 +196,7 @@ project(':vivarium-net') {
 }
 project(':vivarium-ws') {
     dependencies {
+        compile project(':vivarium-concurrency')
         compile project(':vivarium-db')
         compile project(':vivarium-net')
         compile 'net.java.dev.jna:jna-platform:4.0.0'
@@ -343,6 +350,7 @@ project(':vivarium-scripts') {
 
     dependencies {
         compile project(':vivarium-core')
+        compile project(':vivarium-concurrency')
         compile project(':vivarium-db')
         compile project(':vivarium-graph')
         compile project(':vivarium-serialization')
