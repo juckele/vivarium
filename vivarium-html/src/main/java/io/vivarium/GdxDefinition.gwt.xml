@@ -18,7 +18,6 @@
   
   <!-- Vivarium cross project modules                             -->
   <inherits name='io.vivarium.Core' />
-  <inherits name='io.vivarium.Net' />
   <inherits name='io.vivarium.Visualizer' />
 
   <!-- Entry point to web-app                                     -->
