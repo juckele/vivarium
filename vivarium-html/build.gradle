@@ -33,6 +33,14 @@ task superDev(type: de.richsource.gradle.plugins.gwt.GwtSuperDev) {
     }
 }
 
+draftWar {
+   from "war"
+}
+
+task addSource << {
+	sourceSets.main.compileClasspath += files(project(':vivarium-visualizer').sourceSets.main.allJava.srcDirs)
+}*/
+
 task dist(dependsOn: [clean, compileGwt]) {
     doLast {
         file("build/dist").mkdirs()
@@ -50,14 +58,6 @@ task dist(dependsOn: [clean, compileGwt]) {
         }
     }
 }
-
-draftWar {
-   from "war"
-}
-
-task addSource << {
-	sourceSets.main.compileClasspath += files(project(':vivarium-visualizer').sourceSets.main.allJava.srcDirs)
-}*/
 
 //tasks.compileGwt.dependsOn(addSource)
 //tasks.draftCompileGwt.dependsOn(addSource)
