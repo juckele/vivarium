@@ -3,7 +3,7 @@
 <module rename-to="html">
     <inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 	
-    <inherits name='io.vivarium.html.GdxDefinition' />
+    <inherits name='io.vivarium.GdxDefinition' />
     <collapse-all-properties />
 
     <add-linker name="xsiframe"/>
