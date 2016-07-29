@@ -4,7 +4,7 @@
     <inherits name='com.badlogic.gdx.backends.gdx_backends_gwt' />
 
     <inherits name='Vivarium' />
-    <entry-point class='io.vivarium.html.client.HtmlLauncher' />
+    <entry-point class='io.vivarium.client.HtmlLauncher' />
 
     <set-configuration-property name="gdx.assetpath" value="../core/assets" />
 </module>

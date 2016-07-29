@@ -1,4 +1,4 @@
-package io.vivarium.html.client;
+package io.vivarium.client;
 
 import com.badlogic.gdx.ApplicationListener;
 import com.badlogic.gdx.backends.gwt.GwtApplication;
