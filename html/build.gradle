@@ -54,7 +54,9 @@ draftWar {
 }
 
 task addSource << {
-	sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
+    sourceSets.main.compileClasspath += files(project(':core').sourceSets.main.allJava.srcDirs)
+    sourceSets.main.compileClasspath += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
+    sourceSets.main.compileClasspath += files(project(':vivarium-visualizer').sourceSets.main.allJava.srcDirs)	
 }
 
 tasks.compileGwt.dependsOn(addSource)
