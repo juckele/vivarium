@@ -375,9 +375,16 @@ project(':html') {
 
     dependencies {
         compile project(":core")
+        compile project(':vivarium-core')
+        compile project(':vivarium-visualizer')
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
         compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+        compile 'com.github.nmorel.gwtjackson:gwt-jackson:0.10.0'
+        compile "com.google.guava:guava:$guavaVersion"
+        compile "com.google.guava:guava-gwt:$guavaVersion"
+        compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
+        compile 'org.realityforge.gwt.websockets:gwt-websockets:1.1.2'
     }
 }
 
