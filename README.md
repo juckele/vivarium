@@ -13,10 +13,14 @@ poorly understood task is unapproachably difficult. It is my hope that as
 computational power continues to grow, lessons learned from these simulations
 will be useful in building more powerful generative models.
 
-## Running Vivarium
+## Development Environment Setup
+1. Run `gradle eclipseSetup`.
+1. Import all projects into Eclipse as existing Eclipse projects. For most development, this should be sufficient.
+1. Running any database test code requires installing psql, and setting up a user named test with sufficient privelages on a database named test and with password test).
 
-If you would like to run Vivarium, please feel free to contact me if you have
-any problems. The basic set-up requires running `gradle eclipseSetup` and then
-importing the projects into Eclipse as existing Eclipse projects. Running any
-database code requires some additional setup (requires psql, a user named test
-with sufficient privelages on a database named test and with password test).
+## Running Vivarium
+If you would like to run Vivarium and run into any problems, please feel free
+to contact me.
+* The desktop visualizer can be run with the command `vivarium-desktop:run`.
+* The web visualizer can be run with the command `vivarium-html:superDev`, and then navigating to `http://localhost:8080/html/index.html` in a browser.
+* Scripts can be built with the command `gradle vivarium-scripts:build` and run with `java -jar PATH_TO_JAR (options)` 
