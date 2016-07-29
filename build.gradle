@@ -369,6 +369,28 @@ project(':vivarium-visualizer') {
     }
 }
 
+project(':html') {
+    apply plugin: "gwt"
+    apply plugin: "war"
+
+    dependencies {
+        compile project(":core")
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
+        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
+    }
+}
+
+project(':core') {
+    apply plugin: "java"
+
+
+    dependencies {
+        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
+    }
+}
+
+
 project(':vivarium-html') {
     apply plugin: 'gwt'
     apply plugin: 'war'
@@ -389,6 +411,7 @@ project(':vivarium-html') {
             disableCastChecking = true;
         }
     }
+
 
     dependencies {
         compile project(':vivarium-core')
