@@ -369,12 +369,11 @@ project(':vivarium-visualizer') {
     }
 }
 
-project(':html') {
+project(':vivarium-html') {
     apply plugin: "gwt"
     apply plugin: "war"
 
     dependencies {
-        compile project(":core")
         compile project(':vivarium-core')
         compile project(':vivarium-visualizer')
         compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
@@ -383,53 +382,6 @@ project(':html') {
         compile 'com.github.nmorel.gwtjackson:gwt-jackson:0.10.0'
         compile "com.google.guava:guava:$guavaVersion"
         compile "com.google.guava:guava-gwt:$guavaVersion"
-        compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
-        compile 'org.realityforge.gwt.websockets:gwt-websockets:1.1.2'
-    }
-}
-
-project(':core') {
-    apply plugin: "java"
-
-
-    dependencies {
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion"
-    }
-}
-
-
-project(':vivarium-html') {
-    apply plugin: 'gwt'
-    apply plugin: 'war'
-
-    gwt {
-        gwtVersion='2.7.0'
-        maxHeapSize="1G"
-        minHeapSize="1G"
-
-        modules 'io.vivarium.GdxDefinition'
-
-        src += files(project(':vivarium-core').sourceSets.main.allJava.srcDirs)
-        src += files(project(':vivarium-visualizer').sourceSets.main.allJava.srcDirs)
-
-        compiler {
-            strict = true;
-            enableClosureCompiler = true;
-            disableCastChecking = true;
-        }
-    }
-
-
-    dependencies {
-        compile project(':vivarium-core')
-        compile project(':vivarium-visualizer')
-        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion"
-        compile "com.badlogicgames.gdx:gdx:$gdxVersion:sources"
-        compile "com.badlogicgames.gdx:gdx-backend-gwt:$gdxVersion:sources"
-        compile 'com.github.nmorel.gwtjackson:gwt-jackson:0.10.0'
-        compile "com.google.guava:guava:$guavaVersion"
-        compile "com.google.guava:guava-gwt:$guavaVersion"
-        compile 'com.google.gwt:gwt-user:2.7.0'
         compile 'com.googlecode.gwt-streamer:gwt-streamer:2.0.0'
         compile 'org.realityforge.gwt.websockets:gwt-websockets:1.1.2'
     }
