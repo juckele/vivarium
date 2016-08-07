@@ -342,7 +342,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                     }
                     break;
                 case ADD_WALL_BRUTALLY:
-                    _world.removeObject(_yDownWorld, _xDownWorld);
+                    _world.removeCreature(_yDownWorld, _xDownWorld);
                     _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
                     break;
                 case REMOVE_WALL:
@@ -352,7 +352,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                     }
                     break;
                 case VOID_GUN:
-                    _world.removeObject(_yDownWorld, _xDownWorld);
+                    _world.removeCreature(_yDownWorld, _xDownWorld);
                 case SELECT_CREATURE:
                     break;
             }
@@ -682,7 +682,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                         }
                         break;
                     case ADD_WALL_BRUTALLY:
-                        _world.removeObject(_yDownWorld, _xDownWorld);
+                        _world.removeCreature(_yDownWorld, _xDownWorld);
                         _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
                         break;
                     case REMOVE_WALL:
@@ -692,7 +692,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                         }
                         break;
                     case VOID_GUN:
-                        _world.removeObject(_yDownWorld, _xDownWorld);
+                        _world.removeCreature(_yDownWorld, _xDownWorld);
                     case SELECT_CREATURE:
                         if (_world.getCreature(yUpWorld, xUpWorld) != null)
                         {
@@ -724,7 +724,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                     }
                     break;
                 case ADD_WALL_BRUTALLY:
-                    _world.removeObject(yDragWorld, xDragWorld);
+                    _world.removeCreature(yDragWorld, xDragWorld);
                     _world.setTerrain(TerrainType.WALL, yDragWorld, xDragWorld);
                     break;
                 case REMOVE_WALL:
@@ -734,7 +734,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                     }
                     break;
                 case VOID_GUN:
-                    _world.removeObject(yDragWorld, xDragWorld);
+                    _world.removeCreature(yDragWorld, xDragWorld);
                 case SELECT_CREATURE:
                     break;
             }

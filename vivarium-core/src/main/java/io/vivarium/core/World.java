@@ -315,7 +315,7 @@ public class World extends VivariumObject
             creature.executeAction(action);
         }
         // Movement
-        else if (action == Action.MOVE && squareIsEmpty(facingR, facingC))
+        else if (action == Action.MOVE && squareIsPathable(facingR, facingC))
         {
             creature.executeAction(action);
             moveCreature(r, c, facing);
@@ -324,7 +324,7 @@ public class World extends VivariumObject
         else if (action == Action.EAT && _itemGrid[facingR][facingC] == ItemType.FOOD)
         {
             creature.executeAction(action);
-            removeObject(r, c, facing);
+            removeFood(facingR, facingC);
         }
         // Attempt to breed
         else if (action == Action.BREED
@@ -416,40 +416,15 @@ public class World extends VivariumObject
         _creatureGrid[r1][c1] = null;
     }
 
-    public void removeObject(int r, int c)
+    public void removeCreature(int r, int c)
     {
-        this.removeObject(r, c, Direction.NORTH, 0);
-    }
-
-    private void removeObject(int r, int c, Direction direction)
-    {
-        this.removeObject(r, c, direction, 1);
-    }
-
-    private void removeObject(int r, int c, Direction direction, int distance)
-    {
-        switch (direction)
-        {
-            case NORTH:
-                r -= distance;
-                break;
-            case EAST:
-                c += distance;
-                break;
-            case SOUTH:
-                r += distance;
-                break;
-            case WEST:
-                c -= distance;
-                break;
-            default:
-                System.err.println("Non-Fatal Error, unhandled action");
-                new Error().printStackTrace();
-        }
-
         _creatureGrid[r][c] = null;
+
+    }
+
+    public void removeFood(int r, int c)
+    {
         _itemGrid[r][c] = null;
-        _terrainGrid[r][c] = null;
     }
 
     public LinkedList<AuditRecord> getAuditRecords()
@@ -593,6 +568,11 @@ public class World extends VivariumObject
         return _creatureGrid[r][c] == null && _itemGrid[r][c] == null && _terrainGrid[r][c] == null;
     }
 
+    public boolean squareIsPathable(int r, int c)
+    {
+        return _creatureGrid[r][c] == null && _terrainGrid[r][c] == null;
+    }
+
     private void addCreature(Creature creature, int r, int c)
     {
         creature.setID(this.getNewCreatureID());
@@ -601,7 +581,7 @@ public class World extends VivariumObject
 
     private void killCreature(int r, int c)
     {
-        removeObject(r, c);
+        removeCreature(r, c);
     }
 
     public void addImmigrant(Creature creature)
