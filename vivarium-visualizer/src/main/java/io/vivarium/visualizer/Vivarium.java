@@ -137,7 +137,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         // Food Spawn Rate
         final Label foodSpawnLabel = new Label("Food Spawn", skin);
         TextField foodSpawnTextInput = new TextField("", skin);
-        foodSpawnTextInput.setMessageText("0.01");
+        foodSpawnTextInput.setMessageText("" + _blueprint.getFoodGenerationProbability());
         foodSpawnTextInput.setAlignment(Align.center);
 
         // Click Mode
