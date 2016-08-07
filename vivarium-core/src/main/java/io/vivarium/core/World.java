@@ -321,10 +321,10 @@ public class World extends VivariumObject
             moveCreature(r, c, facing);
         }
         // Eating
-        else if (action == Action.EAT && _itemGrid[facingR][facingC] == ItemType.FOOD)
+        else if (action == Action.EAT && _itemGrid[r][c] == ItemType.FOOD)
         {
             creature.executeAction(action);
-            removeFood(facingR, facingC);
+            removeFood(r, c);
         }
         // Attempt to breed
         else if (action == Action.BREED
@@ -342,7 +342,7 @@ public class World extends VivariumObject
             creature.executeAction(action, _creatureGrid[facingR][facingC]);
         }
         // Giving Birth
-        else if (action == Action.BIRTH && squareIsEmpty(facingR, facingC))
+        else if (action == Action.BIRTH && squareIsPathable(facingR, facingC))
         {
             Creature spawningCreature = creature.getFetus();
             creature.executeAction(action);
@@ -362,7 +362,7 @@ public class World extends VivariumObject
         {
             for (int c = 0; c < _width; c++)
             {
-                if (squareIsEmpty(r, c))
+                if (squareIsFoodable(r, c))
                 {
                     double randomNumber = Rand.getInstance().getRandomPositiveDouble();
                     if (randomNumber < this._worldBlueprint.getFoodGenerationProbability())
@@ -571,6 +571,11 @@ public class World extends VivariumObject
     public boolean squareIsPathable(int r, int c)
     {
         return _creatureGrid[r][c] == null && _terrainGrid[r][c] == null;
+    }
+
+    public boolean squareIsFoodable(int r, int c)
+    {
+        return _itemGrid[r][c] == null && _terrainGrid[r][c] == null;
     }
 
     private void addCreature(Creature creature, int r, int c)

@@ -19,7 +19,7 @@ public class WorldBlueprint extends VivariumObject
     @SerializedParameter
     private int _height = 25;
     @SerializedParameter
-    private double _foodGenerationProbability = 0.01;
+    private double _foodGenerationProbability = 0.005;
     @SerializedParameter
     private double _initialFoodGenerationProbability = 0.0;
     @SerializedParameter
