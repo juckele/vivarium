@@ -2,5 +2,5 @@ package io.vivarium.core;
 
 public enum TerrainType
 {
-    WALL
+    FOOD_GENERATOR, WALL
 }

@@ -86,6 +86,7 @@ public class World extends VivariumObject
         WorldPopulator populator = new WorldPopulator();
         populator.setCreatureBlueprints(_worldBlueprint.getCreatureBlueprints());
         populator.setWallProbability(_worldBlueprint.getInitialWallGenerationProbability());
+        populator.setFoodGeneratorProbability(_worldBlueprint.getFoodGeneratorProbability());
         populator.setFoodProbability(_worldBlueprint.getInitialFoodGenerationProbability());
         for (int r = 0; r < _height; r++)
         {
@@ -113,7 +114,8 @@ public class World extends VivariumObject
                     else if (type == EntityType.TERRAIN)
                     {
                         // TODO: Add non-wall terrain
-                        setTerrain(TerrainType.WALL, r, c);
+
+                        setTerrain(populator.getTerrainType(), r, c);
                     }
                 }
             }
@@ -149,10 +151,12 @@ public class World extends VivariumObject
         // Each creature plans which actions to
         // attempt to do during the next phase
         letCreaturesPlan();
-
         // Each creature will physically try to carry
         // out the planned action
         executeCreaturePlans();
+
+        // Each terrain element is activated
+        runTerrain();
 
         // New food resources will be spawned in the world
         spawnFood();
@@ -352,6 +356,35 @@ public class World extends VivariumObject
         else
         {
             creature.failAction(action);
+        }
+    }
+
+    private void runTerrain()
+    {
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                if (this._terrainGrid[r][c] == TerrainType.FOOD_GENERATOR)
+                {
+                    if (squareIsFoodable(r + 1, c))
+                    {
+                        this.setItem(ItemType.FOOD, r + 1, c);
+                    }
+                    if (squareIsFoodable(r - 1, c))
+                    {
+                        this.setItem(ItemType.FOOD, r - 1, c);
+                    }
+                    if (squareIsFoodable(r, c + 1))
+                    {
+                        this.setItem(ItemType.FOOD, r, c + 1);
+                    }
+                    if (squareIsFoodable(r, c - 1))
+                    {
+                        this.setItem(ItemType.FOOD, r, c - 1);
+                    }
+                }
+            }
         }
     }
 

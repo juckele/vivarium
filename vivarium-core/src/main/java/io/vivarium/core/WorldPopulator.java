@@ -12,6 +12,7 @@ public class WorldPopulator
     }
 
     private double _wallProbability;
+    private double _foodGeneratorProbability;
     private double _foodProbability;
     private double _creatureProbability;
     private ArrayList<CreatureBlueprint> _creatureBlueprints;
@@ -36,6 +37,11 @@ public class WorldPopulator
         _wallProbability = probability;
     }
 
+    public void setFoodGeneratorProbability(double probability)
+    {
+        _foodGeneratorProbability = probability;
+    }
+
     public void setFoodProbability(double probability)
     {
         _foodProbability = probability;
@@ -50,6 +56,12 @@ public class WorldPopulator
         }
         random -= this._wallProbability;
 
+        if (random < this._foodGeneratorProbability)
+        {
+            return EntityType.TERRAIN;
+        }
+        random -= this._foodGeneratorProbability;
+
         if (random < this._foodProbability)
         {
             return EntityType.ITEM;
@@ -62,6 +74,23 @@ public class WorldPopulator
         }
 
         return EntityType.VOID;
+    }
+
+    public TerrainType getTerrainType()
+    {
+
+        double normalizedFoodGeneratorProbablity = this._foodGeneratorProbability
+                / (this._wallProbability + this._foodGeneratorProbability);
+
+        double random = Rand.getInstance().getRandomPositiveDouble();
+
+        if (random < normalizedFoodGeneratorProbablity)
+        {
+            return TerrainType.FOOD_GENERATOR;
+        }
+
+        return TerrainType.WALL;
+
     }
 
     public CreatureBlueprint getNextCreatureBlueprint()

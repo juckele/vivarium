@@ -404,6 +404,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 {
                     drawSprite(VivariumSprite.WALL, c, r, 0);
                 }
+                if (_world.getTerrain(r, c) == TerrainType.FOOD_GENERATOR)
+                {
+                    drawSprite(VivariumSprite.FOOD_GENERATOR_ACTIVE, c, r, 0);
+                }
             }
         }
     }
