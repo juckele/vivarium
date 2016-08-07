@@ -21,6 +21,7 @@ will be useful in building more powerful generative models.
 ## Running Vivarium
 If you would like to run Vivarium and run into any problems, please feel free
 to contact me.
-* The desktop visualizer can be run with the command `vivarium-desktop:run`.
-* The web visualizer can be run with the command `vivarium-html:superDev`, and then navigating to `http://localhost:8080/html/index.html` in a browser.
+* The desktop visualizer can be run with the command `gradle vivarium-desktop:run`.
+* The web visualizer can be run with the command `gradle vivarium-html:superDev`, and then navigating to `http://localhost:8080/html/index.html` in a browser.
 * Scripts can be built with the command `gradle vivarium-scripts:build` and run with `java -jar PATH_TO_JAR (options)` 
+
