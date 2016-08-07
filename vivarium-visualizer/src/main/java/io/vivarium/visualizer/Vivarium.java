@@ -277,11 +277,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 }
                 catch (Exception e)
                 {
-                    _overFrames = 1;
                 }
-                _overFrames = Math.max(_overFrames, 1);
-                _overFrames = Math.min(_overFrames, 600);
-                _enableInterpolation = _ticks == 1 && _overFrames > 1;
             }
         });
     }
