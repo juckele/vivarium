@@ -408,6 +408,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 {
                     drawSprite(VivariumSprite.FOOD_GENERATOR_ACTIVE, c, r, 0);
                 }
+                if (_world.getTerrain(r, c) == TerrainType.FLAMETHROWER)
+                {
+                    drawSprite(VivariumSprite.FLAMETHROWER_ACTIVE, c, r, 0);
+                }
             }
         }
     }

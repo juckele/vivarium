@@ -13,6 +13,7 @@ public class WorldPopulator
 
     private double _wallProbability;
     private double _foodGeneratorProbability;
+    private double _flamethrowerProbability;
     private double _foodProbability;
     private double _creatureProbability;
     private ArrayList<CreatureBlueprint> _creatureBlueprints;
@@ -47,6 +48,11 @@ public class WorldPopulator
         _foodProbability = probability;
     }
 
+    public void setFlamethrowerProbability(double probability)
+    {
+        _flamethrowerProbability = probability;
+    }
+
     public EntityType getNextEntityType()
     {
         double random = Rand.getInstance().getRandomPositiveDouble();
@@ -61,6 +67,12 @@ public class WorldPopulator
             return EntityType.TERRAIN;
         }
         random -= this._foodGeneratorProbability;
+
+        if (random < this._flamethrowerProbability)
+        {
+            return EntityType.TERRAIN;
+        }
+        random -= this._flamethrowerProbability;
 
         if (random < this._foodProbability)
         {
@@ -80,13 +92,21 @@ public class WorldPopulator
     {
 
         double normalizedFoodGeneratorProbablity = this._foodGeneratorProbability
-                / (this._wallProbability + this._foodGeneratorProbability);
+                / (this._wallProbability + this._foodGeneratorProbability + this._flamethrowerProbability);
+        double normalizedFlamethrowerProbablity = this._flamethrowerProbability
+                / (this._wallProbability + this._foodGeneratorProbability + this._flamethrowerProbability);
 
         double random = Rand.getInstance().getRandomPositiveDouble();
 
         if (random < normalizedFoodGeneratorProbablity)
         {
             return TerrainType.FOOD_GENERATOR;
+        }
+        random -= normalizedFoodGeneratorProbablity;
+
+        if (random < normalizedFlamethrowerProbablity)
+        {
+            return TerrainType.FLAMETHROWER;
         }
 
         return TerrainType.WALL;
