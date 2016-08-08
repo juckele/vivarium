@@ -88,6 +88,7 @@ public class World extends VivariumObject
         populator.setWallProbability(_worldBlueprint.getInitialWallGenerationProbability());
         populator.setFoodGeneratorProbability(_worldBlueprint.getFoodGeneratorProbability());
         populator.setFoodProbability(_worldBlueprint.getInitialFoodGenerationProbability());
+        populator.setFlamethrowerProbability(_worldBlueprint.getFlamethrowerProbability());
         for (int r = 0; r < _height; r++)
         {
             for (int c = 0; c < _width; c++)

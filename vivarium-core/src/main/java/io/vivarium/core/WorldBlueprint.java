@@ -26,6 +26,8 @@ public class WorldBlueprint extends VivariumObject
     private double _initialWallGenerationProbability = 0.1;
     @SerializedParameter
     private double _foodGeneratorProbability = 0.005;
+    @SerializedParameter
+    private double _flamethrowerProbability = 0.01;
 
     // Simulation Details
     @SerializedParameter
@@ -86,6 +88,11 @@ public class WorldBlueprint extends VivariumObject
     public double getFoodGeneratorProbability()
     {
         return _foodGeneratorProbability;
+    }
+
+    public double getFlamethrowerProbability()
+    {
+        return _flamethrowerProbability;
     }
 
     public double getInitialWallGenerationProbability()
