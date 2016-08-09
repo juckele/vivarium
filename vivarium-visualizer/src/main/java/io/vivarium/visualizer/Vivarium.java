@@ -412,6 +412,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 {
                     drawSprite(VivariumSprite.FLAMETHROWER_ACTIVE, c, r, 0);
                 }
+                if (_world.getTerrain(r, c) == TerrainType.FLAME)
+                {
+                    drawSprite(VivariumSprite.FLAME_1, c, r, 0);
+                }
             }
         }
     }
