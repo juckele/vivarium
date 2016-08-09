@@ -385,6 +385,26 @@ public class World extends VivariumObject
                         this.setItem(ItemType.FOOD, r, c - 1);
                     }
                 }
+
+                if (this._terrainGrid[r][c] == TerrainType.FLAMETHROWER)
+                {
+                    if (squareIsFlamable(r + 1, c))
+                    {
+                        this.setTerrain(TerrainType.FLAME, r + 1, c);
+                    }
+                    if (squareIsFlamable(r - 1, c))
+                    {
+                        this.setTerrain(TerrainType.FLAME, r - 1, c);
+                    }
+                    if (squareIsFlamable(r, c + 1))
+                    {
+                        this.setTerrain(TerrainType.FLAME, r, c + 1);
+                    }
+                    if (squareIsFlamable(r, c - 1))
+                    {
+                        this.setTerrain(TerrainType.FLAME, r, c - 1);
+                    }
+                }
             }
         }
     }
@@ -604,12 +624,17 @@ public class World extends VivariumObject
 
     public boolean squareIsPathable(int r, int c)
     {
-        return _creatureGrid[r][c] == null && _terrainGrid[r][c] == null;
+        return _creatureGrid[r][c] == null && TerrainType.isPathable(_terrainGrid[r][c]);
     }
 
     public boolean squareIsFoodable(int r, int c)
     {
         return _itemGrid[r][c] == null && _terrainGrid[r][c] == null;
+    }
+
+    public boolean squareIsFlamable(int r, int c)
+    {
+        return _terrainGrid[r][c] == null;
     }
 
     private void addCreature(Creature creature, int r, int c)
