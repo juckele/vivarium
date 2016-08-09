@@ -15,7 +15,7 @@ will be useful in building more powerful generative models.
 
 ## Development Environment Setup
 1. Run `gradle eclipseSetup`.
-1. Import all projects into Eclipse as existing Eclipse projects. For most development, this should be sufficient.
+1. Import all projects into Eclipse as existing Eclipse projects. A portion of projects depend on some Groovy code, you can find an Eclipse Groovy plugin here: https://github.com/groovy/groovy-eclipse/wiki. For most development, this should be sufficient.
 1. Running any database test code requires installing psql, and setting up a user named test with sufficient privelages on a database named test and with password test).
 
 ## Running Vivarium
