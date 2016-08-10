@@ -228,7 +228,7 @@ public class Creature extends VivariumObject
             int facingR = r + Direction.getVerticalComponent(this._facing);
             int facingC = c + Direction.getHorizontalComponent(this._facing);
             Creature facingCreature = w.getCreature(facingR, facingC);
-            ItemType facingItem = w.getItem(facingR, facingC);
+            ItemType facingItem = w.getItem(r, c);
             TerrainType facingTerrain = w.getTerrain(facingR, facingC);
             _inputs[0] = this._gender == Gender.FEMALE ? 1 : 0;
             _inputs[1] = facingItem == ItemType.FOOD ? 1 : 0;
