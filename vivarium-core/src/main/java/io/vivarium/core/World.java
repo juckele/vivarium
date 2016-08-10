@@ -174,8 +174,13 @@ public class World extends VivariumObject
             {
                 if (_creatureGrid[r][c] != null)
                 {
-                    _creatureGrid[r][c].tick();
+                    _creatureGrid[r][c].tick(0);
+                    if (_terrainGrid[r][c] == TerrainType.FLAME)
+                    {
+                        _creatureGrid[r][c].tick(1);
+                    }
                 }
+
             }
         }
     }

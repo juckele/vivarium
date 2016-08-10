@@ -57,6 +57,8 @@ public class Creature extends VivariumObject
     private Direction _facing;
     @SerializedParameter
     private Action _action = Action.SPAWN;
+    @SerializedParameter
+    private int _health;
 
     // Fetus
     @SerializedParameter
@@ -167,9 +169,10 @@ public class Creature extends VivariumObject
         this._food = _creatureBlueprint.getMaximumFood();
         this._facing = Direction.NORTH;
         this._action = Action.REST;
+        this._health = 2000;
     }
 
-    public void tick()
+    public void tick(int flameHit)
     {
         // Reset action
         this._hasActed = false;
@@ -183,6 +186,18 @@ public class Creature extends VivariumObject
             this._food += _creatureBlueprint.getPregnantFoodRate();
         }
         this._food += _creatureBlueprint.getBaseFoodRate();
+        this._health -= 10 * flameHit;
+
+        // healing
+        if (this._health < _creatureBlueprint.getMaximumHealth())
+        {
+            this._health++;
+            this._food -= 2;
+        }
+        if (flameHit == 1)
+        {
+            System.out.println("Health: " + this._health);
+        }
     }
 
     public Action getAction()
@@ -235,6 +250,7 @@ public class Creature extends VivariumObject
             _inputs[2] = facingCreature != null ? 1 : 0;
             _inputs[3] = facingTerrain == TerrainType.WALL ? 1 : 0;
             _inputs[4] = ((double) this._food) / _creatureBlueprint.getMaximumFood();
+            _inputs[5] = ((double) this._health) / _creatureBlueprint.getMaximumHealth();
             // Read memory units
             System.arraycopy(_memoryUnits, 0, _inputs,
                     _creatureBlueprint.getProcessorBlueprint().getHardProcessorInputs() - 1, this._memoryUnits.length);
@@ -287,8 +303,9 @@ public class Creature extends VivariumObject
     {
         // Forced actions
         // Old Creatures Die
-        if (this._age > _creatureBlueprint.getMaximumAge() || this._food < 1)
+        if (this._age > _creatureBlueprint.getMaximumAge() || this._food < 1 || this._health < 1)
         {
+
             return (Action.DIE);
         }
         // Pregnant Creatures can give birth
@@ -536,6 +553,11 @@ public class Creature extends VivariumObject
     public int getFood()
     {
         return (this._food);
+    }
+
+    public int getHealth()
+    {
+        return (this._health);
     }
 
     public void setGeneration(double generation)

@@ -19,7 +19,7 @@ public abstract class ProcessorBlueprint extends VivariumObject
     private double _normalizeAfterMutation = 0;
     @SerializedParameter
 
-    private int _sensorInputCount = 5;
+    private int _sensorInputCount = 6;
     @SerializedParameter
     private int _controllerOutputCount = 6;
     @SerializedParameter

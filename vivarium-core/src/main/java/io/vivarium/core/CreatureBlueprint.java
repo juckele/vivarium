@@ -20,6 +20,8 @@ public class CreatureBlueprint extends VivariumObject
     private int _maximumGestation = 2000;
     @SerializedParameter
     private int _maximumFood = 2000;
+    @SerializedParameter
+    private int _maximumHealth = 2000;
 
     // Energy Uses
     @SerializedParameter
@@ -60,6 +62,11 @@ public class CreatureBlueprint extends VivariumObject
     public int getMaximumFood()
     {
         return _maximumFood;
+    }
+
+    public int getMaximumHealth()
+    {
+        return _maximumHealth;
     }
 
     public int getMaximumGestation()
