@@ -58,7 +58,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private enum CreatureRenderMode
     {
-        GENDER, HEALTH, HUNGER, AGE, MEMORY, SIGN
+        GENDER, HEALTH, HUNGER, AGE, MEMORY, SIGN, FLAMEHEALTH
     }
 
     private int _ticks = 1;
@@ -67,7 +67,15 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private enum MouseClickMode
     {
-        SELECT_CREATURE, ADD_WALL, ADD_WALL_BRUTALLY, REMOVE_WALL, VOID_GUN;
+        SELECT_CREATURE,
+        ADD_FLAMETHROWER,
+        ADD_FOODGENERATOR,
+        ADD_WALL,
+        ADD_WALL_BRUTALLY,
+        REMOVE_FLAMETHROWER,
+        REMOVE_FOODGENERATOR,
+        REMOVE_WALL,
+        VOID_GUN;
     }
 
     // High Level Graphics information
@@ -355,6 +363,38 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                     _world.removeCreature(_yDownWorld, _xDownWorld);
                 case SELECT_CREATURE:
                     break;
+                case ADD_FLAMETHROWER:
+                    if (_world.squareIsFlamable(_yDownWorld, _xDownWorld))
+                    {
+                        _world.setTerrain(TerrainType.FLAMETHROWER, _yDownWorld, _xDownWorld);
+                    }
+                    break;
+                case REMOVE_FLAMETHROWER:
+                    if (_world.getTerrain(_yDownWorld, _xDownWorld) == TerrainType.FLAMETHROWER)
+                    {
+                        _world.setTerrain(null, _yDownWorld, _xDownWorld);
+                        _world.setTerrain(null, _yDownWorld + 1, _xDownWorld);
+                        _world.setTerrain(null, _yDownWorld - 1, _xDownWorld);
+                        _world.setTerrain(null, _yDownWorld, _xDownWorld + 1);
+                        _world.setTerrain(null, _yDownWorld, _xDownWorld - 1);
+                    }
+                    break;
+                case ADD_FOODGENERATOR:
+                    if (_world.squareIsFoodable(_yDownWorld, _xDownWorld))
+                    {
+                        _world.setTerrain(TerrainType.FOOD_GENERATOR, _yDownWorld, _xDownWorld);
+                    }
+                    break;
+                case REMOVE_FOODGENERATOR:
+                    if (_world.getTerrain(_yDownWorld, _xDownWorld) == TerrainType.FOOD_GENERATOR)
+                    {
+                        _world.setTerrain(null, _yDownWorld, _xDownWorld);
+                        _world.setTerrain(null, _yDownWorld + 1, _xDownWorld);
+                        _world.setTerrain(null, _yDownWorld - 1, _xDownWorld);
+                        _world.setTerrain(null, _yDownWorld, _xDownWorld + 1);
+                        _world.setTerrain(null, _yDownWorld, _xDownWorld - 1);
+                    }
+                    break;
             }
         }
     }
@@ -463,6 +503,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                         case SIGN:
                             setColorOnSignLanguage(creature);
                             break;
+                        case FLAMEHEALTH:
+                            setColorOnFlameHealth(creature);
+                            break;
                     }
                     float interpolationFraction = (float) framesSinceTick / _overFrames;
                     int c1 = -1;
@@ -553,6 +596,12 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     {
         float food = ((float) creature.getFood()) / creature.getBlueprint().getMaximumFood();
         _batch.setColor(new Color(1, food, food, 1));
+    }
+
+    public void setColorOnFlameHealth(Creature creature)
+    {
+        float health = ((float) creature.getHealth()) / creature.getBlueprint().getMaximumHealth();
+        _batch.setColor(new Color(1, health, health, 1));
     }
 
     public void setColorOnAge(Creature creature)
