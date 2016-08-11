@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.AuditRecord;
-import io.vivarium.core.WorldPopulator.EntityType;
+import io.vivarium.core.Biome.DoorDirection;
 import io.vivarium.core.processor.Processor;
 import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
@@ -88,6 +88,10 @@ public class World extends VivariumObject
         populator.setWallProbability(_worldBlueprint.getInitialWallGenerationProbability());
         populator.setFoodGeneratorProbability(_worldBlueprint.getFoodGeneratorProbability());
         populator.setFoodProbability(_worldBlueprint.getInitialFoodGenerationProbability());
+        Biome biome = new Biome();
+        DoorDirection dir = DoorDirection.WEST;
+
+        biome.house(this, 2, 2, 5, 5, dir);
         for (int r = 0; r < _height; r++)
         {
             for (int c = 0; c < _width; c++)
@@ -97,27 +101,28 @@ public class World extends VivariumObject
                 {
                     setTerrain(TerrainType.WALL, r, c);
                 }
-                else
-                {
-                    EntityType type = populator.getNextEntityType();
-                    if (type == EntityType.CREATURE)
-                    {
-                        CreatureBlueprint creatureBlueprint = populator.getNextCreatureBlueprint();
-                        Creature creature = new Creature(creatureBlueprint);
-                        addCreature(creature, r, c);
-                    }
-                    else if (type == EntityType.ITEM)
-                    {
-                        // TODO: Add non-food items
-                        setItem(ItemType.FOOD, r, c);
-                    }
-                    else if (type == EntityType.TERRAIN)
-                    {
-                        // TODO: Add non-wall terrain
 
-                        setTerrain(populator.getTerrainType(), r, c);
-                    }
-                }
+                // else
+                // {
+                // EntityType type = populator.getNextEntityType();
+                // if (type == EntityType.CREATURE)
+                // {
+                // CreatureBlueprint creatureBlueprint = populator.getNextCreatureBlueprint();
+                // Creature creature = new Creature(creatureBlueprint);
+                // addCreature(creature, r, c);
+                // }
+                // else if (type == EntityType.ITEM)
+                // {
+                // // TODO: Add non-food items
+                // setItem(ItemType.FOOD, r, c);
+                // }
+                // else if (type == EntityType.TERRAIN)
+                // {
+                // // TODO: Add non-wall terrain
+                //
+                // setTerrain(populator.getTerrainType(), r, c);
+                // }
+                // }
             }
         }
     }
