@@ -89,9 +89,9 @@ public class World extends VivariumObject
         populator.setFoodGeneratorProbability(_worldBlueprint.getFoodGeneratorProbability());
         populator.setFoodProbability(_worldBlueprint.getInitialFoodGenerationProbability());
         Biome biome = new Biome();
-        DoorDirection dir = DoorDirection.WEST;
+        DoorDirection dir = DoorDirection.RIGHT;
 
-        biome.house(this, 2, 2, 5, 5, dir);
+        biome.village(this, 5, 21, 15, 2, 2, 1);
         for (int r = 0; r < _height; r++)
         {
             for (int c = 0; c < _width; c++)
