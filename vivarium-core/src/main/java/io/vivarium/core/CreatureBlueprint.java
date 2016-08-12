@@ -39,6 +39,10 @@ public class CreatureBlueprint extends VivariumObject
     private int _baseFoodRate = -1;
     @SerializedParameter
     private int _pregnantFoodRate = -1;
+    @SerializedParameter
+    private int _fightingDamageAmount = -20;
+    @SerializedParameter
+    private int _fightingFoodRate = -2;
 
     // World Generation
     @SerializedParameter
@@ -155,6 +159,16 @@ public class CreatureBlueprint extends VivariumObject
         _pregnantFoodRate = pregnantFoodRate;
     }
 
+    public int getFightingDamageAmount()
+    {
+        return _fightingDamageAmount;
+    }
+
+    public int getFightingFoodRate()
+    {
+        return _fightingFoodRate;
+    }
+
     public static CreatureBlueprint makeDefault()
     {
         CreatureBlueprint s = new CreatureBlueprint();
@@ -262,5 +276,4 @@ public class CreatureBlueprint extends VivariumObject
     {
         return _sensors;
     }
-
 }

@@ -366,7 +366,7 @@ public class Creature extends VivariumObject
         executeAction(action, null);
     }
 
-    public void executeAction(Action action, Creature breedingTarget)
+    public void executeAction(Action action, Creature target)
     {
         _wasSuccessful = true;
         switch (action)
@@ -375,11 +375,11 @@ public class Creature extends VivariumObject
                 this._gestation = 0;
                 break;
             case BREED:
-                assert breedingTarget != null;
+                assert target != null;
                 if (this._gender == Gender.FEMALE && this._gestation < 1)
                 {
                     this._gestation = 1;
-                    this._fetus = createOffspringWith(breedingTarget);
+                    this._fetus = createOffspringWith(target);
                 }
                 this._food += _creatureBlueprint.getBreedingFoodRate();
                 break;
@@ -402,6 +402,11 @@ public class Creature extends VivariumObject
                 {
                     this._food = _creatureBlueprint.getMaximumFood();
                 }
+                break;
+            case FIGHT:
+                assert target != null;
+                target._health += _creatureBlueprint.getFightingDamageAmount();
+                this._food += _creatureBlueprint.getFightingFoodRate();
                 break;
             default:
                 System.err.println("Non-Fatal Error, unhandled action");
@@ -438,6 +443,9 @@ public class Creature extends VivariumObject
             case TURN_LEFT:
             case TURN_RIGHT:
                 System.err.println("Action class " + action + " should not fail");
+                break;
+            case FIGHT:
+                this._food += _creatureBlueprint.getFightingFoodRate();
                 break;
             default:
                 System.err.println("Non-Fatal Error, unhandled action");
