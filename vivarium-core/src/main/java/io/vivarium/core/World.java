@@ -351,6 +351,13 @@ public class World extends VivariumObject
         {
             creature.executeAction(action, _creatureGrid[facingR][facingC]);
         }
+        // Fighting
+        else if (action == Action.FIGHT
+                // Make sure we're facing another creature
+                && _creatureGrid[facingR][facingC] != null)
+        {
+            creature.executeAction(action, _creatureGrid[facingR][facingC]);
+        }
         // Giving Birth
         else if (action == Action.BIRTH && squareIsPathable(facingR, facingC))
         {

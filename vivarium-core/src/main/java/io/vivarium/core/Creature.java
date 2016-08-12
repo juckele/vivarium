@@ -406,6 +406,10 @@ public class Creature extends VivariumObject
                     this._food = _creatureBlueprint.getMaximumFood();
                 }
                 break;
+            case FIGHT:
+                this._health += _creatureBlueprint.getFightingHealthRate();
+                this._food += _creatureBlueprint.getFightingFoodRate();
+                break;
             default:
                 System.err.println("Non-Fatal Error, unhandled action");
                 new Error().printStackTrace();
@@ -441,6 +445,8 @@ public class Creature extends VivariumObject
             case TURN_LEFT:
             case TURN_RIGHT:
                 System.err.println("Action class " + action + " should not fail");
+                break;
+            case FIGHT:
                 break;
             default:
                 System.err.println("Non-Fatal Error, unhandled action");

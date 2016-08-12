@@ -36,6 +36,10 @@ public class CreatureBlueprint extends VivariumObject
     private int _baseFoodRate = -1;
     @SerializedParameter
     private int _pregnantFoodRate = -1;
+    @SerializedParameter
+    private int _fightingHealthRate = -20;
+    @SerializedParameter
+    private int _fightingFoodRate = -2;
 
     // World Generation
     @SerializedParameter
@@ -166,5 +170,15 @@ public class CreatureBlueprint extends VivariumObject
     public void setProcessorBlueprint(ProcessorBlueprint processorBlueprint)
     {
         _processorBlueprint = processorBlueprint;
+    }
+
+    public int getFightingHealthRate()
+    {
+        return _fightingHealthRate;
+    }
+
+    public int getFightingFoodRate()
+    {
+        return _fightingFoodRate;
     }
 }
