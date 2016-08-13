@@ -2,6 +2,7 @@ package io.vivarium.core;
 
 import io.vivarium.core.processor.Processor;
 import io.vivarium.core.processor.ProcessorType;
+import io.vivarium.core.sensor.Sensor;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Functions;
@@ -91,6 +92,7 @@ public class Creature extends VivariumObject
     {
         this._creatureBlueprint = creatureBlueprint;
 
+        // Compute creature generation
         if (parent1 != null)
         {
             if (parent2 != null)
@@ -135,15 +137,19 @@ public class Creature extends VivariumObject
             else
             {
                 // Create a new processor
-                this._processor = _creatureBlueprint.getProcessorBlueprint().makeProcessor();
+                this._processor = _creatureBlueprint.getProcessorBlueprint().makeProcessor(
+                        _creatureBlueprint.getTotalProcessorInputCount(),
+                        _creatureBlueprint.getTotalProcessorOutputCount());
             }
         }
-        _inputs = new double[_creatureBlueprint.getProcessorBlueprint().getTotalProcessorInputCount()];
-        _memoryUnits = new double[_creatureBlueprint.getProcessorBlueprint().getMemoryUnitCount()];
-        _soundInputs = new double[_creatureBlueprint.getProcessorBlueprint().getSoundChannelCount()];
-        _soundOutputs = new double[_creatureBlueprint.getProcessorBlueprint().getSoundChannelCount()];
-        _signInputs = new double[_creatureBlueprint.getProcessorBlueprint().getSignChannelCount()];
-        _signOutputs = new double[_creatureBlueprint.getProcessorBlueprint().getSignChannelCount()];
+
+        // Sets the size of all the processor i/o arrays
+        _inputs = new double[_creatureBlueprint.getTotalProcessorInputCount()];
+        _memoryUnits = new double[_creatureBlueprint.getMemoryUnitCount()];
+        _soundInputs = new double[_creatureBlueprint.getSoundChannelCount()];
+        _soundOutputs = new double[_creatureBlueprint.getSoundChannelCount()];
+        _signInputs = new double[_creatureBlueprint.getSignChannelCount()];
+        _signOutputs = new double[_creatureBlueprint.getSignChannelCount()];
 
         // Set gender
         double randomNumber = Rand.getInstance().getRandomPositiveDouble();
@@ -157,8 +163,7 @@ public class Creature extends VivariumObject
         }
 
         // Set the per Creature random seed (this is
-        // currently only used to set animation offsets in
-        // GWT viewer)
+        // currently only used to set animation offsets)
         this._randomSeed = Rand.getInstance().getRandomPositiveDouble();
 
         // Set defaults
@@ -192,8 +197,8 @@ public class Creature extends VivariumObject
 
     public void listenToCreature(Creature u, double distanceSquared)
     {
-        int soundChannels = Math.min(this._creatureBlueprint.getProcessorBlueprint().getSoundChannelCount(),
-                u._creatureBlueprint.getProcessorBlueprint().getSoundChannelCount());
+        int soundChannels = Math.min(this._creatureBlueprint.getSoundChannelCount(),
+                u._creatureBlueprint.getSoundChannelCount());
         for (int i = 0; i < soundChannels; i++)
         {
             this._soundInputs[i] += u._soundOutputs[i] / distanceSquared;
@@ -202,8 +207,8 @@ public class Creature extends VivariumObject
 
     public void lookAtCreature(Creature u)
     {
-        int signChannels = Math.min(this._creatureBlueprint.getProcessorBlueprint().getSignChannelCount(),
-                u._creatureBlueprint.getProcessorBlueprint().getSignChannelCount());
+        int signChannels = Math.min(this._creatureBlueprint.getSignChannelCount(),
+                u._creatureBlueprint.getSignChannelCount());
         for (int i = 0; i < signChannels; i++)
         {
             this._signInputs[i] = u._signOutputs[i];
@@ -224,54 +229,51 @@ public class Creature extends VivariumObject
         }
         else
         {
-            // Hard coded inputs
-            int facingR = r + Direction.getVerticalComponent(this._facing);
-            int facingC = c + Direction.getHorizontalComponent(this._facing);
-            Creature facingCreature = w.getCreature(facingR, facingC);
-            ItemType facingItem = w.getItem(facingR, facingC);
-            TerrainType facingTerrain = w.getTerrain(facingR, facingC);
-            _inputs[0] = this._gender == Gender.FEMALE ? 1 : 0;
-            _inputs[1] = facingItem == ItemType.FOOD ? 1 : 0;
-            _inputs[2] = facingCreature != null ? 1 : 0;
-            _inputs[3] = facingTerrain == TerrainType.WALL ? 1 : 0;
-            _inputs[4] = ((double) this._food) / _creatureBlueprint.getMaximumFood();
-            // Read memory units
-            System.arraycopy(_memoryUnits, 0, _inputs,
-                    _creatureBlueprint.getProcessorBlueprint().getHardProcessorInputs() - 1, this._memoryUnits.length);
-            // Read sound inputs
-            for (int i = 0; i < this.getBlueprint().getProcessorBlueprint().getSoundChannelCount(); i++)
+            // Run sensors
+            int inputIndex = 0;
+            Sensor[] sensors = _creatureBlueprint.getSensors();
+            for (int i = 0; i < sensors.length; i++)
             {
-                _inputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorInputs() - 1
-                        + this._memoryUnits.length + i] = _soundInputs[i];
+                Sensor sensor = sensors[i];
+                inputIndex += sensor.sense(w, _inputs, inputIndex, r, c, this);
+            }
+            // Read memory units
+            System.arraycopy(_memoryUnits, 0, _inputs, _creatureBlueprint.getHardProcessorInputs() - 1,
+                    this._memoryUnits.length);
+            // Read sound inputs
+            for (int i = 0; i < this.getBlueprint().getSoundChannelCount(); i++)
+            {
+                _inputs[_creatureBlueprint.getHardProcessorInputs() - 1 + this._memoryUnits.length
+                        + i] = _soundInputs[i];
             }
             // Read sign inputs
-            for (int i = 0; i < this.getBlueprint().getProcessorBlueprint().getSignChannelCount(); i++)
+            for (int i = 0; i < this.getBlueprint().getSignChannelCount(); i++)
             {
-                _inputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorInputs() - 1
-                        + this._memoryUnits.length + this._soundInputs.length + i] = _signInputs[i];
+                _inputs[_creatureBlueprint.getHardProcessorInputs() - 1 + this._memoryUnits.length
+                        + this._soundInputs.length + i] = _signInputs[i];
             }
             // Main processor computation
             double[] outputs = this._processor.outputs(_inputs);
             // Save memory units
-            System.arraycopy(outputs, _creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs() - 1,
-                    _memoryUnits, 0, this._memoryUnits.length);
+            System.arraycopy(outputs, _creatureBlueprint.getHardProcessorOutputs() - 1, _memoryUnits, 0,
+                    this._memoryUnits.length);
             // Clear the sound inputs and set the sound outputs
-            for (int i = 0; i < this.getBlueprint().getProcessorBlueprint().getSoundChannelCount(); i++)
+            for (int i = 0; i < _creatureBlueprint.getSoundChannelCount(); i++)
             {
                 this._soundInputs[i] = 0;
-                this._soundOutputs[i] = outputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs() - 1
+                this._soundOutputs[i] = outputs[_creatureBlueprint.getHardProcessorOutputs() - 1
                         + this._memoryUnits.length + i];
             }
             // Clear the sign inputs and set the sign outputs
-            for (int i = 0; i < this.getBlueprint().getProcessorBlueprint().getSignChannelCount(); i++)
+            for (int i = 0; i < this.getBlueprint().getSignChannelCount(); i++)
             {
                 this._signInputs[i] = 0;
-                this._signOutputs[i] = outputs[_creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs() - 1
+                this._signOutputs[i] = outputs[_creatureBlueprint.getHardProcessorOutputs() - 1
                         + this._memoryUnits.length + this._soundInputs.length + i];
             }
             // Hard coded outputs (actionable outputs)
             int maxActionOutput = 0;
-            for (int i = 1; i < _creatureBlueprint.getProcessorBlueprint().getHardProcessorOutputs(); i++)
+            for (int i = 1; i < _creatureBlueprint.getHardProcessorOutputs(); i++)
             {
                 if (outputs[i] > outputs[maxActionOutput])
                 {

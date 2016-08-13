@@ -96,8 +96,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         ArrayList<CreatureBlueprint> creatureBlueprints = _blueprint.getCreatureBlueprints();
         for (CreatureBlueprint creatureBlueprint : creatureBlueprints)
         {
-            creatureBlueprint.getProcessorBlueprint().setCreatureMemoryUnitCount(3);
-            creatureBlueprint.getProcessorBlueprint().setCreatureSignChannelCount(3);
+            creatureBlueprint.setCreatureMemoryUnitCount(3);
+            creatureBlueprint.setCreatureSignChannelCount(3);
             ((NeuralNetworkBlueprint) (creatureBlueprint.getProcessorBlueprint())).setHiddenLayerCount(1);
         }
         _blueprint.setSignEnabled(true);

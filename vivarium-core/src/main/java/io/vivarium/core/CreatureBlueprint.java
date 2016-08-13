@@ -1,6 +1,9 @@
 package io.vivarium.core;
 
 import io.vivarium.core.processor.ProcessorBlueprint;
+import io.vivarium.core.sensor.FoodRadar;
+import io.vivarium.core.sensor.GenderRadar;
+import io.vivarium.core.sensor.Sensor;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -42,6 +45,19 @@ public class CreatureBlueprint extends VivariumObject
     // Neurology
     @SerializedParameter
     private ProcessorBlueprint _processorBlueprint = null;
+    @SerializedParameter
+    private int _sensorInputCount;
+    @SerializedParameter
+    private int _controllerOutputCount = 6;
+    @SerializedParameter
+    private int _memoryUnitCount = 0;
+    @SerializedParameter
+    private int _soundChannelCount = 0;
+    @SerializedParameter
+    private int _signChannelCount = 0;
+
+    // Sensors
+    private Sensor[] _sensors;
 
     private CreatureBlueprint()
     {
@@ -137,6 +153,28 @@ public class CreatureBlueprint extends VivariumObject
         CreatureBlueprint s = new CreatureBlueprint();
         s.finalizeSerialization();
         s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
+        s._sensors = new Sensor[2];// [5];
+        s._sensors[0] = new GenderRadar();
+        s._sensors[1] = new FoodRadar(0, 0, 0, 0);
+        // [2] = facing creature?
+        // [3] = facing wall?
+        // [4] = energy level
+        s._sensorInputCount = 2; // 5;
+        return s;
+    }
+
+    public static CreatureBlueprint makeWithSensors(Sensor[] sensors)
+    {
+        CreatureBlueprint s = new CreatureBlueprint();
+        s.finalizeSerialization();
+        s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
+        s._sensors = sensors;
+        int sensorInputCount = 0;
+        for (Sensor sensor : sensors)
+        {
+            sensorInputCount += sensor.getSensorInputCount();
+        }
+        s._sensorInputCount = sensorInputCount;
         return s;
     }
 
@@ -160,4 +198,60 @@ public class CreatureBlueprint extends VivariumObject
     {
         _processorBlueprint = processorBlueprint;
     }
+
+    public int getHardProcessorInputs()
+    {
+        return _sensorInputCount;
+    }
+
+    public int getHardProcessorOutputs()
+    {
+        return _controllerOutputCount;
+    }
+
+    public int getMemoryUnitCount()
+    {
+        return this._memoryUnitCount;
+    }
+
+    public int getSoundChannelCount()
+    {
+        return this._soundChannelCount;
+    }
+
+    public int getSignChannelCount()
+    {
+        return this._signChannelCount;
+    }
+
+    public void setCreatureMemoryUnitCount(int memoryUnitCount)
+    {
+        this._memoryUnitCount = memoryUnitCount;
+    }
+
+    public void setCreatureSoundChannelCount(int soundChannelCount)
+    {
+        this._soundChannelCount = soundChannelCount;
+    }
+
+    public void setCreatureSignChannelCount(int signChannelCount)
+    {
+        this._signChannelCount = signChannelCount;
+    }
+
+    public int getTotalProcessorInputCount()
+    {
+        return this._sensorInputCount + this._memoryUnitCount + this._soundChannelCount + this._signChannelCount;
+    }
+
+    public int getTotalProcessorOutputCount()
+    {
+        return this._controllerOutputCount + this._memoryUnitCount + this._soundChannelCount + this._signChannelCount;
+    }
+
+    public Sensor[] getSensors()
+    {
+        return _sensors;
+    }
+
 }

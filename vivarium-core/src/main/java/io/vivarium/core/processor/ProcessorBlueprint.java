@@ -17,17 +17,6 @@ public abstract class ProcessorBlueprint extends VivariumObject
     private boolean _randomInitialization = false;
     @SerializedParameter
     private double _normalizeAfterMutation = 0;
-    @SerializedParameter
-
-    private int _sensorInputCount = 5;
-    @SerializedParameter
-    private int _controllerOutputCount = 6;
-    @SerializedParameter
-    private int _memoryUnitCount = 0;
-    @SerializedParameter
-    private int _soundChannelCount = 0;
-    @SerializedParameter
-    private int _signChannelCount = 0;
 
     // Mutation
     @SerializedParameter
@@ -46,7 +35,7 @@ public abstract class ProcessorBlueprint extends VivariumObject
     {
     }
 
-    public abstract Processor makeProcessor();
+    public abstract Processor makeProcessor(int inputs, int outputs);
 
     public ProcessorType getProcessorType()
     {
@@ -66,16 +55,6 @@ public abstract class ProcessorBlueprint extends VivariumObject
     public boolean getRandomInitialization()
     {
         return this._randomInitialization;
-    }
-
-    public int getHardProcessorInputs()
-    {
-        return _sensorInputCount;
-    }
-
-    public int getHardProcessorOutputs()
-    {
-        return _controllerOutputCount;
     }
 
     public double getNormalizeAfterMutation()
@@ -118,50 +97,10 @@ public abstract class ProcessorBlueprint extends VivariumObject
         return this._inheritanceGaussianMixRate;
     }
 
-    public int getMemoryUnitCount()
-    {
-        return this._memoryUnitCount;
-    }
-
-    public int getSoundChannelCount()
-    {
-        return this._soundChannelCount;
-    }
-
-    public int getSignChannelCount()
-    {
-        return this._signChannelCount;
-    }
-
     public void setMutationRateExponent(double exponent)
     {
         this._mutationRateExponent = exponent;
         this._mutationRate = Math.pow(2, exponent);
-    }
-
-    public void setCreatureMemoryUnitCount(int memoryUnitCount)
-    {
-        this._memoryUnitCount = memoryUnitCount;
-    }
-
-    public void setCreatureSoundChannelCount(int soundChannelCount)
-    {
-        this._soundChannelCount = soundChannelCount;
-    }
-
-    public void setCreatureSignChannelCount(int signChannelCount)
-    {
-        this._signChannelCount = signChannelCount;
-    }
-
-    public int getTotalProcessorInputCount()
-    {
-        return this._sensorInputCount + this._memoryUnitCount + this._soundChannelCount + this._signChannelCount;
-    }
-
-    public int getTotalProcessorOutputCount()
-    {
-        return this._controllerOutputCount + this._memoryUnitCount + this._soundChannelCount + this._signChannelCount;
     }
 
     @Override

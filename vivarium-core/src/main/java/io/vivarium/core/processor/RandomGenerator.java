@@ -19,12 +19,12 @@ public class RandomGenerator extends Processor
     {
         // Random processor has no state, it's literally random output. This processor
         // does not evolve.
-        this._outputs = new double[processorBlueprint.getTotalProcessorOutputCount()];
+        this._outputs = new double[_outputs.length];
     }
 
-    public RandomGenerator(int totalProcessorOutputCount)
+    public RandomGenerator(int inputs, int outputs)
     {
-        this._outputs = new double[totalProcessorOutputCount];
+        this._outputs = new double[outputs];
     }
 
     private RandomGenerator()
@@ -71,9 +71,10 @@ public class RandomGenerator extends Processor
         return new RandomGenerator();
     }
 
-    public static RandomGenerator makeWithProcessorBlueprint(ProcessorBlueprint processorBlueprint)
+    public static RandomGenerator makeWithProcessorBlueprint(ProcessorBlueprint processorBlueprint, int inputs,
+            int outputs)
     {
-        RandomGenerator processor = new RandomGenerator(processorBlueprint.getTotalProcessorOutputCount());
+        RandomGenerator processor = new RandomGenerator(inputs, outputs);
         return processor;
     }
 

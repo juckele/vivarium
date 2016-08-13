@@ -1,6 +1,5 @@
 package io.vivarium.core.processor;
 
-import io.vivarium.core.RenderCode;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -28,9 +27,9 @@ public class NeuralNetworkBlueprint extends ProcessorBlueprint
     }
 
     @Override
-    public NeuralNetwork makeProcessor()
+    public NeuralNetwork makeProcessor(int inputs, int outputs)
     {
-        return NeuralNetwork.makeWithProcessorBlueprint(this);
+        return NeuralNetwork.makeWithProcessorBlueprint(this, inputs, outputs);
     }
 
     public static NeuralNetworkBlueprint makeDefault()
@@ -38,16 +37,5 @@ public class NeuralNetworkBlueprint extends ProcessorBlueprint
         NeuralNetworkBlueprint a = new NeuralNetworkBlueprint();
         a.finalizeSerialization();
         return a;
-    }
-
-    public static void main(String[] args)
-    {
-        NeuralNetworkBlueprint blueprint = makeDefault();
-        blueprint.setHiddenLayerCount(1);
-        System.out.println(blueprint);
-        NeuralNetwork processor = blueprint.makeProcessor();
-        System.out.println(processor);
-        System.out.println(processor.render(RenderCode.PROCESSOR_WEIGHTS));
-
     }
 }
