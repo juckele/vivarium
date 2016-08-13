@@ -1,7 +1,12 @@
 package io.vivarium.visualizer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
@@ -22,9 +27,9 @@ import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.Direction;
 import io.vivarium.core.ItemType;
 import io.vivarium.core.TerrainType;
 import io.vivarium.core.World;
@@ -44,9 +49,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     // Simulation + Animation
     private int framesSinceTick = 0;
-    private World _worldSnapshot1;
-    private World _worldSnapshot2;
     private boolean _enableInterpolation = false;
+    private Map<Integer, CreatureDelegate> _animationCreatureDelegates = new HashMap<>();
     private int _selectedCreature = 42;
 
     // Low Level Graphics information
@@ -58,7 +62,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private enum CreatureRenderMode
     {
-        GENDER, HEALTH, HUNGER, AGE, MEMORY, SIGN, FLAMEHEALTH
+        GENDER, HEALTH, HUNGER, AGE, MEMORY, SIGN
     }
 
     private int _ticks = 1;
@@ -111,8 +115,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
         _world = new World(_blueprint);
-        _worldSnapshot1 = _copier.copyObject(_world);
-        _worldSnapshot2 = _copier.copyObject(_world);
 
         // Setup Input Listeners
         Gdx.input.setInputProcessor(this);
@@ -302,14 +304,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _batch.setColor(Color.WHITE);
         drawTerrain();
         drawFood();
-        if (this._enableInterpolation)
-        {
-            drawCreatures(_worldSnapshot1, _worldSnapshot2);
-        }
-        else
-        {
-            drawCreatures(_world, _world);
-        }
+        drawCreatures();
 
         _batch.end();
 
@@ -323,13 +318,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
             for (int i = 0; i < _ticks; i++)
             {
                 _world.tick();
-                if (_enableInterpolation)
-                {
-                    // TODO: Cache two ticks when transitioning to-from interpolation mode, this is going to create a
-                    // weird flashback bug
-                    _worldSnapshot1 = _worldSnapshot2;
-                    _worldSnapshot2 = _copier.copyObject(_world);
-                }
+                updateCreatureDelegates();
             }
             framesSinceTick = 0;
         }
@@ -428,13 +417,17 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle)
     {
+        drawSprite(sprite, xPos, yPos, angle, 1);
+    }
+
+    private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle, float scale)
+    {
         float x = SIZE / 2 * BLOCK_SIZE + xPos * BLOCK_SIZE;
         float y = getHeight() - yPos * BLOCK_SIZE - BLOCK_SIZE;
         float originX = BLOCK_SIZE / 2;
         float originY = BLOCK_SIZE / 2;
         float width = BLOCK_SIZE;
         float height = BLOCK_SIZE;
-        float scale = 1;
         float rotation = angle; // In degrees
         int srcX = sprite.x * BLOCK_SIZE;
         int srcY = sprite.y * BLOCK_SIZE;
@@ -486,122 +479,112 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
     }
 
-    private void drawCreatures(World w1, World w2)
+    private void drawCreatures()
     {
-        for (int c = 0; c < w2.getWorldWidth(); c++)
+        float interpolationFraction = _enableInterpolation ? (float) framesSinceTick / _overFrames : 1;
+        for (CreatureDelegate delegate : _animationCreatureDelegates.values())
         {
-            for (int r = 0; r < w2.getWorldHeight(); r++)
+            drawCreature(delegate, interpolationFraction);
+        }
+    }
+
+    private void drawCreature(CreatureDelegate delegate, float interpolationFraction)
+    {
+        Creature creature = delegate.getCreature();
+        switch (_creatureRenderMode)
+        {
+            case GENDER:
+                setColorOnGenderAndPregnancy(delegate, interpolationFraction);
+                break;
+            case HEALTH:
+                setColorOnHealth(creature);
+                break;
+            case AGE:
+                setColorOnAge(creature);
+                break;
+            case HUNGER:
+                setColorOnFood(creature);
+                break;
+            case MEMORY:
+                setColorOnMemory(creature);
+                break;
+            case SIGN:
+                setColorOnSignLanguage(creature);
+                break;
+        }
+        float scale = delegate.getScale(interpolationFraction);
+        VivariumSprite creatureSprite = getCreatureSpriteFrame(interpolationFraction, creature);
+        drawSprite(creatureSprite, delegate.getC(interpolationFraction), delegate.getR(interpolationFraction),
+                delegate.getRotation(interpolationFraction), scale);
+        if (creature.getID() == this._selectedCreature)
+        {
+            _batch.setColor(Color.WHITE);
+            VivariumSprite creatureHaloSprite = getCreatureHaloSpriteFrame(interpolationFraction, creature);
+            drawSprite(creatureHaloSprite, delegate.getC(interpolationFraction), delegate.getR(interpolationFraction),
+                    delegate.getRotation(interpolationFraction), scale);
+        }
+    }
+
+    private void updateCreatureDelegates()
+    {
+        // Find creatures that are dying and mark them as such. These creatures will no longer
+        // be present in the world, but it's expensive to check this. Fortunately, a creature
+        // will use the die action as its last act in the world. Any existing delegate
+        // with a creature that has used dye either needs to animate its death, or has
+        // already done so.
+        Set<Integer> creatureIDsToRemove = new HashSet<>();
+        for (Entry<Integer, CreatureDelegate> delegatePair : _animationCreatureDelegates.entrySet())
+        {
+            if (delegatePair.getValue().isDying())
             {
-                if (w2.getCreature(r, c) != null)
+                creatureIDsToRemove.add(delegatePair.getKey());
+            }
+            else if (delegatePair.getValue().getCreature().getAction() == Action.DIE)
+            {
+                delegatePair.getValue().die();
+            }
+        }
+        // Remove creatures that have finished dying from the animation delegates.
+        for (Integer creatureID : creatureIDsToRemove)
+        {
+            _animationCreatureDelegates.remove(creatureID);
+        }
+        // For all other creatures, update their animation delegate, or add a new one if they
+        // don't have an animation delegate yet.
+        for (int c = 0; c < _world.getWorldWidth(); c++)
+        {
+            for (int r = 0; r < _world.getWorldHeight(); r++)
+            {
+                Creature creature = _world.getCreature(r, c);
+                if (creature != null)
                 {
-                    Creature creature = w2.getCreature(r, c);
-                    switch (_creatureRenderMode)
+                    if (_animationCreatureDelegates.containsKey(creature.getID()))
                     {
-                        case GENDER:
-                            setColorOnGenderAndPregnancy(creature);
-                            break;
-                        case HEALTH:
-                            setColorOnAgeAndFood(creature);
-                            break;
-                        case AGE:
-                            setColorOnAge(creature);
-                            break;
-                        case HUNGER:
-                            setColorOnFood(creature);
-                            break;
-                        case MEMORY:
-                            setColorOnMemory(creature);
-                            break;
-                        case SIGN:
-                            setColorOnSignLanguage(creature);
-                            break;
-                        case FLAMEHEALTH:
-                            setColorOnFlameHealth(creature);
-                            break;
-                    }
-                    float interpolationFraction = (float) framesSinceTick / _overFrames;
-                    int c1 = -1;
-                    int r1 = -1;
-                    Creature creature1 = null;
-                    int c2 = c;
-                    int r2 = r;
-                    Creature creature2 = creature;
-                    for (int dc = -1; dc <= 1; dc++)
-                    {
-                        for (int dr = -1; dr <= 1; dr++)
-                        {
-                            if (w1.getCreature(r2 + dr, c2 + dc) != null
-                                    && w1.getCreature(r2 + dr, c2 + dc).getID() == creature.getID())
-                            {
-                                c1 = c2 + dc;
-                                r1 = r2 + dr;
-                                creature1 = w1.getCreature(r1, c1);
-                            }
-                        }
-                    }
-                    if (creature1 == null)
-                    {
-                        // Spawn animation
-                        // TODO: WRITE THIS
-                        float rotation = (float) (Direction.getRadiansFromNorth(creature2.getFacing()) * 180
-                                / (Math.PI));
-                        drawSprite(VivariumSprite.CREATURE_2, c, r, rotation);
+                        _animationCreatureDelegates.get(creature.getID()).updateSnapshot(r, c);
                     }
                     else
                     {
-                        float rInterpolated = (1 - interpolationFraction) * r1 + interpolationFraction * r2;
-                        float cInterpolated = (1 - interpolationFraction) * c1 + interpolationFraction * c2;
-                        float rotation1 = (float) (Direction.getRadiansFromNorth(creature1.getFacing()) * 180
-                                / (Math.PI));
-                        float rotation2 = (float) (Direction.getRadiansFromNorth(creature2.getFacing()) * 180
-                                / (Math.PI));
-                        if ((rotation1 == 0 && rotation2 > 180) || (rotation1 > 180 && rotation2 == 0))
-                        {
-                            rotation1 = rotation1 == 0 ? 360 : rotation1;
-                            rotation2 = rotation2 == 0 ? 360 : rotation2;
-                        }
-                        float rotationInterpolated = (1 - interpolationFraction) * rotation1
-                                + interpolationFraction * rotation2;
-                        VivariumSprite creatureSprite = getCreatureSpriteFrame(interpolationFraction, creature2);
-                        drawSprite(creatureSprite, cInterpolated, rInterpolated, rotationInterpolated);
-                        if (creature2.getID() == this._selectedCreature)
-                        {
-                            _batch.setColor(Color.WHITE);
-                            VivariumSprite creatureHaloSprite = getCreatureHaloSpriteFrame(interpolationFraction,
-                                    creature2);
-                            drawSprite(creatureHaloSprite, cInterpolated, rInterpolated, rotationInterpolated);
-                        }
+                        _animationCreatureDelegates.put(creature.getID(), new CreatureDelegate(creature, r, c));
                     }
                 }
-
             }
         }
     }
 
-    public void setColorOnGenderAndPregnancy(Creature creature)
+    public void setColorOnGenderAndPregnancy(CreatureDelegate delegate, float interpolationFraction)
     {
-        if (creature.getIsFemale())
+        if (delegate.getCreature().getIsFemale())
         {
-            if (creature.getGestation() > 0)
-            {
-                _batch.setColor(new Color(0.4f, 0, 0.4f, 1));
-            }
-            else
-            {
-                _batch.setColor(new Color(0, 0.8f, 0.8f, 1));
-            }
+            float pregnancyFraction = delegate.getPregnancy(interpolationFraction);
+            float red = (0 - 0.4f) * pregnancyFraction + 0.4f;
+            float green = (0.8f - 0) * pregnancyFraction + 0;
+            float blue = (0.8f - 0.4f) * pregnancyFraction + 0.4f;
+            _batch.setColor(new Color(red, green, blue, 1));
         }
         else
         {
             _batch.setColor(new Color(0.8f, 0, 0, 1));
         }
-    }
-
-    public void setColorOnAgeAndFood(Creature creature)
-    {
-        float food = ((float) creature.getFood()) / creature.getBlueprint().getMaximumFood();
-        float age = ((float) creature.getAge()) / creature.getBlueprint().getMaximumAge();
-        _batch.setColor(new Color(1, food, age, 1));
     }
 
     public void setColorOnFood(Creature creature)
@@ -610,7 +593,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _batch.setColor(new Color(1, food, food, 1));
     }
 
-    public void setColorOnFlameHealth(Creature creature)
+    public void setColorOnHealth(Creature creature)
     {
         float health = ((float) creature.getHealth()) / creature.getBlueprint().getMaximumHealth();
         _batch.setColor(new Color(1, health, health, 1));
