@@ -81,6 +81,16 @@ public class World extends VivariumObject
         }
     }
 
+    public int getHeight()
+    {
+        return _height;
+    }
+
+    public int getWidth()
+    {
+        return _width;
+    }
+
     private void populatateWorld()
     {
         WorldPopulator populator = new WorldPopulator();

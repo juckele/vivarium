@@ -194,10 +194,7 @@ public class Creature extends VivariumObject
             this._health++;
             this._food -= 2;
         }
-        if (flameHit == 1)
-        {
-            System.out.println("Health: " + this._health);
-        }
+
     }
 
     public Action getAction()
