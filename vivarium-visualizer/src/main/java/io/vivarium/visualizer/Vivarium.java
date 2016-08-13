@@ -341,61 +341,73 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     {
         if (this._xDownWorld > -1 && this._yDownWorld > -1)
         {
-            switch (this._mouseClickMode)
-            {
-                case ADD_WALL:
-                    if (_world.squareIsEmpty(_yDownWorld, _xDownWorld))
-                    {
-                        _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
-                    }
-                    break;
-                case ADD_WALL_BRUTALLY:
-                    _world.removeCreature(_yDownWorld, _xDownWorld);
-                    _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
-                    break;
-                case REMOVE_WALL:
-                    if (_world.getTerrain(_yDownWorld, _xDownWorld) == TerrainType.WALL)
-                    {
-                        _world.setTerrain(null, _yDownWorld, _xDownWorld);
-                    }
-                    break;
-                case VOID_GUN:
-                    _world.removeCreature(_yDownWorld, _xDownWorld);
-                case SELECT_CREATURE:
-                    break;
-                case ADD_FLAMETHROWER:
-                    if (_world.squareIsFlamable(_yDownWorld, _xDownWorld))
-                    {
-                        _world.setTerrain(TerrainType.FLAMETHROWER, _yDownWorld, _xDownWorld);
-                    }
-                    break;
-                case REMOVE_FLAMETHROWER:
-                    if (_world.getTerrain(_yDownWorld, _xDownWorld) == TerrainType.FLAMETHROWER)
-                    {
-                        _world.setTerrain(null, _yDownWorld, _xDownWorld);
-                        _world.setTerrain(null, _yDownWorld + 1, _xDownWorld);
-                        _world.setTerrain(null, _yDownWorld - 1, _xDownWorld);
-                        _world.setTerrain(null, _yDownWorld, _xDownWorld + 1);
-                        _world.setTerrain(null, _yDownWorld, _xDownWorld - 1);
-                    }
-                    break;
-                case ADD_FOODGENERATOR:
-                    if (_world.squareIsFoodable(_yDownWorld, _xDownWorld))
-                    {
-                        _world.setTerrain(TerrainType.FOOD_GENERATOR, _yDownWorld, _xDownWorld);
-                    }
-                    break;
-                case REMOVE_FOODGENERATOR:
-                    if (_world.getTerrain(_yDownWorld, _xDownWorld) == TerrainType.FOOD_GENERATOR)
-                    {
-                        _world.setTerrain(null, _yDownWorld, _xDownWorld);
-                        _world.setTerrain(null, _yDownWorld + 1, _xDownWorld);
-                        _world.setTerrain(null, _yDownWorld - 1, _xDownWorld);
-                        _world.setTerrain(null, _yDownWorld, _xDownWorld + 1);
-                        _world.setTerrain(null, _yDownWorld, _xDownWorld - 1);
-                    }
-                    break;
-            }
+            drawSwitch(_xDownWorld, _yDownWorld);
+        }
+    }
+
+    private void removeCrossTerrain(int r, int c, TerrainType type, TerrainType surrounding)
+    {
+        removeTerrain(r, c, type);
+        removeTerrain(r + 1, c, surrounding);
+        removeTerrain(r - 1, c, surrounding);
+        removeTerrain(r, c + 1, surrounding);
+        removeTerrain(r, c - 1, surrounding);
+
+    }
+
+    private void removeTerrain(int r, int c, TerrainType type)
+    {
+        if (_world.getTerrain(r, c) == type)
+        {
+            _world.setTerrain(null, r, c);
+        }
+    }
+
+    private void drawSwitch(int x, int y)
+    {
+        int height = _world.getHeight();
+        int width = _world.getWidth();
+        switch (this._mouseClickMode)
+        {
+            case ADD_WALL:
+                if (_world.squareIsEmpty(y, x))
+                {
+                    _world.setTerrain(TerrainType.WALL, y, x);
+                }
+                break;
+            case ADD_WALL_BRUTALLY:
+                _world.removeCreature(y, x);
+                _world.removeFood(y, x);
+                _world.setTerrain(TerrainType.WALL, y, x);
+                break;
+            case REMOVE_WALL:
+                if (y > 1 && x > 1 && y < height - 2 && x < width - 2)
+                {
+                    removeTerrain(y, x, TerrainType.WALL);
+                }
+                break;
+            case VOID_GUN:
+                _world.removeCreature(y, x);
+            case SELECT_CREATURE:
+                break;
+            case ADD_FLAMETHROWER:
+                if (_world.squareIsFlamable(y, x))
+                {
+                    _world.setTerrain(TerrainType.FLAMETHROWER, y, x);
+                }
+                break;
+            case REMOVE_FLAMETHROWER:
+                removeCrossTerrain(y, x, TerrainType.FLAMETHROWER, TerrainType.FLAME);
+                break;
+            case ADD_FOODGENERATOR:
+                if (_world.squareIsFoodable(y, x))
+                {
+                    _world.setTerrain(TerrainType.FOOD_GENERATOR, y, x);
+                }
+                break;
+            case REMOVE_FOODGENERATOR:
+                removeTerrain(y, x, TerrainType.FOOD_GENERATOR);
+                break;
         }
     }
 
@@ -776,29 +788,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         {
             int xDragWorld = (screenX - SIZE / 2 * BLOCK_SIZE) / BLOCK_SIZE;
             int yDragWorld = screenY / BLOCK_SIZE;
-            switch (this._mouseClickMode)
-            {
-                case ADD_WALL:
-                    if (_world.squareIsEmpty(yDragWorld, xDragWorld))
-                    {
-                        _world.setTerrain(TerrainType.WALL, yDragWorld, xDragWorld);
-                    }
-                    break;
-                case ADD_WALL_BRUTALLY:
-                    _world.removeCreature(yDragWorld, xDragWorld);
-                    _world.setTerrain(TerrainType.WALL, yDragWorld, xDragWorld);
-                    break;
-                case REMOVE_WALL:
-                    if (_world.getTerrain(yDragWorld, xDragWorld) == TerrainType.WALL)
-                    {
-                        _world.setTerrain(null, yDragWorld, xDragWorld);
-                    }
-                    break;
-                case VOID_GUN:
-                    _world.removeCreature(yDragWorld, xDragWorld);
-                case SELECT_CREATURE:
-                    break;
-            }
+            drawSwitch(xDragWorld, yDragWorld);
         }
         return false;
     }
