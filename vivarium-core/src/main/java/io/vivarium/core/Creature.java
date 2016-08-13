@@ -58,6 +58,8 @@ public class Creature extends VivariumObject
     private Direction _facing;
     @SerializedParameter
     private Action _action = Action.SPAWN;
+    @SerializedParameter
+    private int _health;
 
     // Fetus
     @SerializedParameter
@@ -172,9 +174,10 @@ public class Creature extends VivariumObject
         this._food = _creatureBlueprint.getMaximumFood();
         this._facing = Direction.NORTH;
         this._action = Action.REST;
+        this._health = 2000;
     }
 
-    public void tick()
+    public void tick(int flameHit)
     {
         // Reset action
         this._hasActed = false;
@@ -188,6 +191,14 @@ public class Creature extends VivariumObject
             this._food += _creatureBlueprint.getPregnantFoodRate();
         }
         this._food += _creatureBlueprint.getBaseFoodRate();
+        this._health -= 10 * flameHit;
+
+        // healing
+        if (this._health < _creatureBlueprint.getMaximumHealth())
+        {
+            this._health++;
+            this._food -= 2;
+        }
     }
 
     public Action getAction()
@@ -289,8 +300,9 @@ public class Creature extends VivariumObject
     {
         // Forced actions
         // Old Creatures Die
-        if (this._age > _creatureBlueprint.getMaximumAge() || this._food < 1)
+        if (this._age > _creatureBlueprint.getMaximumAge() || this._food < 1 || this._health < 1)
         {
+
             return (Action.DIE);
         }
         // Pregnant Creatures can give birth
@@ -538,6 +550,11 @@ public class Creature extends VivariumObject
     public int getFood()
     {
         return (this._food);
+    }
+
+    public int getHealth()
+    {
+        return (this._health);
     }
 
     public void setGeneration(double generation)
