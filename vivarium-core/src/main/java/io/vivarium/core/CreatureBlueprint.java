@@ -160,13 +160,15 @@ public class CreatureBlueprint extends VivariumObject
         CreatureBlueprint s = new CreatureBlueprint();
         s.finalizeSerialization();
         s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
-        s._sensors = new Sensor[2];// [5];
+        s._sensors = new Sensor[2];// [6];
         s._sensors[0] = new GenderRadar();
         s._sensors[1] = new FoodRadar(0, 0, 0, 0);
+        // TODO: Re-add these
         // [2] = facing creature?
         // [3] = facing wall?
         // [4] = energy level
-        s._sensorInputCount = 2; // 5;
+        // [5] = health level
+        s._sensorInputCount = 2; // 6;
         return s;
     }
 
