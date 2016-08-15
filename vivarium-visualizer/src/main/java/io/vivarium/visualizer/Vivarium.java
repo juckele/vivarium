@@ -35,7 +35,6 @@ import io.vivarium.core.TerrainType;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
-import io.vivarium.serialization.VivariumObjectCopier;
 
 public class Vivarium extends ApplicationAdapter implements InputProcessor
 {
@@ -45,7 +44,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     // Simulation information
     private WorldBlueprint _blueprint;
     private World _world;
-    private VivariumObjectCopier _copier;
 
     // Simulation + Animation
     private int framesSinceTick = 0;
@@ -95,9 +93,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private int _xDownWorld = -1;
     private int _yDownWorld = -1;
 
-    public Vivarium(VivariumObjectCopier copier)
+    public Vivarium()
     {
-        _copier = copier;
     }
 
     @Override
