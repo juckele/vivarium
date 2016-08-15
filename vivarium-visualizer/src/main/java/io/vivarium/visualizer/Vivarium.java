@@ -309,9 +309,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _batch.begin();
 
         _batch.setColor(Color.WHITE);
-        drawTerrain();
+        float interpolationFraction = _enableInterpolation ? (float) framesSinceTick / _overFrames : 1;
+        drawTerrain(interpolationFraction);
         drawFood();
-        drawCreatures();
+        drawCreatures(interpolationFraction);
 
         _batch.end();
 
@@ -446,7 +447,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 flipY);
     }
 
-    private void drawTerrain()
+    private void drawTerrain(float interpolationFraction)
     {
         for (int c = 0; c < _world.getWorldWidth(); c++)
         {
@@ -466,7 +467,18 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 }
                 if (_world.getTerrain(r, c) == TerrainType.FLAME)
                 {
-                    drawSprite(VivariumSprite.FLAME_1, c, r, 0);
+                    if (interpolationFraction < 1f / 3f)
+                    {
+                        drawSprite(VivariumSprite.FLAME_1, c, r, 0);
+                    }
+                    else if (interpolationFraction < 2f / 3f)
+                    {
+                        drawSprite(VivariumSprite.FLAME_2, c, r, 0);
+                    }
+                    else
+                    {
+                        drawSprite(VivariumSprite.FLAME_3, c, r, 0);
+                    }
                 }
             }
         }
@@ -486,9 +498,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
     }
 
-    private void drawCreatures()
+    private void drawCreatures(float interpolationFraction)
     {
-        float interpolationFraction = _enableInterpolation ? (float) framesSinceTick / _overFrames : 1;
         for (CreatureDelegate delegate : _animationCreatureDelegates.values())
         {
             drawCreature(delegate, interpolationFraction);
