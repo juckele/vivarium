@@ -69,15 +69,25 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private enum MouseClickMode
     {
-        SELECT_CREATURE,
-        ADD_FLAMETHROWER,
-        ADD_FOODGENERATOR,
-        ADD_WALL,
-        ADD_WALL_BRUTALLY,
-        REMOVE_FLAMETHROWER,
-        REMOVE_FOODGENERATOR,
-        REMOVE_WALL,
-        VOID_GUN;
+        SELECT_CREATURE(false),
+        ADD_FLAMETHROWER(true),
+        ADD_FOODGENERATOR(true),
+        ADD_WALL(true),
+        ADD_WALL_BRUTALLY(true),
+        REMOVE_TERRAIN(true),
+        REMOVE_ANYTHING(true);
+
+        private final boolean _isPaintbrushMode;
+
+        MouseClickMode(boolean isPaintbrushMode)
+        {
+            _isPaintbrushMode = isPaintbrushMode;
+        }
+
+        public boolean isPaintbrushMode()
+        {
+            return _isPaintbrushMode;
+        }
     }
 
     // High Level Graphics information
@@ -327,32 +337,28 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     {
         if (this._xDownWorld > -1 && this._yDownWorld > -1)
         {
-            drawSwitch(_xDownWorld, _yDownWorld);
+            if (this._mouseClickMode.isPaintbrushMode())
+            {
+                applyMouseBrush(_xDownWorld, _yDownWorld);
+            }
         }
     }
 
-    private void removeCrossTerrain(int r, int c, TerrainType type, TerrainType surrounding)
+    private void removeTerrain(int r, int c)
     {
-        removeTerrain(r, c, type);
-        removeTerrain(r + 1, c, surrounding);
-        removeTerrain(r - 1, c, surrounding);
-        removeTerrain(r, c + 1, surrounding);
-        removeTerrain(r, c - 1, surrounding);
-
+        _world.setTerrain(null, r, c);
     }
 
-    private void removeTerrain(int r, int c, TerrainType type)
+    private void applyMouseBrush(int x, int y)
     {
-        if (_world.getTerrain(r, c) == type)
+        Creature creature;
+
+        // Check bounds, don't let the user change terrain near the edge of the world
+        if (x < 1 || x >= _world.getWidth() - 1 || y < 1 || y >= _world.getHeight() - 1)
         {
-            _world.setTerrain(null, r, c);
+            return;
         }
-    }
-
-    private void drawSwitch(int x, int y)
-    {
-        int height = _world.getHeight();
-        int width = _world.getWidth();
+        // Apply brush modes
         switch (this._mouseClickMode)
         {
             case ADD_WALL:
@@ -362,38 +368,42 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 }
                 break;
             case ADD_WALL_BRUTALLY:
-                _world.removeCreature(y, x);
+                creature = _world.getCreature(y, x);
+                if (creature != null)
+                {
+                    this._animationCreatureDelegates.remove(creature.getID());
+                    _world.removeCreature(y, x);
+                }
                 _world.removeFood(y, x);
                 _world.setTerrain(TerrainType.WALL, y, x);
                 break;
-            case REMOVE_WALL:
-                if (y > 1 && x > 1 && y < height - 2 && x < width - 2)
-                {
-                    removeTerrain(y, x, TerrainType.WALL);
-                }
+            case REMOVE_TERRAIN:
+                removeTerrain(y, x);
                 break;
-            case VOID_GUN:
-                _world.removeCreature(y, x);
-            case SELECT_CREATURE:
+            case REMOVE_ANYTHING:
+                creature = _world.getCreature(y, x);
+                if (creature != null)
+                {
+                    this._animationCreatureDelegates.remove(creature.getID());
+                    _world.removeCreature(y, x);
+                }
+                _world.removeFood(y, x);
+                _world.setTerrain(null, y, x);
                 break;
             case ADD_FLAMETHROWER:
-                if (_world.squareIsFlamable(y, x))
+                if (_world.squareIsEmpty(y, x))
                 {
                     _world.setTerrain(TerrainType.FLAMETHROWER, y, x);
                 }
                 break;
-            case REMOVE_FLAMETHROWER:
-                removeCrossTerrain(y, x, TerrainType.FLAMETHROWER, TerrainType.FLAME);
-                break;
             case ADD_FOODGENERATOR:
-                if (_world.squareIsFoodable(y, x))
+                if (_world.squareIsEmpty(y, x))
                 {
                     _world.setTerrain(TerrainType.FOOD_GENERATOR, y, x);
                 }
                 break;
-            case REMOVE_FOODGENERATOR:
-                removeTerrain(y, x, TerrainType.FOOD_GENERATOR);
-                break;
+            case SELECT_CREATURE:
+                throw new IllegalStateException("" + MouseClickMode.SELECT_CREATURE + " is not a brush mode");
         }
     }
 
@@ -726,34 +736,14 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
             int yUpWorld = screenY / BLOCK_SIZE;
             if (_xDownWorld == xUpWorld && _yDownWorld == yUpWorld)
             {
-                switch (this._mouseClickMode)
+                if (_mouseClickMode == MouseClickMode.SELECT_CREATURE)
                 {
-                    case ADD_WALL:
-                        if (_world.squareIsEmpty(_yDownWorld, _xDownWorld))
-                        {
-                            _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
-                        }
-                        break;
-                    case ADD_WALL_BRUTALLY:
-                        _world.removeCreature(_yDownWorld, _xDownWorld);
-                        _world.setTerrain(TerrainType.WALL, _yDownWorld, _xDownWorld);
-                        break;
-                    case REMOVE_WALL:
-                        if (_world.getTerrain(_yDownWorld, _xDownWorld) == TerrainType.WALL)
-                        {
-                            _world.setTerrain(null, _yDownWorld, _xDownWorld);
-                        }
-                        break;
-                    case VOID_GUN:
-                        _world.removeCreature(_yDownWorld, _xDownWorld);
-                    case SELECT_CREATURE:
-                        if (_world.getCreature(yUpWorld, xUpWorld) != null)
-                        {
-                            this._selectedCreature = _world.getCreature(yUpWorld, xUpWorld).getID();
-                        }
-                        this._xDownWorld = -1;
-                        this._yDownWorld = -1;
-                        break;
+                    if (_world.getCreature(yUpWorld, xUpWorld) != null)
+                    {
+                        this._selectedCreature = _world.getCreature(yUpWorld, xUpWorld).getID();
+                    }
+                    this._xDownWorld = -1;
+                    this._yDownWorld = -1;
                 }
             }
         }
@@ -768,7 +758,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         {
             int xDragWorld = (screenX - SIZE / 2 * BLOCK_SIZE) / BLOCK_SIZE;
             int yDragWorld = screenY / BLOCK_SIZE;
-            drawSwitch(xDragWorld, yDragWorld);
+            if (this._mouseClickMode.isPaintbrushMode())
+            {
+                applyMouseBrush(xDragWorld, yDragWorld);
+            }
         }
         return false;
     }
