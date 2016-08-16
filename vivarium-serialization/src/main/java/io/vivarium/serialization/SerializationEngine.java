@@ -30,6 +30,8 @@ import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.core.processor.RandomGenerator;
 import io.vivarium.core.processor.RandomGeneratorBlueprint;
+import io.vivarium.core.sensor.FoodRadar;
+import io.vivarium.core.sensor.GenderRadar;
 import io.vivarium.util.UUID;
 
 public class SerializationEngine
@@ -145,6 +147,14 @@ public class SerializationEngine
             else if (clazzName.equals(BreedingPatternRecord.class.getSimpleName()))
             {
                 constructor = BreedingPatternRecord.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(FoodRadar.class.getSimpleName()))
+            {
+                constructor = FoodRadar.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(GenderRadar.class.getSimpleName()))
+            {
+                constructor = GenderRadar.class.getDeclaredConstructor();
             }
             else
             {

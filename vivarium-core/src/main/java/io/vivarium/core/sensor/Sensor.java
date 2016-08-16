@@ -15,6 +15,10 @@ public abstract class Sensor extends VivariumObject
     @SerializedParameter
     private int _sensorInputCount;
 
+    protected Sensor()
+    {
+    }
+
     public Sensor(int sensorInputCount)
     {
         _sensorInputCount = sensorInputCount;

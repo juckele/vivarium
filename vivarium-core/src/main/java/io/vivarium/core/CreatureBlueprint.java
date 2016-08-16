@@ -63,6 +63,7 @@ public class CreatureBlueprint extends VivariumObject
     private int _signChannelCount = 0;
 
     // Sensors
+    @SerializedParameter
     private Sensor[] _sensors;
 
     private CreatureBlueprint()

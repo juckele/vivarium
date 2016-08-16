@@ -22,6 +22,11 @@ public class FoodRadar extends Sensor
     @SerializedParameter
     private int _xMax;
 
+    @SuppressWarnings("unused") // Private constructor for deserialization
+    private FoodRadar()
+    {
+    }
+
     public FoodRadar(int zMin, int zMax, int xMin, int xMax)
     {
         super((zMax - zMin + 1) * (xMax - xMin + 1));
