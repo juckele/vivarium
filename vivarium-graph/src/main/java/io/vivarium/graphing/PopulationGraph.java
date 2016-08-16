@@ -47,6 +47,7 @@ public class PopulationGraph extends BaseGraph
     public static void main(String[] args) throws IOException
     {
         WorldBlueprint b = WorldBlueprint.makeDefault();
+        b.setSize(200);
 
         ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
         CensusBlueprint census = new CensusBlueprint();

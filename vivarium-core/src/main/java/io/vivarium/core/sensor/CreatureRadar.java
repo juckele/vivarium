@@ -10,7 +10,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class GenderRadar extends Sensor
+public class CreatureRadar extends Sensor
 {
     @SerializedParameter
     private int _zMin;
@@ -21,7 +21,7 @@ public class GenderRadar extends Sensor
     @SerializedParameter
     private int _xMax;
 
-    public GenderRadar(int zMin, int zMax, int xMin, int xMax)
+    public CreatureRadar(int zMin, int zMax, int xMin, int xMax)
     {
         super((zMax - zMin + 1) * (xMax - xMin + 1));
         _zMin = zMin;
@@ -43,7 +43,7 @@ public class GenderRadar extends Sensor
                         + Direction.getVerticalComponent(orthaganalDirection) * x;
                 int targetC = c + Direction.getHorizontalComponent(sensorDirection) * z
                         + +Direction.getHorizontalComponent(orthaganalDirection) * x;
-                inputs[index++] = w.getCreature(targetR, targetC).getIsFemale() ? 1 : 0;
+                inputs[index++] = w.getCreature(targetR, targetC) != null ? 1 : 0;
             }
         }
     }

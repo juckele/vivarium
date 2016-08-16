@@ -1,8 +1,13 @@
 package io.vivarium.core;
 
 import io.vivarium.core.processor.ProcessorBlueprint;
+import io.vivarium.core.sensor.CompassRadar;
+import io.vivarium.core.sensor.CreatureRadar;
+import io.vivarium.core.sensor.EnergyRadar;
 import io.vivarium.core.sensor.FoodRadar;
 import io.vivarium.core.sensor.GenderRadar;
+import io.vivarium.core.sensor.HealthRadar;
+import io.vivarium.core.sensor.PathableRadar;
 import io.vivarium.core.sensor.Sensor;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
@@ -176,14 +181,15 @@ public class CreatureBlueprint extends VivariumObject
         s.finalizeSerialization();
         s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
         s._sensors = new Sensor[2];// [6];
-        s._sensors[0] = new GenderRadar();
+        s._sensors[0] = new GenderRadar(0, 0, 0, 0);
         s._sensors[1] = new FoodRadar(0, 0, 0, 0);
-        // TODO: Re-add these
-        // [2] = facing creature?
-        // [3] = facing wall?
-        // [4] = energy level
-        // [5] = health level
-        s._sensorInputCount = 2; // 6;
+
+        s._sensors[2] = new CreatureRadar(1, 1, 0, 0);
+        s._sensors[3] = new PathableRadar(1, 1, 0, 0);
+        s._sensors[4] = new EnergyRadar();
+        s._sensors[5] = new HealthRadar();
+        s._sensors[6] = new CompassRadar();
+        s._sensorInputCount = 8; // 6;
         return s;
     }
 

@@ -565,6 +565,11 @@ public class Creature extends VivariumObject
         return (this._health);
     }
 
+    public CreatureBlueprint getCreatureBlueprint()
+    {
+        return _creatureBlueprint;
+    }
+
     public void setGeneration(double generation)
     {
         this._generation = generation;
