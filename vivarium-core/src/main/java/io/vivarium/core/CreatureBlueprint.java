@@ -181,10 +181,10 @@ public class CreatureBlueprint extends VivariumObject
         s.finalizeSerialization();
         s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
         s._sensors = new Sensor[7];
-        s._sensors[0] = new GenderRadar(0, 0, 0, 0);
-        s._sensors[1] = new FoodRadar(0, 0, 0, 0);
-        s._sensors[2] = new CreatureRadar(1, 1, 0, 0);
-        s._sensors[3] = new PathableRadar(1, 1, 0, 0);
+        s._sensors[0] = new GenderRadar(-3, -3, 3, 3);
+        s._sensors[1] = new FoodRadar(-3, -3, 3, 3);
+        s._sensors[2] = new CreatureRadar(-3, -3, 3, 3);
+        s._sensors[3] = new PathableRadar(-3, -3, 3, 3);
         s._sensors[4] = new EnergySensor();
         s._sensors[5] = new HealthSensor();
         s._sensors[6] = new Compass();
