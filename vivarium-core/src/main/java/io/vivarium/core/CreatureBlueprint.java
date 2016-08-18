@@ -40,7 +40,7 @@ public class CreatureBlueprint extends VivariumObject
     @SerializedParameter
     private int _pregnantFoodRate = -1;
     @SerializedParameter
-    private int _fightingDamageAmount = -20;
+    private int _fightingDamageAmount = -50;
     @SerializedParameter
     private int _fightingFoodRate = -2;
 
@@ -54,7 +54,7 @@ public class CreatureBlueprint extends VivariumObject
     @SerializedParameter
     private int _sensorInputCount;
     @SerializedParameter
-    private int _controllerOutputCount = 6;
+    private int _controllerOutputCount = 7;
     @SerializedParameter
     private int _memoryUnitCount = 0;
     @SerializedParameter

@@ -2,7 +2,7 @@ package io.vivarium.core;
 
 public enum Action
 {
-    REST, MOVE, TURN_LEFT, TURN_RIGHT, EAT, BREED, BIRTH, DIE, SPAWN, FIGHT;
+    REST, MOVE, TURN_LEFT, TURN_RIGHT, EAT, BREED, FIGHT, BIRTH, DIE, SPAWN;
 
     public static Action convertIntegerToAction(int i)
     {
@@ -21,13 +21,13 @@ public enum Action
             case 5:
                 return BREED;
             case 6:
-                return BIRTH;
-            case 7:
-                return DIE;
-            case 8:
-                return SPAWN;
-            case 9:
                 return FIGHT;
+            case 7:
+                return BIRTH;
+            case 8:
+                return DIE;
+            case 9:
+                return SPAWN;
             default:
                 throw new Error("Conversion out of bounds error for value " + i);
         }
@@ -49,13 +49,13 @@ public enum Action
                 return 4;
             case BREED:
                 return 5;
-            case BIRTH:
-                return 6;
-            case DIE:
-                return 7;
-            case SPAWN:
-                return 8;
             case FIGHT:
+                return 6;
+            case BIRTH:
+                return 7;
+            case DIE:
+                return 8;
+            case SPAWN:
                 return 9;
             default:
                 throw new Error("Conversion out of bounds error for value " + a);

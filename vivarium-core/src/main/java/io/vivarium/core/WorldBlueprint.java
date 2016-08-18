@@ -27,7 +27,7 @@ public class WorldBlueprint extends VivariumObject
     @SerializedParameter
     private double _foodGeneratorProbability = 0.005;
     @SerializedParameter
-    private double _flamethrowerProbability = 0.01;
+    private double _flamethrowerProbability = 0.0;
 
     // Simulation Details
     @SerializedParameter
