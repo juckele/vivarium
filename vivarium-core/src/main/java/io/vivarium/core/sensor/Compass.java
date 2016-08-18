@@ -1,6 +1,7 @@
 package io.vivarium.core.sensor;
 
 import io.vivarium.core.Creature;
+import io.vivarium.core.Direction;
 import io.vivarium.core.World;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -8,17 +9,20 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class HealthRadar extends Sensor
+public class Compass extends Sensor
 {
-    public HealthRadar()
+    public Compass()
     {
-        super(1);
+        super(2);
     }
 
     @Override
     public void performSensing(World w, double[] inputs, int index, int r, int c, Creature creature)
     {
-        inputs[index] = ((double) creature.getHealth()) / creature.getCreatureBlueprint().getMaximumHealth();
+        Direction sensorDirection = creature.getFacing();
+
+        inputs[index++] = Direction.getVerticalComponent(sensorDirection);
+        inputs[index++] = Direction.getHorizontalComponent(sensorDirection);
     }
 
     @Override

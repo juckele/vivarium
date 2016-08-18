@@ -8,9 +8,9 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class EnergyRadar extends Sensor
+public class GestationSensor extends Sensor
 {
-    public EnergyRadar()
+    public GestationSensor()
     {
         super(1);
     }
@@ -18,7 +18,7 @@ public class EnergyRadar extends Sensor
     @Override
     public void performSensing(World w, double[] inputs, int index, int r, int c, Creature creature)
     {
-        inputs[index] = ((double) creature.getFood()) / creature.getCreatureBlueprint().getMaximumFood();
+        inputs[index] = ((double) creature.getGestation()) / creature.getCreatureBlueprint().getMaximumGestation();
     }
 
     @Override

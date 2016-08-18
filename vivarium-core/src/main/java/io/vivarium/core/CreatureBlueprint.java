@@ -1,12 +1,12 @@
 package io.vivarium.core;
 
 import io.vivarium.core.processor.ProcessorBlueprint;
-import io.vivarium.core.sensor.CompassRadar;
+import io.vivarium.core.sensor.Compass;
 import io.vivarium.core.sensor.CreatureRadar;
-import io.vivarium.core.sensor.EnergyRadar;
+import io.vivarium.core.sensor.EnergySensor;
 import io.vivarium.core.sensor.FoodRadar;
 import io.vivarium.core.sensor.GenderRadar;
-import io.vivarium.core.sensor.HealthRadar;
+import io.vivarium.core.sensor.HealthSensor;
 import io.vivarium.core.sensor.PathableRadar;
 import io.vivarium.core.sensor.Sensor;
 import io.vivarium.serialization.SerializedParameter;
@@ -180,16 +180,18 @@ public class CreatureBlueprint extends VivariumObject
         CreatureBlueprint s = new CreatureBlueprint();
         s.finalizeSerialization();
         s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
-        s._sensors = new Sensor[2];// [6];
+        s._sensors = new Sensor[7];
         s._sensors[0] = new GenderRadar(0, 0, 0, 0);
         s._sensors[1] = new FoodRadar(0, 0, 0, 0);
-
         s._sensors[2] = new CreatureRadar(1, 1, 0, 0);
         s._sensors[3] = new PathableRadar(1, 1, 0, 0);
-        s._sensors[4] = new EnergyRadar();
-        s._sensors[5] = new HealthRadar();
-        s._sensors[6] = new CompassRadar();
-        s._sensorInputCount = 8; // 6;
+        s._sensors[4] = new EnergySensor();
+        s._sensors[5] = new HealthSensor();
+        s._sensors[6] = new Compass();
+        for (Sensor sensor : s._sensors)
+        {
+            s._sensorInputCount += sensor.getSensorInputCount();
+        }
         return s;
     }
 
@@ -199,12 +201,10 @@ public class CreatureBlueprint extends VivariumObject
         s.finalizeSerialization();
         s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
         s._sensors = sensors;
-        int sensorInputCount = 0;
-        for (Sensor sensor : sensors)
+        for (Sensor sensor : s._sensors)
         {
-            sensorInputCount += sensor.getSensorInputCount();
+            s._sensorInputCount += sensor.getSensorInputCount();
         }
-        s._sensorInputCount = sensorInputCount;
         return s;
     }
 
