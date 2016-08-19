@@ -30,8 +30,14 @@ import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.core.processor.RandomGenerator;
 import io.vivarium.core.processor.RandomGeneratorBlueprint;
+import io.vivarium.core.sensor.Compass;
+import io.vivarium.core.sensor.CreatureRadar;
+import io.vivarium.core.sensor.EnergySensor;
 import io.vivarium.core.sensor.FoodRadar;
 import io.vivarium.core.sensor.GenderRadar;
+import io.vivarium.core.sensor.GestationSensor;
+import io.vivarium.core.sensor.HealthSensor;
+import io.vivarium.core.sensor.PathableRadar;
 import io.vivarium.util.UUID;
 
 public class SerializationEngine
@@ -148,6 +154,18 @@ public class SerializationEngine
             {
                 constructor = BreedingPatternRecord.class.getDeclaredConstructor();
             }
+            else if (clazzName.equals(Compass.class.getSimpleName()))
+            {
+                constructor = Compass.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(CreatureRadar.class.getSimpleName()))
+            {
+                constructor = CreatureRadar.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(EnergySensor.class.getSimpleName()))
+            {
+                constructor = EnergySensor.class.getDeclaredConstructor();
+            }
             else if (clazzName.equals(FoodRadar.class.getSimpleName()))
             {
                 constructor = FoodRadar.class.getDeclaredConstructor();
@@ -155,6 +173,18 @@ public class SerializationEngine
             else if (clazzName.equals(GenderRadar.class.getSimpleName()))
             {
                 constructor = GenderRadar.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(GestationSensor.class.getSimpleName()))
+            {
+                constructor = GestationSensor.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(HealthSensor.class.getSimpleName()))
+            {
+                constructor = HealthSensor.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(PathableRadar.class.getSimpleName()))
+            {
+                constructor = PathableRadar.class.getDeclaredConstructor();
             }
             else
             {

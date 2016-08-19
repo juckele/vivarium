@@ -9,6 +9,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class CreatureRadar extends Radar
 {
+    private CreatureRadar()
+    {
+        super(0, 0, 0, 0);
+    }
+
     public CreatureRadar(int zMin, int zMax, int xMin, int xMax)
     {
         super(zMin, zMax, xMin, xMax);

@@ -11,6 +11,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class FoodRadar extends Radar
 {
+    private FoodRadar()
+    {
+        super(0, 0, 0, 0);
+    }
+
     public FoodRadar(int zMin, int zMax, int xMin, int xMax)
     {
         super(zMin, zMax, xMin, xMax);

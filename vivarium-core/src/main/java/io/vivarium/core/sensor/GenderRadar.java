@@ -10,6 +10,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class GenderRadar extends Radar
 {
+    private GenderRadar()
+    {
+        super(0, 0, 0, 0);
+    }
+
     public GenderRadar(int zMin, int zMax, int xMin, int xMax)
     {
         super(zMin, zMax, xMin, xMax);
