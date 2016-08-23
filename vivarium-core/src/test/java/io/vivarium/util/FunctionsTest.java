@@ -12,6 +12,19 @@ public class FunctionsTest
 {
     @Test
     @Category({ FastTest.class, UnitTest.class })
+    public void testLogit()
+    {
+        Tester.equal("0 = logit(0.5)", Functions.logit(0.5), 0, 0.0001);
+
+        Tester.equal("1 = sigmoid(logit(1))", 1, Functions.sigmoid(Functions.logit(1)), 0.0001);
+
+        Tester.equal("-1 = logit(sigmoid(-1))", -1, Functions.logit(Functions.sigmoid(-1)), 0.0001);
+
+        Tester.equal("4.5951 = logit(0.99)", 4.5951, Functions.logit(0.99), 0.0001);
+    }
+
+    @Test
+    @Category({ FastTest.class, UnitTest.class })
     public void testSigmoid()
     {
         Tester.equal("sigmoid(-1) = 0.2689", 0.2689, Functions.sigmoid(-1), 0.0001);

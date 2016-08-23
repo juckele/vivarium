@@ -8,6 +8,17 @@ import com.google.common.base.Preconditions;
 public class Functions
 {
     /**
+     * computes the logit function (the inverse of the logistic sigmoid function) of a value.
+     *
+     * @param x
+     * @return logit(x)
+     */
+    public static double logit(double x)
+    {
+        return Math.log(x / (1 - x));
+    }
+
+    /**
      * computes the logistic sigmoid of a value, the logistic sigmoid is s(x) = 1 / ( 1 + e ^ -x )
      *
      * @param x
