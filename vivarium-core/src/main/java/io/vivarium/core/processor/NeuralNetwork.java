@@ -5,7 +5,6 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
-import io.vivarium.core.RenderCode;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
@@ -15,7 +14,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class NeuralNetwork extends Processor
+public class NeuralNetwork extends Processor implements VectorizedGenomeProcessor
 {
     // Weights represents all the weights in the neural network
     // weight[i][j][k] corresponds to the weight of the connection
@@ -61,7 +60,7 @@ public class NeuralNetwork extends Processor
         }
     }
 
-    public NeuralNetwork(ProcessorBlueprint processorBlueprint, NeuralNetwork processor1, NeuralNetwork processor2)
+    public NeuralNetwork(NeuralNetworkBlueprint processorBlueprint, NeuralNetwork processor1, NeuralNetwork processor2)
     {
         // Construct the weight layer and store variables with the int based
         // constructor
@@ -227,72 +226,6 @@ public class NeuralNetwork extends Processor
         }
     }
 
-    @Override
-    public String render(RenderCode code)
-    {
-        if (code == RenderCode.PROCESSOR_WEIGHTS)
-        {
-            return this.renderProcessorWeights();
-        }
-        else
-        {
-            throw new IllegalArgumentException("RenderCode " + code + " not supported for type " + this.getClass());
-        }
-    }
-
-    private String renderProcessorWeights()
-    {
-        StringBuilder output = new StringBuilder();
-
-        String[] baseLineEndLabel = { "_", "M", "L", "R", "E", "B" };
-        String[] lineEndLabel = new String[this.getOutputCount()];
-        for (int i = 0; i < lineEndLabel.length; i++)
-        {
-            if (i < baseLineEndLabel.length)
-            {
-                lineEndLabel[i] = baseLineEndLabel[i];
-            }
-            else
-            {
-                lineEndLabel[i] = "x" + (i - baseLineEndLabel.length + 1);
-            }
-        }
-        String[] baseColumnHeaderLabel = { "cB", "rB", "女", "一", "中", "口", "%" };
-        String[] columnHeaderLabel = new String[this.getInputCount() + 2];
-        for (int i = 0; i < columnHeaderLabel.length; i++)
-        {
-            if (i < baseColumnHeaderLabel.length)
-            {
-                columnHeaderLabel[i] = baseColumnHeaderLabel[i];
-            }
-            else
-            {
-                columnHeaderLabel[i] = "x" + (i - baseColumnHeaderLabel.length + 1);
-            }
-        }
-
-        for (int i = 0; i < columnHeaderLabel.length; i++)
-        {
-            output.append(columnHeaderLabel[i]);
-            output.append("\t");
-        }
-        output.append('\n');
-
-        for (int i = 0; i < _weights.length; i++)
-        {
-            for (int j = 0; j < _weights[i].length; j++)
-            {
-                double weight = (int) (1000 * _weights[i][j]) / 1000.0;
-                output.append(weight);
-                output.append('\t');
-                output.append(lineEndLabel[j]);
-                output.append('\n');
-            }
-        }
-
-        return (output.toString());
-    }
-
     public static void main(String[] args)
     {
         NeuralNetwork processor = new NeuralNetwork(3, 10, false, 0);
@@ -419,12 +352,6 @@ public class NeuralNetwork extends Processor
         return standardDeviationProcessor;
     }
 
-    @Override
-    public ProcessorType getProcessorType()
-    {
-        return ProcessorType.NEURAL_NETWORK;
-    }
-
     public static NeuralNetwork makeUninitialized()
     {
         return new NeuralNetwork();
@@ -435,11 +362,5 @@ public class NeuralNetwork extends Processor
     {
         return new NeuralNetwork(inputs, outputs, processorBlueprint.getRandomInitialization(),
                 processorBlueprint.getNormalizeAfterMutation());
-    }
-
-    public static NeuralNetwork makeWithParents(ProcessorBlueprint processorBlueprint, NeuralNetwork parentProcessor1,
-            NeuralNetwork parentProcessor2)
-    {
-        return new NeuralNetwork(processorBlueprint, parentProcessor1, parentProcessor2);
     }
 }

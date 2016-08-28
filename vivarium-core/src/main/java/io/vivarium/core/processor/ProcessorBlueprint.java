@@ -13,29 +13,21 @@ public abstract class ProcessorBlueprint extends VivariumObject
     @SerializedParameter
     private ProcessorType _processorType = ProcessorType.NEURAL_NETWORK;
 
+    // Initialization
     @SerializedParameter
     private boolean _randomInitialization = false;
+
+    // Normalization
     @SerializedParameter
     private double _normalizeAfterMutation = 0;
-
-    // Mutation
-    @SerializedParameter
-    private double _inheritanceGaussianMixRate = 0.8;
-    @SerializedParameter
-    private double _mutationRateExponent = -7;
-    private double _mutationRate;
-    @SerializedParameter
-    private double _mutationTypeSmallScaleRate = 0.5;
-    @SerializedParameter
-    private double _mutationTypeRandomRate = 0.25;
-    @SerializedParameter
-    private double _mutationTypeFlipRate = 0.25;
 
     protected ProcessorBlueprint()
     {
     }
 
     public abstract Processor makeProcessor(int inputs, int outputs);
+
+    public abstract Processor makeProcessorWithParents(Processor parent1, Processor parent2);
 
     public ProcessorType getProcessorType()
     {
@@ -65,49 +57,6 @@ public abstract class ProcessorBlueprint extends VivariumObject
     public void setNormalizeAfterMutation(double normalizeAfterMutation)
     {
         _normalizeAfterMutation = normalizeAfterMutation;
-    }
-
-    public double getMutationSmallScaleRate()
-    {
-        return this._mutationTypeSmallScaleRate;
-    }
-
-    public double getMutationRateExponent()
-    {
-        return this._mutationRateExponent;
-    }
-
-    public double getMutationRate()
-    {
-        return this._mutationRate;
-    }
-
-    public double getMutationFlipRate()
-    {
-        return this._mutationTypeFlipRate;
-    }
-
-    public double getMutationRandomRate()
-    {
-        return this._mutationTypeRandomRate;
-    }
-
-    public double getInheritanceGaussianMixRate()
-    {
-        return this._inheritanceGaussianMixRate;
-    }
-
-    public void setMutationRateExponent(double exponent)
-    {
-        this._mutationRateExponent = exponent;
-        this._mutationRate = Math.pow(2, exponent);
-    }
-
-    @Override
-    public void finalizeSerialization()
-    {
-        // update mutation rate
-        _mutationRate = Math.pow(2, _mutationRateExponent);
     }
 
     public static ProcessorBlueprint makeDefault()

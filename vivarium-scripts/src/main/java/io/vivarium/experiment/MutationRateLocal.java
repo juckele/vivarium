@@ -13,6 +13,7 @@ import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
 import io.vivarium.serialization.FileIO;
@@ -64,7 +65,9 @@ public class MutationRateLocal
             // Set creature blueprint
             ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
             CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
-            creatureBlueprint.getProcessorBlueprint().setMutationRateExponent(mutationRateExponent);
+            NeuralNetworkBlueprint processorBlueprint = (NeuralNetworkBlueprint) creatureBlueprint
+                    .getProcessorBlueprint();
+            processorBlueprint.setMutationRateExponent(mutationRateExponent);
             creatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(42));
             creatureBlueprints.add(creatureBlueprint);
             worldBlueprint.setCreatureBlueprints(creatureBlueprints);

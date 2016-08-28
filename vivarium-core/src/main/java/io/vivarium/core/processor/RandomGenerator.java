@@ -1,6 +1,5 @@
 package io.vivarium.core.processor;
 
-import io.vivarium.core.RenderCode;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Rand;
 import lombok.EqualsAndHashCode;
@@ -32,25 +31,6 @@ public class RandomGenerator extends Processor
     }
 
     @Override
-    public void normalizeWeights(double normalizedLength)
-    {
-        // No weights, nothing to normalize
-    }
-
-    @Override
-    public double getGenomeLength()
-    {
-        // No values, no length
-        return 0;
-    }
-
-    @Override
-    public ProcessorType getProcessorType()
-    {
-        return ProcessorType.RANDOM;
-    }
-
-    @Override
     public double[] outputs(double[] inputs)
     {
         for (int i = 0; i < _outputs.length; i++)
@@ -58,12 +38,6 @@ public class RandomGenerator extends Processor
             _outputs[i] = Rand.getInstance().getRandomDouble();
         }
         return _outputs;
-    }
-
-    @Override
-    public String render(RenderCode code)
-    {
-        return "Hand coded processor: no render available";
     }
 
     public static Processor makeUninitialized()
@@ -78,12 +52,12 @@ public class RandomGenerator extends Processor
         return processor;
     }
 
-    public static Processor makeWithParents(ProcessorBlueprint processorBlueprint,
-            RandomGenerator untypedParentProcessor1, RandomGenerator untypedParentProcessor2)
+    public static RandomGenerator makeWithParents(ProcessorBlueprint processorBlueprint, Processor untypedProcessor1,
+            Processor untypedProcessor2)
     {
-        RandomGenerator parentProcessor1 = untypedParentProcessor1;
-        RandomGenerator parentProcessor2 = untypedParentProcessor2;
-        RandomGenerator processor = new RandomGenerator(processorBlueprint, parentProcessor1, parentProcessor2);
+        RandomGenerator parent1 = (RandomGenerator) untypedProcessor1;
+        RandomGenerator parent2 = (RandomGenerator) untypedProcessor2;
+        RandomGenerator processor = new RandomGenerator(processorBlueprint, parent1, parent2);
         return processor;
     }
 

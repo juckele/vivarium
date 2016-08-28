@@ -9,6 +9,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import io.vivarium.core.processor.Processor;
+import io.vivarium.core.processor.VectorizedGenomeProcessor;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.VivariumObjectCollection;
@@ -72,7 +73,8 @@ public class MeasureProcessorGenomeLengths extends CommonsScript
         int lengthIndex = 0;
         for (Processor processor : processors)
         {
-            lengths[lengthIndex++] = processor.getGenomeLength();
+            VectorizedGenomeProcessor vectorizedProcessor = (VectorizedGenomeProcessor) processor;
+            lengths[lengthIndex++] = vectorizedProcessor.getGenomeLength();
         }
         Arrays.sort(lengths);
         return lengths;

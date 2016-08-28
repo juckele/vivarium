@@ -6,6 +6,7 @@ import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.serialization.SerializationEngine;
 
 public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
@@ -28,7 +29,9 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
         WorldBlueprint instanceBlueprint = new SerializationEngine().makeCopy(_worldBlueprint);
         Preconditions.checkArgument(instanceBlueprint.getCreatureBlueprints().size() == 1);
         CreatureBlueprint instanceCreatureBlueprint = instanceBlueprint.getCreatureBlueprints().get(0);
-        instanceCreatureBlueprint.getProcessorBlueprint().setMutationRateExponent(Double.NEGATIVE_INFINITY);
+        NeuralNetworkBlueprint processorBlueprint = (NeuralNetworkBlueprint) instanceCreatureBlueprint
+                .getProcessorBlueprint();
+        processorBlueprint.setMutationRateExponent(Double.NEGATIVE_INFINITY);
         Creature instanceCreature = new Creature(instanceCreatureBlueprint, c);
 
         World w = new World(instanceBlueprint);

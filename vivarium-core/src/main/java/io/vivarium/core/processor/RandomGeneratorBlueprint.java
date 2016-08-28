@@ -13,9 +13,20 @@ public class RandomGeneratorBlueprint extends ProcessorBlueprint
     }
 
     @Override
+    public void finalizeSerialization()
+    {
+    }
+
+    @Override
     public RandomGenerator makeProcessor(int inputs, int outputs)
     {
         return RandomGenerator.makeWithProcessorBlueprint(this, inputs, outputs);
+    }
+
+    @Override
+    public RandomGenerator makeProcessorWithParents(Processor parent1, Processor parent2)
+    {
+        return RandomGenerator.makeWithParents(this, parent1, parent2);
     }
 
     public static RandomGeneratorBlueprint makeDefault()

@@ -7,6 +7,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import io.vivarium.core.processor.Processor;
+import io.vivarium.core.processor.VectorizedGenomeProcessor;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.VivariumObjectCollection;
@@ -56,7 +57,8 @@ public class NormalizeProcessorGenomes extends CommonsScript
         List<Processor> processors = collection.getAll(Processor.class);
         for (Processor processor : processors)
         {
-            processor.normalizeWeights(1);
+            VectorizedGenomeProcessor vectorizedProcessor = (VectorizedGenomeProcessor) processor;
+            vectorizedProcessor.normalizeWeights(1);
         }
 
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);

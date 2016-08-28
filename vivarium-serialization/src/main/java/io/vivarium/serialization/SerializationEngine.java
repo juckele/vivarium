@@ -25,9 +25,10 @@ import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.DecisionTree;
+import io.vivarium.core.processor.DecisionTreeBlueprint;
 import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
-import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.core.processor.RandomGenerator;
 import io.vivarium.core.processor.RandomGeneratorBlueprint;
 import io.vivarium.core.sensor.Compass;
@@ -94,17 +95,17 @@ public class SerializationEngine
         try
         {
             Constructor<?> constructor;
-            if (clazzName.equals(ProcessorBlueprint.class.getSimpleName()))
+            if (clazzName.equals(NeuralNetworkBlueprint.class.getSimpleName()))
             {
-                constructor = ProcessorBlueprint.class.getDeclaredConstructor();
+                constructor = NeuralNetworkBlueprint.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(DecisionTreeBlueprint.class.getSimpleName()))
+            {
+                constructor = DecisionTreeBlueprint.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(RandomGeneratorBlueprint.class.getSimpleName()))
             {
                 constructor = RandomGeneratorBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(NeuralNetworkBlueprint.class.getSimpleName()))
-            {
-                constructor = NeuralNetworkBlueprint.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(CreatureBlueprint.class.getSimpleName()))
             {
@@ -114,13 +115,17 @@ public class SerializationEngine
             {
                 constructor = WorldBlueprint.class.getDeclaredConstructor();
             }
-            else if (clazzName.equals(RandomGenerator.class.getSimpleName()))
+            else if (clazzName.equals(DecisionTree.class.getSimpleName()))
             {
-                constructor = RandomGenerator.class.getDeclaredConstructor();
+                constructor = DecisionTree.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(NeuralNetwork.class.getSimpleName()))
             {
                 constructor = NeuralNetwork.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(RandomGenerator.class.getSimpleName()))
+            {
+                constructor = RandomGenerator.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(Creature.class.getSimpleName()))
             {

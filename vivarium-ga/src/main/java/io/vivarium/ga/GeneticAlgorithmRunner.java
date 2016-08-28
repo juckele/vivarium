@@ -7,7 +7,6 @@ import org.javatuples.Pair;
 
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.RenderCode;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.util.Rand;
@@ -39,7 +38,7 @@ public class GeneticAlgorithmRunner
         for (int i = 0; i < _populationSize; i++)
         {
             Creature c = new Creature(_creatureBlueprint);
-            System.out.println(c.getProcessor().render(RenderCode.PROCESSOR_WEIGHTS));
+            // TODO: Re-add support for rendering processors
             _population.add(new Pair<>(0.0, c));
         }
     }
@@ -82,11 +81,6 @@ public class GeneticAlgorithmRunner
         System.out.println("3rd Best member " + _population.get(_population.size() - 3).getValue0());
         System.out.println("2nd Best member " + _population.get(_population.size() - 2).getValue0());
         System.out.println("1st Best member " + _population.get(_population.size() - 1).getValue0());
-        System.out.println("1st Best member\n" + _population
-                .get(_population.size() - 1)
-                .getValue1()
-                .getProcessor()
-                .render(RenderCode.PROCESSOR_WEIGHTS));
         ArrayList<Pair<Double, Creature>> newPopulation = new ArrayList<>(_populationSize);
         double fitnessSum = 0;
         for (int i = 0; i < _populationSize; i++)
@@ -106,11 +100,6 @@ public class GeneticAlgorithmRunner
             newPopulation.add(new Pair<>(0.0, child));
         }
         _population = newPopulation;
-        System.out.println("random new member\n" + _population
-                .get(_population.size() - 1)
-                .getValue1()
-                .getProcessor()
-                .render(RenderCode.PROCESSOR_WEIGHTS));
     }
 
     public static void main(String[] args)

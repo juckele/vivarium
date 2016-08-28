@@ -9,9 +9,12 @@ import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.processor.Processor;
-import io.vivarium.core.processor.ProcessorBlueprint;
-import io.vivarium.core.processor.ProcessorType;
+import io.vivarium.core.processor.DecisionTree;
+import io.vivarium.core.processor.DecisionTreeBlueprint;
+import io.vivarium.core.processor.NeuralNetwork;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
+import io.vivarium.core.processor.RandomGenerator;
+import io.vivarium.core.processor.RandomGeneratorBlueprint;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
 
@@ -53,33 +56,68 @@ public class SerializationMakeTest
 
     @Test
     @Category({ FastTest.class, IntegrationTest.class })
-    public void testProcessorMakeWithCreatureBlueprint() throws Exception
+    public void testNeuralNetworkMakeDefault() throws Exception
     {
-        for (ProcessorType processorType : ProcessorType.values())
-        {
-            ProcessorBlueprint processorArchitecture = ProcessorBlueprint.makeDefault();
-            processorArchitecture.setProcessorType(processorType);
-            CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
-            creatureBlueprint.setProcessorBlueprint(processorArchitecture);
-            Processor processor = ProcessorType.makeDefaultProcessorBlueprint(processorType).makeProcessor(7, 3);
-            Tester.isNotNull("Processor of type " + processorType + " should exist", processor);
-        }
+        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault();
+        Tester.isNotNull("NeuralNetworkBlueprint should exist", processorBlueprint);
+        NeuralNetwork processor = processorBlueprint.makeProcessor(7, 3);
+        Tester.isNotNull("NeuralNetwork should exist", processor);
     }
 
     @Test
     @Category({ FastTest.class, IntegrationTest.class })
-    public void testProcessorMakeCopy() throws Exception
+    public void testNeuralNetworkMakeCopy() throws Exception
     {
-        for (ProcessorType processorType : ProcessorType.values())
-        {
-            ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
-            processorBlueprint.setProcessorType(processorType);
-            CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
-            creatureBlueprint.setProcessorBlueprint(processorBlueprint);
-            Processor processor = ProcessorType.makeDefaultProcessorBlueprint(processorType).makeProcessor(2, 9);
-            Processor copy = new SerializationEngine().makeCopy(processor);
-            Tester.isNotNull("Processor copy of type " + processorType + "should exist", copy);
-        }
+        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault();
+        NeuralNetworkBlueprint blueprintCopy = new SerializationEngine().makeCopy(processorBlueprint);
+        Tester.isNotNull("NeuralNetworkBlueprint copy should exist", blueprintCopy);
+        NeuralNetwork processor = processorBlueprint.makeProcessor(7, 3);
+        NeuralNetwork processorCopy = new SerializationEngine().makeCopy(processor);
+        Tester.isNotNull("NeuralNetwork copy should exist", processorCopy);
+    }
+
+    @Test
+    @Category({ FastTest.class, IntegrationTest.class })
+    public void testDecisionTreeMakeDefault() throws Exception
+    {
+        DecisionTreeBlueprint processorBlueprint = DecisionTreeBlueprint.makeDefault();
+        Tester.isNotNull("DecisionTreeBlueprint should exist", processorBlueprint);
+        DecisionTree processor = processorBlueprint.makeProcessor(7, 3);
+        Tester.isNotNull("DecisionTree should exist", processor);
+    }
+
+    @Test
+    @Category({ FastTest.class, IntegrationTest.class })
+    public void testDecisionTreeMakeCopy() throws Exception
+    {
+        DecisionTreeBlueprint processorBlueprint = DecisionTreeBlueprint.makeDefault();
+        DecisionTreeBlueprint blueprintCopy = new SerializationEngine().makeCopy(processorBlueprint);
+        Tester.isNotNull("DecisionTreeBlueprint copy should exist", blueprintCopy);
+        DecisionTree processor = processorBlueprint.makeProcessor(7, 3);
+        DecisionTree processorCopy = new SerializationEngine().makeCopy(processor);
+        Tester.isNotNull("DecisionTree copy should exist", processorCopy);
+    }
+
+    @Test
+    @Category({ FastTest.class, IntegrationTest.class })
+    public void testRandomGeneratorMakeDefault() throws Exception
+    {
+        RandomGeneratorBlueprint processorBlueprint = RandomGeneratorBlueprint.makeDefault();
+        Tester.isNotNull("RandomGeneratorBlueprint should exist", processorBlueprint);
+        RandomGenerator processor = processorBlueprint.makeProcessor(7, 3);
+        Tester.isNotNull("RandomGenerator should exist", processor);
+    }
+
+    @Test
+    @Category({ FastTest.class, IntegrationTest.class })
+    public void testRandomGeneratorMakeCopy() throws Exception
+    {
+        RandomGeneratorBlueprint processorBlueprint = RandomGeneratorBlueprint.makeDefault();
+        RandomGeneratorBlueprint blueprintCopy = new SerializationEngine().makeCopy(processorBlueprint);
+        Tester.isNotNull("RandomGeneratorBlueprint copy should exist", blueprintCopy);
+        RandomGenerator processor = processorBlueprint.makeProcessor(7, 3);
+        RandomGenerator processorCopy = new SerializationEngine().makeCopy(processor);
+        Tester.isNotNull("RandomGenerator copy should exist", processorCopy);
     }
 
     @Test

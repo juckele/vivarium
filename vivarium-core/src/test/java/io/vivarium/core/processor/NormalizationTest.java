@@ -25,7 +25,7 @@ public class NormalizationTest
         Creature c1 = new Creature(creatureBlueprint);
         Creature c2 = new Creature(creatureBlueprint);
         Creature c3 = new Creature(c1, c2);
-        double childProcessorGenomeLength = c3.getProcessor().getGenomeLength();
+        double childProcessorGenomeLength = ((VectorizedGenomeProcessor) c3.getProcessor()).getGenomeLength();
         Tester.equal("Child processor genome should be 1", childProcessorGenomeLength, Math.sqrt(42), 0.000001);
     }
 }

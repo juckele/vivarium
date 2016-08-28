@@ -8,8 +8,6 @@ import java.util.LinkedList;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.AuditRecord;
 import io.vivarium.core.WorldPopulator.EntityType;
-import io.vivarium.core.processor.Processor;
-import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Rand;
@@ -721,10 +719,6 @@ public class World extends VivariumObject
         {
             return (renderMap());
         }
-        else if (code == RenderCode.PROCESSOR_WEIGHTS)
-        {
-            return (renderProcessorWeights());
-        }
         else if (code == RenderCode.LIVE_CREATURE_LIST)
         {
             StringBuilder creatureOutput = new StringBuilder();
@@ -788,38 +782,6 @@ public class World extends VivariumObject
             worldOutput.append('\n');
         }
         return (worldOutput.toString());
-    }
-
-    private String renderProcessorWeights()
-    {
-        StringBuilder multiCreatureBlueprintOutput = new StringBuilder();
-        for (CreatureBlueprint creatureBlueprint : this._worldBlueprint.getCreatureBlueprints())
-        {
-            multiCreatureBlueprintOutput.append(this.renderProcessorWeights(creatureBlueprint));
-        }
-        return multiCreatureBlueprintOutput.toString();
-    }
-
-    private String renderProcessorWeights(CreatureBlueprint s)
-    {
-        // Draw average processor
-        // Draw creature readouts
-        LinkedList<Processor> processors = new LinkedList<>();
-        for (int r = 0; r < this._height; r++)
-        {
-            for (int c = 0; c < this._width; c++)
-            {
-                if (_creatureGrid[r][c] != null && _creatureGrid[r][c].getBlueprint().equals(s))
-                {
-                    processors.add(_creatureGrid[r][c].getProcessor());
-                }
-            }
-        }
-        if (processors.size() > 0)
-        {
-            return ProcessorType.render(processors.getFirst().getProcessorType(), processors);
-        }
-        return "";
     }
 
     @Override

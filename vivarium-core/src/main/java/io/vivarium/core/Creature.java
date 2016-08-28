@@ -1,7 +1,6 @@
 package io.vivarium.core;
 
 import io.vivarium.core.processor.Processor;
-import io.vivarium.core.processor.ProcessorType;
 import io.vivarium.core.sensor.Sensor;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
@@ -117,16 +116,16 @@ public class Creature extends VivariumObject
             if (parent2 != null)
             {
                 // Processor combined from genetic legacy
-                this._processor = ProcessorType.makeWithParents(
-                        _creatureBlueprint.getProcessorBlueprint().getProcessorType(), _creatureBlueprint,
-                        parent1._processor, parent2._processor);
+                this._processor = _creatureBlueprint
+                        .getProcessorBlueprint()
+                        .makeProcessorWithParents(parent1._processor, parent2._processor);
             }
             else
             {
                 // Processor from single parent (might still mutate)
-                this._processor = ProcessorType.makeWithParents(
-                        _creatureBlueprint.getProcessorBlueprint().getProcessorType(), _creatureBlueprint,
-                        parent1._processor, parent1._processor);
+                this._processor = _creatureBlueprint
+                        .getProcessorBlueprint()
+                        .makeProcessorWithParents(parent1._processor, parent1._processor);
             }
         }
         else

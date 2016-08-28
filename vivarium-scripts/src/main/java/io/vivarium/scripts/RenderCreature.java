@@ -32,7 +32,6 @@ public class RenderCreature extends Script
     protected void run(String[] args)
     {
         Creature c = FileIO.loadObjectCollection(args[0], Format.JSON).getFirst(Creature.class);
-        System.out.println(c.getProcessor().render(RenderCode.PROCESSOR_WEIGHTS));
         System.out.println(c.render(RenderCode.COMPLEX_CREATURE, -1, -1));
 
     }

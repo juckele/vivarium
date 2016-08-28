@@ -8,7 +8,7 @@
   </Match>
   <Match>
     <Bug pattern="EI_EXPOSE_REP"/>
-    <Package name="io.vivarium.core.brain"/>
+    <Package name="io.vivarium.core.processor"/>
   </Match>
   <!-- This looks like a false positive from the method, it's FileOutputStream is closed
        in a finally block. -->
