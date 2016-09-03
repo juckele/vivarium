@@ -16,7 +16,7 @@ public class DecisionTreeBlueprint extends ProcessorBlueprint
 
     // Decision tree structure
     @SerializedParameter
-    private int _maximumDepth = 1;
+    private int _maximumDepth = 4;
 
     private DecisionTreeBlueprint()
     {

@@ -61,6 +61,6 @@ public abstract class ProcessorBlueprint extends VivariumObject
 
     public static ProcessorBlueprint makeDefault()
     {
-        return NeuralNetworkBlueprint.makeDefault();
+        return DecisionTreeBlueprint.makeDefault();
     }
 }
