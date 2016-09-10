@@ -27,6 +27,7 @@ import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.DecisionTree;
 import io.vivarium.core.processor.DecisionTreeBlueprint;
+import io.vivarium.core.processor.Multiplexer;
 import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.RandomGenerator;
@@ -138,6 +139,10 @@ public class SerializationEngine
             else if (clazzName.equals(CensusBlueprint.class.getSimpleName()))
             {
                 constructor = CensusBlueprint.class.getDeclaredConstructor();
+            }
+            else if (clazzName.equals(Multiplexer.class.getSimpleName()))
+            {
+                constructor = Multiplexer.class.getDeclaredConstructor();
             }
             else if (clazzName.equals(CensusRecord.class.getSimpleName()))
             {

@@ -16,16 +16,26 @@ public class NormalizationTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testBreedNormalize()
     {
-        ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
+
+        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault();
+        processorBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
         processorBlueprint.setRandomInitialization(true);
+        ProcessorBlueprint[] processorBlueprints = new ProcessorBlueprint[] { processorBlueprint };
 
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
-        creatureBlueprint.setProcessorBlueprint(processorBlueprint);
-        creatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(42));
+        creatureBlueprint.setProcessorBlueprints(processorBlueprints);
         Creature c1 = new Creature(creatureBlueprint);
         Creature c2 = new Creature(creatureBlueprint);
         Creature c3 = new Creature(c1, c2);
-        double childProcessorGenomeLength = ((VectorizedGenomeProcessor) c3.getProcessor()).getGenomeLength();
+        double childProcessorGenomeLength = 0;
+        for (Processor p : c3.getProcessors())
+        {
+            if (p instanceof NeuralNetwork)
+            {
+                NeuralNetwork nn = (NeuralNetwork) p;
+                childProcessorGenomeLength += nn.getGenomeLength();
+            }
+        }
         Tester.equal("Child processor genome should be 1", childProcessorGenomeLength, Math.sqrt(42), 0.000001);
     }
 }

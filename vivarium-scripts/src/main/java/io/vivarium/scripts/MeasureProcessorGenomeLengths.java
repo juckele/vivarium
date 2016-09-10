@@ -8,8 +8,8 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
+import io.vivarium.core.processor.NeuralNetwork;
 import io.vivarium.core.processor.Processor;
-import io.vivarium.core.processor.VectorizedGenomeProcessor;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.VivariumObjectCollection;
@@ -73,8 +73,8 @@ public class MeasureProcessorGenomeLengths extends CommonsScript
         int lengthIndex = 0;
         for (Processor processor : processors)
         {
-            VectorizedGenomeProcessor vectorizedProcessor = (VectorizedGenomeProcessor) processor;
-            lengths[lengthIndex++] = vectorizedProcessor.getGenomeLength();
+            NeuralNetwork nn = (NeuralNetwork) processor;
+            lengths[lengthIndex++] = nn.getGenomeLength();
         }
         Arrays.sort(lengths);
         return lengths;

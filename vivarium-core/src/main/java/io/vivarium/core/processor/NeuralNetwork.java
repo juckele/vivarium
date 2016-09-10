@@ -14,7 +14,7 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class NeuralNetwork extends Processor implements VectorizedGenomeProcessor
+public class NeuralNetwork extends Processor
 {
     // Weights represents all the weights in the neural network
     // weight[i][j][k] corresponds to the weight of the connection
@@ -147,7 +147,6 @@ public class NeuralNetwork extends Processor implements VectorizedGenomeProcesso
         }
     }
 
-    @Override
     public void normalizeWeights(double normalizedLength)
     {
         double vectorLength = getGenomeLength();
@@ -160,7 +159,6 @@ public class NeuralNetwork extends Processor implements VectorizedGenomeProcesso
         }
     }
 
-    @Override
     public double getGenomeLength()
     {
         double sumOfSquares = 0;
@@ -357,7 +355,7 @@ public class NeuralNetwork extends Processor implements VectorizedGenomeProcesso
         return new NeuralNetwork();
     }
 
-    public static NeuralNetwork makeWithProcessorBlueprint(ProcessorBlueprint processorBlueprint, int inputs,
+    public static NeuralNetwork makeWithProcessorBlueprint(NeuralNetworkBlueprint processorBlueprint, int inputs,
             int outputs)
     {
         return new NeuralNetwork(inputs, outputs, processorBlueprint.getRandomInitialization(),

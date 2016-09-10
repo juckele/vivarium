@@ -9,6 +9,10 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class NeuralNetworkBlueprint extends ProcessorBlueprint
 {
+    // Normalization
+    @SerializedParameter
+    private double _normalizeAfterMutation = 0;
+
     // Mutation
     @SerializedParameter
     private double _inheritanceGaussianMixRate = 0.8;
@@ -74,6 +78,16 @@ public class NeuralNetworkBlueprint extends ProcessorBlueprint
     public void setHiddenLayerCount(int hiddenLayerCount)
     {
         this._hiddenLayerCount = hiddenLayerCount;
+    }
+
+    public double getNormalizeAfterMutation()
+    {
+        return this._normalizeAfterMutation;
+    }
+
+    public void setNormalizeAfterMutation(double normalizeAfterMutation)
+    {
+        _normalizeAfterMutation = normalizeAfterMutation;
     }
 
     @Override

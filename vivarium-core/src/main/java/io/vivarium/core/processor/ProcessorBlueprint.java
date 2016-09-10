@@ -17,10 +17,6 @@ public abstract class ProcessorBlueprint extends VivariumObject
     @SerializedParameter
     private boolean _randomInitialization = false;
 
-    // Normalization
-    @SerializedParameter
-    private double _normalizeAfterMutation = 0;
-
     protected ProcessorBlueprint()
     {
     }
@@ -47,16 +43,6 @@ public abstract class ProcessorBlueprint extends VivariumObject
     public boolean getRandomInitialization()
     {
         return this._randomInitialization;
-    }
-
-    public double getNormalizeAfterMutation()
-    {
-        return this._normalizeAfterMutation;
-    }
-
-    public void setNormalizeAfterMutation(double normalizeAfterMutation)
-    {
-        _normalizeAfterMutation = normalizeAfterMutation;
     }
 
     public static ProcessorBlueprint makeDefault()

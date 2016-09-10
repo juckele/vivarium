@@ -30,7 +30,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
         Preconditions.checkArgument(instanceBlueprint.getCreatureBlueprints().size() == 1);
         CreatureBlueprint instanceCreatureBlueprint = instanceBlueprint.getCreatureBlueprints().get(0);
         NeuralNetworkBlueprint processorBlueprint = (NeuralNetworkBlueprint) instanceCreatureBlueprint
-                .getProcessorBlueprint();
+                .getProcessorBlueprints()[0];
         processorBlueprint.setMutationRateExponent(Double.NEGATIVE_INFINITY);
         Creature instanceCreature = new Creature(instanceCreatureBlueprint, c);
 

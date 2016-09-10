@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
 import io.vivarium.serialization.FileIO;
@@ -53,7 +54,8 @@ public class NormalizationConvergenceLocal
         normalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint normalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
-        normalizingCreatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(1);
+        ((NeuralNetworkBlueprint) normalizingCreatureBlueprint.getProcessorBlueprints()[0])
+                .setNormalizeAfterMutation(1);
         normalizingCreatureBlueprints.add(normalizingCreatureBlueprint);
         normalizingWorldBlueprint.setCreatureBlueprints(normalizingCreatureBlueprints);
 
@@ -65,7 +67,8 @@ public class NormalizationConvergenceLocal
         longNormalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> longNormalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint longNormalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
-        longNormalizingCreatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(42));
+        ((NeuralNetworkBlueprint) longNormalizingCreatureBlueprint.getProcessorBlueprints()[0])
+                .setNormalizeAfterMutation(Math.sqrt(42));
         longNormalizingCreatureBlueprints.add(longNormalizingCreatureBlueprint);
         longNormalizingWorldBlueprint.setCreatureBlueprints(longNormalizingCreatureBlueprints);
 

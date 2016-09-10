@@ -1,7 +1,9 @@
 package io.vivarium.core;
 
 import io.vivarium.core.processor.Processor;
+import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.core.sensor.Sensor;
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Functions;
@@ -14,6 +16,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class Creature extends VivariumObject
 {
+    static
+    {
+        ClassRegistry.getInstance().register(Creature.class);
+    }
+
     // Meta information
     @SerializedParameter
     private int _id;
@@ -24,7 +31,7 @@ public class Creature extends VivariumObject
 
     // Processor
     @SerializedParameter
-    private Processor _processor;
+    private Processor[] _processors;
     @SerializedParameter
     private double[] _inputs;
     @SerializedParameter
@@ -110,38 +117,14 @@ public class Creature extends VivariumObject
             this._generation = 1;
         }
 
-        // Create processor to control the Creature
-        if (parent1 != null)
+        // Create processors to control the Creature
+        ProcessorBlueprint[] processorBlueprints = _creatureBlueprint.getProcessorBlueprints();
+        _processors = new Processor[processorBlueprints.length];
+        for (int i = 0; i < processorBlueprints.length; i++)
         {
-            if (parent2 != null)
-            {
-                // Processor combined from genetic legacy
-                this._processor = _creatureBlueprint
-                        .getProcessorBlueprint()
-                        .makeProcessorWithParents(parent1._processor, parent2._processor);
-            }
-            else
-            {
-                // Processor from single parent (might still mutate)
-                this._processor = _creatureBlueprint
-                        .getProcessorBlueprint()
-                        .makeProcessorWithParents(parent1._processor, parent1._processor);
-            }
-        }
-        else
-        {
-            if (parent2 != null)
-            {
-                // Single parent is only an error if parent2 is non-null, otherwise assumed to be a clone
-                throw new Error("Creature with single parent");
-            }
-            else
-            {
-                // Create a new processor
-                this._processor = _creatureBlueprint.getProcessorBlueprint().makeProcessor(
-                        _creatureBlueprint.getTotalProcessorInputCount(),
-                        _creatureBlueprint.getTotalProcessorOutputCount());
-            }
+            Processor processor1 = parent1 != null ? parent1._processors[i] : null;
+            Processor processor2 = parent2 != null ? parent2._processors[i] : null;
+            _processors[i] = createProcessor(processorBlueprints[i], processor1, processor2);
         }
 
         // Sets the size of all the processor i/o arrays
@@ -174,6 +157,37 @@ public class Creature extends VivariumObject
         this._facing = Direction.NORTH;
         this._action = Action.REST;
         this._health = 2000;
+    }
+
+    private Processor createProcessor(ProcessorBlueprint blueprint, Processor processor1, Processor processor2)
+    {
+        if (processor1 != null)
+        {
+            if (processor2 != null)
+            {
+                // Processor combined from genetic legacy
+                return blueprint.makeProcessorWithParents(processor1, processor2);
+            }
+            else
+            {
+                // Processor from single parent (might still mutate)
+                return blueprint.makeProcessorWithParents(processor1, processor1);
+            }
+        }
+        else
+        {
+            if (processor2 != null)
+            {
+                // Single parent is only an error if parent2 is non-null, otherwise assumed to be a clone
+                throw new Error("Creature with single parent");
+            }
+            else
+            {
+                // Create a new processor
+                return blueprint.makeProcessor(_creatureBlueprint.getTotalProcessorInputCount(),
+                        _creatureBlueprint.getTotalProcessorOutputCount());
+            }
+        }
     }
 
     public void tick(int flameHit)
@@ -263,7 +277,7 @@ public class Creature extends VivariumObject
                         + this._soundInputs.length + i] = _signInputs[i];
             }
             // Main processor computation
-            double[] outputs = this._processor.outputs(_inputs);
+            double[] outputs = this._processors[0].outputs(_inputs);
             // Save memory units
             System.arraycopy(outputs, _creatureBlueprint.getHardProcessorOutputs() - 1, _memoryUnits, 0,
                     this._memoryUnits.length);
@@ -339,9 +353,9 @@ public class Creature extends VivariumObject
         return (_fetus);
     }
 
-    public Processor getProcessor()
+    public Processor[] getProcessors()
     {
-        return (_processor);
+        return (_processors);
     }
 
     public double[] getMemoryUnits()
@@ -602,11 +616,6 @@ public class Creature extends VivariumObject
     public void setFetus(Creature fetus)
     {
         this._fetus = fetus;
-    }
-
-    public void setProcessor(Processor processor)
-    {
-        this._processor = processor;
     }
 
     /*

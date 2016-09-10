@@ -1,5 +1,6 @@
 package io.vivarium.core;
 
+import io.vivarium.core.processor.Multiplexer;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.core.sensor.Compass;
 import io.vivarium.core.sensor.CreatureRadar;
@@ -55,7 +56,9 @@ public class CreatureBlueprint extends VivariumObject
 
     // Neurology
     @SerializedParameter
-    private ProcessorBlueprint _processorBlueprint = null;
+    private Multiplexer _multiplexer = null;
+    @SerializedParameter
+    private ProcessorBlueprint[] _processorBlueprints = null;
     @SerializedParameter
     private int _sensorInputCount;
     @SerializedParameter
@@ -179,7 +182,7 @@ public class CreatureBlueprint extends VivariumObject
     {
         CreatureBlueprint s = new CreatureBlueprint();
         s.finalizeSerialization();
-        s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
+        s.setProcessorBlueprints(new ProcessorBlueprint[] { ProcessorBlueprint.makeDefault() });
         s._sensors = new Sensor[7];
         s._sensors[0] = new GenderRadar(-3, -3, 3, 3);
         s._sensors[1] = new FoodRadar(-3, -3, 3, 3);
@@ -199,7 +202,7 @@ public class CreatureBlueprint extends VivariumObject
     {
         CreatureBlueprint s = new CreatureBlueprint();
         s.finalizeSerialization();
-        s.setProcessorBlueprint(ProcessorBlueprint.makeDefault());
+        s.setProcessorBlueprints(new ProcessorBlueprint[] { ProcessorBlueprint.makeDefault() });
         s._sensors = sensors;
         for (Sensor sensor : s._sensors)
         {
@@ -219,14 +222,14 @@ public class CreatureBlueprint extends VivariumObject
         System.out.println(CreatureBlueprint.makeDefault());
     }
 
-    public ProcessorBlueprint getProcessorBlueprint()
+    public ProcessorBlueprint[] getProcessorBlueprints()
     {
-        return _processorBlueprint;
+        return _processorBlueprints;
     }
 
-    public void setProcessorBlueprint(ProcessorBlueprint processorBlueprint)
+    public void setProcessorBlueprints(ProcessorBlueprint[] processorBlueprints)
     {
-        _processorBlueprint = processorBlueprint;
+        _processorBlueprints = processorBlueprints;
     }
 
     public int getHardProcessorInputs()

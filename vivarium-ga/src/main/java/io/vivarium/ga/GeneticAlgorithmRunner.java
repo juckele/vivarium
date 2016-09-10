@@ -108,7 +108,7 @@ public class GeneticAlgorithmRunner
         processorBlueprint.setRandomInitialization(true);
 
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
-        creatureBlueprint.setProcessorBlueprint(processorBlueprint);
+        creatureBlueprint.setProcessorBlueprints((new ProcessorBlueprint[] { processorBlueprint }));
         creatureBlueprint.setInitialGenerationProbability(0);
         creatureBlueprint.setMaximumFood(200);
         System.out.println("Creature Blueprint: " + creatureBlueprint);

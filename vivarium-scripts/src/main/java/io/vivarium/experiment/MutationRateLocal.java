@@ -66,9 +66,10 @@ public class MutationRateLocal
             ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
             CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
             NeuralNetworkBlueprint processorBlueprint = (NeuralNetworkBlueprint) creatureBlueprint
-                    .getProcessorBlueprint();
+                    .getProcessorBlueprints()[0];
             processorBlueprint.setMutationRateExponent(mutationRateExponent);
-            creatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(Math.sqrt(42));
+            ((NeuralNetworkBlueprint) creatureBlueprint.getProcessorBlueprints()[0])
+                    .setNormalizeAfterMutation(Math.sqrt(42));
             creatureBlueprints.add(creatureBlueprint);
             worldBlueprint.setCreatureBlueprints(creatureBlueprints);
             // Set audit functions

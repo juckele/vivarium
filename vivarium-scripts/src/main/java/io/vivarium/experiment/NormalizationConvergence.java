@@ -11,6 +11,7 @@ import io.vivarium.client.task.CreateJobTask;
 import io.vivarium.client.task.UploadResourceTask;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.net.jobs.CreateWorldJob;
 import io.vivarium.net.jobs.Job;
 import io.vivarium.net.jobs.SimulationJob;
@@ -57,7 +58,8 @@ public class NormalizationConvergence
         normalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint normalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
-        normalizingCreatureBlueprint.getProcessorBlueprint().setNormalizeAfterMutation(1);
+        ((NeuralNetworkBlueprint) normalizingCreatureBlueprint.getProcessorBlueprints()[0])
+                .setNormalizeAfterMutation(1);
         normalizingCreatureBlueprints.add(normalizingCreatureBlueprint);
         normalizingWorldBlueprint.setCreatureBlueprints(normalizingCreatureBlueprints);
 
