@@ -58,9 +58,9 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testNeuralNetworkMakeDefault() throws Exception
     {
-        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault();
+        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault(7, 3);
         Tester.isNotNull("NeuralNetworkBlueprint should exist", processorBlueprint);
-        NeuralNetwork processor = processorBlueprint.makeProcessor(7, 3);
+        NeuralNetwork processor = processorBlueprint.makeProcessor();
         Tester.isNotNull("NeuralNetwork should exist", processor);
     }
 
@@ -68,10 +68,10 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testNeuralNetworkMakeCopy() throws Exception
     {
-        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault();
+        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault(7, 3);
         NeuralNetworkBlueprint blueprintCopy = new SerializationEngine().makeCopy(processorBlueprint);
         Tester.isNotNull("NeuralNetworkBlueprint copy should exist", blueprintCopy);
-        NeuralNetwork processor = processorBlueprint.makeProcessor(7, 3);
+        NeuralNetwork processor = processorBlueprint.makeProcessor();
         NeuralNetwork processorCopy = new SerializationEngine().makeCopy(processor);
         Tester.isNotNull("NeuralNetwork copy should exist", processorCopy);
     }
@@ -80,9 +80,9 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testDecisionTreeMakeDefault() throws Exception
     {
-        DecisionTreeBlueprint processorBlueprint = DecisionTreeBlueprint.makeDefault();
+        DecisionTreeBlueprint processorBlueprint = DecisionTreeBlueprint.makeDefault(7, 3);
         Tester.isNotNull("DecisionTreeBlueprint should exist", processorBlueprint);
-        DecisionTree processor = processorBlueprint.makeProcessor(7, 3);
+        DecisionTree processor = processorBlueprint.makeProcessor();
         Tester.isNotNull("DecisionTree should exist", processor);
     }
 
@@ -90,10 +90,10 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testDecisionTreeMakeCopy() throws Exception
     {
-        DecisionTreeBlueprint processorBlueprint = DecisionTreeBlueprint.makeDefault();
+        DecisionTreeBlueprint processorBlueprint = DecisionTreeBlueprint.makeDefault(7, 3);
         DecisionTreeBlueprint blueprintCopy = new SerializationEngine().makeCopy(processorBlueprint);
         Tester.isNotNull("DecisionTreeBlueprint copy should exist", blueprintCopy);
-        DecisionTree processor = processorBlueprint.makeProcessor(7, 3);
+        DecisionTree processor = processorBlueprint.makeProcessor();
         DecisionTree processorCopy = new SerializationEngine().makeCopy(processor);
         Tester.isNotNull("DecisionTree copy should exist", processorCopy);
     }
@@ -102,9 +102,9 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testRandomGeneratorMakeDefault() throws Exception
     {
-        RandomGeneratorBlueprint processorBlueprint = RandomGeneratorBlueprint.makeDefault();
+        RandomGeneratorBlueprint processorBlueprint = RandomGeneratorBlueprint.makeDefault(7, 3);
         Tester.isNotNull("RandomGeneratorBlueprint should exist", processorBlueprint);
-        RandomGenerator processor = processorBlueprint.makeProcessor(7, 3);
+        RandomGenerator processor = processorBlueprint.makeProcessor();
         Tester.isNotNull("RandomGenerator should exist", processor);
     }
 
@@ -112,10 +112,10 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testRandomGeneratorMakeCopy() throws Exception
     {
-        RandomGeneratorBlueprint processorBlueprint = RandomGeneratorBlueprint.makeDefault();
+        RandomGeneratorBlueprint processorBlueprint = RandomGeneratorBlueprint.makeDefault(7, 3);
         RandomGeneratorBlueprint blueprintCopy = new SerializationEngine().makeCopy(processorBlueprint);
         Tester.isNotNull("RandomGeneratorBlueprint copy should exist", blueprintCopy);
-        RandomGenerator processor = processorBlueprint.makeProcessor(7, 3);
+        RandomGenerator processor = processorBlueprint.makeProcessor();
         RandomGenerator processorCopy = new SerializationEngine().makeCopy(processor);
         Tester.isNotNull("RandomGenerator copy should exist", processorCopy);
     }

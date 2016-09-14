@@ -128,7 +128,7 @@ public class Creature extends VivariumObject
         }
 
         // Sets the size of all the processor i/o arrays
-        _inputs = new double[_creatureBlueprint.getTotalProcessorInputCount()];
+        _inputs = new double[_creatureBlueprint.getMultiplexerInputCount()];
         _memoryUnits = new double[_creatureBlueprint.getMemoryUnitCount()];
         _soundInputs = new double[_creatureBlueprint.getSoundChannelCount()];
         _soundOutputs = new double[_creatureBlueprint.getSoundChannelCount()];
@@ -184,8 +184,7 @@ public class Creature extends VivariumObject
             else
             {
                 // Create a new processor
-                return blueprint.makeProcessor(_creatureBlueprint.getTotalProcessorInputCount(),
-                        _creatureBlueprint.getTotalProcessorOutputCount());
+                return blueprint.makeProcessor();
             }
         }
     }
@@ -277,7 +276,7 @@ public class Creature extends VivariumObject
                         + this._soundInputs.length + i] = _signInputs[i];
             }
             // Main processor computation
-            double[] outputs = this._processors[0].outputs(_inputs);
+            double[] outputs = this._creatureBlueprint.getMultiplexer().outputs(_inputs, _processors);
             // Save memory units
             System.arraycopy(outputs, _creatureBlueprint.getHardProcessorOutputs() - 1, _memoryUnits, 0,
                     this._memoryUnits.length);

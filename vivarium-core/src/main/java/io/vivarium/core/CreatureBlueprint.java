@@ -180,34 +180,41 @@ public class CreatureBlueprint extends VivariumObject
 
     public static CreatureBlueprint makeDefault()
     {
-        CreatureBlueprint s = new CreatureBlueprint();
-        s.finalizeSerialization();
-        s.setProcessorBlueprints(new ProcessorBlueprint[] { ProcessorBlueprint.makeDefault() });
-        s._sensors = new Sensor[7];
-        s._sensors[0] = new GenderRadar(-3, -3, 3, 3);
-        s._sensors[1] = new FoodRadar(-3, -3, 3, 3);
-        s._sensors[2] = new CreatureRadar(-3, -3, 3, 3);
-        s._sensors[3] = new PathableRadar(-3, -3, 3, 3);
-        s._sensors[4] = new EnergySensor();
-        s._sensors[5] = new HealthSensor();
-        s._sensors[6] = new Compass();
-        for (Sensor sensor : s._sensors)
-        {
-            s._sensorInputCount += sensor.getSensorInputCount();
-        }
-        return s;
+        return makeDefault(0, 0, 0);
     }
 
-    public static CreatureBlueprint makeWithSensors(Sensor[] sensors)
+    private static Sensor[] defaultSensors()
+    {
+        Sensor[] sensors = new Sensor[7];
+        sensors[0] = new GenderRadar(-3, -3, 3, 3);
+        sensors[1] = new FoodRadar(-3, -3, 3, 3);
+        sensors[2] = new CreatureRadar(-3, -3, 3, 3);
+        sensors[3] = new PathableRadar(-3, -3, 3, 3);
+        sensors[4] = new EnergySensor();
+        sensors[5] = new HealthSensor();
+        sensors[6] = new Compass();
+        return sensors;
+    }
+
+    public static CreatureBlueprint makeDefault(int memoryCount, int soundChannelCount, int signChannelCount)
+    {
+        return makeWithSensors(defaultSensors(), memoryCount, soundChannelCount, signChannelCount);
+    }
+
+    public static CreatureBlueprint makeWithSensors(Sensor[] sensors, int memoryCount, int soundChannelCount,
+            int signChannelCount)
     {
         CreatureBlueprint s = new CreatureBlueprint();
         s.finalizeSerialization();
-        s.setProcessorBlueprints(new ProcessorBlueprint[] { ProcessorBlueprint.makeDefault() });
         s._sensors = sensors;
-        for (Sensor sensor : s._sensors)
+        for (Sensor sensor : sensors)
         {
             s._sensorInputCount += sensor.getSensorInputCount();
         }
+        s._processorBlueprints = new ProcessorBlueprint[] { ProcessorBlueprint
+                .makeDefault(s.getMultiplexerInputCount(), s.getMultiplexerOutputCount()) };
+        s._multiplexer = Multiplexer.makeWithSequentialProcessors(s.getMultiplexerInputCount(),
+                s.getMultiplexerOutputCount(), s._processorBlueprints);
         return s;
     }
 
@@ -257,27 +264,12 @@ public class CreatureBlueprint extends VivariumObject
         return this._signChannelCount;
     }
 
-    public void setCreatureMemoryUnitCount(int memoryUnitCount)
-    {
-        this._memoryUnitCount = memoryUnitCount;
-    }
-
-    public void setCreatureSoundChannelCount(int soundChannelCount)
-    {
-        this._soundChannelCount = soundChannelCount;
-    }
-
-    public void setCreatureSignChannelCount(int signChannelCount)
-    {
-        this._signChannelCount = signChannelCount;
-    }
-
-    public int getTotalProcessorInputCount()
+    public int getMultiplexerInputCount()
     {
         return this._sensorInputCount + this._memoryUnitCount + this._soundChannelCount + this._signChannelCount;
     }
 
-    public int getTotalProcessorOutputCount()
+    public int getMultiplexerOutputCount()
     {
         return this._controllerOutputCount + this._memoryUnitCount + this._soundChannelCount + this._signChannelCount;
     }
@@ -285,5 +277,10 @@ public class CreatureBlueprint extends VivariumObject
     public Sensor[] getSensors()
     {
         return _sensors;
+    }
+
+    public Multiplexer getMultiplexer()
+    {
+        return _multiplexer;
     }
 }

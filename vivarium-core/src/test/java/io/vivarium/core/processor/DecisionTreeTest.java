@@ -17,9 +17,9 @@ public class DecisionTreeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testRandomConstruction()
     {
-        DecisionTreeBlueprint blueprint = DecisionTreeBlueprint.makeDefault();
+        DecisionTreeBlueprint blueprint = DecisionTreeBlueprint.makeDefault(6, 6);
         blueprint.setMaximumDepth(4);
-        DecisionTree processor = blueprint.makeProcessor(6, 6);
+        DecisionTree processor = blueprint.makeProcessor();
         double[] thresholds = processor.getThresholds();
         Tester.equal("Maximum depth of 4 should have 15 nodes", thresholds.length, 15);
         int[] indices = processor.getIndices();

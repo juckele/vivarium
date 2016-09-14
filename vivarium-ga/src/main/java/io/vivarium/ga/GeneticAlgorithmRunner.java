@@ -104,11 +104,11 @@ public class GeneticAlgorithmRunner
 
     public static void main(String[] args)
     {
-        ProcessorBlueprint processorBlueprint = ProcessorBlueprint.makeDefault();
-        processorBlueprint.setRandomInitialization(true);
-
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
-        creatureBlueprint.setProcessorBlueprints((new ProcessorBlueprint[] { processorBlueprint }));
+        for (ProcessorBlueprint processorBlueprint : creatureBlueprint.getProcessorBlueprints())
+        {
+            processorBlueprint.setRandomInitialization(true);
+        }
         creatureBlueprint.setInitialGenerationProbability(0);
         creatureBlueprint.setMaximumFood(200);
         System.out.println("Creature Blueprint: " + creatureBlueprint);

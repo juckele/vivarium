@@ -176,10 +176,10 @@ public class DecisionTree extends Processor
         return new DecisionTree();
     }
 
-    public static DecisionTree makeWithProcessorBlueprint(DecisionTreeBlueprint decisionTreeBlueprint, int inputs,
-            int outputs)
+    public static DecisionTree makeWithProcessorBlueprint(DecisionTreeBlueprint decisionTreeBlueprint)
     {
-        return new DecisionTree(decisionTreeBlueprint.getMaximumDepth(), inputs, outputs);
+        return new DecisionTree(decisionTreeBlueprint.getMaximumDepth(), decisionTreeBlueprint.getInputCount(),
+                decisionTreeBlueprint.getOutputCount());
     }
 
     public static DecisionTree makeProcessorWithParents(DecisionTreeBlueprint decisionTreeBlueprint,

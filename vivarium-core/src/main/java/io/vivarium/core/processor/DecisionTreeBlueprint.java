@@ -20,6 +20,12 @@ public class DecisionTreeBlueprint extends ProcessorBlueprint
 
     private DecisionTreeBlueprint()
     {
+        super(0, 0);
+    }
+
+    private DecisionTreeBlueprint(int inputCount, int outputCount)
+    {
+        super(inputCount, outputCount);
     }
 
     public int getMaximumDepth()
@@ -56,9 +62,9 @@ public class DecisionTreeBlueprint extends ProcessorBlueprint
     }
 
     @Override
-    public DecisionTree makeProcessor(int inputs, int outputs)
+    public DecisionTree makeProcessor()
     {
-        return DecisionTree.makeWithProcessorBlueprint(this, inputs, outputs);
+        return DecisionTree.makeWithProcessorBlueprint(this);
     }
 
     @Override
@@ -67,9 +73,9 @@ public class DecisionTreeBlueprint extends ProcessorBlueprint
         return DecisionTree.makeProcessorWithParents(this, parent1, parent2);
     }
 
-    public static DecisionTreeBlueprint makeDefault()
+    public static DecisionTreeBlueprint makeDefault(int inputCount, int outputCount)
     {
-        DecisionTreeBlueprint a = new DecisionTreeBlueprint();
+        DecisionTreeBlueprint a = new DecisionTreeBlueprint(inputCount, outputCount);
         a.finalizeSerialization();
         return a;
     }

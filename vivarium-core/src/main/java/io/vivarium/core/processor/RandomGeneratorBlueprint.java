@@ -10,6 +10,12 @@ public class RandomGeneratorBlueprint extends ProcessorBlueprint
 {
     private RandomGeneratorBlueprint()
     {
+        super(0, 0);
+    }
+
+    private RandomGeneratorBlueprint(int inputCount, int outputCount)
+    {
+        super(inputCount, outputCount);
     }
 
     @Override
@@ -18,9 +24,9 @@ public class RandomGeneratorBlueprint extends ProcessorBlueprint
     }
 
     @Override
-    public RandomGenerator makeProcessor(int inputs, int outputs)
+    public RandomGenerator makeProcessor()
     {
-        return RandomGenerator.makeWithProcessorBlueprint(this, inputs, outputs);
+        return RandomGenerator.makeWithProcessorBlueprint(this, getInputCount(), getOutputCount());
     }
 
     @Override
@@ -29,9 +35,9 @@ public class RandomGeneratorBlueprint extends ProcessorBlueprint
         return RandomGenerator.makeWithParents(this, parent1, parent2);
     }
 
-    public static RandomGeneratorBlueprint makeDefault()
+    public static RandomGeneratorBlueprint makeDefault(int inputCount, int outputCount)
     {
-        RandomGeneratorBlueprint a = new RandomGeneratorBlueprint();
+        RandomGeneratorBlueprint a = new RandomGeneratorBlueprint(inputCount, outputCount);
         a.finalizeSerialization();
         return a;
     }
