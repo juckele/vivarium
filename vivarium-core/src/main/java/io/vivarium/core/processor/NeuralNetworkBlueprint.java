@@ -32,6 +32,12 @@ public class NeuralNetworkBlueprint extends ProcessorBlueprint
 
     private NeuralNetworkBlueprint()
     {
+        super(0, 0);
+    }
+
+    private NeuralNetworkBlueprint(int inputCount, int outputCount)
+    {
+        super(inputCount, outputCount);
     }
 
     public double getMutationSmallScaleRate()
@@ -98,9 +104,9 @@ public class NeuralNetworkBlueprint extends ProcessorBlueprint
     }
 
     @Override
-    public NeuralNetwork makeProcessor(int inputs, int outputs)
+    public NeuralNetwork makeProcessor()
     {
-        return NeuralNetwork.makeWithProcessorBlueprint(this, inputs, outputs);
+        return NeuralNetwork.makeWithProcessorBlueprint(this);
     }
 
     @Override
@@ -109,9 +115,9 @@ public class NeuralNetworkBlueprint extends ProcessorBlueprint
         return new NeuralNetwork(this, (NeuralNetwork) parent1, (NeuralNetwork) parent2);
     }
 
-    public static NeuralNetworkBlueprint makeDefault()
+    public static NeuralNetworkBlueprint makeDefault(int inputCount, int outputCount)
     {
-        NeuralNetworkBlueprint a = new NeuralNetworkBlueprint();
+        NeuralNetworkBlueprint a = new NeuralNetworkBlueprint(inputCount, outputCount);
         a.finalizeSerialization();
         return a;
     }

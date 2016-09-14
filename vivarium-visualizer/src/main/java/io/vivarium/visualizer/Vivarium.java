@@ -1,6 +1,5 @@
 package io.vivarium.visualizer;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -26,6 +25,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.google.common.collect.Lists;
 
 import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
@@ -111,12 +111,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     {
         // Create simulation
         _blueprint = WorldBlueprint.makeDefault();
-        ArrayList<CreatureBlueprint> creatureBlueprints = _blueprint.getCreatureBlueprints();
-        for (CreatureBlueprint creatureBlueprint : creatureBlueprints)
-        {
-            creatureBlueprint.setCreatureMemoryUnitCount(3);
-            creatureBlueprint.setCreatureSignChannelCount(3);
-        }
+        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault(3, 0, 3);
+        _blueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
         _world = new World(_blueprint);

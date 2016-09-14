@@ -16,13 +16,14 @@ public class NormalizationTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testBreedNormalize()
     {
+        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
 
-        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault();
+        NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault(
+                creatureBlueprint.getMultiplexerInputCount(), creatureBlueprint.getMultiplexerOutputCount());
         processorBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
         processorBlueprint.setRandomInitialization(true);
         ProcessorBlueprint[] processorBlueprints = new ProcessorBlueprint[] { processorBlueprint };
 
-        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
         creatureBlueprint.setProcessorBlueprints(processorBlueprints);
         Creature c1 = new Creature(creatureBlueprint);
         Creature c2 = new Creature(creatureBlueprint);
