@@ -67,7 +67,7 @@ public class Multiplexer extends VivariumObject
             m._source[0][j] = MULTIPLEXER_INPUT;
             m._index[0][j] = j;
         }
-        for (int i = 1; i < processorBlueprints.length - 1; i++)
+        for (int i = 1; i < processorBlueprints.length; i++)
         {
             ProcessorBlueprint blueprint = processorBlueprints[i];
             ProcessorBlueprint preceeding = processorBlueprints[i - 1];
@@ -78,6 +78,9 @@ public class Multiplexer extends VivariumObject
                         + " outputs. Current processor at index " + i + " has " + blueprint.getInputCount()
                         + " inputs.");
             }
+            m._inputs[i] = new double[blueprint.getInputCount()];
+            m._source[i] = new int[blueprint.getInputCount()];
+            m._index[i] = new int[blueprint.getInputCount()];
             for (int j = 0; j < blueprint.getInputCount(); j++)
             {
                 m._source[i][j] = i - 1;

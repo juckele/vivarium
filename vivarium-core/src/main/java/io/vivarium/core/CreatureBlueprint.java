@@ -211,8 +211,11 @@ public class CreatureBlueprint extends VivariumObject
         {
             s._sensorInputCount += sensor.getSensorInputCount();
         }
-        s._processorBlueprints = new ProcessorBlueprint[] { ProcessorBlueprint
-                .makeDefault(s.getMultiplexerInputCount(), s.getMultiplexerOutputCount()) };
+        int midCount = Math.max(s.getMultiplexerInputCount(), s.getMultiplexerOutputCount());
+        s._processorBlueprints = new ProcessorBlueprint[] {
+                ProcessorBlueprint.makeDefault(s.getMultiplexerInputCount(), midCount),
+                ProcessorBlueprint.makeDefault(midCount, midCount),
+                ProcessorBlueprint.makeDefault(midCount, s.getMultiplexerOutputCount()) };
         s._multiplexer = Multiplexer.makeWithSequentialProcessors(s.getMultiplexerInputCount(),
                 s.getMultiplexerOutputCount(), s._processorBlueprints);
         return s;
