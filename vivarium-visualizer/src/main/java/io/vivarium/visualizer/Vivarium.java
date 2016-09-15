@@ -97,6 +97,11 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private Label generationLabel;
     private Label foodSupplyLabel;
     private Label mouseLabel;
+    private Label creatureIdLabel;
+    private Label creatureAgeLabel;
+    private Label creatureFoodLabel;
+    private Label creatureGestationLabel;
+    private Label creatureHealthLabel;
 
     // Input tracking
     private int _xDownWorld = -1;
@@ -193,41 +198,63 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
         // FPS Display
         fpsLabel = new Label("fps:", skin);
+
+        // World Stats
         populationLabel = new Label("population:", skin);
         generationLabel = new Label("generation:", skin);
         foodSupplyLabel = new Label("food:", skin);
         mouseLabel = new Label("mouse:", skin);
 
         // Layout
-        Table table = new Table();
-        table.setPosition(200, getHeight() - 150);
-        table.add(renderModeLabel).colspan(2);
-        table.add(renderModeSelectBox).maxWidth(100);
-        table.row();
-        table.add(clickModeLabel).colspan(2);
-        table.add(clickModeSelectBox).maxWidth(100);
-        table.row();
-        table.add();
-        table.add(framesPerTickTextInput);
-        table.add(ticksLabel);
-        table.row();
-        table.add(perLabel);
-        table.add(perFramesTextInput);
-        table.add(framesLabel);
-        table.row();
-        table.add(foodSpawnLabel);
-        table.add(foodSpawnTextInput);
-        table.row();
-        table.add(fpsLabel).colspan(4);
-        table.row();
-        table.add(populationLabel).colspan(4);
-        table.row();
-        table.add(generationLabel).colspan(4);
-        table.row();
-        table.add(foodSupplyLabel).colspan(4);
-        table.row();
-        table.add(mouseLabel).colspan(4);
-        stage.addActor(table);
+        Table worldTable = new Table();
+        worldTable.setPosition(200, getHeight() - 150);
+        worldTable.add(renderModeLabel).colspan(2);
+        worldTable.add(renderModeSelectBox).maxWidth(100);
+        worldTable.row();
+        worldTable.add(clickModeLabel).colspan(2);
+        worldTable.add(clickModeSelectBox).maxWidth(100);
+        worldTable.row();
+        worldTable.add();
+        worldTable.add(framesPerTickTextInput);
+        worldTable.add(ticksLabel);
+        worldTable.row();
+        worldTable.add(perLabel);
+        worldTable.add(perFramesTextInput);
+        worldTable.add(framesLabel);
+        worldTable.row();
+        worldTable.add(foodSpawnLabel);
+        worldTable.add(foodSpawnTextInput);
+        worldTable.row();
+        worldTable.add(fpsLabel).colspan(4);
+        worldTable.row();
+        worldTable.add(populationLabel).colspan(4);
+        worldTable.row();
+        worldTable.add(generationLabel).colspan(4);
+        worldTable.row();
+        worldTable.add(foodSupplyLabel).colspan(4);
+        worldTable.row();
+        worldTable.add(mouseLabel).colspan(4);
+        stage.addActor(worldTable);
+
+        // Creature Stats
+        creatureIdLabel = new Label("creature id:", skin);
+        creatureAgeLabel = new Label("age:", skin);
+        creatureFoodLabel = new Label("food:", skin);
+        creatureGestationLabel = new Label("gestation:", skin);
+        creatureHealthLabel = new Label("health:", skin);
+
+        Table creatureTable = new Table();
+        creatureTable.setPosition(200, getHeight() - 500);
+        creatureTable.add(creatureIdLabel).colspan(4);
+        creatureTable.row();
+        creatureTable.add(creatureAgeLabel).colspan(4);
+        creatureTable.row();
+        creatureTable.add(creatureFoodLabel).colspan(4);
+        creatureTable.row();
+        creatureTable.add(creatureGestationLabel).colspan(4);
+        creatureTable.row();
+        creatureTable.add(creatureHealthLabel).colspan(4);
+        stage.addActor(creatureTable);
 
         framesPerTickTextInput.setTextFieldListener(new TextFieldListener()
         {
@@ -415,6 +442,18 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         generation /= creatures.size();
         generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
         foodSupplyLabel.setText("food: " + _world.getItemCount());
+
+        for (Creature c : this._world.getCreatures())
+        {
+            if (c.getID() == _selectedCreature)
+            {
+                creatureIdLabel.setText("creature id: " + c.getID());
+                creatureAgeLabel.setText("age: " + c.getAge());
+                creatureFoodLabel.setText("food: " + c.getFood());
+                creatureGestationLabel.setText("gestation: " + c.getGestation());
+                creatureHealthLabel.setText("health: " + c.getHealth());
+            }
+        }
     }
 
     private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle)
