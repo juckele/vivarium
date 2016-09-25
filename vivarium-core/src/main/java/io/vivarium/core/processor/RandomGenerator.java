@@ -40,6 +40,12 @@ public class RandomGenerator extends Processor
         return _outputs;
     }
 
+    @Override
+    public double[] outputs()
+    {
+        return _outputs;
+    }
+
     public static Processor makeUninitialized()
     {
         return new RandomGenerator();

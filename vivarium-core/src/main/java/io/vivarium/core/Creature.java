@@ -351,6 +351,11 @@ public class Creature extends VivariumObject
         return (_fetus);
     }
 
+    public double[] getInputs()
+    {
+        return _inputs;
+    }
+
     public Processor[] getProcessors()
     {
         return (_processors);
