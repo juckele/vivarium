@@ -21,8 +21,8 @@ public class Compass extends Sensor
     {
         Direction sensorDirection = creature.getFacing();
 
-        inputs[index++] = Direction.getVerticalComponent(sensorDirection);
-        inputs[index++] = Direction.getHorizontalComponent(sensorDirection);
+        inputs[index++] = Direction.getVerticalComponent(sensorDirection) / 2.0 + 0.5;
+        inputs[index++] = Direction.getHorizontalComponent(sensorDirection) / 2.0 + 0.5;
     }
 
     @Override
