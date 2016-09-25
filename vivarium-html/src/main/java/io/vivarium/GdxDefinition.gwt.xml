@@ -11,6 +11,7 @@
   <!-- For GWT side serialization/copying                         -->
   <inherits name="com.googlecode.gwtstreamer.GWTStreamer"/>
   <!-- For GWT Guava                                              -->
+  <inherits name="com.google.common.collect.Collect"/>
   <inherits name="com.google.common.io.Io"/>
 
   <!-- Configuration for GWT Jackson support                      -->
