@@ -3,6 +3,7 @@ package io.vivarium.core;
 import java.util.ArrayList;
 
 import io.vivarium.audit.AuditBlueprint;
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -13,6 +14,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class WorldBlueprint extends VivariumObject
 {
+    static
+    {
+        ClassRegistry.getInstance().register(WorldBlueprint.class);
+    }
+
     // World Generation
     @SerializedParameter
     private int _width = 25;

@@ -15,31 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import io.vivarium.audit.ActionFrequencyBlueprint;
-import io.vivarium.audit.ActionFrequencyRecord;
-import io.vivarium.audit.BreedingPatternBlueprint;
-import io.vivarium.audit.BreedingPatternRecord;
-import io.vivarium.audit.CensusBlueprint;
-import io.vivarium.audit.CensusRecord;
-import io.vivarium.core.Creature;
-import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.World;
-import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.processor.DecisionTree;
-import io.vivarium.core.processor.DecisionTreeBlueprint;
-import io.vivarium.core.processor.Multiplexer;
-import io.vivarium.core.processor.NeuralNetwork;
-import io.vivarium.core.processor.NeuralNetworkBlueprint;
-import io.vivarium.core.processor.RandomGenerator;
-import io.vivarium.core.processor.RandomGeneratorBlueprint;
-import io.vivarium.core.sensor.Compass;
-import io.vivarium.core.sensor.CreatureRadar;
-import io.vivarium.core.sensor.EnergySensor;
-import io.vivarium.core.sensor.FoodRadar;
-import io.vivarium.core.sensor.GenderRadar;
-import io.vivarium.core.sensor.GestationSensor;
-import io.vivarium.core.sensor.HealthSensor;
-import io.vivarium.core.sensor.PathableRadar;
 import io.vivarium.util.UUID;
 
 public class SerializationEngine
@@ -95,111 +70,8 @@ public class SerializationEngine
     {
         try
         {
-            Constructor<?> constructor;
-            if (clazzName.equals(NeuralNetworkBlueprint.class.getSimpleName()))
-            {
-                constructor = NeuralNetworkBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(DecisionTreeBlueprint.class.getSimpleName()))
-            {
-                constructor = DecisionTreeBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(RandomGeneratorBlueprint.class.getSimpleName()))
-            {
-                constructor = RandomGeneratorBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(CreatureBlueprint.class.getSimpleName()))
-            {
-                constructor = CreatureBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(WorldBlueprint.class.getSimpleName()))
-            {
-                constructor = WorldBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(DecisionTree.class.getSimpleName()))
-            {
-                constructor = DecisionTree.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(NeuralNetwork.class.getSimpleName()))
-            {
-                constructor = NeuralNetwork.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(RandomGenerator.class.getSimpleName()))
-            {
-                constructor = RandomGenerator.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(Creature.class.getSimpleName()))
-            {
-                constructor = Creature.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(World.class.getSimpleName()))
-            {
-                constructor = World.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(CensusBlueprint.class.getSimpleName()))
-            {
-                constructor = CensusBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(Multiplexer.class.getSimpleName()))
-            {
-                constructor = Multiplexer.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(CensusRecord.class.getSimpleName()))
-            {
-                constructor = CensusRecord.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(ActionFrequencyBlueprint.class.getSimpleName()))
-            {
-                constructor = ActionFrequencyBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(ActionFrequencyRecord.class.getSimpleName()))
-            {
-                constructor = ActionFrequencyRecord.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(BreedingPatternBlueprint.class.getSimpleName()))
-            {
-                constructor = BreedingPatternBlueprint.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(BreedingPatternRecord.class.getSimpleName()))
-            {
-                constructor = BreedingPatternRecord.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(Compass.class.getSimpleName()))
-            {
-                constructor = Compass.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(CreatureRadar.class.getSimpleName()))
-            {
-                constructor = CreatureRadar.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(EnergySensor.class.getSimpleName()))
-            {
-                constructor = EnergySensor.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(FoodRadar.class.getSimpleName()))
-            {
-                constructor = FoodRadar.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(GenderRadar.class.getSimpleName()))
-            {
-                constructor = GenderRadar.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(GestationSensor.class.getSimpleName()))
-            {
-                constructor = GestationSensor.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(HealthSensor.class.getSimpleName()))
-            {
-                constructor = HealthSensor.class.getDeclaredConstructor();
-            }
-            else if (clazzName.equals(PathableRadar.class.getSimpleName()))
-            {
-                constructor = PathableRadar.class.getDeclaredConstructor();
-            }
-            else
-            {
-                throw new UnsupportedOperationException("Cannot deserialize class " + clazzName);
-            }
+            Class<? extends VivariumObject> clazz = ClassRegistry.getInstance().getClassNamed(clazzName);
+            Constructor<?> constructor = clazz.getDeclaredConstructor();
             constructor.setAccessible(true);
             return (VivariumObject) constructor.newInstance();
         }

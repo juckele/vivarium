@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.World;
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -13,6 +14,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class CensusRecord extends AuditRecord
 {
+    static
+    {
+        ClassRegistry.getInstance().register(CensusRecord.class);
+    }
+
     @SerializedParameter
     private AuditBlueprint _auditBlueprint;
 

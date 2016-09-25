@@ -1,5 +1,6 @@
 package io.vivarium.core.processor;
 
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Rand;
 import lombok.EqualsAndHashCode;
@@ -10,6 +11,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class DecisionTree extends Processor
 {
+    static
+    {
+        ClassRegistry.getInstance().register(DecisionTree.class);
+    }
+
     @SerializedParameter
     private int _inputCount;
     @SerializedParameter

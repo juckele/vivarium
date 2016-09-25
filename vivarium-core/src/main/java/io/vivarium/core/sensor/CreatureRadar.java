@@ -1,6 +1,7 @@
 package io.vivarium.core.sensor;
 
 import io.vivarium.core.World;
+import io.vivarium.serialization.ClassRegistry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -9,6 +10,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class CreatureRadar extends Radar
 {
+    static
+    {
+        ClassRegistry.getInstance().register(CreatureRadar.class);
+    }
+
     private CreatureRadar()
     {
         super(0, 0, 0, 0);

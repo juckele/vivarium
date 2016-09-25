@@ -1,5 +1,6 @@
 package io.vivarium.core.processor;
 
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -10,6 +11,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class Multiplexer extends VivariumObject
 {
+    static
+    {
+        ClassRegistry.getInstance().register(Multiplexer.class);
+    }
+
     private static final int MULTIPLEXER_INPUT = -1;
 
     @SerializedParameter

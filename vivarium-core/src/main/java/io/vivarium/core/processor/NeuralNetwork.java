@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.google.common.base.Preconditions;
 
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Functions;
 import io.vivarium.util.Rand;
@@ -16,6 +17,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class NeuralNetwork extends Processor
 {
+    static
+    {
+        ClassRegistry.getInstance().register(NeuralNetwork.class);
+    }
+
     // Weights represents all the weights in the neural network
     // weight[i][j][k] corresponds to the weight of the connection
     // for the jth node in the layer coming from the kth node in

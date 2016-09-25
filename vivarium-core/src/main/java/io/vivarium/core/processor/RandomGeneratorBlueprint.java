@@ -1,5 +1,6 @@
 package io.vivarium.core.processor;
 
+import io.vivarium.serialization.ClassRegistry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -8,6 +9,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class RandomGeneratorBlueprint extends ProcessorBlueprint
 {
+    static
+    {
+        ClassRegistry.getInstance().register(RandomGeneratorBlueprint.class);
+    }
+
     private RandomGeneratorBlueprint()
     {
         super(0, 0);

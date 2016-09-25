@@ -10,6 +10,7 @@ import io.vivarium.core.sensor.GenderRadar;
 import io.vivarium.core.sensor.HealthSensor;
 import io.vivarium.core.sensor.PathableRadar;
 import io.vivarium.core.sensor.Sensor;
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -20,6 +21,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class CreatureBlueprint extends VivariumObject
 {
+    static
+    {
+        ClassRegistry.getInstance().register(CreatureBlueprint.class);
+    }
+
     // Physical traits
     @SerializedParameter
     private double _femaleProportion = 0.6;

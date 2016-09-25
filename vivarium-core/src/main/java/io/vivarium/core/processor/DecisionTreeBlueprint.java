@@ -1,5 +1,6 @@
 package io.vivarium.core.processor;
 
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -9,6 +10,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class DecisionTreeBlueprint extends ProcessorBlueprint
 {
+    static
+    {
+        ClassRegistry.getInstance().register(DecisionTreeBlueprint.class);
+    }
+
     // Mutation
     @SerializedParameter
     private double _mutationRateExponent = -7;

@@ -1,5 +1,6 @@
 package io.vivarium.core.processor;
 
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.util.Rand;
 import lombok.EqualsAndHashCode;
@@ -10,6 +11,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class RandomGenerator extends Processor
 {
+    static
+    {
+        ClassRegistry.getInstance().register(RandomGenerator.class);
+    }
+
     @SerializedParameter
     private double[] _outputs;
 

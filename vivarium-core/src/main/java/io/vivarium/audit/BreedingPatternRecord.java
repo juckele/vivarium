@@ -5,6 +5,7 @@ import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.Direction;
 import io.vivarium.core.World;
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -14,6 +15,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class BreedingPatternRecord extends AuditRecord
 {
+    static
+    {
+        ClassRegistry.getInstance().register(BreedingPatternRecord.class);
+    }
+
     // The action tally is a 4x dimensional counter of breeding actions.
     // index 1 generation (numeric, index is generation-1)
     // index 2 gender of 'first' partner (0 is male, 1 is female, 2 is pregnant female)

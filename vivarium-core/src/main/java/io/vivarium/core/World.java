@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.AuditRecord;
 import io.vivarium.core.WorldPopulator.EntityType;
+import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Rand;
@@ -19,6 +20,11 @@ import lombok.ToString;
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
 public class World extends VivariumObject
 {
+    static
+    {
+        ClassRegistry.getInstance().register(World.class);
+    }
+
     @SerializedParameter
     private int _maximumCreatureID;
     @SerializedParameter
