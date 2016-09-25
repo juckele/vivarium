@@ -48,7 +48,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private int framesSinceTick = 0;
     private boolean _enableInterpolation = false;
     private Map<Integer, CreatureDelegate> _animationCreatureDelegates = new HashMap<>();
-    private int _selectedCreature = 42;
+    private Creature _selectedCreature;
 
     // Low Level Graphics information
     private SpriteBatch _batch;
@@ -121,6 +121,13 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
         _world = new World(_blueprint);
+
+        // Start with selected creature
+        LinkedList<Creature> creatures = _world.getCreatures();
+        if (creatures.size() > 41)
+        {
+            _selectedCreature = creatures.get(41);
+        }
 
         // Setup Input Listeners
         Gdx.input.setInputProcessor(this);
@@ -443,16 +450,13 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
         foodSupplyLabel.setText("food: " + _world.getItemCount());
 
-        for (Creature c : this._world.getCreatures())
+        if (_selectedCreature != null)
         {
-            if (c.getID() == _selectedCreature)
-            {
-                creatureIdLabel.setText("creature id: " + c.getID());
-                creatureAgeLabel.setText("age: " + c.getAge());
-                creatureFoodLabel.setText("food: " + c.getFood());
-                creatureGestationLabel.setText("gestation: " + c.getGestation());
-                creatureHealthLabel.setText("health: " + c.getHealth());
-            }
+            creatureIdLabel.setText("creature id: " + _selectedCreature.getID());
+            creatureAgeLabel.setText("age: " + _selectedCreature.getAge());
+            creatureFoodLabel.setText("food: " + _selectedCreature.getFood());
+            creatureGestationLabel.setText("gestation: " + _selectedCreature.getGestation());
+            creatureHealthLabel.setText("health: " + _selectedCreature.getHealth());
         }
     }
 
@@ -567,7 +571,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         VivariumSprite creatureSprite = getCreatureSpriteFrame(interpolationFraction, creature);
         drawSprite(creatureSprite, delegate.getC(interpolationFraction), delegate.getR(interpolationFraction),
                 delegate.getRotation(interpolationFraction), scale);
-        if (creature.getID() == this._selectedCreature)
+        if (creature == _selectedCreature)
         {
             _batch.setColor(Color.WHITE);
             VivariumSprite creatureHaloSprite = getCreatureHaloSpriteFrame(interpolationFraction, creature);
@@ -784,7 +788,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 {
                     if (_world.getCreature(yUpWorld, xUpWorld) != null)
                     {
-                        this._selectedCreature = _world.getCreature(yUpWorld, xUpWorld).getID();
+                        this._selectedCreature = _world.getCreature(yUpWorld, xUpWorld);
                     }
                     this._xDownWorld = -1;
                     this._yDownWorld = -1;
