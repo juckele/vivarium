@@ -19,7 +19,7 @@ public abstract class Sensor extends VivariumObject
     {
     }
 
-    public Sensor(int sensorInputCount)
+    protected Sensor(int sensorInputCount)
     {
         _sensorInputCount = sensorInputCount;
     }

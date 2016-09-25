@@ -204,6 +204,12 @@ public class NeuralNetwork extends Processor
         return (_outputs);
     }
 
+    @Override
+    public double[] outputs()
+    {
+        return _outputs;
+    }
+
     @SerializedParameter
     private int _hiddenLayerCount = 0;
 

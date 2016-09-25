@@ -116,6 +116,12 @@ public class DecisionTree extends Processor
         return _outputs;
     }
 
+    @Override
+    public double[] outputs()
+    {
+        return _outputs;
+    }
+
     private void zeroOutputs()
     {
         for (int i = 0; i < _outputs.length; i++)

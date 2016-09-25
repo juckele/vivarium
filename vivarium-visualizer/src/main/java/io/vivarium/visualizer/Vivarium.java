@@ -14,6 +14,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -34,6 +36,7 @@ import io.vivarium.core.ItemType;
 import io.vivarium.core.TerrainType;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.Processor;
 
 public class Vivarium extends ApplicationAdapter implements InputProcessor
 {
@@ -116,7 +119,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     {
         // Create simulation
         _blueprint = WorldBlueprint.makeDefault();
-        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault(3, 0, 3);
+        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault(3, 0, 2);
         _blueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
@@ -345,6 +348,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _batch.end();
 
         setLabels();
+        drawCreatureMultiplexer();
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
 
@@ -360,6 +364,36 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
 
         mouseBrush();
+    }
+
+    private void drawCreatureMultiplexer()
+    {
+        if (_selectedCreature != null)
+        {
+            ShapeRenderer sr = new ShapeRenderer();
+            sr.begin(ShapeType.Filled);
+            for (int j = 0; j < _selectedCreature.getInputs().length; j++)
+            {
+                drawMultiplexerCell(sr, 0, j, (float) _selectedCreature.getInputs()[j]);
+            }
+            for (int i = 0; i < _selectedCreature.getProcessors().length; i++)
+            {
+                Processor p = _selectedCreature.getProcessors()[i];
+                for (int j = 0; j < p.outputs().length; j++)
+                {
+                    drawMultiplexerCell(sr, i + 1, j, (float) p.outputs()[j]);
+                }
+            }
+            sr.end();
+        }
+    }
+
+    private void drawMultiplexerCell(ShapeRenderer sr, int x, int y, float color)
+    {
+        sr.setColor(Color.WHITE);
+        sr.rect(50 + x * 10, 500 - y * 10, 9, 9);
+        sr.setColor(color, color, color, 1);
+        sr.rect(51 + x * 10, 501 - y * 10, 7, 7);
     }
 
     private void mouseBrush()

@@ -18,9 +18,16 @@ public abstract class Processor extends VivariumObject
      * visibility to the mapping world state to inputs or from outputs to actions.
      *
      * @param inputs
-     * @return outputsS
+     * @return outputs
      */
     public abstract double[] outputs(double[] inputs);
+
+    /**
+     * Returns the last computed outputs.
+     *
+     * @return outputs
+     */
+    public abstract double[] outputs();
 
     public abstract int getInputCount();
 
@@ -30,4 +37,5 @@ public abstract class Processor extends VivariumObject
     public void finalizeSerialization()
     {
     }
+
 }
