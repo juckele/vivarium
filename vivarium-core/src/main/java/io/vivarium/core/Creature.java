@@ -261,38 +261,37 @@ public class Creature extends VivariumObject
                 inputIndex += sensor.sense(w, _inputs, inputIndex, r, c, this);
             }
             // Read memory units
-            System.arraycopy(_memoryUnits, 0, _inputs, _creatureBlueprint.getHardProcessorInputs() - 1,
+            System.arraycopy(_memoryUnits, 0, _inputs, _creatureBlueprint.getHardProcessorInputs(),
                     this._memoryUnits.length);
             // Read sound inputs
             for (int i = 0; i < this.getBlueprint().getSoundChannelCount(); i++)
             {
-                _inputs[_creatureBlueprint.getHardProcessorInputs() - 1 + this._memoryUnits.length
-                        + i] = _soundInputs[i];
+                _inputs[_creatureBlueprint.getHardProcessorInputs() + this._memoryUnits.length + i] = _soundInputs[i];
             }
             // Read sign inputs
             for (int i = 0; i < this.getBlueprint().getSignChannelCount(); i++)
             {
-                _inputs[_creatureBlueprint.getHardProcessorInputs() - 1 + this._memoryUnits.length
+                _inputs[_creatureBlueprint.getHardProcessorInputs() + this._memoryUnits.length
                         + this._soundInputs.length + i] = _signInputs[i];
             }
             // Main processor computation
             double[] outputs = this._creatureBlueprint.getMultiplexer().outputs(_inputs, _processors);
             // Save memory units
-            System.arraycopy(outputs, _creatureBlueprint.getHardProcessorOutputs() - 1, _memoryUnits, 0,
+            System.arraycopy(outputs, _creatureBlueprint.getHardProcessorOutputs(), _memoryUnits, 0,
                     this._memoryUnits.length);
             // Clear the sound inputs and set the sound outputs
             for (int i = 0; i < _creatureBlueprint.getSoundChannelCount(); i++)
             {
                 this._soundInputs[i] = 0;
-                this._soundOutputs[i] = outputs[_creatureBlueprint.getHardProcessorOutputs() - 1
-                        + this._memoryUnits.length + i];
+                this._soundOutputs[i] = outputs[_creatureBlueprint.getHardProcessorOutputs() + this._memoryUnits.length
+                        + i];
             }
             // Clear the sign inputs and set the sign outputs
             for (int i = 0; i < this.getBlueprint().getSignChannelCount(); i++)
             {
                 this._signInputs[i] = 0;
-                this._signOutputs[i] = outputs[_creatureBlueprint.getHardProcessorOutputs() - 1
-                        + this._memoryUnits.length + this._soundInputs.length + i];
+                this._signOutputs[i] = outputs[_creatureBlueprint.getHardProcessorOutputs() + this._memoryUnits.length
+                        + this._soundInputs.length + i];
             }
             // Hard coded outputs (actionable outputs)
             int maxActionOutput = 0;

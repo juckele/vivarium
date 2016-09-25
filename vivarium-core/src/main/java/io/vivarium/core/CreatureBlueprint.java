@@ -186,10 +186,10 @@ public class CreatureBlueprint extends VivariumObject
     private static Sensor[] defaultSensors()
     {
         Sensor[] sensors = new Sensor[7];
-        sensors[0] = new GenderRadar(-3, -3, 3, 3);
-        sensors[1] = new FoodRadar(-3, -3, 3, 3);
-        sensors[2] = new CreatureRadar(-3, -3, 3, 3);
-        sensors[3] = new PathableRadar(-3, -3, 3, 3);
+        sensors[0] = new GenderRadar(0, 0, 0, 0);
+        sensors[1] = new FoodRadar(0, 1, 0, 0);
+        sensors[2] = new CreatureRadar(1, 1, 0, 0);
+        sensors[3] = new PathableRadar(1, 1, 0, 0);
         sensors[4] = new EnergySensor();
         sensors[5] = new HealthSensor();
         sensors[6] = new Compass();
@@ -211,11 +211,11 @@ public class CreatureBlueprint extends VivariumObject
         {
             s._sensorInputCount += sensor.getSensorInputCount();
         }
-        int midCount = Math.max(s.getMultiplexerInputCount(), s.getMultiplexerOutputCount());
+        s._memoryUnitCount = memoryCount;
+        s._soundChannelCount = soundChannelCount;
+        s._signChannelCount = signChannelCount;
         s._processorBlueprints = new ProcessorBlueprint[] {
-                ProcessorBlueprint.makeDefault(s.getMultiplexerInputCount(), midCount),
-                ProcessorBlueprint.makeDefault(midCount, midCount),
-                ProcessorBlueprint.makeDefault(midCount, s.getMultiplexerOutputCount()) };
+                ProcessorBlueprint.makeDefault(s.getMultiplexerInputCount(), s.getMultiplexerOutputCount()) };
         s._multiplexer = Multiplexer.makeWithSequentialProcessors(s.getMultiplexerInputCount(),
                 s.getMultiplexerOutputCount(), s._processorBlueprints);
         return s;
