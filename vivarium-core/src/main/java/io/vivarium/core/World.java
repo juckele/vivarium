@@ -45,6 +45,8 @@ public class World extends VivariumObject
 
     @SerializedParameter
     private WorldBlueprint _worldBlueprint;
+    @SerializedParameter
+    private DynamicBalancer _balancer;
 
     protected World()
     {
@@ -178,6 +180,12 @@ public class World extends VivariumObject
 
         // Record with audit records
         performAudits();
+
+        // Run balancer if it's present
+        if (this._balancer != null)
+        {
+            _balancer.balance(this);
+        }
     }
 
     private void tickCreatures()
@@ -520,6 +528,16 @@ public class World extends VivariumObject
     public WorldBlueprint getBlueprint()
     {
         return this._worldBlueprint;
+    }
+
+    public DynamicBalancer getDynamicBalancer()
+    {
+        return this._balancer;
+    }
+
+    public void setDynamicBalancer(DynamicBalancer balancer)
+    {
+        this._balancer = balancer;
     }
 
     public LinkedList<Creature> getCreatures()

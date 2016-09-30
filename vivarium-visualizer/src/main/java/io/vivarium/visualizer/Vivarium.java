@@ -32,6 +32,7 @@ import com.google.common.collect.Lists;
 import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
+import io.vivarium.core.DynamicBalancer;
 import io.vivarium.core.ItemType;
 import io.vivarium.core.TerrainType;
 import io.vivarium.core.World;
@@ -99,7 +100,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private Label populationLabel;
     private Label generationLabel;
     private Label foodSupplyLabel;
-    private Label mouseLabel;
+    private Label foodSpawnRateLabel;
+    private Label breedingCostLabel;
     private Label creatureIdLabel;
     private Label creatureAgeLabel;
     private Label creatureFoodLabel;
@@ -124,6 +126,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
         _world = new World(_blueprint);
+        _world.setDynamicBalancer(DynamicBalancer.makeDefault());
 
         // Start with selected creature
         LinkedList<Creature> creatures = _world.getCreatures();
@@ -213,7 +216,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         populationLabel = new Label("population:", skin);
         generationLabel = new Label("generation:", skin);
         foodSupplyLabel = new Label("food:", skin);
-        mouseLabel = new Label("mouse:", skin);
+        foodSpawnRateLabel = new Label("food spawn rate:", skin);
+        breedingCostLabel = new Label("breeding cost:", skin);
 
         // Layout
         Table worldTable = new Table();
@@ -243,7 +247,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         worldTable.row();
         worldTable.add(foodSupplyLabel).colspan(4);
         worldTable.row();
-        worldTable.add(mouseLabel).colspan(4);
+        worldTable.add(foodSpawnRateLabel).colspan(4);
+        worldTable.row();
+        worldTable.add(breedingCostLabel).colspan(4);
         stage.addActor(worldTable);
 
         // Creature Stats
@@ -483,6 +489,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         generation /= creatures.size();
         generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
         foodSupplyLabel.setText("food: " + _world.getItemCount());
+        foodSpawnRateLabel.setText("food spawn rate: " + _world.getBlueprint().getFoodGenerationProbability());
+        breedingCostLabel.setText(
+                "breeding cost: " + (-1 * _world.getBlueprint().getCreatureBlueprints().get(0).getBreedingFoodRate()));
 
         if (_selectedCreature != null)
         {
