@@ -37,6 +37,7 @@ import io.vivarium.core.ItemType;
 import io.vivarium.core.TerrainType;
 import io.vivarium.core.World;
 import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.Processor;
 
 public class Vivarium extends ApplicationAdapter implements InputProcessor
@@ -122,6 +123,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         // Create simulation
         _blueprint = WorldBlueprint.makeDefault();
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault(3, 0, 2);
+        NeuralNetworkBlueprint nnBlueprint = (NeuralNetworkBlueprint) creatureBlueprint.getProcessorBlueprints()[0];
+        nnBlueprint.setRandomInitializationProportion(0.1);
+        nnBlueprint.setMutationRateExponent(-10);
         _blueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);

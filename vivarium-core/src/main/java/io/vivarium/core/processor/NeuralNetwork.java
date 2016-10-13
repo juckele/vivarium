@@ -40,15 +40,15 @@ public class NeuralNetwork extends Processor
     {
     }
 
-    public NeuralNetwork(int inputCount, int outputCount, boolean randomInitialization, double normalizedLength)
+    public NeuralNetwork(int inputCount, int outputCount, double randomizationProportion, double normalizedLength)
     {
         super();
         Preconditions.checkArgument(inputCount > 0);
         Preconditions.checkArgument(outputCount > 0);
-        constructWithDimensions(inputCount, outputCount, randomInitialization, normalizedLength);
+        constructWithDimensions(inputCount, outputCount, randomizationProportion, normalizedLength);
     }
 
-    private void constructWithDimensions(int inputCount, int outputCount, boolean randomInitialization,
+    private void constructWithDimensions(int inputCount, int outputCount, double randomizationProportion,
             double normalizedLength)
     {
         this._outputs = new double[outputCount];
@@ -57,7 +57,8 @@ public class NeuralNetwork extends Processor
         {
             for (int j = 0; j < _weights[i].length; j++)
             {
-                _weights[i][j] = randomInitialization ? Rand.getInstance().getRandomDouble() : 1;
+                _weights[i][j] = randomizationProportion * Rand.getInstance().getRandomDouble()
+                        + (1 - randomizationProportion);
             }
         }
         if (normalizedLength != 0)
@@ -70,7 +71,7 @@ public class NeuralNetwork extends Processor
     {
         // Construct the weight layer and store variables with the int based
         // constructor
-        this(processor1.getInputCount(), processor1.getOutputCount(), false,
+        this(processor1.getInputCount(), processor1.getOutputCount(), 0,
                 processorBlueprint.getNormalizeAfterMutation());
 
         // Set all the weights with
@@ -238,7 +239,7 @@ public class NeuralNetwork extends Processor
 
     public static void main(String[] args)
     {
-        NeuralNetwork processor = new NeuralNetwork(3, 10, false, 0);
+        NeuralNetwork processor = new NeuralNetwork(3, 10, 0, 0);
         System.out.println("Creating Processor...");
         System.out.println(processor);
         System.out.println("Processor Outputs for inputs");
@@ -260,7 +261,7 @@ public class NeuralNetwork extends Processor
     public static NeuralNetwork minProcessor(List<NeuralNetwork> processors)
     {
         NeuralNetwork minProcessor = new NeuralNetwork(processors.get(0).getInputCount(),
-                processors.get(0).getOutputCount(), false, 0);
+                processors.get(0).getOutputCount(), 0, 0);
         // Set all the weights with
         for (NeuralNetwork processor : processors)
         {
@@ -279,7 +280,7 @@ public class NeuralNetwork extends Processor
     public static NeuralNetwork maxProcessor(List<NeuralNetwork> processors)
     {
         NeuralNetwork maxProcessor = new NeuralNetwork(processors.get(0).getInputCount(),
-                processors.get(0).getOutputCount(), false, 0);
+                processors.get(0).getOutputCount(), 0, 0);
         // Set all the weights with
         for (NeuralNetwork processor : processors)
         {
@@ -297,7 +298,7 @@ public class NeuralNetwork extends Processor
     public static NeuralNetwork medianProcessor(List<NeuralNetwork> processors)
     {
         NeuralNetwork medianProcessor = new NeuralNetwork(processors.get(0).getInputCount(),
-                processors.get(0).getOutputCount(), false, 0);
+                processors.get(0).getOutputCount(), 0, 0);
         // Set all the weights with
         for (int i = 0; i < medianProcessor._weights.length; i++)
         {
@@ -331,7 +332,7 @@ public class NeuralNetwork extends Processor
             NeuralNetwork medianProcessor)
     {
         NeuralNetwork standardDeviationProcessor = new NeuralNetwork(medianProcessor.getInputCount(),
-                medianProcessor.getOutputCount(), false, 0);
+                medianProcessor.getOutputCount(), 0, 0);
         for (int i = 0; i < standardDeviationProcessor._weights.length; i++)
         {
             for (int j = 0; j < standardDeviationProcessor._weights[i].length; j++)
@@ -370,6 +371,6 @@ public class NeuralNetwork extends Processor
     public static NeuralNetwork makeWithProcessorBlueprint(NeuralNetworkBlueprint processorBlueprint)
     {
         return new NeuralNetwork(processorBlueprint.getInputCount(), processorBlueprint.getOutputCount(),
-                processorBlueprint.getRandomInitialization(), processorBlueprint.getNormalizeAfterMutation());
+                processorBlueprint.getRandomInitializationProportion(), processorBlueprint.getNormalizeAfterMutation());
     }
 }

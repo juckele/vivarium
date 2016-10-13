@@ -19,7 +19,7 @@ public abstract class ProcessorBlueprint extends VivariumObject
 
     // Initialization
     @SerializedParameter
-    private boolean _randomInitialization = false;
+    private double _randomInitializationProportion = 0;
 
     @SuppressWarnings("unused")
     private ProcessorBlueprint()
@@ -46,14 +46,14 @@ public abstract class ProcessorBlueprint extends VivariumObject
         this._processorType = type;
     }
 
-    public void setRandomInitialization(boolean b)
+    public void setRandomInitializationProportion(double d)
     {
-        this._randomInitialization = b;
+        this._randomInitializationProportion = d;
     }
 
-    public boolean getRandomInitialization()
+    public double getRandomInitializationProportion()
     {
-        return this._randomInitialization;
+        return this._randomInitializationProportion;
     }
 
     public static ProcessorBlueprint makeDefault(int inputCount, int outputCount)

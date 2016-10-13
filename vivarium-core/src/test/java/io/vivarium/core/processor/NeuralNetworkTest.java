@@ -16,7 +16,7 @@ public class NeuralNetworkTest
     public void testNormalizeWeights()
     {
         double length = Math.sqrt(7 * 6);
-        NeuralNetwork nn = new NeuralNetwork(7, 6, true, length);
+        NeuralNetwork nn = new NeuralNetwork(7, 6, 1, length);
         Tester.equal("Random initialized network should match the initial target length", nn.getGenomeLength(), length,
                 0.01);
         nn.normalizeWeights(1);

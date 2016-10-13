@@ -21,7 +21,7 @@ public class NormalizationTest
         NeuralNetworkBlueprint processorBlueprint = NeuralNetworkBlueprint.makeDefault(
                 creatureBlueprint.getMultiplexerInputCount(), creatureBlueprint.getMultiplexerOutputCount());
         processorBlueprint.setNormalizeAfterMutation(Math.sqrt(42));
-        processorBlueprint.setRandomInitialization(true);
+        processorBlueprint.setRandomInitializationProportion(1);
         ProcessorBlueprint[] processorBlueprints = new ProcessorBlueprint[] { processorBlueprint };
 
         creatureBlueprint.setProcessorBlueprints(processorBlueprints);
