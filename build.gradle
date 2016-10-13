@@ -78,7 +78,7 @@ subprojects {
     dependencies {
         testCompile "com.johnuckele:vtest:0.9.5"
         testCompile "junit:junit:4.+"
-        testCompile "org.mockito:mockito-core:1.+"
+        testCompile "org.mockito:mockito-core:1.9.5"
     }
 
     task dbTest(type: Test) {
