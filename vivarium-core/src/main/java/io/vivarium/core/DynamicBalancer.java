@@ -3,6 +3,7 @@ package io.vivarium.core;
 import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
+import io.vivarium.util.Rand;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -21,11 +22,11 @@ public class DynamicBalancer extends VivariumObject
     @SerializedParameter
     private int _timePeriod = 2_000;
     @SerializedParameter
-    private int _safePopulation = 150;
+    private int _safePopulation = 300;
     @SerializedParameter
     private double _minimumFoodGenerationProbability = 0.002;
     @SerializedParameter
-    private int _minimumBreedingFoodRate = -800;
+    private int _minimumBreedingFoodRate = -1500;
 
     private DynamicBalancer()
     {
@@ -39,25 +40,41 @@ public class DynamicBalancer extends VivariumObject
         {
             if (target.getTickCounter() - _timePeriod > _lastLowPopTickstamp)
             {
-                double oldFoodGenerationProbability = blueprint.getFoodGenerationProbability();
-                if (oldFoodGenerationProbability > _minimumFoodGenerationProbability)
+                double traitSelector = Rand.getInstance().getRandomPositiveDouble();
+                if (traitSelector < 0.01)
                 {
-                    double newFoodGenerationProbability = Math.max(oldFoodGenerationProbability * 0.95,
-                            _minimumFoodGenerationProbability);
-                    blueprint.setFoodGenerationProbability(newFoodGenerationProbability);
+                    // Try to lower food spawn rate
+                    double oldFoodGenerationProbability = blueprint.getFoodGenerationProbability();
+                    if (oldFoodGenerationProbability > _minimumFoodGenerationProbability)
+                    {
+                        // Lower food spawn rate
+                        double newFoodGenerationProbability = Math.max(oldFoodGenerationProbability * 0.95,
+                                _minimumFoodGenerationProbability);
+                        blueprint.setFoodGenerationProbability(newFoodGenerationProbability);
+
+                        // Reset the low tick population tracker
+                        _lastLowPopTickstamp = target.getTickCounter();
+                    }
                 }
-                else
+                else if (traitSelector < 1)
                 {
+                    // Try to raise breeding cost
                     int oldBreedingFoodRate = species.getBreedingFoodRate();
                     if (oldBreedingFoodRate > _minimumBreedingFoodRate)
                     {
+                        // Raise breeding cost
                         int newBreedingFoodRate = (int) Math.max(
                                 Math.min(oldBreedingFoodRate * 1.01, oldBreedingFoodRate - 1),
                                 _minimumBreedingFoodRate);
                         species.setBreedingFoodRate(newBreedingFoodRate);
+
+                        // Reset the low tick population tracker
+                        _lastLowPopTickstamp = target.getTickCounter();
                     }
                 }
-                _lastLowPopTickstamp = target.getTickCounter();
+                else
+                {
+                }
             }
         }
         else
