@@ -42,8 +42,9 @@ import io.vivarium.core.processor.Processor;
 
 public class Vivarium extends ApplicationAdapter implements InputProcessor
 {
-    private static final int SIZE = 30;
-    private static final int BLOCK_SIZE = 32;
+    private static final int SIZE = 60;
+    private static final int RENDER_BLOCK_SIZE = 16;
+    private static final int SOURCE_BLOCK_SIZE = 32;
 
     // Simulation information
     private WorldBlueprint _blueprint;
@@ -129,6 +130,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _blueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
+        _blueprint.setInitialWallGenerationProbability(0);
         _world = new World(_blueprint);
         _world.setDynamicBalancer(DynamicBalancer.makeDefault());
 
@@ -514,17 +516,17 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle, float scale)
     {
-        float x = SIZE / 2 * BLOCK_SIZE + xPos * BLOCK_SIZE;
-        float y = getHeight() - yPos * BLOCK_SIZE - BLOCK_SIZE;
-        float originX = BLOCK_SIZE / 2;
-        float originY = BLOCK_SIZE / 2;
-        float width = BLOCK_SIZE;
-        float height = BLOCK_SIZE;
+        float x = SIZE / 2 * RENDER_BLOCK_SIZE + xPos * RENDER_BLOCK_SIZE;
+        float y = getHeight() - yPos * RENDER_BLOCK_SIZE - RENDER_BLOCK_SIZE;
+        float originX = RENDER_BLOCK_SIZE / 2;
+        float originY = RENDER_BLOCK_SIZE / 2;
+        float width = RENDER_BLOCK_SIZE;
+        float height = RENDER_BLOCK_SIZE;
         float rotation = angle; // In degrees
-        int srcX = sprite.x * BLOCK_SIZE;
-        int srcY = sprite.y * BLOCK_SIZE;
-        int srcW = BLOCK_SIZE;
-        int srcH = BLOCK_SIZE;
+        int srcX = sprite.x * SOURCE_BLOCK_SIZE;
+        int srcY = sprite.y * SOURCE_BLOCK_SIZE;
+        int srcW = SOURCE_BLOCK_SIZE;
+        int srcH = SOURCE_BLOCK_SIZE;
         boolean flipX = false;
         boolean flipY = false;
         _batch.draw(_img, x, y, originX, originY, width, height, scale, scale, rotation, srcX, srcY, srcW, srcH, flipX,
@@ -773,12 +775,12 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     public static int getHeight()
     {
-        return SIZE * BLOCK_SIZE;
+        return SIZE * RENDER_BLOCK_SIZE;
     }
 
     public static int getWidth()
     {
-        return SIZE * BLOCK_SIZE;
+        return SIZE * RENDER_BLOCK_SIZE;
     }
 
     @Override
@@ -807,10 +809,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     {
         stage.touchDown(screenX, screenY, pointer, button);
 
-        if (screenX > SIZE / 2 * BLOCK_SIZE)
+        if (screenX > SIZE / 2 * RENDER_BLOCK_SIZE)
         {
-            this._xDownWorld = (screenX - SIZE / 2 * BLOCK_SIZE) / BLOCK_SIZE;
-            this._yDownWorld = screenY / BLOCK_SIZE;
+            this._xDownWorld = (screenX - SIZE / 2 * RENDER_BLOCK_SIZE) / RENDER_BLOCK_SIZE;
+            this._yDownWorld = screenY / RENDER_BLOCK_SIZE;
         }
         else
         {
@@ -825,10 +827,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     {
         stage.touchUp(screenX, screenY, pointer, button);
 
-        if (screenX > SIZE / 2 * BLOCK_SIZE)
+        if (screenX > SIZE / 2 * RENDER_BLOCK_SIZE)
         {
-            int xUpWorld = (screenX - SIZE / 2 * BLOCK_SIZE) / BLOCK_SIZE;
-            int yUpWorld = screenY / BLOCK_SIZE;
+            int xUpWorld = (screenX - SIZE / 2 * RENDER_BLOCK_SIZE) / RENDER_BLOCK_SIZE;
+            int yUpWorld = screenY / RENDER_BLOCK_SIZE;
             if (_xDownWorld == xUpWorld && _yDownWorld == yUpWorld)
             {
                 if (_mouseClickMode == MouseClickMode.SELECT_CREATURE)
@@ -849,10 +851,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
         stage.touchDragged(screenX, screenY, pointer);
-        if (screenX > SIZE / 2 * BLOCK_SIZE)
+        if (screenX > SIZE / 2 * RENDER_BLOCK_SIZE)
         {
-            int xDragWorld = (screenX - SIZE / 2 * BLOCK_SIZE) / BLOCK_SIZE;
-            int yDragWorld = screenY / BLOCK_SIZE;
+            int xDragWorld = (screenX - SIZE / 2 * RENDER_BLOCK_SIZE) / RENDER_BLOCK_SIZE;
+            int yDragWorld = screenY / RENDER_BLOCK_SIZE;
             if (this._mouseClickMode.isPaintbrushMode())
             {
                 applyMouseBrush(xDragWorld, yDragWorld);
