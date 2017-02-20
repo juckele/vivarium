@@ -42,8 +42,8 @@ import io.vivarium.core.processor.Processor;
 
 public class Vivarium extends ApplicationAdapter implements InputProcessor
 {
-    private static final int SIZE = 60;
-    private static final int RENDER_BLOCK_SIZE = 16;
+    private static final int SIZE = 30;
+    private static final int RENDER_BLOCK_SIZE = 32;
     private static final int SOURCE_BLOCK_SIZE = 32;
 
     // Simulation information
@@ -123,12 +123,13 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     {
         // Create simulation
         _blueprint = WorldBlueprint.makeDefault();
-        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault(3, 0, 2);
+        CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault(0, 0, 0);
         NeuralNetworkBlueprint nnBlueprint = (NeuralNetworkBlueprint) creatureBlueprint.getProcessorBlueprints()[0];
-        nnBlueprint.setRandomInitializationProportion(0.1);
-        nnBlueprint.setMutationRateExponent(-10);
+        // nnBlueprint.setRandomInitializationProportion(1);
+        nnBlueprint.setMutationRateExponent(-6);
+        nnBlueprint.setNormalizeAfterMutation(0);
         _blueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
-        _blueprint.setSignEnabled(true);
+        // _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
         _blueprint.setInitialWallGenerationProbability(0);
         _world = new World(_blueprint);
