@@ -33,10 +33,10 @@ import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.DynamicBalancer;
-import io.vivarium.core.ItemType;
-import io.vivarium.core.TerrainType;
 import io.vivarium.core.GridWorld;
 import io.vivarium.core.GridWorldBlueprint;
+import io.vivarium.core.ItemType;
+import io.vivarium.core.TerrainType;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.Processor;
 
@@ -47,8 +47,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private static final int SOURCE_BLOCK_SIZE = 32;
 
     // Simulation information
-    private GridWorldBlueprint _blueprint;
-    private GridWorld _world;
+    private GridWorldBlueprint _gridWorldBlueprint;
+    private GridWorld _gridWorld;
 
     // Simulation + Animation
     private int framesSinceTick = 0;
@@ -122,21 +122,21 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     public void create()
     {
         // Create simulation
-        _blueprint = GridWorldBlueprint.makeDefault();
+        _gridWorldBlueprint = GridWorldBlueprint.makeDefault();
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault(0, 0, 0);
         NeuralNetworkBlueprint nnBlueprint = (NeuralNetworkBlueprint) creatureBlueprint.getProcessorBlueprints()[0];
         // nnBlueprint.setRandomInitializationProportion(1);
         nnBlueprint.setMutationRateExponent(-6);
         nnBlueprint.setNormalizeAfterMutation(0);
-        _blueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
+        _gridWorldBlueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         // _blueprint.setSignEnabled(true);
-        _blueprint.setSize(SIZE);
-        _blueprint.setInitialWallGenerationProbability(0);
-        _world = new GridWorld(_blueprint);
-        _world.setDynamicBalancer(DynamicBalancer.makeDefault());
+        _gridWorldBlueprint.setSize(SIZE);
+        _gridWorldBlueprint.setInitialWallGenerationProbability(0);
+        _gridWorld = new GridWorld(_gridWorldBlueprint);
+        _gridWorld.setDynamicBalancer(DynamicBalancer.makeDefault());
 
         // Start with selected creature
-        LinkedList<Creature> creatures = _world.getCreatures();
+        LinkedList<Creature> creatures = _gridWorld.getCreatures();
         if (creatures.size() > 41)
         {
             _selectedCreature = creatures.get(41);
@@ -173,7 +173,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         // Food Spawn Rate
         final Label foodSpawnLabel = new Label("Food Spawn", skin);
         TextField foodSpawnTextInput = new TextField("", skin);
-        foodSpawnTextInput.setMessageText("" + _blueprint.getFoodGenerationProbability());
+        foodSpawnTextInput.setMessageText("" + _gridWorldBlueprint.getFoodGenerationProbability());
         foodSpawnTextInput.setAlignment(Align.center);
 
         // Click Mode
@@ -334,7 +334,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 }
                 try
                 {
-                    _world.getBlueprint().setFoodGenerationProbability(Double.parseDouble(textField.getText().trim()));
+                    _gridWorld.getGridWorldBlueprint().setFoodGenerationProbability(
+                            Double.parseDouble(textField.getText().trim()));
                 }
                 catch (Exception e)
                 {
@@ -370,7 +371,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         {
             for (int i = 0; i < _ticks; i++)
             {
-                _world.tick();
+                _gridWorld.tick();
                 updateCreatureDelegates();
             }
             framesSinceTick = 0;
@@ -422,7 +423,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private void removeTerrain(int r, int c)
     {
-        _world.setTerrain(null, r, c);
+        _gridWorld.setTerrain(null, r, c);
     }
 
     private void applyMouseBrush(int x, int y)
@@ -430,7 +431,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         Creature creature;
 
         // Check bounds, don't let the user change terrain near the edge of the world
-        if (x < 1 || x >= _world.getWidth() - 1 || y < 1 || y >= _world.getHeight() - 1)
+        if (x < 1 || x >= _gridWorld.getWidth() - 1 || y < 1 || y >= _gridWorld.getHeight() - 1)
         {
             return;
         }
@@ -438,44 +439,44 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         switch (this._mouseClickMode)
         {
             case ADD_WALL:
-                if (_world.squareIsEmpty(y, x))
+                if (_gridWorld.squareIsEmpty(y, x))
                 {
-                    _world.setTerrain(TerrainType.WALL, y, x);
+                    _gridWorld.setTerrain(TerrainType.WALL, y, x);
                 }
                 break;
             case ADD_WALL_BRUTALLY:
-                creature = _world.getCreature(y, x);
+                creature = _gridWorld.getCreature(y, x);
                 if (creature != null)
                 {
                     this._animationCreatureDelegates.remove(creature.getID());
-                    _world.removeCreature(y, x);
+                    _gridWorld.removeCreature(y, x);
                 }
-                _world.removeFood(y, x);
-                _world.setTerrain(TerrainType.WALL, y, x);
+                _gridWorld.removeFood(y, x);
+                _gridWorld.setTerrain(TerrainType.WALL, y, x);
                 break;
             case REMOVE_TERRAIN:
                 removeTerrain(y, x);
                 break;
             case REMOVE_ANYTHING:
-                creature = _world.getCreature(y, x);
+                creature = _gridWorld.getCreature(y, x);
                 if (creature != null)
                 {
                     this._animationCreatureDelegates.remove(creature.getID());
-                    _world.removeCreature(y, x);
+                    _gridWorld.removeCreature(y, x);
                 }
-                _world.removeFood(y, x);
-                _world.setTerrain(null, y, x);
+                _gridWorld.removeFood(y, x);
+                _gridWorld.setTerrain(null, y, x);
                 break;
             case ADD_FLAMETHROWER:
-                if (_world.squareIsEmpty(y, x))
+                if (_gridWorld.squareIsEmpty(y, x))
                 {
-                    _world.setTerrain(TerrainType.FLAMETHROWER, y, x);
+                    _gridWorld.setTerrain(TerrainType.FLAMETHROWER, y, x);
                 }
                 break;
             case ADD_FOODGENERATOR:
-                if (_world.squareIsEmpty(y, x))
+                if (_gridWorld.squareIsEmpty(y, x))
                 {
-                    _world.setTerrain(TerrainType.FOOD_GENERATOR, y, x);
+                    _gridWorld.setTerrain(TerrainType.FOOD_GENERATOR, y, x);
                 }
                 break;
             case SELECT_CREATURE:
@@ -486,8 +487,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private void setLabels()
     {
         fpsLabel.setText("fps: " + Gdx.graphics.getFramesPerSecond());
-        populationLabel.setText("population: " + _world.getCreatureCount());
-        LinkedList<Creature> creatures = _world.getCreatures();
+        populationLabel.setText("population: " + _gridWorld.getCreatureCount());
+        LinkedList<Creature> creatures = _gridWorld.getCreatures();
         double generation = 0;
         for (Creature creature : creatures)
         {
@@ -495,10 +496,10 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
         generation /= creatures.size();
         generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
-        foodSupplyLabel.setText("food: " + _world.getItemCount());
-        foodSpawnRateLabel.setText("food spawn rate: " + _world.getBlueprint().getFoodGenerationProbability());
-        breedingCostLabel.setText(
-                "breeding cost: " + (-1 * _world.getBlueprint().getCreatureBlueprints().get(0).getBreedingFoodRate()));
+        foodSupplyLabel.setText("food: " + _gridWorld.getItemCount());
+        foodSpawnRateLabel.setText("food spawn rate: " + _gridWorld.getGridWorldBlueprint().getFoodGenerationProbability());
+        breedingCostLabel.setText("breeding cost: "
+                + (-1 * _gridWorld.getGridWorldBlueprint().getCreatureBlueprints().get(0).getBreedingFoodRate()));
 
         if (_selectedCreature != null)
         {
@@ -536,23 +537,23 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private void drawTerrain(float interpolationFraction)
     {
-        for (int c = 0; c < _world.getWorldWidth(); c++)
+        for (int c = 0; c < _gridWorld.getWorldWidth(); c++)
         {
-            for (int r = 0; r < _world.getWorldHeight(); r++)
+            for (int r = 0; r < _gridWorld.getWorldHeight(); r++)
             {
-                if (_world.getTerrain(r, c) == TerrainType.WALL)
+                if (_gridWorld.getTerrain(r, c) == TerrainType.WALL)
                 {
                     drawSprite(VivariumSprite.WALL, c, r, 0);
                 }
-                if (_world.getTerrain(r, c) == TerrainType.FOOD_GENERATOR)
+                if (_gridWorld.getTerrain(r, c) == TerrainType.FOOD_GENERATOR)
                 {
                     drawSprite(VivariumSprite.FOOD_GENERATOR_ACTIVE, c, r, 0);
                 }
-                if (_world.getTerrain(r, c) == TerrainType.FLAMETHROWER)
+                if (_gridWorld.getTerrain(r, c) == TerrainType.FLAMETHROWER)
                 {
                     drawSprite(VivariumSprite.FLAMETHROWER_ACTIVE, c, r, 0);
                 }
-                if (_world.getTerrain(r, c) == TerrainType.FLAME)
+                if (_gridWorld.getTerrain(r, c) == TerrainType.FLAME)
                 {
                     if (interpolationFraction < 1f / 3f)
                     {
@@ -573,11 +574,11 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private void drawFood()
     {
-        for (int c = 0; c < _world.getWorldWidth(); c++)
+        for (int c = 0; c < _gridWorld.getWorldWidth(); c++)
         {
-            for (int r = 0; r < _world.getWorldHeight(); r++)
+            for (int r = 0; r < _gridWorld.getWorldHeight(); r++)
             {
-                if (_world.getItem(r, c) == ItemType.FOOD)
+                if (_gridWorld.getItem(r, c) == ItemType.FOOD)
                 {
                     drawSprite(VivariumSprite.FOOD, c, r, 0);
                 }
@@ -656,11 +657,11 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
         // For all other creatures, update their animation delegate, or add a new one if they
         // don't have an animation delegate yet.
-        for (int c = 0; c < _world.getWorldWidth(); c++)
+        for (int c = 0; c < _gridWorld.getWorldWidth(); c++)
         {
-            for (int r = 0; r < _world.getWorldHeight(); r++)
+            for (int r = 0; r < _gridWorld.getWorldHeight(); r++)
             {
-                Creature creature = _world.getCreature(r, c);
+                Creature creature = _gridWorld.getCreature(r, c);
                 if (creature != null)
                 {
                     if (_animationCreatureDelegates.containsKey(creature.getID()))
@@ -836,9 +837,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
             {
                 if (_mouseClickMode == MouseClickMode.SELECT_CREATURE)
                 {
-                    if (_world.getCreature(yUpWorld, xUpWorld) != null)
+                    if (_gridWorld.getCreature(yUpWorld, xUpWorld) != null)
                     {
-                        this._selectedCreature = _world.getCreature(yUpWorld, xUpWorld);
+                        this._selectedCreature = _gridWorld.getCreature(yUpWorld, xUpWorld);
                     }
                     this._xDownWorld = -1;
                     this._yDownWorld = -1;

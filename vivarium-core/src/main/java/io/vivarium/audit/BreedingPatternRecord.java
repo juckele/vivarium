@@ -1,10 +1,7 @@
 package io.vivarium.audit;
 
-import io.vivarium.core.Action;
-import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.Direction;
-import io.vivarium.core.GridWorld;
+import io.vivarium.core.World;
 import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
@@ -38,47 +35,9 @@ public class BreedingPatternRecord extends AuditRecord
     }
 
     @Override
-    public void record(GridWorld world, int tick)
+    public void record(World world, int tick)
     {
-        for (int r = 0; r < world.getWorldHeight(); r++)
-        {
-            for (int c = 0; c < world.getWorldHeight(); c++)
-            {
-                Creature creature = world.getCreature(r, c);
-                if (creature != null && creature.getAction() == Action.BREED)
-                {
-                    int targetR = r + Direction.getVerticalComponent(creature.getFacing());
-                    int targetC = c + Direction.getHorizontalComponent(creature.getFacing());
-                    Creature targetCreature = world.getCreature(targetR, targetC);
-                    BreedingGender creatureGender = creature.getIsFemale()
-                            ? (creature.getGestation() > 0 ? BreedingGender.PREGNANT : BreedingGender.FEMALE)
-                            : BreedingGender.MALE;
-                    BreedingGender targetCreatureGender;
-                    if (targetCreature != null)
-                    {
-                        targetCreatureGender = targetCreature.getIsFemale()
-                                ? (targetCreature.getGestation() > 0 ? BreedingGender.PREGNANT : BreedingGender.FEMALE)
-                                : BreedingGender.MALE;
-                    }
-                    else
-                    {
-                        targetCreatureGender = BreedingGender.NONE;
-                    }
-                    addRecord((int) creature.getGeneration(), creatureGender, targetCreatureGender,
-                            creature.wasSuccessful());
-                }
-            }
-        }
-    }
-
-    private void addRecord(int generation, BreedingGender creature, BreedingGender targetCreature,
-            boolean wasSuccessful)
-    {
-        while (generation > _tally.length)
-        {
-            resizeTally();
-        }
-        _tally[generation - 1][creature.index][targetCreature.index][wasSuccessful ? 1 : 0]++;
+        // TODO: FIX THIS
     }
 
     public int getMaximumGeneration()
@@ -107,25 +66,6 @@ public class BreedingPatternRecord extends AuditRecord
     public int getRecord(int generation, BreedingGender creature, BreedingGender targetCreature, boolean wasSuccessful)
     {
         return _tally[generation - 1][creature.index][targetCreature.index][wasSuccessful ? 1 : 0];
-    }
-
-    private void resizeTally()
-    {
-        int[][][][] newTally = new int[_tally.length * 2][3][4][2];
-        for (int i = 0; i < _tally.length; i++)
-        {
-            for (int j = 0; j < 3; j++)
-            {
-                for (int k = 0; k < 4; k++)
-                {
-                    for (int l = 0; l < 2; l++)
-                    {
-                        newTally[i][j][k][l] = _tally[i][j][k][l];
-                    }
-                }
-            }
-        }
-        _tally = newTally;
     }
 
     public static enum BreedingGender

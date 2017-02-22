@@ -4,10 +4,9 @@ import org.junit.Test;
 import org.junit.experimental.categories.Category;
 
 import io.vivarium.scripts.CreateAuditBlueprint;
-import io.vivarium.scripts.CreateWorldBlueprint;
 import io.vivarium.scripts.CreateCreatureBlueprint;
 import io.vivarium.scripts.CreateWorld;
-import io.vivarium.scripts.RenderWorld;
+import io.vivarium.scripts.CreateWorldBlueprint;
 import io.vivarium.scripts.RunSimulation;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.SystemTest;
@@ -82,10 +81,5 @@ public class Harness
                     "data/world_saves/medium" + (i + 1) + ".viv" };
             RunSimulation.main(commandArgs);
         }
-        {
-            String[] commandArgs = { "data/world_saves/world_viewer/tick0.viv" };
-            RenderWorld.main(commandArgs);
-        }
-
     }
 }

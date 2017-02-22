@@ -2,15 +2,12 @@ package io.vivarium.core;
 
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.LinkedList;
 
-import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.AuditRecord;
 import io.vivarium.core.GridWorldPopulator.EntityType;
 import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
-import io.vivarium.serialization.VivariumObject;
 import io.vivarium.util.Rand;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -18,17 +15,13 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class GridWorld extends VivariumObject
+public class GridWorld extends World
 {
     static
     {
         ClassRegistry.getInstance().register(GridWorld.class);
     }
 
-    @SerializedParameter
-    private int _maximumCreatureID;
-    @SerializedParameter
-    private int _tick;
     @SerializedParameter
     private int _width;
     @SerializedParameter
@@ -40,51 +33,39 @@ public class GridWorld extends VivariumObject
     protected Creature[][] _creatureGrid;
     @SerializedParameter
     protected TerrainType[][] _terrainGrid;
-    @SerializedParameter
-    protected AuditRecord[] _auditRecords;
 
     @SerializedParameter
-    private GridWorldBlueprint _worldBlueprint;
+    private GridWorldBlueprint _gridWorldBlueprint;
     @SerializedParameter
     private DynamicBalancer _balancer;
 
-    protected GridWorld()
+    // Private constructor for deserialization
+    @SuppressWarnings("unused")
+    private GridWorld()
     {
     }
 
-    public GridWorld(GridWorldBlueprint worldBlueprint)
+    public GridWorld(GridWorldBlueprint gridWorldBlueprint)
     {
-        // Store the world blueprint
-        this._worldBlueprint = worldBlueprint;
+        super(gridWorldBlueprint);
 
-        // Set up base variables
-        this._maximumCreatureID = 0;
+        // Store the world blueprint
+        this._gridWorldBlueprint = gridWorldBlueprint;
 
         // Size the world
-        this.setWorldDimensions(worldBlueprint.getWidth(), worldBlueprint.getHeight());
+        this.setWorldDimensions(gridWorldBlueprint.getWidth(), gridWorldBlueprint.getHeight());
 
-        // Fill the world with creatures and food
-        this.populatateWorld();
-
-        // Build audit records
-        this.constructAuditRecords();
-        this.performAudits();
+        initialize();
     }
 
-    private void constructAuditRecords()
+    public DynamicBalancer getDynamicBalancer()
     {
-        int auditRecordCount = _worldBlueprint.getCreatureBlueprints().size()
-                * _worldBlueprint.getAuditBlueprints().size();
-        _auditRecords = new AuditRecord[auditRecordCount];
-        int i = 0;
-        for (CreatureBlueprint creatureBlueprint : _worldBlueprint.getCreatureBlueprints())
-        {
-            for (AuditBlueprint auditBlueprint : _worldBlueprint.getAuditBlueprints())
-            {
-                _auditRecords[i] = auditBlueprint.makeRecordWithCreatureBlueprint(creatureBlueprint);
-                i++;
-            }
-        }
+        return this._balancer;
+    }
+
+    public void setDynamicBalancer(DynamicBalancer balancer)
+    {
+        this._balancer = balancer;
     }
 
     public int getHeight()
@@ -97,14 +78,15 @@ public class GridWorld extends VivariumObject
         return _width;
     }
 
-    private void populatateWorld()
+    @Override
+    protected void populatateWorld()
     {
         GridWorldPopulator populator = new GridWorldPopulator();
-        populator.setCreatureBlueprints(_worldBlueprint.getCreatureBlueprints());
-        populator.setWallProbability(_worldBlueprint.getInitialWallGenerationProbability());
-        populator.setFoodGeneratorProbability(_worldBlueprint.getFoodGeneratorProbability());
-        populator.setFoodProbability(_worldBlueprint.getInitialFoodGenerationProbability());
-        populator.setFlamethrowerProbability(_worldBlueprint.getFlamethrowerProbability());
+        populator.setCreatureBlueprints(_gridWorldBlueprint.getCreatureBlueprints());
+        populator.setWallProbability(_gridWorldBlueprint.getInitialWallGenerationProbability());
+        populator.setFoodGeneratorProbability(_gridWorldBlueprint.getFoodGeneratorProbability());
+        populator.setFoodProbability(_gridWorldBlueprint.getInitialFoodGenerationProbability());
+        populator.setFlamethrowerProbability(_gridWorldBlueprint.getFlamethrowerProbability());
         for (int r = 0; r < _height; r++)
         {
             for (int c = 0; c < _width; c++)
@@ -139,56 +121,8 @@ public class GridWorld extends VivariumObject
         }
     }
 
-    public int getNewCreatureID()
-    {
-        return (++_maximumCreatureID);
-    }
-
-    /**
-     * Top level simulation step of the entire world and all denizens within it. Simulations are divided into four
-     * phases: 1, each creature will age and compute other time based values. 2, each creatur will decide on an action
-     * to attempt. 3, each creature will attempt to execute the planned action (the order of execution on the actions is
-     * currently left to right, top to bottom, so some creature will get priority if actions conflict). 4, finally, food
-     * is spawned at a constant chance in empty spaces in the world.
-     */
-    public void tick()
-    {
-        // Increment tick counter
-        _tick++;
-
-        // Each creature calculates time based
-        // changes in condition such as age,
-        // gestation, and energy levels.
-        tickCreatures();
-
-        // Creatures transmit sound & signs
-        transmitSounds();
-        transmitSigns();
-
-        // Each creature plans which actions to
-        // attempt to do during the next phase
-        letCreaturesPlan();
-        // Each creature will physically try to carry
-        // out the planned action
-        executeCreaturePlans();
-
-        // Each terrain element is activated
-        runTerrain();
-
-        // New food resources will be spawned in the world
-        spawnFood();
-
-        // Record with audit records
-        performAudits();
-
-        // Run balancer if it's present
-        if (this._balancer != null)
-        {
-            _balancer.balance(this);
-        }
-    }
-
-    private void tickCreatures()
+    @Override
+    protected void tickCreatures()
     {
         for (int r = 1; r < _height - 1; r++)
         {
@@ -196,20 +130,17 @@ public class GridWorld extends VivariumObject
             {
                 if (_creatureGrid[r][c] != null)
                 {
-                    _creatureGrid[r][c].tick(0);
-                    if (_terrainGrid[r][c] == TerrainType.FLAME)
-                    {
-                        _creatureGrid[r][c].tick(1);
-                    }
+                    int flameAmount = _terrainGrid[r][c] == TerrainType.FLAME ? 1 : 0;
+                    _creatureGrid[r][c].tick(flameAmount);
                 }
-
             }
         }
     }
 
-    private void transmitSounds()
+    @Override
+    protected void transmitSounds()
     {
-        if (this._worldBlueprint.getSoundEnabled())
+        if (this._gridWorldBlueprint.getSoundEnabled())
         {
             for (int r = 1; r < this._height - 1; r++)
             {
@@ -256,9 +187,10 @@ public class GridWorld extends VivariumObject
         _creatureGrid[r2][c2].listenToCreature(_creatureGrid[r1][c1], distanceSquared);
     }
 
-    private void transmitSigns()
+    @Override
+    protected void transmitSigns()
     {
-        if (this._worldBlueprint.getSignEnabled())
+        if (this._gridWorldBlueprint.getSignEnabled())
         {
             for (int r = 1; r < this._height - 1; r++)
             {
@@ -296,7 +228,8 @@ public class GridWorld extends VivariumObject
         _creatureGrid[r2][c2].lookAtCreature(_creatureGrid[r1][c1]);
     }
 
-    private void letCreaturesPlan()
+    @Override
+    protected void letCreaturesPlan()
     {
         for (int r = 1; r < _height - 1; r++)
         {
@@ -310,7 +243,8 @@ public class GridWorld extends VivariumObject
         }
     }
 
-    private void executeCreaturePlans()
+    @Override
+    protected void executeCreaturePlans()
     {
         // Creatures act
         for (int r = 1; r < _height - 1; r++)
@@ -394,7 +328,8 @@ public class GridWorld extends VivariumObject
         }
     }
 
-    private void runTerrain()
+    @Override
+    protected void tickTerrain()
     {
         for (int r = 0; r < _height; r++)
         {
@@ -443,7 +378,8 @@ public class GridWorld extends VivariumObject
         }
     }
 
-    private void spawnFood()
+    @Override
+    protected void spawnFood()
     {
         // Generate food at a given rate
         for (int r = 0; r < _height; r++)
@@ -453,26 +389,13 @@ public class GridWorld extends VivariumObject
                 if (squareIsFoodable(r, c))
                 {
                     double randomNumber = Rand.getInstance().getRandomPositiveDouble();
-                    if (randomNumber < this._worldBlueprint.getFoodGenerationProbability())
+                    if (randomNumber < this._gridWorldBlueprint.getFoodGenerationProbability())
                     {
                         this.setItem(ItemType.FOOD, r, c);
                     }
                 }
             }
         }
-    }
-
-    private void performAudits()
-    {
-        for (int i = 0; i < _auditRecords.length; i++)
-        {
-            _auditRecords[i].record(this, _tick);
-        }
-    }
-
-    public int getTickCounter()
-    {
-        return _tick;
     }
 
     private void moveCreature(int r, int c, Direction direction)
@@ -525,21 +448,24 @@ public class GridWorld extends VivariumObject
         return auditRecords;
     }
 
-    public GridWorldBlueprint getBlueprint()
+    @Override
+    public void tick()
     {
-        return this._worldBlueprint;
+        super.tick();
+
+        // Run balancer if it's present
+        if (this._balancer != null)
+        {
+            _balancer.balance(this);
+        }
     }
 
-    public DynamicBalancer getDynamicBalancer()
+    public GridWorldBlueprint getGridWorldBlueprint()
     {
-        return this._balancer;
+        return this._gridWorldBlueprint;
     }
 
-    public void setDynamicBalancer(DynamicBalancer balancer)
-    {
-        this._balancer = balancer;
-    }
-
+    @Override
     public LinkedList<Creature> getCreatures()
     {
         LinkedList<Creature> allCreatures = new LinkedList<>();
@@ -572,6 +498,7 @@ public class GridWorld extends VivariumObject
         return allCreatures;
     }
 
+    @Override
     public int getCreatureCount()
     {
         int count = 0;
@@ -620,6 +547,7 @@ public class GridWorld extends VivariumObject
         return (count);
     }
 
+    @Override
     public int getCount(CreatureBlueprint s)
     {
         int count = 0;
@@ -634,16 +562,6 @@ public class GridWorld extends VivariumObject
             }
         }
         return (count);
-    }
-
-    public int getMaximimCreatureID()
-    {
-        return this._maximumCreatureID;
-    }
-
-    public void setMaximumCreatureID(int maximumCreatureID)
-    {
-        this._maximumCreatureID = maximumCreatureID;
     }
 
     public Creature getCreature(int r, int c)
@@ -735,77 +653,6 @@ public class GridWorld extends VivariumObject
     public void setItem(ItemType itemType, int r, int c)
     {
         this._itemGrid[r][c] = itemType;
-    }
-
-    public String render(RenderCode code)
-    {
-        if (code == RenderCode.WORLD_MAP)
-        {
-            return (renderMap());
-        }
-        else if (code == RenderCode.LIVE_CREATURE_LIST)
-        {
-            StringBuilder creatureOutput = new StringBuilder();
-            for (int r = 0; r < this._height; r++)
-            {
-                for (int c = 0; c < this._width; c++)
-                {
-                    if (_creatureGrid[r][c] != null)
-                    {
-                        creatureOutput.append(_creatureGrid[r][c].render(RenderCode.SIMPLE_CREATURE, r, c));
-                        creatureOutput.append('\n');
-                    }
-                }
-            }
-            return (creatureOutput.toString());
-        }
-        else
-        {
-            throw new IllegalArgumentException("RenderCode " + code + " not supported for type " + this.getClass());
-        }
-    }
-
-    private String renderMap()
-    {
-        String[] glyphs = { "中", "马", "心" };
-        // Draw world map
-        StringBuilder worldOutput = new StringBuilder();
-        worldOutput.append("Walls: ");
-        worldOutput.append(this.getTerrainCount());
-        HashMap<CreatureBlueprint, String> creatureBlueprintToGlyph = new HashMap<>();
-        for (CreatureBlueprint s : this._worldBlueprint.getCreatureBlueprints())
-        {
-            creatureBlueprintToGlyph.put(s, glyphs[creatureBlueprintToGlyph.size()]);
-            worldOutput.append(", ").append(creatureBlueprintToGlyph.get(s)).append("-creatures: ");
-            worldOutput.append(this.getCount(s));
-        }
-        worldOutput.append(", Food: ");
-        worldOutput.append(this.getItemCount());
-        worldOutput.append('\n');
-        for (int r = 0; r < _height; r++)
-        {
-            for (int c = 0; c < _width; c++)
-            {
-                if (_terrainGrid[r][c] == TerrainType.WALL)
-                {
-                    worldOutput.append('口');
-                }
-                else if (_itemGrid[r][c] == ItemType.FOOD)
-                {
-                    worldOutput.append('一');
-                }
-                else if (_creatureGrid[r][c] != null)
-                {
-                    worldOutput.append(creatureBlueprintToGlyph.get(_creatureGrid[r][c].getBlueprint()));
-                }
-                else
-                {
-                    worldOutput.append('\u3000');
-                }
-            }
-            worldOutput.append('\n');
-        }
-        return (worldOutput.toString());
     }
 
     @Override

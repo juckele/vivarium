@@ -5,14 +5,13 @@ import java.util.ArrayList;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
-import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class GridWorldBlueprint extends VivariumObject
+public class GridWorldBlueprint extends WorldBlueprint
 {
     static
     {
@@ -106,21 +105,25 @@ public class GridWorldBlueprint extends VivariumObject
         return _initialWallGenerationProbability;
     }
 
+    @Override
     public boolean getSoundEnabled()
     {
         return this._soundEnabled;
     }
 
+    @Override
     public boolean getSignEnabled()
     {
         return this._signEnabled;
     }
 
+    @Override
     public ArrayList<AuditBlueprint> getAuditBlueprints()
     {
         return this._auditBlueprints;
     }
 
+    @Override
     public ArrayList<CreatureBlueprint> getCreatureBlueprints()
     {
         return this._creatureBlueprints;
@@ -147,21 +150,25 @@ public class GridWorldBlueprint extends VivariumObject
         this._initialWallGenerationProbability = p;
     }
 
+    @Override
     public void setSoundEnabled(boolean soundEnabled)
     {
         this._soundEnabled = soundEnabled;
     }
 
+    @Override
     public void setSignEnabled(boolean signEnabled)
     {
         this._signEnabled = signEnabled;
     }
 
+    @Override
     public void setCreatureBlueprints(ArrayList<CreatureBlueprint> creatureBlueprints)
     {
         this._creatureBlueprints = creatureBlueprints;
     }
 
+    @Override
     public void setAuditBlueprints(ArrayList<AuditBlueprint> auditBlueprints)
     {
         this._auditBlueprints = auditBlueprints;
@@ -185,7 +192,7 @@ public class GridWorldBlueprint extends VivariumObject
 
     public static void main(String[] args)
     {
-        System.out
-                .println("" + GridWorldBlueprint.makeDefault().hashCode() + ":" + GridWorldBlueprint.makeDefault().toString());
+        System.out.println(
+                "" + GridWorldBlueprint.makeDefault().hashCode() + ":" + GridWorldBlueprint.makeDefault().toString());
     }
 }

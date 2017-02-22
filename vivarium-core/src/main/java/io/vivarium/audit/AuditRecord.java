@@ -1,7 +1,7 @@
 package io.vivarium.audit;
 
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.GridWorld;
+import io.vivarium.core.World;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -30,7 +30,7 @@ public abstract class AuditRecord extends VivariumObject
      * @param inputs
      * @return outputsS
      */
-    public abstract void record(GridWorld world, int tick);
+    public abstract void record(World world, int tick);
 
     @Override
     public void finalizeSerialization()

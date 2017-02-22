@@ -3,7 +3,7 @@ package io.vivarium.audit;
 import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.GridWorld;
+import io.vivarium.core.World;
 import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
@@ -38,18 +38,14 @@ public class ActionFrequencyRecord extends AuditRecord
     }
 
     @Override
-    public void record(GridWorld world, int tick)
+    public void record(World world, int tick)
     {
-        for (int r = 0; r < world.getWorldHeight(); r++)
+        for (Creature creature : world.getCreatures())
         {
-            for (int c = 0; c < world.getWorldHeight(); c++)
+            if (creature != null && creature.getBlueprint() == this._trackedCreatureBlueprint)
             {
-                Creature creature = world.getCreature(r, c);
-                if (creature != null && creature.getBlueprint() == this._trackedCreatureBlueprint)
-                {
-                    addRecord((int) creature.getGeneration(), creature.getIsFemale(), creature.getGestation() > 0,
-                            creature.getAction(), creature.wasSuccessful());
-                }
+                addRecord((int) creature.getGeneration(), creature.getIsFemale(), creature.getGestation() > 0,
+                        creature.getAction(), creature.wasSuccessful());
             }
         }
     }
