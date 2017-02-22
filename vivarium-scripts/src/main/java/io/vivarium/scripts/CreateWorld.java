@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
@@ -80,7 +80,7 @@ public class CreateWorld extends CommonsScript
         }
 
         // Build the world
-        World world = run(worldBlueprint, size);
+        GridWorld world = run(worldBlueprint, size);
 
         // Save the world
         String outputFile = commandLine.getOptionValue(OUTPUT_FILE);
@@ -96,7 +96,7 @@ public class CreateWorld extends CommonsScript
      *            Optional size override. If this value is passed in, the world will be created with this size.
      * @return The new world.
      */
-    public World run(WorldBlueprint worldBlueprint, Integer size)
+    public GridWorld run(WorldBlueprint worldBlueprint, Integer size)
     {
         if (worldBlueprint == null)
         {
@@ -108,7 +108,7 @@ public class CreateWorld extends CommonsScript
             worldBlueprint = serializer.makeCopy(worldBlueprint);
             worldBlueprint.setSize(size);
         }
-        return new World(worldBlueprint);
+        return new GridWorld(worldBlueprint);
     }
 
     @Override

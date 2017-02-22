@@ -18,7 +18,7 @@ import org.jfree.data.xy.XYSeriesCollection;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.graphing.util.Utils;
 
@@ -54,7 +54,7 @@ public class PopulationGraph extends BaseGraph
         auditBlueprints.add(census);
         b.setAuditBlueprints(auditBlueprints);
 
-        World w = new World(b);
+        GridWorld w = new GridWorld(b);
 
         for (int i = 0; i < 4000; i++)
         {

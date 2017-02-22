@@ -1,7 +1,7 @@
 package io.vivarium.scripts;
 
 import io.vivarium.core.RenderCode;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 
@@ -31,7 +31,7 @@ public class RenderWorld extends Script
     @Override
     protected void run(String[] args)
     {
-        World w = FileIO.loadObjectCollection(args[0], Format.JSON).getFirst(World.class);
+        GridWorld w = FileIO.loadObjectCollection(args[0], Format.JSON).getFirst(GridWorld.class);
         System.out.println(w.render(RenderCode.WORLD_MAP));
     }
 

@@ -7,7 +7,7 @@ import com.johnuckele.vtest.Tester;
 
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.DecisionTree;
 import io.vivarium.core.processor.DecisionTreeBlueprint;
@@ -135,8 +135,8 @@ public class SerializationMakeTest
     public void testWorldMakeCopy() throws Exception
     {
         WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
-        World world = new World(worldBlueprint);
-        World copy = new SerializationEngine().makeCopy(world);
+        GridWorld world = new GridWorld(worldBlueprint);
+        GridWorld copy = new SerializationEngine().makeCopy(world);
         Tester.isNotNull("World copy should exist", copy);
     }
 }

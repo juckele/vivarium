@@ -1,6 +1,6 @@
 package io.vivarium.core.sensor;
 
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.ClassRegistry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -26,7 +26,7 @@ public class CreatureRadar extends Radar
     }
 
     @Override
-    protected double senseSquare(World w, int r, int c)
+    protected double senseSquare(GridWorld w, int r, int c)
     {
         return w.getCreature(r, c) != null ? 1 : 0;
     }

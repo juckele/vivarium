@@ -1,7 +1,7 @@
 package io.vivarium.core.sensor;
 
 import io.vivarium.core.Creature;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.ClassRegistry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -22,7 +22,7 @@ public class EnergySensor extends Sensor
     }
 
     @Override
-    public void performSensing(World w, double[] inputs, int index, int r, int c, Creature creature)
+    public void performSensing(GridWorld w, double[] inputs, int index, int r, int c, Creature creature)
     {
         inputs[index] = ((double) creature.getFood()) / creature.getCreatureBlueprint().getMaximumFood();
     }

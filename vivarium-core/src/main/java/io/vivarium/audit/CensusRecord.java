@@ -3,7 +3,7 @@ package io.vivarium.audit;
 import java.util.ArrayList;
 
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
@@ -50,7 +50,7 @@ public class CensusRecord extends AuditRecord
     }
 
     @Override
-    public void record(World world, int tick)
+    public void record(GridWorld world, int tick)
     {
         // always record the starting population
         if (_creaturePopulation.size() < 1)

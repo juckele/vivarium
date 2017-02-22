@@ -1,7 +1,7 @@
 package io.vivarium.core.sensor;
 
 import io.vivarium.core.Creature;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
 import lombok.EqualsAndHashCode;
@@ -41,13 +41,13 @@ public abstract class Sensor extends VivariumObject
      *            The creature this sensor is on.
      * @return The number of values sensed and written to inputs.
      */
-    public int sense(World w, double[] inputs, int index, int r, int c, Creature creature)
+    public int sense(GridWorld w, double[] inputs, int index, int r, int c, Creature creature)
     {
         performSensing(w, inputs, index, r, c, creature);
         return _sensorInputCount;
     }
 
-    protected abstract void performSensing(World w, double[] inputs, int index, int r, int c, Creature creature);
+    protected abstract void performSensing(GridWorld w, double[] inputs, int index, int r, int c, Creature creature);
 
     /**
      * Returns number of sensor inputs that this sensor writes.

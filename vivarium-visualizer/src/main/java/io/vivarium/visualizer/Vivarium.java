@@ -35,7 +35,7 @@ import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.DynamicBalancer;
 import io.vivarium.core.ItemType;
 import io.vivarium.core.TerrainType;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.Processor;
@@ -48,7 +48,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     // Simulation information
     private WorldBlueprint _blueprint;
-    private World _world;
+    private GridWorld _world;
 
     // Simulation + Animation
     private int framesSinceTick = 0;
@@ -132,7 +132,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         // _blueprint.setSignEnabled(true);
         _blueprint.setSize(SIZE);
         _blueprint.setInitialWallGenerationProbability(0);
-        _world = new World(_blueprint);
+        _world = new GridWorld(_blueprint);
         _world.setDynamicBalancer(DynamicBalancer.makeDefault());
 
         // Start with selected creature

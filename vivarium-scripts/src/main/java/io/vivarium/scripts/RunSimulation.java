@@ -7,7 +7,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.simulation.Simulation;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
@@ -99,7 +99,7 @@ public class RunSimulation extends CommonsScript
         // Load the file
         String inputFile = commandLine.getOptionValue(INPUT_FILE);
         VivariumObjectCollection collection = FileIO.loadObjectCollection(inputFile, Format.JSON);
-        World world = collection.getFirst(World.class);
+        GridWorld world = collection.getFirst(GridWorld.class);
         if (world == null)
         {
             String extendedMessage = "input file " + inputFile + " does not contain a world object and cannot be run";
@@ -152,7 +152,7 @@ public class RunSimulation extends CommonsScript
      *            The unit of time that maxTime is measured in. Only checked if maxTime is not null.
      * @return nothing, this method changes the World object passed in to it.
      */
-    public void run(World world, Long maxTicks, Long maxTime, TimeUnit timeUnit)
+    public void run(GridWorld world, Long maxTicks, Long maxTime, TimeUnit timeUnit)
     {
         if (maxTicks != null)
         {

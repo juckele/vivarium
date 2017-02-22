@@ -6,7 +6,7 @@ import java.util.List;
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.simulation.Simulation;
 import io.vivarium.util.Rand;
@@ -153,7 +153,7 @@ public class RunBenchmark extends CommonsScript
         worldBlueprint.getCreatureBlueprints().get(0).setMaximumFood(Integer.MAX_VALUE); // Increase max food to prevent
                                                                                          // creatures from
                                                                                          // starving during the benchmark
-        World world = new World(worldBlueprint);
+        GridWorld world = new GridWorld(worldBlueprint);
         int tickCount = 2000;
         int worldPopulation = world.getCreatureCount();
         long startTime = System.currentTimeMillis();

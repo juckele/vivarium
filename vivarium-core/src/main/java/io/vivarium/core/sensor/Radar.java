@@ -2,7 +2,7 @@ package io.vivarium.core.sensor;
 
 import io.vivarium.core.Creature;
 import io.vivarium.core.Direction;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -31,7 +31,7 @@ public abstract class Radar extends Sensor
     }
 
     @Override
-    public void performSensing(World w, double[] inputs, int index, int r, int c, Creature creature)
+    public void performSensing(GridWorld w, double[] inputs, int index, int r, int c, Creature creature)
     {
         // Determine direction of sensor
         Direction sensorDirection = creature.getFacing();
@@ -62,5 +62,5 @@ public abstract class Radar extends Sensor
         }
     }
 
-    abstract protected double senseSquare(World w, int r, int c);
+    abstract protected double senseSquare(GridWorld w, int r, int c);
 }

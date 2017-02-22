@@ -7,7 +7,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import io.vivarium.core.Creature;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.util.Rand;
@@ -57,11 +57,11 @@ public class ExtractCreatureFromWorld extends CommonsScript
     @Override
     protected void run(CommandLine commandLine)
     {
-        World world = null;
+        GridWorld world = null;
         String worldFile = commandLine.getOptionValue(WORLD_INPUT_FILE);
         try
         {
-            world = FileIO.loadObjectCollection(worldFile, Format.JSON).getFirst(World.class);
+            world = FileIO.loadObjectCollection(worldFile, Format.JSON).getFirst(GridWorld.class);
         }
         catch (ClassCastException e)
         {

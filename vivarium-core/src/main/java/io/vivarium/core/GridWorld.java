@@ -18,11 +18,11 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 @ToString
 @SuppressWarnings("serial") // Default serialization is never used for a durable store
-public class World extends VivariumObject
+public class GridWorld extends VivariumObject
 {
     static
     {
-        ClassRegistry.getInstance().register(World.class);
+        ClassRegistry.getInstance().register(GridWorld.class);
     }
 
     @SerializedParameter
@@ -48,11 +48,11 @@ public class World extends VivariumObject
     @SerializedParameter
     private DynamicBalancer _balancer;
 
-    protected World()
+    protected GridWorld()
     {
     }
 
-    public World(WorldBlueprint worldBlueprint)
+    public GridWorld(WorldBlueprint worldBlueprint)
     {
         // Store the world blueprint
         this._worldBlueprint = worldBlueprint;

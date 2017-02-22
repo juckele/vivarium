@@ -2,11 +2,11 @@ package io.vivarium.core.simulation;
 
 import java.util.concurrent.TimeUnit;
 
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 
 public class Simulation
 {
-    public static void runForUpTo(World world, long maxTicks)
+    public static void runForUpTo(GridWorld world, long maxTicks)
     {
         long runTicks = 0;
         while (runTicks < maxTicks)
@@ -16,7 +16,7 @@ public class Simulation
         }
     }
 
-    public static void runForUpTo(World world, long timePeriod, TimeUnit timeUnit)
+    public static void runForUpTo(GridWorld world, long timePeriod, TimeUnit timeUnit)
     {
         long maxMilliseconds = TimeUnit.MILLISECONDS.convert(timePeriod, timeUnit);
         long startTime = System.currentTimeMillis();
@@ -28,7 +28,7 @@ public class Simulation
         }
     }
 
-    public static void runForUpTo(World world, long maxTicks, long timePeriod, TimeUnit timeUnit)
+    public static void runForUpTo(GridWorld world, long maxTicks, long timePeriod, TimeUnit timeUnit)
     {
         long runTicks = 0;
         long maxMilliseconds = TimeUnit.MILLISECONDS.convert(timePeriod, timeUnit);

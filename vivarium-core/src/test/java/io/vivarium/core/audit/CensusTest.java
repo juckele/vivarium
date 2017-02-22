@@ -11,7 +11,7 @@ import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
 
@@ -26,7 +26,7 @@ public class CensusTest
         ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
         auditBlueprints.add(censusBlueprint);
         worldBlueprint.setAuditBlueprints(auditBlueprints);
-        World world = new World(worldBlueprint);
+        GridWorld world = new GridWorld(worldBlueprint);
         world.tick();
         CensusRecord record = (CensusRecord) world.getAuditRecords().remove();
         ArrayList<Integer> populationRecords = record.getPopulationRecords();

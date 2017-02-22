@@ -1,7 +1,7 @@
 package io.vivarium.core.sensor;
 
 import io.vivarium.core.Creature;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.ClassRegistry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -27,7 +27,7 @@ public class GenderRadar extends Radar
     }
 
     @Override
-    protected double senseSquare(World w, int r, int c)
+    protected double senseSquare(GridWorld w, int r, int c)
     {
         Creature creature = w.getCreature(r, c);
         if (creature != null)

@@ -4,7 +4,7 @@ import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.Direction;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import lombok.EqualsAndHashCode;
@@ -38,7 +38,7 @@ public class BreedingPatternRecord extends AuditRecord
     }
 
     @Override
-    public void record(World world, int tick)
+    public void record(GridWorld world, int tick)
     {
         for (int r = 0; r < world.getWorldHeight(); r++)
         {

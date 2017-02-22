@@ -1,7 +1,7 @@
 package io.vivarium.audit;
 
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.ClassRegistry;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -27,7 +27,7 @@ public class CreatureMemorial extends AuditRecord
     }
 
     @Override
-    public void record(World world, int tick)
+    public void record(GridWorld world, int tick)
     {
         // TODO FILL
     }

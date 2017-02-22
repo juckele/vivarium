@@ -8,7 +8,7 @@ import io.vivarium.client.WorkerClient;
 import io.vivarium.client.WorkerConfig;
 import io.vivarium.client.task.DownloadResourceTask;
 import io.vivarium.client.task.UploadResourceTask;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.server.VivariumResearchServer;
 import io.vivarium.util.UUID;
@@ -22,7 +22,7 @@ public class DemoTest
 
         Thread.sleep(100);
 
-        World world = new World(WorldBlueprint.makeDefault());
+        GridWorld world = new GridWorld(WorldBlueprint.makeDefault());
         UploadResourceTask t1 = new UploadResourceTask(UUID.randomUUID(), world);
         TaskClient c1 = new TaskClient(t1);
         c1.connect();
@@ -51,7 +51,7 @@ public class DemoTest
         c3.connect();
         try
         {
-            World world_copy = t3.waitForResource().getFirst(World.class);
+            GridWorld world_copy = t3.waitForResource().getFirst(GridWorld.class);
             System.out.println("DL world with " + world_copy.getCreatureCount() + " creatures");
         }
         catch (ExecutionException e)

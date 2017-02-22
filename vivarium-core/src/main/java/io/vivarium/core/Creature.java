@@ -238,12 +238,12 @@ public class Creature extends VivariumObject
         }
     }
 
-    public void planAction(World w, int r, int c)
+    public void planAction(GridWorld w, int r, int c)
     {
         _action = determineAction(w, r, c);
     }
 
-    private Action determineAction(World w, int r, int c)
+    private Action determineAction(GridWorld w, int r, int c)
     {
         Action involuntaryAction = getInvoluntaryAction();
         if (involuntaryAction != null)

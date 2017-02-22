@@ -6,7 +6,7 @@ import org.junit.experimental.categories.Category;
 import com.johnuckele.vtest.Tester;
 
 import io.vivarium.core.WorldBlueprint;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.serialization.JSONConverter;
 import io.vivarium.serialization.VivariumObjectCollection;
 import io.vivarium.test.FastTest;
@@ -19,10 +19,10 @@ public class JSONConverterTest
     public void testSaveLoadSaveWorld()
     {
         WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
-        World worldOriginal = new World(worldBlueprint);
+        GridWorld worldOriginal = new GridWorld(worldBlueprint);
         String jsonString1 = JSONConverter.serializerToJSONString(worldOriginal);
         VivariumObjectCollection copiedCollection = JSONConverter.jsonStringToSerializerCollection(jsonString1);
-        World worldCopy = copiedCollection.getFirst(World.class);
+        GridWorld worldCopy = copiedCollection.getFirst(GridWorld.class);
         String jsonString2 = JSONConverter.serializerToJSONString(worldCopy);
         System.out.println(jsonString1);
         System.out.println(jsonString2);

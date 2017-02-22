@@ -8,7 +8,7 @@ import org.junit.experimental.categories.Category;
 import com.google.common.collect.Lists;
 
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
@@ -23,13 +23,13 @@ public class JSONSerializationTest
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
         WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
         worldBlueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
-        World world = new World(worldBlueprint);
+        GridWorld world = new GridWorld(worldBlueprint);
 
         // Convert to json
         String jsonString = JSONConverter.serializerToJSONString(world);
 
         // Deserialize
-        World deserializeWorld = JSONConverter.jsonStringToSerializerCollection(jsonString).getFirst(World.class);
+        GridWorld deserializeWorld = JSONConverter.jsonStringToSerializerCollection(jsonString).getFirst(GridWorld.class);
 
         // Deep compare of the worlds
         assertEquals(world, deserializeWorld);

@@ -32,7 +32,7 @@ public class DynamicBalancer extends VivariumObject
     {
     }
 
-    public void balance(World target)
+    public void balance(GridWorld target)
     {
         WorldBlueprint blueprint = target.getBlueprint();
         CreatureBlueprint species = blueprint.getCreatureBlueprints().get(0);

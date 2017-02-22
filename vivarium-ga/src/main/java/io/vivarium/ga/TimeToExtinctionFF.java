@@ -4,7 +4,7 @@ import com.google.common.base.Preconditions;
 
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.World;
+import io.vivarium.core.GridWorld;
 import io.vivarium.core.WorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.serialization.SerializationEngine;
@@ -34,7 +34,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
         processorBlueprint.setMutationRateExponent(Double.NEGATIVE_INFINITY);
         Creature instanceCreature = new Creature(instanceCreatureBlueprint, c);
 
-        World w = new World(instanceBlueprint);
+        GridWorld w = new GridWorld(instanceBlueprint);
         for (int i = 0; i < _initialPopulation; i++)
         {
             w.addImmigrant(new Creature(instanceCreature));
