@@ -19,7 +19,7 @@ import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
 import io.vivarium.core.GridWorld;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.graphing.util.Utils;
 
 public class PopulationGraph extends BaseGraph
@@ -46,7 +46,7 @@ public class PopulationGraph extends BaseGraph
 
     public static void main(String[] args) throws IOException
     {
-        WorldBlueprint b = WorldBlueprint.makeDefault();
+        GridWorldBlueprint b = GridWorldBlueprint.makeDefault();
         b.setSize(200);
 
         ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();

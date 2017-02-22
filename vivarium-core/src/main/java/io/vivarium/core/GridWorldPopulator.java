@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import io.vivarium.util.Rand;
 
-public class WorldPopulator
+public class GridWorldPopulator
 {
     public enum EntityType
     {
@@ -18,7 +18,7 @@ public class WorldPopulator
     private double _creatureProbability;
     private ArrayList<CreatureBlueprint> _creatureBlueprints;
 
-    public WorldPopulator()
+    public GridWorldPopulator()
     {
 
     }

@@ -9,7 +9,7 @@ import com.google.common.collect.Lists;
 
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.GridWorld;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
 
@@ -21,7 +21,7 @@ public class JSONSerializationTest
     {
         // Build a world with creatures
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault();
-        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
         worldBlueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         GridWorld world = new GridWorld(worldBlueprint);
 

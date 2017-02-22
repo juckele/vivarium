@@ -5,17 +5,17 @@ import com.google.common.base.Preconditions;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.GridWorld;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.serialization.SerializationEngine;
 
 public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
 {
     private int _initialPopulation;
-    private WorldBlueprint _worldBlueprint;
+    private GridWorldBlueprint _worldBlueprint;
     private double _simulationDuration;
 
-    public TimeToExtinctionFF(WorldBlueprint worldBlueprint, int initialPopulation, int simulationDuration)
+    public TimeToExtinctionFF(GridWorldBlueprint worldBlueprint, int initialPopulation, int simulationDuration)
     {
         this._worldBlueprint = worldBlueprint;
         this._initialPopulation = initialPopulation;
@@ -26,7 +26,7 @@ public class TimeToExtinctionFF extends SimulationBasedFitnessFunction
     public double evaluate(Creature c)
     {
         // Build world
-        WorldBlueprint instanceBlueprint = new SerializationEngine().makeCopy(_worldBlueprint);
+        GridWorldBlueprint instanceBlueprint = new SerializationEngine().makeCopy(_worldBlueprint);
         Preconditions.checkArgument(instanceBlueprint.getCreatureBlueprints().size() == 1);
         CreatureBlueprint instanceCreatureBlueprint = instanceBlueprint.getCreatureBlueprints().get(0);
         NeuralNetworkBlueprint processorBlueprint = (NeuralNetworkBlueprint) instanceCreatureBlueprint

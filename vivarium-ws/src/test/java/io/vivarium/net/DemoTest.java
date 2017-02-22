@@ -9,7 +9,7 @@ import io.vivarium.client.WorkerConfig;
 import io.vivarium.client.task.DownloadResourceTask;
 import io.vivarium.client.task.UploadResourceTask;
 import io.vivarium.core.GridWorld;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.server.VivariumResearchServer;
 import io.vivarium.util.UUID;
 
@@ -22,7 +22,7 @@ public class DemoTest
 
         Thread.sleep(100);
 
-        GridWorld world = new GridWorld(WorldBlueprint.makeDefault());
+        GridWorld world = new GridWorld(GridWorldBlueprint.makeDefault());
         UploadResourceTask t1 = new UploadResourceTask(UUID.randomUUID(), world);
         TaskClient c1 = new TaskClient(t1);
         c1.connect();

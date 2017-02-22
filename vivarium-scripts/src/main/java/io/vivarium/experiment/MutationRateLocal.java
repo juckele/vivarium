@@ -12,7 +12,7 @@ import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
@@ -60,7 +60,7 @@ public class MutationRateLocal
             String name = "mutation=2^" + mutationRateExponent;
 
             // Make a world blueprint
-            WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+            GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
             worldBlueprint.setSize(WORLD_SIZE);
             // Set creature blueprint
             ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();

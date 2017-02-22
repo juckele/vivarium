@@ -7,7 +7,7 @@ import java.util.LinkedList;
 
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.AuditRecord;
-import io.vivarium.core.WorldPopulator.EntityType;
+import io.vivarium.core.GridWorldPopulator.EntityType;
 import io.vivarium.serialization.ClassRegistry;
 import io.vivarium.serialization.SerializedParameter;
 import io.vivarium.serialization.VivariumObject;
@@ -44,7 +44,7 @@ public class GridWorld extends VivariumObject
     protected AuditRecord[] _auditRecords;
 
     @SerializedParameter
-    private WorldBlueprint _worldBlueprint;
+    private GridWorldBlueprint _worldBlueprint;
     @SerializedParameter
     private DynamicBalancer _balancer;
 
@@ -52,7 +52,7 @@ public class GridWorld extends VivariumObject
     {
     }
 
-    public GridWorld(WorldBlueprint worldBlueprint)
+    public GridWorld(GridWorldBlueprint worldBlueprint)
     {
         // Store the world blueprint
         this._worldBlueprint = worldBlueprint;
@@ -99,7 +99,7 @@ public class GridWorld extends VivariumObject
 
     private void populatateWorld()
     {
-        WorldPopulator populator = new WorldPopulator();
+        GridWorldPopulator populator = new GridWorldPopulator();
         populator.setCreatureBlueprints(_worldBlueprint.getCreatureBlueprints());
         populator.setWallProbability(_worldBlueprint.getInitialWallGenerationProbability());
         populator.setFoodGeneratorProbability(_worldBlueprint.getFoodGeneratorProbability());
@@ -525,7 +525,7 @@ public class GridWorld extends VivariumObject
         return auditRecords;
     }
 
-    public WorldBlueprint getBlueprint()
+    public GridWorldBlueprint getBlueprint()
     {
         return this._worldBlueprint;
     }

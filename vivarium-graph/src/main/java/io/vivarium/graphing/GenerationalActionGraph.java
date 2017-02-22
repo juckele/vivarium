@@ -23,7 +23,7 @@ import io.vivarium.audit.ActionFrequencyBlueprint;
 import io.vivarium.audit.ActionFrequencyRecord;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.core.Action;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.GridWorld;
 import io.vivarium.graphing.util.Utils;
 
@@ -138,7 +138,7 @@ public class GenerationalActionGraph extends BaseGraph
 
     public static void main(String[] args) throws IOException
     {
-        WorldBlueprint b = WorldBlueprint.makeDefault();
+        GridWorldBlueprint b = GridWorldBlueprint.makeDefault();
 
         ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
         ActionFrequencyBlueprint actionFrequencies = new ActionFrequencyBlueprint();

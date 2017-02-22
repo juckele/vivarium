@@ -7,7 +7,7 @@ import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.Option;
 
 import io.vivarium.core.GridWorld;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.simulation.Simulation;
 import io.vivarium.util.Rand;
 import io.vivarium.util.concurrency.ThreadRandAllocator;
@@ -148,7 +148,7 @@ public class RunBenchmark extends CommonsScript
 
     private static double inlineTest(int size)
     {
-        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
         worldBlueprint.setSize(size);
         worldBlueprint.getCreatureBlueprints().get(0).setMaximumFood(Integer.MAX_VALUE); // Increase max food to prevent
                                                                                          // creatures from

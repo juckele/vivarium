@@ -10,7 +10,7 @@ import com.johnuckele.vtest.Tester;
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.audit.CensusBlueprint;
 import io.vivarium.audit.CensusRecord;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.GridWorld;
 import io.vivarium.test.FastTest;
 import io.vivarium.test.IntegrationTest;
@@ -21,7 +21,7 @@ public class CensusTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testCensus()
     {
-        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
         AuditBlueprint censusBlueprint = new CensusBlueprint();
         ArrayList<AuditBlueprint> auditBlueprints = new ArrayList<>();
         auditBlueprints.add(censusBlueprint);

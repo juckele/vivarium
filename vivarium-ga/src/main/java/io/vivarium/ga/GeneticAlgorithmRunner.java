@@ -7,7 +7,7 @@ import org.javatuples.Pair;
 
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.processor.ProcessorBlueprint;
 import io.vivarium.util.Rand;
 
@@ -113,7 +113,7 @@ public class GeneticAlgorithmRunner
         creatureBlueprint.setMaximumFood(200);
         System.out.println("Creature Blueprint: " + creatureBlueprint);
 
-        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
         worldBlueprint.setSize(30);
         ArrayList<CreatureBlueprint> creatureBlueprints = new ArrayList<>();
         worldBlueprint.setCreatureBlueprints(creatureBlueprints);

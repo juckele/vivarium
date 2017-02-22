@@ -10,7 +10,7 @@ import org.apache.commons.cli.Option;
 
 import io.vivarium.audit.AuditBlueprint;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.serialization.FileIO;
 import io.vivarium.serialization.Format;
 import io.vivarium.serialization.SerializationEngine;
@@ -114,7 +114,7 @@ public class CreateWorldBlueprint extends CommonsScript
         Map<String, Object> extraOptions = this.extraArgsAsMap(commandLine);
 
         // Build the world blueprint
-        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
         new SerializationEngine().deserialize(worldBlueprint, extraOptions);
         if (!creatureBlueprints.isEmpty())
         {

@@ -8,7 +8,7 @@ import com.johnuckele.vtest.Tester;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.GridWorld;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.processor.DecisionTree;
 import io.vivarium.core.processor.DecisionTreeBlueprint;
 import io.vivarium.core.processor.NeuralNetwork;
@@ -24,7 +24,7 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldBlueprintMakeDefault() throws Exception
     {
-        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
         Tester.isNotNull("WorldBlueprint should exist", worldBlueprint);
     }
 
@@ -32,8 +32,8 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldBlueprintMakeCopy() throws Exception
     {
-        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
-        WorldBlueprint copy = new SerializationEngine().makeCopy(worldBlueprint);
+        GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
+        GridWorldBlueprint copy = new SerializationEngine().makeCopy(worldBlueprint);
         Tester.isNotNull("WorldBlueprint copy should exist", copy);
     }
 
@@ -134,7 +134,7 @@ public class SerializationMakeTest
     @Category({ FastTest.class, IntegrationTest.class })
     public void testWorldMakeCopy() throws Exception
     {
-        WorldBlueprint worldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint worldBlueprint = GridWorldBlueprint.makeDefault();
         GridWorld world = new GridWorld(worldBlueprint);
         GridWorld copy = new SerializationEngine().makeCopy(world);
         Tester.isNotNull("World copy should exist", copy);

@@ -10,7 +10,7 @@ import io.vivarium.client.TaskClient;
 import io.vivarium.client.task.CreateJobTask;
 import io.vivarium.client.task.UploadResourceTask;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.net.jobs.CreateWorldJob;
 import io.vivarium.net.jobs.Job;
@@ -41,7 +41,7 @@ public class NormalizationConvergence
     public static void main(String[] args) throws URISyntaxException
     {
         // Make the blueprints with the default behavior
-        WorldBlueprint defaultWorldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint defaultWorldBlueprint = GridWorldBlueprint.makeDefault();
         defaultWorldBlueprint.setSize(worldSize);
         ArrayList<CreatureBlueprint> defaultCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint defaultCreatureBlueprint = CreatureBlueprint.makeDefault();
@@ -54,7 +54,7 @@ public class NormalizationConvergence
         defaultUploadClient.connect();
 
         // Make the blueprints with the normalizing behavior
-        WorldBlueprint normalizingWorldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint normalizingWorldBlueprint = GridWorldBlueprint.makeDefault();
         normalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint normalizingCreatureBlueprint = CreatureBlueprint.makeDefault();

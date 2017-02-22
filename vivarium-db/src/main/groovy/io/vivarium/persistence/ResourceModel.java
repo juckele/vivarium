@@ -10,7 +10,7 @@ import java.util.Optional;
 
 import com.google.common.base.Preconditions;
 
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
 import io.vivarium.core.GridWorld;
@@ -89,7 +89,7 @@ public class ResourceModel extends PersistenceModel
         {
             VivariumObjectCollection collection = JSONConverter.jsonStringToSerializerCollection(jsonData.get());
             resourceRelation.put(WORLD_COUNT, collection.getAll(GridWorld.class).size());
-            resourceRelation.put(BLUEPRINT_COUNT, collection.getAll(WorldBlueprint.class).size());
+            resourceRelation.put(BLUEPRINT_COUNT, collection.getAll(GridWorldBlueprint.class).size());
             resourceRelation.put(SPECIES_COUNT, collection.getAll(CreatureBlueprint.class).size());
             resourceRelation.put(CREATURE_COUNT, collection.getAll(Creature.class).size());
             resourceRelation.put(PROCESSOR_COUNT, collection.getAll(Processor.class).size());

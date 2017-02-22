@@ -3,7 +3,7 @@ package io.vivarium.experiment;
 import java.util.ArrayList;
 
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.WorldBlueprint;
+import io.vivarium.core.GridWorldBlueprint;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.scripts.CreateWorld;
 import io.vivarium.scripts.RunSimulation;
@@ -39,7 +39,7 @@ public class NormalizationConvergenceLocal
         Rand.setAllocator(new ThreadRandAllocator());
 
         // Make the blueprints with the default behavior
-        WorldBlueprint defaultWorldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint defaultWorldBlueprint = GridWorldBlueprint.makeDefault();
         defaultWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> defaultCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint defaultCreatureBlueprint = CreatureBlueprint.makeDefault();
@@ -50,7 +50,7 @@ public class NormalizationConvergenceLocal
         FileIO.saveSerializer(defaultWorldBlueprint, "defaultBlueprint.viv", Format.JSON);
 
         // Make the blueprints with the normalizing behavior
-        WorldBlueprint normalizingWorldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint normalizingWorldBlueprint = GridWorldBlueprint.makeDefault();
         normalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> normalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint normalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
@@ -63,7 +63,7 @@ public class NormalizationConvergenceLocal
         FileIO.saveSerializer(normalizingWorldBlueprint, "normalizingBlueprint.viv", Format.JSON);
 
         // Make the blueprints with the normalizing behavior and a longer length
-        WorldBlueprint longNormalizingWorldBlueprint = WorldBlueprint.makeDefault();
+        GridWorldBlueprint longNormalizingWorldBlueprint = GridWorldBlueprint.makeDefault();
         longNormalizingWorldBlueprint.setSize(50);
         ArrayList<CreatureBlueprint> longNormalizingCreatureBlueprints = new ArrayList<>();
         CreatureBlueprint longNormalizingCreatureBlueprint = CreatureBlueprint.makeDefault();
