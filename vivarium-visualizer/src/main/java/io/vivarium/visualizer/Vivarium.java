@@ -22,10 +22,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField.TextFieldListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
-import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.google.common.collect.Lists;
 
@@ -39,6 +36,9 @@ import io.vivarium.core.ItemType;
 import io.vivarium.core.TerrainType;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.Processor;
+import io.vivarium.visualizer.enums.CreatureRenderMode;
+import io.vivarium.visualizer.enums.MouseClickMode;
+import io.vivarium.visualizer.enums.SimulationSpeed;
 
 public class Vivarium extends ApplicationAdapter implements InputProcessor
 {
@@ -63,37 +63,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     // Graphical settings
     private CreatureRenderMode _creatureRenderMode = CreatureRenderMode.GENDER;
 
-    private enum CreatureRenderMode
-    {
-        GENDER, HEALTH, HUNGER, AGE, MEMORY, SIGN
-    }
-
     private int _ticks = 1;
     private int _overFrames = 1;
     private MouseClickMode _mouseClickMode = MouseClickMode.SELECT_CREATURE;
-
-    private enum MouseClickMode
-    {
-        SELECT_CREATURE(false),
-        ADD_FLAMETHROWER(true),
-        ADD_FOODGENERATOR(true),
-        ADD_WALL(true),
-        ADD_WALL_BRUTALLY(true),
-        REMOVE_TERRAIN(true),
-        REMOVE_ANYTHING(true);
-
-        private final boolean _isPaintbrushMode;
-
-        MouseClickMode(boolean isPaintbrushMode)
-        {
-            _isPaintbrushMode = isPaintbrushMode;
-        }
-
-        public boolean isPaintbrushMode()
-        {
-            return _isPaintbrushMode;
-        }
-    }
 
     // High Level Graphics information
     private Stage stage;
@@ -199,22 +171,27 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         clickModeSelectBox.setItems(clickModeStrings);
         clickModeSelectBox.setSelected(_mouseClickMode.toString());
 
-        // Simulation Speed
-        final Label ticksLabel = new Label("Ticks", skin);
-        TextField framesPerTickTextInput = new TextField("", skin);
-        framesPerTickTextInput.setMessageText("1");
-        framesPerTickTextInput.setAlignment(Align.center);
-        final Label perLabel = new Label("per", skin);
-        final Label framesLabel = new Label("Frames", skin);
-        TextField perFramesTextInput = new TextField("", skin);
-        perFramesTextInput.setMessageText("1");
-        perFramesTextInput.setAlignment(Align.center);
-
-        // Food Spawn Rate
-        final Label foodSpawnLabel = new Label("Food Spawn", skin);
-        TextField foodSpawnTextInput = new TextField("", skin);
-        foodSpawnTextInput.setMessageText("" + _gridWorldBlueprint.getFoodGenerationProbability());
-        foodSpawnTextInput.setAlignment(Align.center);
+        // Simulation speed
+        final Label simulationSpeedLabel = new Label("Simulation Speed: ", skin);
+        final SelectBox<String> simulationSpeedSelectBox = new SelectBox<>(skin);
+        simulationSpeedSelectBox.addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ChangeEvent event, Actor actor)
+            {
+                SimulationSpeed simulationSpeed = SimulationSpeed.valueOf(simulationSpeedSelectBox.getSelected());
+                _ticks = simulationSpeed.getTicks();
+                _overFrames = simulationSpeed.getPerFrame();
+                _enableInterpolation = simulationSpeed.getEnableInterpolation();
+            }
+        });
+        String[] simulationSpeedStrings = new String[SimulationSpeed.values().length];
+        for (int i = 0; i < SimulationSpeed.values().length; i++)
+        {
+            simulationSpeedStrings[i] = SimulationSpeed.values()[i].toString();
+        }
+        simulationSpeedSelectBox.setItems(simulationSpeedStrings);
+        simulationSpeedSelectBox.setSelected(SimulationSpeed.getDefault().toString());
 
         // FPS Display
         fpsLabel = new Label("fps:", skin);
@@ -235,16 +212,8 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         worldTable.add(clickModeLabel).colspan(2);
         worldTable.add(clickModeSelectBox).maxWidth(100);
         worldTable.row();
-        worldTable.add();
-        worldTable.add(framesPerTickTextInput);
-        worldTable.add(ticksLabel);
-        worldTable.row();
-        worldTable.add(perLabel);
-        worldTable.add(perFramesTextInput);
-        worldTable.add(framesLabel);
-        worldTable.row();
-        worldTable.add(foodSpawnLabel);
-        worldTable.add(foodSpawnTextInput);
+        worldTable.add(simulationSpeedLabel).colspan(2);
+        worldTable.add(simulationSpeedSelectBox).maxWidth(100);
         worldTable.row();
         worldTable.add(fpsLabel).colspan(4);
         worldTable.row();
@@ -278,70 +247,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         creatureTable.row();
         creatureTable.add(creatureHealthLabel).colspan(4);
         stage.addActor(creatureTable);
-
-        framesPerTickTextInput.setTextFieldListener(new TextFieldListener()
-        {
-            @Override
-            public void keyTyped(TextField textField, char key)
-            {
-                if (key == '\n')
-                {
-                    textField.getOnscreenKeyboard().show(false);
-                }
-                try
-                {
-                    _ticks = Integer.parseInt(textField.getText().trim());
-                }
-                catch (Exception e)
-                {
-                    _ticks = 1;
-                }
-                _ticks = Math.max(_ticks, 1);
-                _ticks = Math.min(_ticks, 1_000);
-                _enableInterpolation = _ticks == 1 && _overFrames > 1;
-            }
-        });
-        perFramesTextInput.setTextFieldListener(new TextFieldListener()
-        {
-            @Override
-            public void keyTyped(TextField textField, char key)
-            {
-                if (key == '\n')
-                {
-                    textField.getOnscreenKeyboard().show(false);
-                }
-                try
-                {
-                    _overFrames = Integer.parseInt(textField.getText().trim());
-                }
-                catch (Exception e)
-                {
-                    _overFrames = 1;
-                }
-                _overFrames = Math.max(_overFrames, 1);
-                _overFrames = Math.min(_overFrames, 600);
-                _enableInterpolation = _ticks == 1 && _overFrames > 1;
-            }
-        });
-        foodSpawnTextInput.setTextFieldListener(new TextFieldListener()
-        {
-            @Override
-            public void keyTyped(TextField textField, char key)
-            {
-                if (key == '\n')
-                {
-                    textField.getOnscreenKeyboard().show(false);
-                }
-                try
-                {
-                    _gridWorld.getGridWorldBlueprint().setFoodGenerationProbability(
-                            Double.parseDouble(textField.getText().trim()));
-                }
-                catch (Exception e)
-                {
-                }
-            }
-        });
     }
 
     @Override
