@@ -555,6 +555,7 @@ public class EmojiVivarium extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
+        stage.touchDown(screenX, screenY, pointer, button);
         // TODO: THIS
         return true;
     }
@@ -562,6 +563,7 @@ public class EmojiVivarium extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
+        stage.touchUp(screenX, screenY, pointer, button);
         // TODO: THIS
         return true;
     }
@@ -569,6 +571,7 @@ public class EmojiVivarium extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
+        stage.touchDragged(screenX, screenY, pointer);
         // TODO: THIS
         return false;
     }
