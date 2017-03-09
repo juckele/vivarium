@@ -31,7 +31,7 @@ public enum SimulationSpeed
 
     public static SimulationSpeed getDefault()
     {
-        return REALTIME;
+        return SLOW;
     }
 
     public boolean getEnableInterpolation()

@@ -131,7 +131,7 @@ public class BubbleWorld extends World
             Creature creature = _creatures.get(i);
             BubblePosition creaturePosition = _creaturePositions.get(i);
             creature.setAge(creature.getAge() + 1);
-            creaturePosition.setHeading(creaturePosition.getHeading() + 0.01);
+            creaturePosition.setHeading(creaturePosition.getHeading() + (creature.getIsFemale() ? 1 : -1));
         }
         // TODO Auto-generated method stub
 

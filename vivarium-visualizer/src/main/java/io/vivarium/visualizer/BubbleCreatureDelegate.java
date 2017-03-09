@@ -75,12 +75,23 @@ public class BubbleCreatureDelegate
     {
         double heading1 = _heading1 * 180 / (Math.PI);
         double heading2 = _heading2 * 180 / (Math.PI);
-        if ((heading1 == 0 && heading2 > 180) || (heading1 > 180 && heading2 == 0))
+        double rotationInterpolated;
+        if (Math.abs(heading2 - heading1) < 180)
         {
-            heading1 = heading1 == 0 ? 360 : heading1;
-            heading2 = heading2 == 0 ? 360 : heading2;
+            rotationInterpolated = (1 - interpolationFraction) * heading1 + interpolationFraction * heading2;
         }
-        double rotationInterpolated = (1 - interpolationFraction) * heading1 + interpolationFraction * heading2;
+        else
+        {
+            if (heading2 > heading1)
+            {
+                heading2 -= 360;
+            }
+            else
+            {
+                heading2 += 360;
+            }
+            rotationInterpolated = (1 - interpolationFraction) * heading1 + interpolationFraction * heading2;
+        }
         return (float) rotationInterpolated;
     }
 
