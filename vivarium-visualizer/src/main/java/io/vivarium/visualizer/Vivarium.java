@@ -159,22 +159,24 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         stage = new Stage(new ScreenViewport());
         // Gdx.input.setInputProcessor(stage);
 
-        // Simulation Speed
-        final Label ticksLabel = new Label("Ticks", skin);
-        TextField framesPerTickTextInput = new TextField("", skin);
-        framesPerTickTextInput.setMessageText("1");
-        framesPerTickTextInput.setAlignment(Align.center);
-        final Label perLabel = new Label("per", skin);
-        final Label framesLabel = new Label("Frames", skin);
-        TextField perFramesTextInput = new TextField("", skin);
-        perFramesTextInput.setMessageText("1");
-        perFramesTextInput.setAlignment(Align.center);
-
-        // Food Spawn Rate
-        final Label foodSpawnLabel = new Label("Food Spawn", skin);
-        TextField foodSpawnTextInput = new TextField("", skin);
-        foodSpawnTextInput.setMessageText("" + _gridWorldBlueprint.getFoodGenerationProbability());
-        foodSpawnTextInput.setAlignment(Align.center);
+        // Render Mode
+        final Label renderModeLabel = new Label("Render Mode: ", skin);
+        final SelectBox<String> renderModeSelectBox = new SelectBox<>(skin);
+        renderModeSelectBox.addListener(new ChangeListener()
+        {
+            @Override
+            public void changed(ChangeEvent event, Actor actor)
+            {
+                _creatureRenderMode = CreatureRenderMode.valueOf(renderModeSelectBox.getSelected());
+            }
+        });
+        String[] creatureRenderModeStrings = new String[CreatureRenderMode.values().length];
+        for (int i = 0; i < CreatureRenderMode.values().length; i++)
+        {
+            creatureRenderModeStrings[i] = CreatureRenderMode.values()[i].toString();
+        }
+        renderModeSelectBox.setItems(creatureRenderModeStrings);
+        renderModeSelectBox.setSelected(_creatureRenderMode.toString());
 
         // Click Mode
         final Label clickModeLabel = new Label("Click Mode: ", skin);
@@ -197,24 +199,22 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         clickModeSelectBox.setItems(clickModeStrings);
         clickModeSelectBox.setSelected(_mouseClickMode.toString());
 
-        // Render Mode
-        final Label renderModeLabel = new Label("Render Mode: ", skin);
-        final SelectBox<String> renderModeSelectBox = new SelectBox<>(skin);
-        renderModeSelectBox.addListener(new ChangeListener()
-        {
-            @Override
-            public void changed(ChangeEvent event, Actor actor)
-            {
-                _creatureRenderMode = CreatureRenderMode.valueOf(renderModeSelectBox.getSelected());
-            }
-        });
-        String[] creatureRenderModeStrings = new String[CreatureRenderMode.values().length];
-        for (int i = 0; i < CreatureRenderMode.values().length; i++)
-        {
-            creatureRenderModeStrings[i] = CreatureRenderMode.values()[i].toString();
-        }
-        renderModeSelectBox.setItems(creatureRenderModeStrings);
-        renderModeSelectBox.setSelected(_creatureRenderMode.toString());
+        // Simulation Speed
+        final Label ticksLabel = new Label("Ticks", skin);
+        TextField framesPerTickTextInput = new TextField("", skin);
+        framesPerTickTextInput.setMessageText("1");
+        framesPerTickTextInput.setAlignment(Align.center);
+        final Label perLabel = new Label("per", skin);
+        final Label framesLabel = new Label("Frames", skin);
+        TextField perFramesTextInput = new TextField("", skin);
+        perFramesTextInput.setMessageText("1");
+        perFramesTextInput.setAlignment(Align.center);
+
+        // Food Spawn Rate
+        final Label foodSpawnLabel = new Label("Food Spawn", skin);
+        TextField foodSpawnTextInput = new TextField("", skin);
+        foodSpawnTextInput.setMessageText("" + _gridWorldBlueprint.getFoodGenerationProbability());
+        foodSpawnTextInput.setAlignment(Align.center);
 
         // FPS Display
         fpsLabel = new Label("fps:", skin);
