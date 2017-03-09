@@ -4,7 +4,7 @@ import io.vivarium.core.Action;
 import io.vivarium.core.Creature;
 import io.vivarium.core.Direction;
 
-public class CreatureDelegate
+public class GridCreatureDelegate
 {
     private final Creature _creature;
 
@@ -14,7 +14,7 @@ public class CreatureDelegate
     private boolean _isSpawning;
     private boolean _isDying;
 
-    public CreatureDelegate(Creature creature, int r, int c)
+    public GridCreatureDelegate(Creature creature, int r, int c)
     {
         _creature = creature;
         _r1 = _r2 = r;

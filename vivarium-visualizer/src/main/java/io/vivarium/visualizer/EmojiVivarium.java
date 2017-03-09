@@ -2,7 +2,7 @@ package io.vivarium.visualizer;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -30,30 +30,28 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.google.common.collect.Lists;
 
 import io.vivarium.core.Action;
+import io.vivarium.core.BubbleWorld;
+import io.vivarium.core.BubbleWorldBlueprint;
 import io.vivarium.core.Creature;
 import io.vivarium.core.CreatureBlueprint;
-import io.vivarium.core.DynamicBalancer;
-import io.vivarium.core.GridWorld;
-import io.vivarium.core.GridWorldBlueprint;
-import io.vivarium.core.ItemType;
-import io.vivarium.core.TerrainType;
+import io.vivarium.core.bubble.BubblePosition;
 import io.vivarium.core.processor.NeuralNetworkBlueprint;
 import io.vivarium.core.processor.Processor;
 
-public class Vivarium extends ApplicationAdapter implements InputProcessor
+public class EmojiVivarium extends ApplicationAdapter implements InputProcessor
 {
-    private static final int SIZE = 30;
+    private static final double SIZE = 30;
     private static final int RENDER_BLOCK_SIZE = 32;
-    private static final int SOURCE_BLOCK_SIZE = 32;
+    private static final int SOURCE_BLOCK_SIZE = 512;
 
     // Simulation information
-    private GridWorldBlueprint _gridWorldBlueprint;
-    private GridWorld _gridWorld;
+    private BubbleWorldBlueprint _bubbleWorldBlueprint;
+    private BubbleWorld _bubbleWorld;
 
     // Simulation + Animation
     private int framesSinceTick = 0;
     private boolean _enableInterpolation = false;
-    private Map<Integer, GridCreatureDelegate> _animationCreatureDelegates = new HashMap<>();
+    private Map<Integer, BubbleCreatureDelegate> _animationCreatureDelegates = new HashMap<>();
     private Creature _selectedCreature;
 
     // Low Level Graphics information
@@ -102,7 +100,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private Label populationLabel;
     private Label generationLabel;
     private Label foodSupplyLabel;
-    private Label foodSpawnRateLabel;
     private Label breedingCostLabel;
     private Label creatureIdLabel;
     private Label creatureAgeLabel;
@@ -114,7 +111,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     private int _xDownWorld = -1;
     private int _yDownWorld = -1;
 
-    public Vivarium()
+    public EmojiVivarium()
     {
     }
 
@@ -122,21 +119,19 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     public void create()
     {
         // Create simulation
-        _gridWorldBlueprint = GridWorldBlueprint.makeDefault();
+        _bubbleWorldBlueprint = BubbleWorldBlueprint.makeDefault();
         CreatureBlueprint creatureBlueprint = CreatureBlueprint.makeDefault(0, 0, 0);
         NeuralNetworkBlueprint nnBlueprint = (NeuralNetworkBlueprint) creatureBlueprint.getProcessorBlueprints()[0];
         // nnBlueprint.setRandomInitializationProportion(1);
         nnBlueprint.setMutationRateExponent(-6);
         nnBlueprint.setNormalizeAfterMutation(0);
-        _gridWorldBlueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
+        _bubbleWorldBlueprint.setCreatureBlueprints(Lists.newArrayList(creatureBlueprint));
         // _blueprint.setSignEnabled(true);
-        _gridWorldBlueprint.setSize(SIZE);
-        _gridWorldBlueprint.setInitialWallGenerationProbability(0);
-        _gridWorld = new GridWorld(_gridWorldBlueprint);
-        _gridWorld.setDynamicBalancer(DynamicBalancer.makeDefault());
+        _bubbleWorldBlueprint.setSize(SIZE);
+        _bubbleWorld = new BubbleWorld(_bubbleWorldBlueprint);
 
         // Start with selected creature
-        LinkedList<Creature> creatures = _gridWorld.getCreatures();
+        List<Creature> creatures = _bubbleWorld.getCreatures();
         if (creatures.size() > 41)
         {
             _selectedCreature = creatures.get(41);
@@ -147,7 +142,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
         // Low level grahpics
         _batch = new SpriteBatch();
-        _img = new Texture("sprites.png");
+        _img = new Texture("emoji_sprites.png");
 
         buildSidebarUI();
     }
@@ -169,12 +164,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         TextField perFramesTextInput = new TextField("", skin);
         perFramesTextInput.setMessageText("1");
         perFramesTextInput.setAlignment(Align.center);
-
-        // Food Spawn Rate
-        final Label foodSpawnLabel = new Label("Food Spawn", skin);
-        TextField foodSpawnTextInput = new TextField("", skin);
-        foodSpawnTextInput.setMessageText("" + _gridWorldBlueprint.getFoodGenerationProbability());
-        foodSpawnTextInput.setAlignment(Align.center);
 
         // Click Mode
         final Label clickModeLabel = new Label("Click Mode: ", skin);
@@ -223,7 +212,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         populationLabel = new Label("population:", skin);
         generationLabel = new Label("generation:", skin);
         foodSupplyLabel = new Label("food:", skin);
-        foodSpawnRateLabel = new Label("food spawn rate:", skin);
         breedingCostLabel = new Label("breeding cost:", skin);
 
         // Layout
@@ -243,9 +231,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         worldTable.add(perFramesTextInput);
         worldTable.add(framesLabel);
         worldTable.row();
-        worldTable.add(foodSpawnLabel);
-        worldTable.add(foodSpawnTextInput);
-        worldTable.row();
         worldTable.add(fpsLabel).colspan(4);
         worldTable.row();
         worldTable.add(populationLabel).colspan(4);
@@ -253,8 +238,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         worldTable.add(generationLabel).colspan(4);
         worldTable.row();
         worldTable.add(foodSupplyLabel).colspan(4);
-        worldTable.row();
-        worldTable.add(foodSpawnRateLabel).colspan(4);
         worldTable.row();
         worldTable.add(breedingCostLabel).colspan(4);
         stage.addActor(worldTable);
@@ -323,25 +306,6 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 _enableInterpolation = _ticks == 1 && _overFrames > 1;
             }
         });
-        foodSpawnTextInput.setTextFieldListener(new TextFieldListener()
-        {
-            @Override
-            public void keyTyped(TextField textField, char key)
-            {
-                if (key == '\n')
-                {
-                    textField.getOnscreenKeyboard().show(false);
-                }
-                try
-                {
-                    _gridWorld.getGridWorldBlueprint().setFoodGenerationProbability(
-                            Double.parseDouble(textField.getText().trim()));
-                }
-                catch (Exception e)
-                {
-                }
-            }
-        });
     }
 
     @Override
@@ -371,7 +335,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         {
             for (int i = 0; i < _ticks; i++)
             {
-                _gridWorld.tick();
+                _bubbleWorld.tick();
                 updateCreatureDelegates();
             }
             framesSinceTick = 0;
@@ -421,74 +385,16 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
     }
 
-    private void removeTerrain(int r, int c)
-    {
-        _gridWorld.setTerrain(null, r, c);
-    }
-
     private void applyMouseBrush(int x, int y)
     {
-        Creature creature;
-
-        // Check bounds, don't let the user change terrain near the edge of the world
-        if (x < 1 || x >= _gridWorld.getWidth() - 1 || y < 1 || y >= _gridWorld.getHeight() - 1)
-        {
-            return;
-        }
-        // Apply brush modes
-        switch (this._mouseClickMode)
-        {
-            case ADD_WALL:
-                if (_gridWorld.squareIsEmpty(y, x))
-                {
-                    _gridWorld.setTerrain(TerrainType.WALL, y, x);
-                }
-                break;
-            case ADD_WALL_BRUTALLY:
-                creature = _gridWorld.getCreature(y, x);
-                if (creature != null)
-                {
-                    this._animationCreatureDelegates.remove(creature.getID());
-                    _gridWorld.removeCreature(y, x);
-                }
-                _gridWorld.removeFood(y, x);
-                _gridWorld.setTerrain(TerrainType.WALL, y, x);
-                break;
-            case REMOVE_TERRAIN:
-                removeTerrain(y, x);
-                break;
-            case REMOVE_ANYTHING:
-                creature = _gridWorld.getCreature(y, x);
-                if (creature != null)
-                {
-                    this._animationCreatureDelegates.remove(creature.getID());
-                    _gridWorld.removeCreature(y, x);
-                }
-                _gridWorld.removeFood(y, x);
-                _gridWorld.setTerrain(null, y, x);
-                break;
-            case ADD_FLAMETHROWER:
-                if (_gridWorld.squareIsEmpty(y, x))
-                {
-                    _gridWorld.setTerrain(TerrainType.FLAMETHROWER, y, x);
-                }
-                break;
-            case ADD_FOODGENERATOR:
-                if (_gridWorld.squareIsEmpty(y, x))
-                {
-                    _gridWorld.setTerrain(TerrainType.FOOD_GENERATOR, y, x);
-                }
-                break;
-            case SELECT_CREATURE:
-                throw new IllegalStateException("" + MouseClickMode.SELECT_CREATURE + " is not a brush mode");
-        }
+        // TODO: Re-implement
     }
 
     private void setLabels()
     {
         fpsLabel.setText("fps: " + Gdx.graphics.getFramesPerSecond());
-        populationLabel.setText("population: " + _gridWorld.getCreatureCount());
-        LinkedList<Creature> creatures = _gridWorld.getCreatures();
+        populationLabel.setText("population: " + _bubbleWorld.getCreatureCount());
+        List<Creature> creatures = _bubbleWorld.getCreatures();
         double generation = 0;
         for (Creature creature : creatures)
         {
@@ -496,11 +402,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
         generation /= creatures.size();
         generationLabel.setText("generation: " + ((int) (generation * 100) / 100.0));
-        foodSupplyLabel.setText("food: " + _gridWorld.getItemCount());
-        foodSpawnRateLabel
-                .setText("food spawn rate: " + _gridWorld.getGridWorldBlueprint().getFoodGenerationProbability());
+        foodSupplyLabel.setText("food: " + _bubbleWorld.getItemCount());
         breedingCostLabel.setText("breeding cost: "
-                + (-1 * _gridWorld.getGridWorldBlueprint().getCreatureBlueprints().get(0).getBreedingFoodRate()));
+                + (-1 * _bubbleWorld.getWorldBlueprint().getCreatureBlueprints().get(0).getBreedingFoodRate()));
 
         if (_selectedCreature != null)
         {
@@ -512,14 +416,9 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
     }
 
-    private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle)
+    private void drawSprite(EmojiVivariumSprite sprite, float xPos, float yPos, float angle, float scale)
     {
-        drawSprite(sprite, xPos, yPos, angle, 1);
-    }
-
-    private void drawSprite(VivariumSprite sprite, float xPos, float yPos, float angle, float scale)
-    {
-        float x = SIZE / 2 * RENDER_BLOCK_SIZE + xPos * RENDER_BLOCK_SIZE;
+        float x = (float) (SIZE / 2 * RENDER_BLOCK_SIZE + xPos * RENDER_BLOCK_SIZE);
         float y = getHeight() - yPos * RENDER_BLOCK_SIZE - RENDER_BLOCK_SIZE;
         float originX = RENDER_BLOCK_SIZE / 2;
         float originY = RENDER_BLOCK_SIZE / 2;
@@ -538,64 +437,23 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
 
     private void drawTerrain(float interpolationFraction)
     {
-        for (int c = 0; c < _gridWorld.getWorldWidth(); c++)
-        {
-            for (int r = 0; r < _gridWorld.getWorldHeight(); r++)
-            {
-                if (_gridWorld.getTerrain(r, c) == TerrainType.WALL)
-                {
-                    drawSprite(VivariumSprite.WALL, c, r, 0);
-                }
-                if (_gridWorld.getTerrain(r, c) == TerrainType.FOOD_GENERATOR)
-                {
-                    drawSprite(VivariumSprite.FOOD_GENERATOR_ACTIVE, c, r, 0);
-                }
-                if (_gridWorld.getTerrain(r, c) == TerrainType.FLAMETHROWER)
-                {
-                    drawSprite(VivariumSprite.FLAMETHROWER_ACTIVE, c, r, 0);
-                }
-                if (_gridWorld.getTerrain(r, c) == TerrainType.FLAME)
-                {
-                    if (interpolationFraction < 1f / 3f)
-                    {
-                        drawSprite(VivariumSprite.FLAME_1, c, r, 0);
-                    }
-                    else if (interpolationFraction < 2f / 3f)
-                    {
-                        drawSprite(VivariumSprite.FLAME_2, c, r, 0);
-                    }
-                    else
-                    {
-                        drawSprite(VivariumSprite.FLAME_3, c, r, 0);
-                    }
-                }
-            }
-        }
+        // TODO: THIS
     }
 
     private void drawFood()
     {
-        for (int c = 0; c < _gridWorld.getWorldWidth(); c++)
-        {
-            for (int r = 0; r < _gridWorld.getWorldHeight(); r++)
-            {
-                if (_gridWorld.getItem(r, c) == ItemType.FOOD)
-                {
-                    drawSprite(VivariumSprite.FOOD, c, r, 0);
-                }
-            }
-        }
+        // TODO: THIS
     }
 
     private void drawCreatures(float interpolationFraction)
     {
-        for (GridCreatureDelegate delegate : _animationCreatureDelegates.values())
+        for (BubbleCreatureDelegate delegate : _animationCreatureDelegates.values())
         {
             drawCreature(delegate, interpolationFraction);
         }
     }
 
-    private void drawCreature(GridCreatureDelegate delegate, float interpolationFraction)
+    private void drawCreature(BubbleCreatureDelegate delegate, float interpolationFraction)
     {
         Creature creature = delegate.getCreature();
         switch (_creatureRenderMode)
@@ -620,15 +478,13 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
                 break;
         }
         float scale = delegate.getScale(interpolationFraction);
-        VivariumSprite creatureSprite = getCreatureSpriteFrame(interpolationFraction, creature);
-        drawSprite(creatureSprite, delegate.getC(interpolationFraction), delegate.getR(interpolationFraction),
-                delegate.getRotation(interpolationFraction), scale);
+        drawSprite(EmojiVivariumSprite.CREATURE_1, delegate.getX(interpolationFraction),
+                delegate.getY(interpolationFraction), delegate.getHeading(interpolationFraction), scale);
         if (creature == _selectedCreature)
         {
             _batch.setColor(Color.WHITE);
-            VivariumSprite creatureHaloSprite = getCreatureHaloSpriteFrame(interpolationFraction, creature);
-            drawSprite(creatureHaloSprite, delegate.getC(interpolationFraction), delegate.getR(interpolationFraction),
-                    delegate.getRotation(interpolationFraction), scale);
+            drawSprite(EmojiVivariumSprite.HALO_CREATURE_1, delegate.getX(interpolationFraction),
+                    delegate.getY(interpolationFraction), delegate.getHeading(interpolationFraction), scale);
         }
     }
 
@@ -640,7 +496,7 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         // with a creature that has used dye either needs to animate its death, or has
         // already done so.
         Set<Integer> creatureIDsToRemove = new HashSet<>();
-        for (Entry<Integer, GridCreatureDelegate> delegatePair : _animationCreatureDelegates.entrySet())
+        for (Entry<Integer, BubbleCreatureDelegate> delegatePair : _animationCreatureDelegates.entrySet())
         {
             if (delegatePair.getValue().isDying())
             {
@@ -658,27 +514,25 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         }
         // For all other creatures, update their animation delegate, or add a new one if they
         // don't have an animation delegate yet.
-        for (int c = 0; c < _gridWorld.getWorldWidth(); c++)
+        List<Creature> creatures = _bubbleWorld.getCreatures();
+        List<BubblePosition> creaturePositions = _bubbleWorld.getCreaturePositions();
+        for (int i = 0; i < creatures.size(); i++)
         {
-            for (int r = 0; r < _gridWorld.getWorldHeight(); r++)
+            Creature creature = creatures.get(i);
+            BubblePosition creaturePosition = creaturePositions.get(i);
+            if (_animationCreatureDelegates.containsKey(creature.getID()))
             {
-                Creature creature = _gridWorld.getCreature(r, c);
-                if (creature != null)
-                {
-                    if (_animationCreatureDelegates.containsKey(creature.getID()))
-                    {
-                        _animationCreatureDelegates.get(creature.getID()).updateSnapshot(r, c);
-                    }
-                    else
-                    {
-                        _animationCreatureDelegates.put(creature.getID(), new GridCreatureDelegate(creature, r, c));
-                    }
-                }
+                _animationCreatureDelegates.get(creature.getID()).updateSnapshot();
+            }
+            else
+            {
+                _animationCreatureDelegates.put(creature.getID(),
+                        new BubbleCreatureDelegate(creature, creaturePosition));
             }
         }
     }
 
-    public void setColorOnGenderAndPregnancy(GridCreatureDelegate delegate, float interpolationFraction)
+    public void setColorOnGenderAndPregnancy(BubbleCreatureDelegate delegate, float interpolationFraction)
     {
         if (delegate.getCreature().getIsFemale())
         {
@@ -734,56 +588,14 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
         _batch.setColor(new Color(displaySigns[0], displaySigns[1], displaySigns[2], 1));
     }
 
-    private VivariumSprite getCreatureSpriteFrame(float cycle, Creature creature)
-    {
-        int offset = (int) (cycle * 100 + creature.getRandomSeed() * 100) % 100;
-        if (offset < 25)
-        {
-            return VivariumSprite.CREATURE_1;
-        }
-        else if (offset < 50)
-        {
-            return VivariumSprite.CREATURE_2;
-        }
-        else if (offset < 75)
-        {
-            return VivariumSprite.CREATURE_3;
-        }
-        else
-        {
-            return VivariumSprite.CREATURE_2;
-        }
-    }
-
-    private VivariumSprite getCreatureHaloSpriteFrame(float cycle, Creature creature)
-    {
-        int offset = (int) (cycle * 100 + creature.getRandomSeed() * 100) % 100;
-        if (offset < 25)
-        {
-            return VivariumSprite.HALO_CREATURE_1;
-        }
-        else if (offset < 50)
-        {
-            return VivariumSprite.HALO_CREATURE_2;
-        }
-        else if (offset < 75)
-        {
-            return VivariumSprite.HALO_CREATURE_3;
-        }
-        else
-        {
-            return VivariumSprite.HALO_CREATURE_2;
-        }
-    }
-
     public static int getHeight()
     {
-        return SIZE * RENDER_BLOCK_SIZE;
+        return (int) (SIZE * RENDER_BLOCK_SIZE);
     }
 
     public static int getWidth()
     {
-        return SIZE * RENDER_BLOCK_SIZE;
+        return (int) (SIZE * RENDER_BLOCK_SIZE);
     }
 
     @Override
@@ -810,59 +622,21 @@ public class Vivarium extends ApplicationAdapter implements InputProcessor
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button)
     {
-        stage.touchDown(screenX, screenY, pointer, button);
-
-        if (screenX > SIZE / 2 * RENDER_BLOCK_SIZE)
-        {
-            this._xDownWorld = (screenX - SIZE / 2 * RENDER_BLOCK_SIZE) / RENDER_BLOCK_SIZE;
-            this._yDownWorld = screenY / RENDER_BLOCK_SIZE;
-        }
-        else
-        {
-            this._xDownWorld = -1;
-            this._yDownWorld = -1;
-        }
+        // TODO: THIS
         return true;
     }
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button)
     {
-        stage.touchUp(screenX, screenY, pointer, button);
-
-        if (screenX > SIZE / 2 * RENDER_BLOCK_SIZE)
-        {
-            int xUpWorld = (screenX - SIZE / 2 * RENDER_BLOCK_SIZE) / RENDER_BLOCK_SIZE;
-            int yUpWorld = screenY / RENDER_BLOCK_SIZE;
-            if (_xDownWorld == xUpWorld && _yDownWorld == yUpWorld)
-            {
-                if (_mouseClickMode == MouseClickMode.SELECT_CREATURE)
-                {
-                    if (_gridWorld.getCreature(yUpWorld, xUpWorld) != null)
-                    {
-                        this._selectedCreature = _gridWorld.getCreature(yUpWorld, xUpWorld);
-                    }
-                    this._xDownWorld = -1;
-                    this._yDownWorld = -1;
-                }
-            }
-        }
+        // TODO: THIS
         return true;
     }
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer)
     {
-        stage.touchDragged(screenX, screenY, pointer);
-        if (screenX > SIZE / 2 * RENDER_BLOCK_SIZE)
-        {
-            int xDragWorld = (screenX - SIZE / 2 * RENDER_BLOCK_SIZE) / RENDER_BLOCK_SIZE;
-            int yDragWorld = screenY / RENDER_BLOCK_SIZE;
-            if (this._mouseClickMode.isPaintbrushMode())
-            {
-                applyMouseBrush(xDragWorld, yDragWorld);
-            }
-        }
+        // TODO: THIS
         return false;
     }
 

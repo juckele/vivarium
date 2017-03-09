@@ -53,211 +53,33 @@ public class GridWorld extends World
         this._gridWorldBlueprint = gridWorldBlueprint;
 
         // Size the world
-        this.setWorldDimensions(gridWorldBlueprint.getWidth(), gridWorldBlueprint.getHeight());
+        this._width = gridWorldBlueprint.getWidth();
+        this._height = gridWorldBlueprint.getHeight();
+
+        this._creatureGrid = new Creature[_height][_width];
+        this._itemGrid = new ItemType[_height][_width];
+        this._terrainGrid = new TerrainType[_height][_width];
 
         initialize();
     }
 
-    public DynamicBalancer getDynamicBalancer()
+    private void addCreature(Creature creature, int r, int c)
     {
-        return this._balancer;
+        creature.setID(this.getNewCreatureID());
+        _creatureGrid[r][c] = creature;
     }
 
-    public void setDynamicBalancer(DynamicBalancer balancer)
+    public void addImmigrant(Creature creature)
     {
-        this._balancer = balancer;
-    }
-
-    public int getHeight()
-    {
-        return _height;
-    }
-
-    public int getWidth()
-    {
-        return _width;
-    }
-
-    @Override
-    protected void populatateWorld()
-    {
-        GridWorldPopulator populator = new GridWorldPopulator();
-        populator.setCreatureBlueprints(_gridWorldBlueprint.getCreatureBlueprints());
-        populator.setWallProbability(_gridWorldBlueprint.getInitialWallGenerationProbability());
-        populator.setFoodGeneratorProbability(_gridWorldBlueprint.getFoodGeneratorProbability());
-        populator.setFoodProbability(_gridWorldBlueprint.getInitialFoodGenerationProbability());
-        populator.setFlamethrowerProbability(_gridWorldBlueprint.getFlamethrowerProbability());
-        for (int r = 0; r < _height; r++)
+        boolean immigrantPlaced = false;
+        while (!immigrantPlaced)
         {
-            for (int c = 0; c < _width; c++)
+            int r = Rand.getInstance().getRandomInt(this._height);
+            int c = Rand.getInstance().getRandomInt(this._width);
+            if (this.squareIsEmpty(r, c))
             {
-                _creatureGrid[r][c] = null;
-                if (r < 1 || c < 1 || r > _height - 2 || c > _width - 2)
-                {
-                    setTerrain(TerrainType.WALL, r, c);
-                }
-                else
-                {
-                    EntityType type = populator.getNextEntityType();
-                    if (type == EntityType.CREATURE)
-                    {
-                        CreatureBlueprint creatureBlueprint = populator.getNextCreatureBlueprint();
-                        Creature creature = new Creature(creatureBlueprint);
-                        addCreature(creature, r, c);
-                    }
-                    else if (type == EntityType.ITEM)
-                    {
-                        // TODO: Add non-food items
-                        setItem(ItemType.FOOD, r, c);
-                    }
-                    else if (type == EntityType.TERRAIN)
-                    {
-                        // TODO: Add non-wall terrain
-
-                        setTerrain(populator.getTerrainType(), r, c);
-                    }
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void tickCreatures()
-    {
-        for (int r = 1; r < _height - 1; r++)
-        {
-            for (int c = 1; c < _width - 1; c++)
-            {
-                if (_creatureGrid[r][c] != null)
-                {
-                    int flameAmount = _terrainGrid[r][c] == TerrainType.FLAME ? 1 : 0;
-                    _creatureGrid[r][c].tick(flameAmount);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void transmitSounds()
-    {
-        if (this._gridWorldBlueprint.getSoundEnabled())
-        {
-            for (int r = 1; r < this._height - 1; r++)
-            {
-                for (int c = 1; c < this._width - 1; c++)
-                {
-                    if (_creatureGrid[r][c] != null)
-                    {
-                        transmitSoundsFrom(r, c);
-                    }
-                }
-            }
-        }
-    }
-
-    private void transmitSoundsFrom(int r1, int c1)
-    {
-        // We transmit sounds both directions at the same time, so we only want to get each pair of
-        // creatures once. Anything 'below and to the right' is should be a pair that haven't shared
-        // sounds yet.
-        for (int c2 = c1 + 1; c2 < this._width; c2++)
-        {
-            int r2 = r1;
-            if (_creatureGrid[r1][c1] != null)
-            {
-                transmitSoundsFromTo(r1, c1, r2, c2);
-            }
-        }
-        for (int r2 = r1 + 1; r2 < this._height; r2++)
-        {
-            for (int c2 = c1; c2 < this._width; c2++)
-            {
-                if (_creatureGrid[r2][c2] != null)
-                {
-                    transmitSoundsFromTo(r1, c1, r2, c2);
-                }
-            }
-        }
-    }
-
-    private void transmitSoundsFromTo(int r1, int c1, int r2, int c2)
-    {
-        int distanceSquared = (r1 - r2) * (r1 - r2) + (c1 - c2) * (c1 - c2);
-        _creatureGrid[r1][c1].listenToCreature(_creatureGrid[r2][c2], distanceSquared);
-        _creatureGrid[r2][c2].listenToCreature(_creatureGrid[r1][c1], distanceSquared);
-    }
-
-    @Override
-    protected void transmitSigns()
-    {
-        if (this._gridWorldBlueprint.getSignEnabled())
-        {
-            for (int r = 1; r < this._height - 1; r++)
-            {
-                for (int c = 1; c < this._width - 1; c++)
-                {
-                    if (_creatureGrid[r][c] != null)
-                    {
-                        transmitSignsFrom(r, c);
-                    }
-                }
-            }
-        }
-    }
-
-    private void transmitSignsFrom(int r1, int c1)
-    {
-        Direction facing = _creatureGrid[r1][c1].getFacing();
-        int r2 = r1 + Direction.getVerticalComponent(facing);
-        int c2 = c1 + Direction.getHorizontalComponent(facing);
-        // We transmit signs both directions at the same time, so we only want to get each pair of
-        // creatures once. Anything 'below and to the right' is should be a pair that haven't shared
-        // signs yet.
-        if (r1 <= r2 && c1 <= c2)
-        {
-            if (_creatureGrid[r2][c2] != null && facing == Direction.flipDirection(_creatureGrid[r2][c2].getFacing()))
-            {
-                transmitSignsFromTo(r1, c1, r2, c2);
-            }
-        }
-    }
-
-    private void transmitSignsFromTo(int r1, int c1, int r2, int c2)
-    {
-        _creatureGrid[r1][c1].lookAtCreature(_creatureGrid[r2][c2]);
-        _creatureGrid[r2][c2].lookAtCreature(_creatureGrid[r1][c1]);
-    }
-
-    @Override
-    protected void letCreaturesPlan()
-    {
-        for (int r = 1; r < _height - 1; r++)
-        {
-            for (int c = 1; c < _width - 1; c++)
-            {
-                if (_creatureGrid[r][c] != null)
-                {
-                    _creatureGrid[r][c].planAction(this, r, c);
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void executeCreaturePlans()
-    {
-        // Creatures act
-        for (int r = 1; r < _height - 1; r++)
-        {
-            for (int c = 1; c < _width - 1; c++)
-            {
-                if (_creatureGrid[r][c] != null)
-                {
-                    if (!_creatureGrid[r][c].hasActed())
-                    {
-                        executeCreaturePlan(r, c);
-                    }
-                }
+                addCreature(creature, r, c);
+                immigrantPlaced = true;
             }
         }
     }
@@ -329,6 +151,377 @@ public class GridWorld extends World
     }
 
     @Override
+    protected void executeCreaturePlans()
+    {
+        // Creatures act
+        for (int r = 1; r < _height - 1; r++)
+        {
+            for (int c = 1; c < _width - 1; c++)
+            {
+                if (_creatureGrid[r][c] != null)
+                {
+                    if (!_creatureGrid[r][c].hasActed())
+                    {
+                        executeCreaturePlan(r, c);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public void finalizeSerialization()
+    {
+        // Do nothing
+    }
+
+    public LinkedList<AuditRecord> getAuditRecords()
+    {
+        LinkedList<AuditRecord> auditRecords = new LinkedList<>();
+        for (int i = 0; i < this._auditRecords.length; i++)
+        {
+            auditRecords.add(_auditRecords[i]);
+        }
+        return auditRecords;
+    }
+
+    @Override
+    public int getCount(CreatureBlueprint s)
+    {
+        int count = 0;
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                if (this._creatureGrid[r][c] != null && this._creatureGrid[r][c].getBlueprint().equals(s))
+                {
+                    count++;
+                }
+            }
+        }
+        return (count);
+    }
+
+    public Creature getCreature(int r, int c)
+    {
+        return this._creatureGrid[r][c];
+    }
+
+    @Override
+    public int getCreatureCount()
+    {
+        int count = 0;
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                if (this._creatureGrid[r][c] != null)
+                {
+                    count++;
+                }
+            }
+        }
+        return (count);
+    }
+
+    @Override
+    public LinkedList<Creature> getCreatures()
+    {
+        LinkedList<Creature> allCreatures = new LinkedList<>();
+        for (int r = 1; r < this._height - 1; r++)
+        {
+            for (int c = 1; c < this._width - 1; c++)
+            {
+                if (_creatureGrid[r][c] != null)
+                {
+                    allCreatures.add(_creatureGrid[r][c]);
+                }
+            }
+        }
+        Collections.sort(allCreatures, new Comparator<Creature>()
+        {
+            @Override
+            public int compare(Creature c1, Creature c2)
+            {
+                int generationComparison = Double.compare(c1.getGeneration(), c2.getGeneration());
+                if (generationComparison != 0)
+                {
+                    return generationComparison;
+                }
+                else
+                {
+                    return Integer.compare(c1.getID(), c2.getID());
+                }
+            }
+        });
+        return allCreatures;
+    }
+
+    public DynamicBalancer getDynamicBalancer()
+    {
+        return this._balancer;
+    }
+
+    public GridWorldBlueprint getGridWorldBlueprint()
+    {
+        return this._gridWorldBlueprint;
+    }
+
+    public int getHeight()
+    {
+        return _height;
+    }
+
+    public ItemType getItem(int r, int c)
+    {
+        return this._itemGrid[r][c];
+    }
+
+    public int getItemCount()
+    {
+        int count = 0;
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                if (this._itemGrid[r][c] != null)
+                {
+                    count++;
+                }
+            }
+        }
+        return (count);
+    }
+
+    public TerrainType getTerrain(int r, int c)
+    {
+        return this._terrainGrid[r][c];
+    }
+
+    public int getTerrainCount()
+    {
+        int count = 0;
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                if (this._terrainGrid[r][c] != null)
+                {
+                    count++;
+                }
+            }
+        }
+        return (count);
+    }
+
+    public int getWidth()
+    {
+        return _width;
+    }
+
+    public int getWorldHeight()
+    {
+        return this._height;
+    }
+
+    public int getWorldWidth()
+    {
+        return this._width;
+    }
+
+    private void killCreature(int r, int c)
+    {
+        removeCreature(r, c);
+    }
+
+    @Override
+    protected void letCreaturesPlan()
+    {
+        for (int r = 1; r < _height - 1; r++)
+        {
+            for (int c = 1; c < _width - 1; c++)
+            {
+                if (_creatureGrid[r][c] != null)
+                {
+                    _creatureGrid[r][c].planAction(this, r, c);
+                }
+            }
+        }
+    }
+
+    private void moveCreature(int r, int c, Direction direction)
+    {
+        int r1 = r;
+        int c1 = c;
+        int r2 = r;
+        int c2 = c;
+        switch (direction)
+        {
+            case NORTH:
+                r2--;
+                break;
+            case EAST:
+                c2++;
+                break;
+            case SOUTH:
+                r2++;
+                break;
+            case WEST:
+                c2--;
+                break;
+            default:
+                System.err.println("Non-Fatal Error, unhandled action");
+                new Error().printStackTrace();
+        }
+
+        _creatureGrid[r2][c2] = _creatureGrid[r1][c1];
+        _creatureGrid[r1][c1] = null;
+    }
+
+    @Override
+    protected void populatateWorld()
+    {
+        GridWorldPopulator populator = new GridWorldPopulator();
+        populator.setCreatureBlueprints(_gridWorldBlueprint.getCreatureBlueprints());
+        populator.setWallProbability(_gridWorldBlueprint.getInitialWallGenerationProbability());
+        populator.setFoodGeneratorProbability(_gridWorldBlueprint.getFoodGeneratorProbability());
+        populator.setFoodProbability(_gridWorldBlueprint.getInitialFoodGenerationProbability());
+        populator.setFlamethrowerProbability(_gridWorldBlueprint.getFlamethrowerProbability());
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                _creatureGrid[r][c] = null;
+                if (r < 1 || c < 1 || r > _height - 2 || c > _width - 2)
+                {
+                    setTerrain(TerrainType.WALL, r, c);
+                }
+                else
+                {
+                    EntityType type = populator.getNextEntityType();
+                    if (type == EntityType.CREATURE)
+                    {
+                        CreatureBlueprint creatureBlueprint = populator.getNextCreatureBlueprint();
+                        Creature creature = new Creature(creatureBlueprint);
+                        addCreature(creature, r, c);
+                    }
+                    else if (type == EntityType.ITEM)
+                    {
+                        // TODO: Add non-food items
+                        setItem(ItemType.FOOD, r, c);
+                    }
+                    else if (type == EntityType.TERRAIN)
+                    {
+                        // TODO: Add non-wall terrain
+
+                        setTerrain(populator.getTerrainType(), r, c);
+                    }
+                }
+            }
+        }
+    }
+
+    public void removeCreature(int r, int c)
+    {
+        _creatureGrid[r][c] = null;
+
+    }
+
+    public void removeFood(int r, int c)
+    {
+        _itemGrid[r][c] = null;
+    }
+
+    public void setDynamicBalancer(DynamicBalancer balancer)
+    {
+        this._balancer = balancer;
+    }
+
+    public void setItem(ItemType itemType, int r, int c)
+    {
+        this._itemGrid[r][c] = itemType;
+    }
+
+    public void setTerrain(TerrainType terrainType, int r, int c)
+    {
+        this._terrainGrid[r][c] = terrainType;
+    }
+
+    @Override
+    protected void spawnFood()
+    {
+        // Generate food at a given rate
+        for (int r = 0; r < _height; r++)
+        {
+            for (int c = 0; c < _width; c++)
+            {
+                if (squareIsFoodable(r, c))
+                {
+                    double randomNumber = Rand.getInstance().getRandomPositiveDouble();
+                    if (randomNumber < this._gridWorldBlueprint.getFoodGenerationProbability())
+                    {
+                        this.setItem(ItemType.FOOD, r, c);
+                    }
+                }
+            }
+        }
+    }
+
+    public boolean squareIsEmpty(int r, int c)
+    {
+        return _creatureGrid[r][c] == null && _itemGrid[r][c] == null && _terrainGrid[r][c] == null;
+    }
+
+    public boolean squareIsFlamable(int r, int c)
+    {
+        return _terrainGrid[r][c] == null;
+    }
+
+    public boolean squareIsFoodable(int r, int c)
+    {
+        return _itemGrid[r][c] == null && _terrainGrid[r][c] == null;
+    }
+
+    public boolean squareIsPathable(int r, int c)
+    {
+        return _creatureGrid[r][c] == null && TerrainType.isPathable(_terrainGrid[r][c]);
+    }
+
+    @Override
+    public void tick()
+    {
+        super.tick();
+
+        // Run balancer if it's present
+        if (this._balancer != null)
+        {
+            _balancer.balance(this);
+        }
+    }
+
+    @Override
+    protected void tickCreatures()
+    {
+        for (int r = 1; r < _height - 1; r++)
+        {
+            for (int c = 1; c < _width - 1; c++)
+            {
+                if (_creatureGrid[r][c] != null)
+                {
+                    int flameAmount = _terrainGrid[r][c] == TerrainType.FLAME ? 1 : 0;
+                    _creatureGrid[r][c].tick(flameAmount);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void tickPhysics()
+    {
+        // Do nothing, nothing to resolve in a grid world
+    }
+
+    @Override
     protected void tickTerrain()
     {
         for (int r = 0; r < _height; r++)
@@ -379,285 +572,93 @@ public class GridWorld extends World
     }
 
     @Override
-    protected void spawnFood()
+    protected void transmitSigns()
     {
-        // Generate food at a given rate
-        for (int r = 0; r < _height; r++)
+        if (this._gridWorldBlueprint.getSignEnabled())
         {
-            for (int c = 0; c < _width; c++)
+            for (int r = 1; r < this._height - 1; r++)
             {
-                if (squareIsFoodable(r, c))
+                for (int c = 1; c < this._width - 1; c++)
                 {
-                    double randomNumber = Rand.getInstance().getRandomPositiveDouble();
-                    if (randomNumber < this._gridWorldBlueprint.getFoodGenerationProbability())
+                    if (_creatureGrid[r][c] != null)
                     {
-                        this.setItem(ItemType.FOOD, r, c);
+                        transmitSignsFrom(r, c);
                     }
                 }
             }
         }
     }
 
-    private void moveCreature(int r, int c, Direction direction)
+    private void transmitSignsFrom(int r1, int c1)
     {
-        int r1 = r;
-        int c1 = c;
-        int r2 = r;
-        int c2 = c;
-        switch (direction)
+        Direction facing = _creatureGrid[r1][c1].getFacing();
+        int r2 = r1 + Direction.getVerticalComponent(facing);
+        int c2 = c1 + Direction.getHorizontalComponent(facing);
+        // We transmit signs both directions at the same time, so we only want to get each pair of
+        // creatures once. Anything 'below and to the right' is should be a pair that haven't shared
+        // signs yet.
+        if (r1 <= r2 && c1 <= c2)
         {
-            case NORTH:
-                r2--;
-                break;
-            case EAST:
-                c2++;
-                break;
-            case SOUTH:
-                r2++;
-                break;
-            case WEST:
-                c2--;
-                break;
-            default:
-                System.err.println("Non-Fatal Error, unhandled action");
-                new Error().printStackTrace();
+            if (_creatureGrid[r2][c2] != null && facing == Direction.flipDirection(_creatureGrid[r2][c2].getFacing()))
+            {
+                transmitSignsFromTo(r1, c1, r2, c2);
+            }
         }
-
-        _creatureGrid[r2][c2] = _creatureGrid[r1][c1];
-        _creatureGrid[r1][c1] = null;
     }
 
-    public void removeCreature(int r, int c)
+    private void transmitSignsFromTo(int r1, int c1, int r2, int c2)
     {
-        _creatureGrid[r][c] = null;
-
-    }
-
-    public void removeFood(int r, int c)
-    {
-        _itemGrid[r][c] = null;
-    }
-
-    public LinkedList<AuditRecord> getAuditRecords()
-    {
-        LinkedList<AuditRecord> auditRecords = new LinkedList<>();
-        for (int i = 0; i < this._auditRecords.length; i++)
-        {
-            auditRecords.add(_auditRecords[i]);
-        }
-        return auditRecords;
+        _creatureGrid[r1][c1].lookAtCreature(_creatureGrid[r2][c2]);
+        _creatureGrid[r2][c2].lookAtCreature(_creatureGrid[r1][c1]);
     }
 
     @Override
-    public void tick()
+    protected void transmitSounds()
     {
-        super.tick();
-
-        // Run balancer if it's present
-        if (this._balancer != null)
+        if (this._gridWorldBlueprint.getSoundEnabled())
         {
-            _balancer.balance(this);
-        }
-    }
-
-    public GridWorldBlueprint getGridWorldBlueprint()
-    {
-        return this._gridWorldBlueprint;
-    }
-
-    @Override
-    public LinkedList<Creature> getCreatures()
-    {
-        LinkedList<Creature> allCreatures = new LinkedList<>();
-        for (int r = 1; r < this._height - 1; r++)
-        {
-            for (int c = 1; c < this._width - 1; c++)
+            for (int r = 1; r < this._height - 1; r++)
             {
-                if (_creatureGrid[r][c] != null)
+                for (int c = 1; c < this._width - 1; c++)
                 {
-                    allCreatures.add(_creatureGrid[r][c]);
+                    if (_creatureGrid[r][c] != null)
+                    {
+                        transmitSoundsFrom(r, c);
+                    }
                 }
             }
         }
-        Collections.sort(allCreatures, new Comparator<Creature>()
-        {
-            @Override
-            public int compare(Creature c1, Creature c2)
-            {
-                int generationComparison = Double.compare(c1.getGeneration(), c2.getGeneration());
-                if (generationComparison != 0)
-                {
-                    return generationComparison;
-                }
-                else
-                {
-                    return Integer.compare(c1.getID(), c2.getID());
-                }
-            }
-        });
-        return allCreatures;
     }
 
-    @Override
-    public int getCreatureCount()
+    private void transmitSoundsFrom(int r1, int c1)
     {
-        int count = 0;
-        for (int r = 0; r < _height; r++)
+        // We transmit sounds both directions at the same time, so we only want to get each pair of
+        // creatures once. Anything 'below and to the right' is should be a pair that haven't shared
+        // sounds yet.
+        for (int c2 = c1 + 1; c2 < this._width; c2++)
         {
-            for (int c = 0; c < _width; c++)
+            int r2 = r1;
+            if (_creatureGrid[r1][c1] != null)
             {
-                if (this._creatureGrid[r][c] != null)
-                {
-                    count++;
-                }
+                transmitSoundsFromTo(r1, c1, r2, c2);
             }
         }
-        return (count);
-    }
-
-    public int getItemCount()
-    {
-        int count = 0;
-        for (int r = 0; r < _height; r++)
+        for (int r2 = r1 + 1; r2 < this._height; r2++)
         {
-            for (int c = 0; c < _width; c++)
+            for (int c2 = c1; c2 < this._width; c2++)
             {
-                if (this._itemGrid[r][c] != null)
+                if (_creatureGrid[r2][c2] != null)
                 {
-                    count++;
+                    transmitSoundsFromTo(r1, c1, r2, c2);
                 }
-            }
-        }
-        return (count);
-    }
-
-    public int getTerrainCount()
-    {
-        int count = 0;
-        for (int r = 0; r < _height; r++)
-        {
-            for (int c = 0; c < _width; c++)
-            {
-                if (this._terrainGrid[r][c] != null)
-                {
-                    count++;
-                }
-            }
-        }
-        return (count);
-    }
-
-    @Override
-    public int getCount(CreatureBlueprint s)
-    {
-        int count = 0;
-        for (int r = 0; r < _height; r++)
-        {
-            for (int c = 0; c < _width; c++)
-            {
-                if (this._creatureGrid[r][c] != null && this._creatureGrid[r][c].getBlueprint().equals(s))
-                {
-                    count++;
-                }
-            }
-        }
-        return (count);
-    }
-
-    public Creature getCreature(int r, int c)
-    {
-        return this._creatureGrid[r][c];
-    }
-
-    public ItemType getItem(int r, int c)
-    {
-        return this._itemGrid[r][c];
-    }
-
-    public TerrainType getTerrain(int r, int c)
-    {
-        return this._terrainGrid[r][c];
-    }
-
-    public boolean squareIsEmpty(int r, int c)
-    {
-        return _creatureGrid[r][c] == null && _itemGrid[r][c] == null && _terrainGrid[r][c] == null;
-    }
-
-    public boolean squareIsPathable(int r, int c)
-    {
-        return _creatureGrid[r][c] == null && TerrainType.isPathable(_terrainGrid[r][c]);
-    }
-
-    public boolean squareIsFoodable(int r, int c)
-    {
-        return _itemGrid[r][c] == null && _terrainGrid[r][c] == null;
-    }
-
-    public boolean squareIsFlamable(int r, int c)
-    {
-        return _terrainGrid[r][c] == null;
-    }
-
-    private void addCreature(Creature creature, int r, int c)
-    {
-        creature.setID(this.getNewCreatureID());
-        _creatureGrid[r][c] = creature;
-    }
-
-    private void killCreature(int r, int c)
-    {
-        removeCreature(r, c);
-    }
-
-    public void addImmigrant(Creature creature)
-    {
-        boolean immigrantPlaced = false;
-        while (!immigrantPlaced)
-        {
-            int r = Rand.getInstance().getRandomInt(this._height);
-            int c = Rand.getInstance().getRandomInt(this._width);
-            if (this.squareIsEmpty(r, c))
-            {
-                addCreature(creature, r, c);
-                immigrantPlaced = true;
             }
         }
     }
 
-    public int getWorldWidth()
+    private void transmitSoundsFromTo(int r1, int c1, int r2, int c2)
     {
-        return this._width;
-    }
-
-    public int getWorldHeight()
-    {
-        return this._height;
-    }
-
-    public void setWorldDimensions(int width, int height)
-    {
-        this._width = width;
-        this._height = height;
-
-        this._creatureGrid = new Creature[height][width];
-        this._itemGrid = new ItemType[height][width];
-        this._terrainGrid = new TerrainType[height][width];
-    }
-
-    public void setTerrain(TerrainType terrainType, int r, int c)
-    {
-        this._terrainGrid[r][c] = terrainType;
-    }
-
-    public void setItem(ItemType itemType, int r, int c)
-    {
-        this._itemGrid[r][c] = itemType;
-    }
-
-    @Override
-    public void finalizeSerialization()
-    {
-        // Do nothing
+        int distanceSquared = (r1 - r2) * (r1 - r2) + (c1 - c2) * (c1 - c2);
+        _creatureGrid[r1][c1].listenToCreature(_creatureGrid[r2][c2], distanceSquared);
+        _creatureGrid[r2][c2].listenToCreature(_creatureGrid[r1][c1], distanceSquared);
     }
 }

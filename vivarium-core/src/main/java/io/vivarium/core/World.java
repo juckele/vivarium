@@ -146,6 +146,9 @@ public abstract class World extends VivariumObject
         // Each terrain element is activated
         tickTerrain();
 
+        // If there's any sort of physics engine being run, resolve it here
+        tickPhysics();
+
         // New food resources will be spawned in the world
         spawnFood();
 
@@ -160,4 +163,6 @@ public abstract class World extends VivariumObject
     abstract protected void transmitSigns();
 
     abstract protected void transmitSounds();
+
+    abstract protected void tickPhysics();
 }

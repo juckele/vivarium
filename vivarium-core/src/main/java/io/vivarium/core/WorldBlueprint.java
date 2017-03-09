@@ -22,11 +22,11 @@ public abstract class WorldBlueprint extends VivariumObject
 
     // Blueprints for creatures
     @SerializedParameter
-    private ArrayList<CreatureBlueprint> _creatureBlueprints;
+    protected ArrayList<CreatureBlueprint> _creatureBlueprints;
 
     // Audit Functions
     @SerializedParameter
-    private ArrayList<AuditBlueprint> _auditBlueprints;
+    protected ArrayList<AuditBlueprint> _auditBlueprints;
 
     protected WorldBlueprint()
     {
